@@ -15,7 +15,8 @@
 				"jock.svg",
 				"yzhang.markdown-all-in-one",
 				"GitHub.copilot",
-				"Gruntfuggly.todo-tree"
+				"Gruntfuggly.todo-tree",
+				"NomicFoundation.hardhat-solidity"
 			]
 		}
 	}

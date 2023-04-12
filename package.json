@@ -4,9 +4,13 @@
 	"scripts": {
 		"dev": "vite --port 3000",
 		"build": "vite build",
-		"preview": "vite preview --port 3000"
+		"preview": "vite preview --port 3000",
+		"hardhat:compile": "npm run compile --prefix ./hardhat",
+		"hardhat:clean": "npm run clean --prefix ./hardhat"
 	},
 	"devDependencies": {
+		"@ethersproject/providers": "^5.1.3",
+		"ethers": "^5.1.3",
 		"master-ts": "github:DeepDoge/master-ts",
 		"master-ts-vite-plugin": "github:DeepDoge/master-ts-vite-plugin",
 		"typescript": "^4.6.4",
