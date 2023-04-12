@@ -1,0 +1,16 @@
+{
+	"type": "module",
+	"name": "dforum",
+	"scripts": {
+		"dev": "vite --port 3000",
+		"build": "vite build",
+		"preview": "vite preview --port 3000"
+	},
+	"devDependencies": {
+		"master-ts": "github:DeepDoge/master-ts",
+		"master-ts-vite-plugin": "github:DeepDoge/master-ts-vite-plugin",
+		"typescript": "^4.6.4",
+		"vite": "^3.2.3",
+		"vite-plugin-singlefile": "^0.13.5"
+	}
+}
