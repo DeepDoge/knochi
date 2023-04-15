@@ -1,24 +1,26 @@
-import { ethers } from "hardhat";
+import { Signer } from "ethers"
+import fs from "fs"
+import { ethers } from "hardhat"
 
-async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+async function deployContract(name: string, signer: Signer) {
+	const deploys: Record<string, string> = JSON.parse(fs.readFileSync("./deployed.json", { encoding: "utf-8" }))
+	const key = `${await signer.getChainId()}-${name}`
+	if (deploys[key]) return
 
-  const lockedAmount = ethers.utils.parseEther("0.001");
+	const Contract = await ethers.getContractFactory(name, signer)
+	const contract = await Contract.deploy()
+	await contract.deployed()
+	console.log(`${name} deployed to ${contract.address}`)
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(
-    `Lock with ${ethers.utils.formatEther(lockedAmount)}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+	deploys[key] = contract.address
+	fs.writeFileSync("./deployed.json", JSON.stringify(deploys), { encoding: "utf-8" })
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+async function deploy() {
+	deployContract("PostDB")
+}
+
+deploy().catch((error) => {
+	console.error(error)
+	process.exitCode = 1
+})
