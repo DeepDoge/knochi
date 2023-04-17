@@ -4,15 +4,20 @@ import type { Component } from "master-ts/library/component"
 import { HomePage } from "./pages/home"
 import { UnknownPage } from "./pages/unknown"
 import { UserPage } from "./pages/user"
-import { address } from "./utils/address"
+import { Address, address } from "./utils/address"
 
 export const PageRouter = $.readable<Component | null>(null, (set) => {
+	const userPageCache = $.writable<ReturnType<typeof UserPage> | null>(null)
+	const userPageAddressCache = $.writable<Address>(null!)
+
 	return route.page.subscribe(
 		(path) => {
 			if (path === "") {
 				set(HomePage())
 			} else if (path.startsWith("0x") && path.length === 42) {
-				set(UserPage(address(path)))
+				userPageAddressCache.ref = address(path)
+				userPageCache.ref ??= UserPage(userPageAddressCache)
+				set(userPageCache.ref)
 			} else {
 				set(UnknownPage())
 			}
