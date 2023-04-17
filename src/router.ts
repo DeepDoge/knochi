@@ -1,4 +1,4 @@
-import { route, routeHash } from "@/route"
+import { route, routeHref } from "@/route"
 import { $ } from "master-ts/library/$"
 import type { Component } from "master-ts/library/component"
 import { HomePage } from "./pages/home"
@@ -18,7 +18,7 @@ export const PageRouter = $.readable<Component | null>(null, (set) => {
 				userPageAddressCache.ref = address(path)
 				userPageCache.ref ??= UserPage(userPageAddressCache)
 				set(userPageCache.ref)
-				location.replace(routeHash({ path: userPageAddressCache.ref }))
+				location.replace(routeHref({ path: userPageAddressCache.ref }))
 			} else {
 				set(UnknownPage())
 			}
