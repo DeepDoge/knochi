@@ -8,7 +8,7 @@ const route = {
 const routeReadable = route as { [K in keyof typeof route]: SignalReadable<string> }
 export { routeReadable as route }
 function updateRoute() {
-	const [_, page, modal] = location.hash.split("#")
+	const [page, modal] = location.hash.substring(1).split("@")
 
 	route.page.ref = page ?? ""
 	route.modal.ref = modal ?? ""
