@@ -6,7 +6,7 @@ import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal/readable"
 import { css, html } from "master-ts/library/template"
 
-const UserPageComponent = defineComponent("x-user")
+const UserPageComponent = defineComponent("x-user-page")
 export function UserPage(userAddress: SignalReadable<Address>) {
 	const component = new UserPageComponent()
 
