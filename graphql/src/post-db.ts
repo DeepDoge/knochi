@@ -1,4 +1,4 @@
-import { BigInt, Bytes } from "@graphprotocol/graph-ts"
+import { Bytes } from "@graphprotocol/graph-ts"
 import { Post as PostEvent } from "../generated/PostDB/PostDB"
 import { Post, PostContent } from "../generated/schema"
 

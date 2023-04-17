@@ -24,17 +24,8 @@ const signer = provider.getSigner()
 const PostDB = new PostDB__factory(signer)
 const postDB = PostDB.attach(contracts["80001-PostDB"])
 
-async function post(text: string) {
-	await postDB.post(
-		encodePostContent([
-			{
-				type: "text",
-				value: new TextEncoder().encode(text)
-			}
-		])
-	)
-
-	await new Promise<void>((resolve) => postDB.once(postDB.filters.Post(), () => resolve()))
+async function post(data: Uint8Array) {
+	await postDB.post(data)
 }
 
 const AppComponent = defineComponent()
@@ -42,12 +33,14 @@ function App() {
 	const component = new AppComponent()
 
 	const text = $.writable("")
+	const data = $.derive(() => encodePostContent([{ type: "text", value: new TextEncoder().encode(text.ref) }]))
 
 	component.$html = html`
 		<section>
 			${Routes()}
-			<form on:submit=${(e) => (e.preventDefault(), post(text.ref))}>
+			<form on:submit=${(e) => (e.preventDefault(), post(data.ref))}>
 				<input type="text" bind:value=${text} placeholder="Text" />
+				<div>${() => data.ref.byteLength} bytes</div>
 				<button>Post</button>
 			</form>
 		</section>
