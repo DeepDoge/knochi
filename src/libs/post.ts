@@ -12,29 +12,32 @@ const PostComponent = defineComponent("x-post")
 export function Post(post: SignalReadable<PostData>) {
 	const component = new PostComponent()
 
-	const textContents = $.derive(() =>
-		post.ref.contents.filter((content) => content.type === "text").map((content) => ethers.utils.toUtf8String(content.value))
-	)
+	const textContents = $.derive(() => {
+		let text = post.ref.contents
+			.filter((content) => content.type === "text")
+			.map((content) => ethers.utils.toUtf8String(content.value))
+			.join("\n").trim()
+		if (text.length > 128) text = `${text.substring(0, 128).trimEnd()}...`
+		return text.split("\n")
+	})
 
 	component.$html = html`
-    	<div class="glow-effect"></div>
+		<div class="glow-effect"></div>
 		<div class="author">
-            ${() => WalletAddress(post.ref.author)}
+			${() => WalletAddress(post.ref.author)}
 		</div>
-		<div class="master">
-			<div class="content">
-				${() =>
-					textContents.ref.map(
-						(textContent) => html`
-							<div>${textContent}</div>
-						`
-					)}
-			</div>
+		<div class="content">
+			${() =>
+				textContents.ref.map(
+					(textContent) => html`
+						<div>${textContent}</div>
+					`
+				)}
 		</div>
 		<div class="other">
-            <div class="created-at">
-                ${$.derive(() => relativeTime(post.ref.createdAt), [secondTick, post])}
-            </div>
+			<div class="created-at">
+				${$.derive(() => relativeTime(post.ref.createdAt), [secondTick, post])}
+			</div>
 		</div>
 	`
 
@@ -43,34 +46,35 @@ export function Post(post: SignalReadable<PostData>) {
 
 PostComponent.$css = css`
 	:host {
-        position: relative;
+		position: relative;
 		display: grid;
 		gap: 0.5em;
-        background-color: hsl(var(--base-hsl), 50%);
-        color: hsl(var(--base-text-hsl));
-        padding: calc(var(--span) * 1);
-        border-radius: var(--radius);
-        border: 1px solid hsl(var(--base-hsl))
-	}
-
-    .glow-effect {
-        position: absolute;
-        inset: 0;
-        background-color: hsl(var(--master-hsl), 20%);
-        color: hsl(var(--master-text-hsl));
-        z-index: -1;
-        border-radius: inherit;
-        filter: blur(1rem);
-    }
-
-	.master {
-		display: grid;
-		background-color: hsl(var(--base-hsl));
-		padding: calc(var(--span) * .5);
+		background-color: hsl(var(--base-hsl), 50%);
+		color: hsl(var(--base-text-hsl));
+		padding: calc(var(--span) * 1);
 		border-radius: var(--radius);
+		border: 1px solid hsl(var(--base-hsl));
 	}
 
-    .created-at {
-        font-size: .75em
-    }
+	.glow-effect {
+		position: absolute;
+		inset: 0;
+		background-color: hsl(var(--master-hsl), 20%);
+		color: hsl(var(--master-text-hsl));
+		z-index: -1;
+		border-radius: inherit;
+		filter: blur(1rem);
+	}
+
+	.author {
+		font-size: 0.75em;
+	}
+
+	.content {
+		font-size: 1.1em;
+	}
+
+	.created-at {
+		font-size: 0.7em;
+	}
 `

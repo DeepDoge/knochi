@@ -1,4 +1,3 @@
-import { routeHash } from "@/route"
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
@@ -9,7 +8,6 @@ export function WalletAddress(address: Address) {
 
 	component.$html = html`
 		<button
-			href=${routeHash({ path: address })}
 			on:click=${(e) => (e.preventDefault(), navigator.clipboard.writeText(address).then(() => alert(`Address copied to clipboard\nTODO: Add toast notifactions etc..`)))}
 			title=${address}
 			aria-label="wallet address, click to copy"
@@ -29,7 +27,6 @@ WalletAddressComponent.$css = css`
 		all: unset;
 		font: inherit;
 		cursor: pointer;
-        padding-inline: .5ch;
 
         background-color: transparent;
 
