@@ -1,4 +1,4 @@
-import appCss from "@/styles/app.css"
+import globalCss from "@/styles/global.css"
 import { ethers } from "ethers"
 import { Component, defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
@@ -9,7 +9,7 @@ import { $ } from "master-ts/library/$"
 import { PageRouter } from "./router"
 
 const appCssSheet = new CSSStyleSheet()
-appCssSheet.replace(appCss)
+appCssSheet.replace(globalCss)
 Component.$globalCSS = [appCssSheet]
 
 declare namespace globalThis {

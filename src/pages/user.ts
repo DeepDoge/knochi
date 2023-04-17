@@ -32,7 +32,7 @@ UserPageComponent.$css = css`
 	.posts {
 		display: grid;
 		grid-template-columns: minmax(0, 35em);
-		gap: 1em;
+		gap: calc(var(--span) * 2.2);
 		justify-content: center;
 	}
 `
