@@ -28,7 +28,7 @@ async function post(data: Uint8Array) {
 	await postDB.post(data)
 }
 
-const AppComponent = defineComponent()
+const AppComponent = defineComponent("x-app")
 function App() {
 	const component = new AppComponent()
 

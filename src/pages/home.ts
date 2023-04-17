@@ -1,7 +1,7 @@
 import { defineComponent } from "master-ts/library/component"
 import { html } from "master-ts/library/template"
 
-const HomePageComponent = defineComponent()
+const HomePageComponent = defineComponent("x-home")
 export function HomePage() {
 	const component = new HomePageComponent()
 

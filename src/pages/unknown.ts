@@ -1,7 +1,7 @@
 import { defineComponent } from "master-ts/library/component"
 import { html } from "master-ts/library/template"
 
-const UnknownPageComponent = defineComponent()
+const UnknownPageComponent = defineComponent("x-unknown")
 export function UnknownPage() {
 	const component = new UnknownPageComponent()
 
