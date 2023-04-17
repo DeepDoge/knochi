@@ -6,7 +6,7 @@ import { PostDB__factory } from "./typechain"
 import contracts from "@/../hardhat/scripts/deployed.json"
 import { encodePostContent } from "./utils/post-db"
 import { $ } from "master-ts/library/$"
-import { Routes } from "./routes"
+import { PageRouter } from "./router"
 
 const appCssSheet = new CSSStyleSheet()
 appCssSheet.replace(appCss)
@@ -37,7 +37,7 @@ function App() {
 
 	component.$html = html`
 		<section>
-			${Routes()}
+			${PageRouter}
 			<form on:submit=${(e) => (e.preventDefault(), post(data.ref))}>
 				<input type="text" bind:value=${text} placeholder="Text" />
 				<div>${() => data.ref.byteLength} bytes</div>
