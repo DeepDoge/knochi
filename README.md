@@ -9,5 +9,5 @@ Inspired by https://github.com/DeepDoge/dweb-forum
 -   Follow system (client side only for now), show combine posts from people you follow an home page
 -   Search based on words in a post. (text content only), also have a prefix on the content type that indicates that its a string
 -   Ability to follow search results
--   Somehow find out top daily, weekly, monthly yearly post. No trends, but tops, because trends die when while they are not suppose to die in favor of less popular but growing things
+-   Somehow find out top daily, weekly, monthly yearly post. No trends, because trends die while they are not suppose to die in favor of less popular but growing things
 -   etc.
