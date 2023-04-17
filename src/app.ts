@@ -6,6 +6,7 @@ import { PostDB__factory } from "./typechain"
 import contracts from "@/../hardhat/scripts/deployed.json"
 import { encodePostContent } from "./utils/post-db"
 import { $ } from "master-ts/library/$"
+import { Routes } from "./routes"
 
 const appCssSheet = new CSSStyleSheet()
 appCssSheet.replace(appCss)
@@ -44,7 +45,7 @@ function App() {
 
 	component.$html = html`
 		<section>
-			<h1>DForum</h1>
+			${Routes()}
 			<form on:submit=${(e) => (e.preventDefault(), post(text.ref))}>
 				<input type="text" bind:value=${text} placeholder="Text" />
 				<button>Post</button>
