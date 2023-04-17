@@ -1,11 +1,11 @@
-import { Bytes } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 import { Post as PostEvent } from "../generated/PostDB/PostDB"
 import { Post, PostContent } from "../generated/schema"
 
 @inline
-export function decodePostContent(buffer: Uint8Array, postId: Bytes): Bytes[] {
+export function decodePostContent(buffer: Uint8Array, postId: Bytes): string[] {
 	const view = new DataView(buffer.buffer)
-	const ids = new Array<Bytes>()
+	const ids = new Array<string>()
 
 	let offset = 0
 	let offsetCache = -1
@@ -35,7 +35,7 @@ export function decodePostContent(buffer: Uint8Array, postId: Bytes): Bytes[] {
 
 		const idSuffix = new Uint8Array(1)
 		new DataView(idSuffix.buffer).setUint8(0, u8(i))
-		const content = new PostContent(postId.concat(Bytes.fromUint8Array(idSuffix)))
+		const content = new PostContent(`${postId.toHex()}-${i}`)
 		content.type = type
 		content.value = Bytes.fromUint8Array(value)
 		content.save()
@@ -49,11 +49,10 @@ export function decodePostContent(buffer: Uint8Array, postId: Bytes): Bytes[] {
 }
 
 export function handlePost(event: PostEvent): void {
-	let id = event.transaction.hash.concat(Bytes.fromByteArray(Bytes.fromBigInt(event.logIndex)))
+	let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.postId))
 	let post = new Post(id)
 
-	post.author = event.params.author
-	post.postId = event.params.postId
+	post.author = event.transaction.from
 	post.postContent = decodePostContent(event.params.postData, id)
 
 	post.blockNumber = event.block.number

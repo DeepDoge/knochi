@@ -1,7 +1,6 @@
 type Post @entity(immutable: true) {
 	id: Bytes!
 	author: Bytes! # address
-	postId: BigInt! # uint256
 	postContent: [PostContent!]!
 	blockNumber: BigInt!
 	blockTimestamp: BigInt!
@@ -9,7 +8,7 @@ type Post @entity(immutable: true) {
 }
 
 type PostContent @entity(immutable: true) {
-	id: Bytes!
+	id: String!
 	type: String!
 	value: Bytes!
 }

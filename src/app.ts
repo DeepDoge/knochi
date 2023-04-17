@@ -32,6 +32,7 @@ async function post(text: string) {
 			}
 		])
 	)
+
 	await new Promise<void>((resolve) => postDB.once(postDB.filters.Post(), () => resolve()))
 }
 

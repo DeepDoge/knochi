@@ -6,9 +6,9 @@ contract PostDB {
     // Mapping is for future NFTs or similar stuff, to check post author on-chain
     mapping (uint => address) public postIdToAuthorMap;
 
-    event Post(address author, uint postId, bytes postData);
+    event Post(uint postId, bytes postData);
     function post(bytes calldata postData) public {
         postIdToAuthorMap[postId] = msg.sender;
-        emit Post(msg.sender, postId++, postData);
+        emit Post(postId++, postData);
     }
 }

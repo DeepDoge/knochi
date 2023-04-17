@@ -6,7 +6,7 @@ dataSources:
       name: PostDB
       network: mumbai
       source:
-          address: "0xAB8b0d6aA21560AEDfD4D706460dd967d51814EB"
+          address: "0x56E22a6306b7F966D28E767121E3C9f7AC0Ca8cD"
           abi: PostDB
           startBlock: 34447242
       mapping:
@@ -17,8 +17,8 @@ dataSources:
               - Post
           abis:
               - name: PostDB
-                file: ../hardhat/artifacts/contracts/PostDB.sol/PostDB.json
+                file: ./abis/PostDB.json
           eventHandlers:
-              - event: Post(address,uint256,bytes)
+              - event: Post(uint256,bytes)
                 handler: handlePost
           file: ./src/post-db.ts
