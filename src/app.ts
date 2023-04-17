@@ -33,7 +33,7 @@ function App() {
 	const component = new AppComponent()
 
 	const text = $.writable("")
-	const data = $.derive(() => encodePostContent([{ type: "text", value: new TextEncoder().encode(text.ref) }]))
+	const data = $.derive(() => encodePostContent([{ type: "text", value: ethers.utils.toUtf8Bytes(text.ref) }]))
 
 	component.$html = html`
 		<section>
