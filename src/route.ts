@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal/readable"
 
@@ -16,3 +17,11 @@ function updateRoute() {
 updateRoute()
 window.addEventListener("hashchange", updateRoute)
 setInterval(updateRoute, 100)
+
+export function routeHash({path, postId}: { path?: string, postId?: BigNumber }): string
+{
+	path ??= route.path.ref
+	postId ??= route.postId.ref ? BigNumber.from(route.postId.ref) : postId
+
+	return `#${path}${postId ? `@${postId}` : ''}`
+}

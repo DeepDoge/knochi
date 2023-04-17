@@ -6,8 +6,9 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal/readable"
 import { css, html } from "master-ts/library/template"
+import { WalletAddress } from "./wallet-address"
 
-const PostComponent = defineComponent()
+const PostComponent = defineComponent("x-post")
 export function Post(post: SignalReadable<PostData>) {
 	const component = new PostComponent()
 
@@ -16,9 +17,9 @@ export function Post(post: SignalReadable<PostData>) {
 	)
 
 	component.$html = html`
-    <slot></slot>
+    	<div class="glow-effect"></div>
 		<div class="author">
-			${post.ref.author}
+            ${() => WalletAddress(post.ref.author)}
 		</div>
 		<div class="master">
 			<div class="content">
@@ -47,16 +48,16 @@ PostComponent.$css = css`
 		gap: 0.5em;
         background-color: hsl(var(--base-hsl), 50%);
         color: hsl(var(--base-text-hsl));
-        padding: calc(var(--span) * .5);
+        padding: calc(var(--span) * 1);
         border-radius: var(--radius);
         border: 1px solid hsl(var(--base-hsl))
 	}
 
-    :host::before {
-        content: "";
+    .glow-effect {
         position: absolute;
         inset: 0;
         background-color: hsl(var(--master-hsl), 20%);
+        color: hsl(var(--master-text-hsl));
         z-index: -1;
         border-radius: inherit;
         filter: blur(1rem);

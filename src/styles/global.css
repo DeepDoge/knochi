@@ -21,6 +21,8 @@
 
 	--span: 1em;
 
+	--transition: 0.175s ease-in;
+
 	color-scheme: dark;
 	color: hsl(var(--background-text-hsl));
 
@@ -64,7 +66,7 @@ input {
 	font: inherit;
 }
 
-button {
+.btn {
 	border-radius: var(--radius);
 	border: 1px solid transparent;
 	padding: calc(var(--span) * 0.6) calc(var(--span) * 1.2);
@@ -76,9 +78,9 @@ button {
 	cursor: pointer;
 	transition: border-color 0.25s;
 }
-button:hover {
+.btn:hover {
 	border-color: hsl(var(--slave-hsl));
 }
-button:focus-visible {
+.btn:focus-visible {
 	outline: var(--span) auto currentColor;
 }
