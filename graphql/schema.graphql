@@ -1,0 +1,15 @@
+type Post @entity(immutable: true) {
+	id: Bytes!
+	author: Bytes! # address
+	postId: BigInt! # uint256
+	postContent: [PostContent!]!
+	blockNumber: BigInt!
+	blockTimestamp: BigInt!
+	transactionHash: Bytes!
+}
+
+type PostContent @entity(immutable: true) {
+	id: Bytes!
+	type: String!
+	value: Bytes!
+}

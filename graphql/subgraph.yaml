@@ -1,0 +1,24 @@
+specVersion: 0.0.5
+schema:
+    file: ./schema.graphql
+dataSources:
+    - kind: ethereum
+      name: PostDB
+      network: mumbai
+      source:
+          address: "0xAB8b0d6aA21560AEDfD4D706460dd967d51814EB"
+          abi: PostDB
+          startBlock: 34447242
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          entities:
+              - Post
+          abis:
+              - name: PostDB
+                file: ../hardhat/artifacts/contracts/PostDB.sol/PostDB.json
+          eventHandlers:
+              - event: Post(address,uint256,bytes)
+                handler: handlePost
+          file: ./src/post-db.ts

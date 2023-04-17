@@ -16,7 +16,8 @@
 				"yzhang.markdown-all-in-one",
 				"GitHub.copilot",
 				"Gruntfuggly.todo-tree",
-				"NomicFoundation.hardhat-solidity"
+				"NomicFoundation.hardhat-solidity",
+				"GraphQL.vscode-graphql"
 			]
 		}
 	}
