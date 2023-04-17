@@ -10,7 +10,7 @@ export const PageRouter = $.readable<Component | null>(null, (set) => {
 	const userPageCache = $.writable<ReturnType<typeof UserPage> | null>(null)
 	const userPageAddressCache = $.writable<Address>(null!)
 
-	return route.page.subscribe(
+	return route.path.subscribe(
 		(path) => {
 			if (path === "") {
 				set(HomePage())
