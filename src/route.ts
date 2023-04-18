@@ -18,7 +18,7 @@ updateRoute()
 window.addEventListener("hashchange", updateRoute)
 setInterval(updateRoute, 100)
 
-export function routeHref({path, postId}: { path?: string, postId?: BigNumber }): string
+export function routeHref({path, postId}: { path?: string, postId?: BigNumber | null }): string
 {
 	path ??= route.path.ref
 	postId ??= route.postId.ref ? BigNumber.from(route.postId.ref) : postId

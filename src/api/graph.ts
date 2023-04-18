@@ -3,13 +3,14 @@ import { BigNumber, ethers } from "ethers"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 
 const client = createClient({
-	url: "https://api.studio.thegraph.com/query/45351/dforum/v0.0.27",
+	url: "https://api.studio.thegraph.com/query/45351/dforum/v0.0.29",
 	exchanges: [cacheExchange, fetchExchange]
 })
 
 export type PostData = {
 	id: BigNumber
 	parentId: BigNumber | null
+	replyCount: BigNumber
 	author: Address
 	contents: { type: string; value: Uint8Array }[]
 	createdAt: Date
@@ -26,16 +27,19 @@ export async function getPosts(author: Address): Promise<PostData[]> {
 							orderBy: blockTimestamp
                             orderDirection: desc 
 							where: { and: [
-                                { or: [{ postContent_: { value_not: "" } }, { postContent_: { type_not: "" } }] }, 
+                                { or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] }, 
                                 { author: "${author}" } 
                             ] }
 						) {
 							id
 							parentId
 							author
-							postContent {
+							contents {
 								type
 								value
+							}
+							metadata {
+								replyCount
 							}
                             blockTimestamp
 						}
@@ -48,8 +52,9 @@ export async function getPosts(author: Address): Promise<PostData[]> {
 		(post: any): PostData => ({
 			id: BigNumber.from(post.id),
 			parentId: post.parentId === "0x" ? null : BigNumber.from(post.parentId),
+			replyCount: BigNumber.from(post.metadata.replyCount),
 			author: address(post.author),
-			contents: post.postContent.map((content: any): PostData["contents"][number] => ({
+			contents: post.contents.map((content: any): PostData["contents"][number] => ({
 				type: content.type,
 				value: ethers.utils.arrayify(content.value)
 			})),
