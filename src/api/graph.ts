@@ -3,12 +3,13 @@ import { BigNumber, ethers } from "ethers"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 
 const client = createClient({
-	url: "https://api.studio.thegraph.com/query/45351/dforum/v0.0.25",
+	url: "https://api.studio.thegraph.com/query/45351/dforum/v0.0.27",
 	exchanges: [cacheExchange, fetchExchange]
 })
 
 export type PostData = {
 	id: BigNumber
+	parentId: BigNumber | null
 	author: Address
 	contents: { type: string; value: Uint8Array }[]
 	createdAt: Date
@@ -30,6 +31,7 @@ export async function getPosts(author: Address): Promise<PostData[]> {
                             ] }
 						) {
 							id
+							parentId
 							author
 							postContent {
 								type
@@ -45,6 +47,7 @@ export async function getPosts(author: Address): Promise<PostData[]> {
 	).data.posts.map(
 		(post: any): PostData => ({
 			id: BigNumber.from(post.id),
+			parentId: post.parentId === "0x" ? null : BigNumber.from(post.parentId),
 			author: address(post.author),
 			contents: post.postContent.map((content: any): PostData["contents"][number] => ({
 				type: content.type,

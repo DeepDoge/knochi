@@ -2,17 +2,21 @@ import { Bytes } from "@graphprotocol/graph-ts"
 import { Post as PostEvent } from "../generated/PostDB/PostDB"
 import { Post, PostContent } from "../generated/schema"
 
-@inline
-export function decodePostContent(buffer: Uint8Array, postId: Bytes): string[] {
+export function handlePost(event: PostEvent): void {
+	let postId = Bytes.fromByteArray(Bytes.fromBigInt(event.params.postId))
+	let post = new Post(postId)
+	const buffer = event.params.postData
+
 	const view = new DataView(buffer.buffer)
-	const ids = new Array<string>()
+	const ids: string[] = []
+	let parentPostId: Bytes = new Bytes(0)
 
 	let offset = 0
 	let offsetCache = -1
 
-	const types = new Array<string>()
+	const types: string[] = []
 	while (offset < buffer.length) {
-		const byte = buffer[offset]
+		const byte = view.getUint8(offset)
 		if (byte === 10 || byte === 0) {
 			types.push(String.UTF8.decode(buffer.slice(offsetCache + 1, (offsetCache = offset)).buffer))
 			if (byte === 10) break
@@ -24,14 +28,20 @@ export function decodePostContent(buffer: Uint8Array, postId: Bytes): string[] {
 
 	let i = 0
 	while (offset < buffer.length) {
-		if (offset + 2 > buffer.length) return []
-		const typeIndex = buffer[offset++]
+		if (offset + 1 > buffer.length) break
+		const typeIndex = view.getUint8(offset)
+		offset += 1
+
+		if (offset + 2 > buffer.length) break
 		const valueBufferSize = view.getUint16(offset)
 		offset += 2
+
+		if (typeIndex >= u8(types.length)) break
 		const type = types[typeIndex]
-		if (!type) return []
-		if (offset + valueBufferSize > buffer.length) return []
+
+		if (offset + valueBufferSize > buffer.length) break
 		const value = buffer.subarray(offset, offset + valueBufferSize)
+		offset += valueBufferSize
 
 		const idSuffix = new Uint8Array(1)
 		new DataView(idSuffix.buffer).setUint8(0, u8(i))
@@ -41,19 +51,14 @@ export function decodePostContent(buffer: Uint8Array, postId: Bytes): string[] {
 		content.save()
 		ids.push(content.id)
 
-		offset += valueBufferSize
+		if (type === "parent") parentPostId = content.value
+
 		i++
 	}
 
-	return ids
-}
-
-export function handlePost(event: PostEvent): void {
-	let id = Bytes.fromByteArray(Bytes.fromBigInt(event.params.postId))
-	let post = new Post(id)
-
 	post.author = event.transaction.from
-	post.postContent = decodePostContent(event.params.postData, id)
+	post.postContent = ids
+	post.parentId = parentPostId
 
 	post.blockNumber = event.block.number
 	post.blockTimestamp = event.block.timestamp

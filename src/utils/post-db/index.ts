@@ -14,7 +14,7 @@ export function decodePostContent(buffer: Uint8Array): PostContent[] {
 
 	const types: string[] = []
 	while (offset < buffer.length) {
-		const byte = buffer[offset]
+		const byte = view.getUint8(offset)
 		if (byte === 10 || byte === 0) {
 			types.push(ethers.utils.toUtf8String(buffer.subarray(offsetCache + 1, (offsetCache = offset))))
 			if (byte === 10) break
@@ -25,16 +25,22 @@ export function decodePostContent(buffer: Uint8Array): PostContent[] {
 	offset++
 
 	while (offset < buffer.length) {
-		if (offset + 2 > buffer.length) return []
-		const typeIndex = buffer[offset++]!
+		if (offset + 1 > buffer.length) return []
+		const typeIndex = view.getUint8(offset)
+		offset += 1
+
+		if (offset + 1 > buffer.length) return []
 		const valueBufferSize = view.getUint16(offset)
 		offset += 2
-		const type = types[typeIndex]
-		if (!type) return []
+
+		if (typeIndex >= types.length) return []
+		const type = types[typeIndex]!
+
 		if (offset + valueBufferSize > buffer.length) return []
 		const value = buffer.subarray(offset, offset + valueBufferSize)
-		contents.push({ type, value })
 		offset += valueBufferSize
+
+		contents.push({ type, value })
 	}
 
 	return contents
@@ -55,7 +61,7 @@ export function encodePostContent(contents: PostContent[]): Uint8Array {
 
 	for (const content of contents) {
 		const size = new Uint8Array(2)
-		new DataView(size.buffer).setInt16(0, content.value.byteLength)
+		new DataView(size.buffer).setUint16(0, content.value.byteLength)
 		bytes.push(typeNameToIndexMap.get(content.type)!, ...size, ...content.value)
 	}
 
