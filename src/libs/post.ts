@@ -60,20 +60,22 @@ PostComponent.$css = css`
 		position: relative;
 		display: grid;
 		gap: calc(var(--span) * 0.5);
-		background-color: hsl(var(--base-hsl), 50%);
-		color: hsl(var(--base-text-hsl));
 		padding: calc(var(--span) * 1);
+
+		background-color: hsl(var(--base-hsl));
+		color: hsl(var(--base-text-hsl));
+
 		border-radius: var(--radius);
-		border: 1px solid hsl(var(--base-hsl));
+		border: calc(var(--span) * 0.1) solid hsl(var(--master-hsl), 25%);
 	}
 
 	.glow-effect {
 		position: absolute;
 		inset: 0;
-		background-color: hsl(var(--master-hsl), 20%);
-		color: hsl(var(--master-text-hsl));
 		z-index: -1;
+
 		border-radius: inherit;
+		background-color: hsl(var(--master-hsl), 25%);
 		filter: blur(1rem);
 	}
 

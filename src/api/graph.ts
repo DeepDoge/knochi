@@ -3,7 +3,7 @@ import { BigNumber, ethers } from "ethers"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 
 const client = createClient({
-	url: "https://api.studio.thegraph.com/query/45351/dforum/v0.0.29",
+	url: "https://api.studio.thegraph.com/query/45351/dforum/v0.0.42",
 	exchanges: [cacheExchange, fetchExchange]
 })
 
@@ -16,7 +16,7 @@ export type PostData = {
 	createdAt: Date
 }
 
-export async function getPosts(author: Address): Promise<PostData[]> {
+export async function getPosts(params: { author?: Address; includeReplies?: boolean }): Promise<PostData[]> {
 	return (
 		await client
 			.query(
@@ -28,7 +28,8 @@ export async function getPosts(author: Address): Promise<PostData[]> {
                             orderDirection: desc 
 							where: { and: [
                                 { or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] }, 
-                                { author: "${author}" } 
+                                ${params.author ? `{ author: "${params.author}" }` : ""} ,
+								${params.includeReplies ? "" : `{ parentId: "0x" }`}
                             ] }
 						) {
 							id

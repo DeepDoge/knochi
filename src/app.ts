@@ -1,12 +1,12 @@
+import contracts from "@/../hardhat/scripts/deployed.json"
 import globalCss from "@/styles/global.css"
 import { ethers } from "ethers"
+import { $ } from "master-ts/library/$"
 import { Component, defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
-import { PostDB__factory } from "./typechain"
-import contracts from "@/../hardhat/scripts/deployed.json"
-import { encodePostContent } from "./utils/post-db"
-import { $ } from "master-ts/library/$"
 import { PageRouter } from "./router"
+import { PostDB__factory } from "./typechain"
+import { encodePostContent } from "./utils/post-db"
 
 const appCssSheet = new CSSStyleSheet()
 appCssSheet.replace(globalCss)

@@ -10,7 +10,7 @@ const UserPageComponent = defineComponent("x-user-page")
 export function UserPage(userAddress: SignalReadable<Address>) {
 	const component = new UserPageComponent()
 
-	const posts = $.derive(() => getPosts(userAddress.ref))
+	const posts = $.derive(() => getPosts({ author: userAddress.ref }))
 
 	component.$html = html`
 		<h1>User Page</h1>

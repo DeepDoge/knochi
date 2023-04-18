@@ -5,11 +5,11 @@ import { Post, PostContent, PostMetadata } from "../generated/schema"
 export function handlePost(event: PostEvent): void {
 	let postId = Bytes.fromByteArray(Bytes.fromBigInt(event.params.postId))
 	let post = new Post(postId)
-	const postData = event.params.postData
+	post.parentId = new Bytes(0)
 
+	const postData = event.params.postData
 	const view = new DataView(postData.buffer)
 	const contentIds: string[] = []
-	let parentPostId: Bytes = new Bytes(0)
 
 	let offset = 0
 	let offsetCache = -1
@@ -51,14 +51,13 @@ export function handlePost(event: PostEvent): void {
 		content.save()
 		contentIds.push(content.id)
 
-		if (type === "parent") parentPostId = content.value
+		if (type == "parent") post.parentId = content.value
 
 		i++
 	}
 
 	post.author = event.transaction.from
 	post.contents = contentIds
-	post.parentId = parentPostId
 
 	post.blockNumber = event.block.number
 	post.blockTimestamp = event.block.timestamp
@@ -72,8 +71,9 @@ export function handlePost(event: PostEvent): void {
 
 	post.save()
 
-	if (parentPostId.length > 0) {
-		const parentPostMetadata = new PostMetadata(parentPostId)
+	if (post.parentId.length > 0) {
+		const parentPostMetadata = PostMetadata.load(post.parentId)
+		if (!parentPostMetadata) return
 		parentPostMetadata.replyCount = parentPostMetadata.replyCount.plus(BigInt.fromI32(1))
 		parentPostMetadata.save()
 	}
