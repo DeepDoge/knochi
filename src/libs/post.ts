@@ -1,11 +1,11 @@
-import { PostData } from "@/api/graph"
+import type { PostData } from "@/api/graph"
 import { routeHref } from "@/route"
 import { secondTick } from "@/utils/ticks"
 import { relativeTime } from "@/utils/time"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
-import { SignalReadable } from "master-ts/library/signal/readable"
+import type { SignalReadable } from "master-ts/library/signal/readable"
 import { css, html } from "master-ts/library/template"
 import { WalletAddress } from "./wallet-address"
 
