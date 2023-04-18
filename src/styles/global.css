@@ -1,5 +1,4 @@
-:root,
-:host {
+:root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
@@ -25,15 +24,13 @@
 
 	color-scheme: dark;
 	color: hsl(var(--background-text-hsl));
+	background-color: hsl(var(--background-hsl));
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
-}
-:root {
-	background-color: hsl(var(--background-hsl));
 }
 
 a {

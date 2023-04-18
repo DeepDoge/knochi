@@ -1,7 +1,6 @@
 import type { PostData } from "@/api/graph"
 import { routeHref } from "@/route"
-import { secondTick } from "@/utils/ticks"
-import { relativeTime } from "@/utils/time"
+import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
@@ -47,7 +46,7 @@ export function Post(post: SignalReadable<PostData>) {
 				Replies: ${() => post.ref.replyCount}
 			</div>
 			<div class="created-at">
-				${$.derive(() => relativeTime(post.ref.createdAt), [secondTick, post])}
+				${() => relativeTimeSignal(post.ref.createdAt)}
 			</div>
 		</div>
 	`

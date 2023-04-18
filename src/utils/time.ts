@@ -1,3 +1,7 @@
+import { $ } from "master-ts/library/$"
+import type { SignalReadable } from "master-ts/library/signal/readable"
+import { oneHourTick, oneMinuteTick, oneSecondTick } from "./ticks"
+
 const relativeTimeFormat = new Intl.RelativeTimeFormat()
 
 export function relativeTime(date: Date): string {
@@ -21,4 +25,15 @@ export function relativeTime(date: Date): string {
 	}
 
 	return relativeTimeFormat.format(0, "second")
+}
+
+export function relativeTimeSignal(date: Date): SignalReadable<string> {
+	return $.derive(() => {
+		const diff = Math.floor((new Date().getTime() - date.getTime()) / 1000)
+		if (diff >= 3600) oneHourTick.ref
+		else if (diff >= 60) oneMinuteTick.ref
+		else oneSecondTick.ref
+
+		return relativeTime(date)
+	})
 }
