@@ -81,3 +81,7 @@ input {
 .btn:focus-visible {
 	outline: var(--span) auto currentColor;
 }
+.btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}

@@ -6,7 +6,7 @@ import { UnknownPage } from "./pages/unknown"
 import { UserPage } from "./pages/user"
 import { Address, address } from "./utils/address"
 
-export const PageRouter = $.readable<Component | null>(null, (set) => {
+export const PageRouter = $.readable<Component | null>((set) => {
 	const userPageCache = $.writable<ReturnType<typeof UserPage> | null>(null)
 	const userPageAddressCache = $.writable<Address>(null!)
 

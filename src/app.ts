@@ -1,4 +1,4 @@
-import contracts from "@/../hardhat/deployed.json"
+import networks from "@/../graph/networks.json"
 import globalCss from "@/styles/global.css"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
@@ -22,7 +22,7 @@ await provider.send("eth_requestAccounts", [])
 const signer = provider.getSigner()
 
 const PostDB = new PostDB__factory(signer)
-const postDB = PostDB.attach(contracts.PostDB["mumbai-1"])
+const postDB = PostDB.attach(networks.sepolia.PostDB.address)
 
 async function post(data: Uint8Array) {
 	await postDB.post(data)

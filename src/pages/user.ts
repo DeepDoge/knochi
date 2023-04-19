@@ -1,5 +1,5 @@
-import { getPosts } from "@/api/graph"
-import { Post } from "@/libs/post"
+import { getTimeline } from "@/api/graph"
+import { Timeline } from "@/libs/timeline"
 import type { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
@@ -10,29 +10,15 @@ const UserPageComponent = defineComponent("x-user-page")
 export function UserPage(userAddress: SignalReadable<Address>) {
 	const component = new UserPageComponent()
 
-	const posts = $.derive(() => getPosts({ author: userAddress.ref }))
+	const timeline = $.derive(() => getTimeline({ author: userAddress.ref }))
 
 	component.$html = html`
 		<h1>User Page</h1>
-
-		<div class="posts">
-			${$.await(posts)
-				.placeholder(() => "Loading...")
-				.then((posts) =>
-					$.each(posts)
-						.key((post) => post.id)
-						.as((post) => Post(post))
-				)}
-		</div>
+		${Timeline(timeline)}
 	`
 
 	return component
 }
 UserPageComponent.$css = css`
-	.posts {
-		display: grid;
-		grid-template-columns: minmax(0, 35em);
-		gap: calc(var(--span) * 2.2);
-		justify-content: center;
-	}
+
 `

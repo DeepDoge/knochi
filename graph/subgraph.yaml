@@ -6,7 +6,7 @@ dataSources:
     name: PostDB
     network: mumbai
     source:
-      abi: ./abis/PostDB.json
+      abi: PostDB
       address: "0x56E22a6306b7F966D28E767121E3C9f7AC0Ca8cD"
       startBlock: 34447242
     mapping:

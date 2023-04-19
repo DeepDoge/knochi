@@ -5,5 +5,10 @@
 			"startBlock": 34447242
 		}
 	},
-	"sepolia": {}
+	"sepolia": {
+		"PostDB": {
+			"address": "0xAB8b0d6aA21560AEDfD4D706460dd967d51814EB",
+			"startBlock": 3320423
+		}
+	}
 }
