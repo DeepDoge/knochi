@@ -9,7 +9,7 @@ const TimelineComponent = defineComponent("x-timeline")
 export function Timeline(timeline: SignalReadable<Timeline>) {
 	const component = new TimelineComponent()
 
-	const firstload = $.derive(() => timeline.ref.loadBottom())
+	const firstload = $.derive(() => timeline.ref.loadBottom(), [timeline])
 
 	const loadBottomButton = $.writable<HTMLButtonElement | null>(null)
 	component.$subscribe(loadBottomButton, (button) => (loadBottomButtonObserve.disconnect(), button && loadBottomButtonObserve.observe(button)))
@@ -31,7 +31,7 @@ export function Timeline(timeline: SignalReadable<Timeline>) {
 		<button
             class="btn load-more"
 			ref:=${loadBottomButton} 
-			disabled=${() => (timeline.ref.loading.ref ? true : null)} 
+			disabled=${() => (timeline.ref.loading.ref ? "" : null)} 
 			on:click=${() => timeline.ref.loadBottom()}
 		>
 			Load more

@@ -70,7 +70,6 @@ export function getTimeline(timelineOptions: TimelineOptions): Timeline {
 
 	let loading = $.writable(false)
 	async function loadBottom(count = 128) {
-		await Promise.resolve()
 		if (loading.ref) return
 		loading.ref = true
 		try {
