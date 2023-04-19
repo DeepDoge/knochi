@@ -4,7 +4,8 @@
 	"scripts": {
 		"codegen": "graph codegen",
 		"build": "graph build",
-		"deploy:mumbai": "graph deploy --studio --network:mumbai dforum"
+		"deploy:mumbai": "graph deploy --studio --network:mumbai dforum-mumbai",
+		"deploy:sepolia": "graph deploy --studio --network:sepolia dforum-sepolia"
 	},
 	"dependencies": {
 		"@graphprotocol/graph-cli": "0.46.1",
