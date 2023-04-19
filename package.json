@@ -9,9 +9,9 @@
 		"hardhat:clean": "npm run clean --prefix ./hardhat",
 		"hardhat:dev": "npm run dev --prefix ./hardhat",
 		"hardhat:deploy": "npm run deploy --prefix ./hardhat",
-		"graph:deploy": "npm run deploy --prefix ./graphql",
+		"graph:codegen": "npm run codegen --prefix ./graphql",
 		"graph:build": "npm run build --prefix ./graphql",
-		"graph:codegen": "npm run codegen --prefix ./graphql"
+		"graph:deploy:mumbai": "npm run deploy:mumbai --prefix ./graphql"
 	},
 	"devDependencies": {
 		"@ethersproject/providers": "^5.1.3",

@@ -3,8 +3,7 @@ import { Post as PostEvent } from "../generated/PostDB/PostDB"
 import { Post, PostContent, PostMetadata } from "../generated/schema"
 
 export function handlePost(event: PostEvent): void {
-	let postId = Bytes.fromByteArray(Bytes.fromBigInt(event.params.postId))
-	let post = new Post(postId)
+	let post = new Post(Bytes.fromByteArray(Bytes.fromBigInt(event.params.postId)))
 	post.parentId = new Bytes(0)
 
 	const postData = event.params.postData
@@ -45,7 +44,7 @@ export function handlePost(event: PostEvent): void {
 
 		const idSuffix = new Uint8Array(1)
 		new DataView(idSuffix.buffer).setUint8(0, u8(i))
-		const content = new PostContent(`${postId.toHex()}-${i}`)
+		const content = new PostContent(`${post.id.toHex()}-${i}`)
 		content.type = type
 		content.value = Bytes.fromUint8Array(value)
 		content.save()
@@ -59,9 +58,7 @@ export function handlePost(event: PostEvent): void {
 	post.author = event.transaction.from
 	post.contents = contentIds
 
-	post.blockNumber = event.block.number
 	post.blockTimestamp = event.block.timestamp
-	post.transactionHash = event.transaction.hash
 
 	const postMetadata = new PostMetadata(post.id)
 	postMetadata.replyCount = BigInt.fromI32(0)

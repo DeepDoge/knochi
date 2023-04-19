@@ -4,11 +4,7 @@
 	"scripts": {
 		"codegen": "graph codegen",
 		"build": "graph build",
-		"deploy": "graph deploy --studio dforum",
-		"create-local": "graph create --node http://localhost:8020/ dforum",
-		"remove-local": "graph remove --node http://localhost:8020/ dforum",
-		"deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 dforum",
-		"test": "graph test"
+		"deploy:mumbai": "graph deploy --studio --network:mumbai dforum"
 	},
 	"dependencies": {
 		"@graphprotocol/graph-cli": "0.46.1",

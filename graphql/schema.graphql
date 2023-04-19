@@ -1,12 +1,10 @@
 type Post @entity(immutable: true) {
-	parentId: Bytes!
 	id: Bytes!
-	author: Bytes! # address
+	parentId: Bytes!
+	author: Bytes!
 	contents: [PostContent!]!
 	metadata: PostMetadata!
-	blockNumber: BigInt!
 	blockTimestamp: BigInt!
-	transactionHash: Bytes!
 }
 
 type PostMetadata @entity {

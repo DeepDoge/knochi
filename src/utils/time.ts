@@ -30,6 +30,7 @@ export function relativeTime(date: Date): string {
 export function relativeTimeSignal(date: Date): SignalReadable<string> {
 	return $.derive(() => {
 		const diff = Math.floor((new Date().getTime() - date.getTime()) / 1000)
+		
 		if (diff >= 3600) oneHourTick.ref
 		else if (diff >= 60) oneMinuteTick.ref
 		else oneSecondTick.ref

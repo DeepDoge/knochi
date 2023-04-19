@@ -3,7 +3,7 @@ import { BigNumber, ethers } from "ethers"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 
 const client = createClient({
-	url: "https://api.studio.thegraph.com/query/45351/dforum/v0.0.42",
+	url: "https://api.studio.thegraph.com/query/45351/dforum/v0.0.46",
 	exchanges: [cacheExchange, fetchExchange]
 })
 
@@ -34,6 +34,7 @@ export async function getPosts(params: { author?: Address; includeReplies?: bool
 						) {
 							id
 							parentId
+
 							author
 							contents {
 								type

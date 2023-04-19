@@ -1,13 +1,6 @@
-# Sample Hardhat Project
+# How to deploy
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+Removed deploy script, deploy the contract manually, from remix.ethereum.org or similar.<br/>
+Then update the `deployed.json` by hand.
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+Don't wanna deal with private keys.
