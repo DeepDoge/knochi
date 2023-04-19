@@ -3,7 +3,7 @@ import { BigNumber, ethers } from "ethers"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 
 const client = createClient({
-	url: "https://api.studio.thegraph.com/query/45351/dforum/v0.0.46",
+	url: "https://api.studio.thegraph.com/query/45351/dforum-mumbai/v0.0.46",
 	exchanges: [cacheExchange, fetchExchange]
 })
 
