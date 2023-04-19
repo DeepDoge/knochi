@@ -64,6 +64,8 @@ input {
 }
 
 .btn {
+	position: relative;
+
 	border-radius: var(--radius);
 	border: 1px solid transparent;
 	padding: calc(var(--span) * 0.6) calc(var(--span) * 1.2);
@@ -73,11 +75,26 @@ input {
 	background-color: hsl(var(--base-hsl));
 	color: hsl(var(--base-text-hsl));
 	cursor: pointer;
-	transition: border-color 0.25s;
+	transition: var(--transition);
+	transition-property: border;
 }
-.btn:hover {
-	border-color: hsl(var(--slave-hsl));
+.btn::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background-color: currentColor;
+	opacity: 0;
+	transition: var(--transition);
+	transition-property: opacity;
 }
+.btn:hover::before {
+	opacity: 0.1;
+}
+.btn:active::before {
+	opacity: 0.2;
+}
+
 .btn:focus-visible {
 	outline: var(--span) auto currentColor;
 }
