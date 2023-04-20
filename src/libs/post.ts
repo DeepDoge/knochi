@@ -82,12 +82,15 @@ PostComponent.$css = css`
 		align-items: center;
 		gap: 0.5em;
 
-		& > a::before {
-			content: "@";
+		& > a {
+			padding: calc(var(--span) * 0) calc(var(--span) * 0.5);
+
+			&::before {
+				content: "@";
+			}
 		}
 		& > * {
 			display: block;
-			padding: calc(var(--span) * 0) calc(var(--span) * 0.5);
 			border-radius: var(--radius);
 
 			&:empty {
