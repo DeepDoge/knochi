@@ -12,15 +12,15 @@ export type PostData = {
 	author: Address
 	contents: { type: string; value: Uint8Array }[]
 	createdAt: Date
-	networkId: number
+	chainKey: networks.ChainKey
 }
 
 const clients = Object.entries(networks.graphApis).map(([key, value]) => ({
 	key: key as networks.ChainKey,
 	client: createClient({
 		url: value.url.href,
-		exchanges: [cacheExchange, fetchExchange]
-	})
+		exchanges: [cacheExchange, fetchExchange],
+	}),
 }))
 
 export type TimelineOptions = {
@@ -87,10 +87,10 @@ export function getTimeline(timelineOptions: TimelineOptions): Timeline {
 							author: address(post.author),
 							contents: post.contents.map((content: any): PostData["contents"][number] => ({
 								type: content.type,
-								value: ethers.utils.arrayify(content.value)
+								value: ethers.utils.arrayify(content.value),
 							})),
 							createdAt: new Date(parseInt(post.blockTimestamp) * 1000),
-							networkId: networks.chains[key].id
+							chainKey: key,
 						})
 					) as PostData[]
 
@@ -131,6 +131,6 @@ export function getTimeline(timelineOptions: TimelineOptions): Timeline {
 	return {
 		posts,
 		loading,
-		loadBottom
+		loadBottom,
 	}
 }

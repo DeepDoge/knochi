@@ -24,7 +24,7 @@ export function Timeline(timeline: SignalReadable<Timeline>) {
 				.placeholder(() => "Loading...")
 				.then(() =>
 					$.each($.derive(() => timeline.ref.posts.ref))
-						.key((post) => `${post.networkId}-${post.id}`)
+						.key((post) => `${post.chainKey}-${post.id}`)
 						.as((post) => Post(post))
 				)}
 		</div>

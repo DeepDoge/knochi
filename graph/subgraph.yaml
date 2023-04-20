@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: PostDB
-    network: mumbai
+    network: sepolia
     source:
       abi: PostDB
-      address: "0x56E22a6306b7F966D28E767121E3C9f7AC0Ca8cD"
-      startBlock: 34447242
+      address: "0xAB8b0d6aA21560AEDfD4D706460dd967d51814EB"
+      startBlock: 3320423
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

@@ -1,20 +1,23 @@
 import { Copy2Svg } from "@/assets/svgs/copy2"
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
+import type { SignalReadable } from "master-ts/library/signal/readable"
 import { css, html } from "master-ts/library/template"
 
 const WalletAddressComponent = defineComponent("x-wallet-address")
-export function WalletAddress(address: Address) {
+export function WalletAddress(address: SignalReadable<Address>) {
 	const component = new WalletAddressComponent()
 
 	component.$html = html`
 		<button
-			on:click=${(e) => (e.preventDefault(), navigator.clipboard.writeText(address).then(() => alert(`Address copied to clipboard\nTODO: Add toast notifactions etc..`)))}
+			on:click=${(e) => (
+				e.preventDefault(),
+				navigator.clipboard.writeText(address.ref).then(() => alert(`Address copied to clipboard\nTODO: Add toast notifactions etc..`))
+			)}
 			title=${address}
-			aria-label="wallet address, click to copy"
-		>
+			aria-label="wallet address, click to copy">
 			<x ${Copy2Svg()} aria-hidden></x>
-			<span>${address.substring(0, address.length - 4)}</span><span>${address.substring(address.length - 4)}</span>
+			<span>${() => address.ref.substring(0, address.ref.length - 4)}</span><span>${() => address.ref.substring(address.ref.length - 4)}</span>
 		</button>
 	`
 
@@ -30,24 +33,24 @@ WalletAddressComponent.$css = css`
 		font: inherit;
 		cursor: pointer;
 
-        background-color: transparent;
+		background-color: transparent;
 
-        transition: var(--transition);
-        transition-property: background-color;
+		transition: var(--transition);
+		transition-property: background-color;
 
 		&:hover {
-			background-color: hsl(var(--base-text-hsl), 10%)
+			background-color: hsl(var(--base-text-hsl), 10%);
 		}
 
-        &:active {
-			background-color: hsl(var(--base-text-hsl), 20%)
+		&:active {
+			background-color: hsl(var(--base-text-hsl), 20%);
 		}
 	}
 
 	button {
 		display: inline-grid;
 		grid-template-areas: "address-start address-end . svg";
-		grid-template-columns: 1fr auto .5ch 1em;
+		grid-template-columns: 1fr auto 0.5ch 1em;
 		align-items: center;
 		max-width: 20ch;
 		color: inherit;

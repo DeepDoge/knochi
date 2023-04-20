@@ -1,4 +1,5 @@
 import type { PostData } from "@/api/graph"
+import { networks } from "@/api/networks"
 import { routeHref } from "@/route"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
@@ -25,29 +26,17 @@ export function Post(post: SignalReadable<PostData>) {
 	component.$html = html`
 		<div class="glow-effect"></div>
 		<div class="header">
-			<div class="author">
-				${() => WalletAddress(post.ref.author)}
-			</div>
+			<div class="author">${WalletAddress($.derive(() => post.ref.author))}</div>
 			<div class="chips">
+				<span class="chain" title=${() => networks.chains[post.ref.chainKey].name}>${() => networks.chains[post.ref.chainKey].name}</span>
 				<a class="post-id" href=${() => routeHref({ postId: post.ref.id })}>${() => post.ref.id}</a>
 				<a class="parent-id" href=${routeHref({ postId: post.ref.parentId })}>${() => post.ref.parentId}</a>
 			</div>
 		</div>
-		<div class="content">
-			${() =>
-				textContents.ref.map(
-					(textContent) => html`
-						<div>${textContent}</div>
-					`
-				)}
-		</div>
+		<div class="content">${() => textContents.ref.map((textContent) => html` <div>${textContent}</div> `)}</div>
 		<div class="footer">
-			<div class="reply-count">
-				Replies: ${() => post.ref.replyCount}
-			</div>
-			<div class="created-at">
-				${() => relativeTimeSignal(post.ref.createdAt)}
-			</div>
+			<div class="reply-count">Replies: ${() => post.ref.replyCount}</div>
+			<div class="created-at">${() => relativeTimeSignal(post.ref.createdAt)}</div>
 		</div>
 	`
 
@@ -79,8 +68,8 @@ PostComponent.$css = css`
 	}
 
 	.header {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-auto-flow: column;
 		gap: calc(var(--span) * 0.5);
 		align-items: center;
 		justify-content: space-between;
@@ -88,23 +77,26 @@ PostComponent.$css = css`
 	}
 
 	.chips {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-auto-flow: column;
 		align-items: center;
 		gap: 0.5em;
 
+		& > a::before {
+			content: "@";
+		}
 		& > * {
-			display: grid;
-			grid-auto-flow: column;
-			place-items: center;
+			display: block;
 			padding: calc(var(--span) * 0) calc(var(--span) * 0.5);
 			border-radius: var(--radius);
 
-			&::before {
-				content: "@";
-			}
 			&:empty {
 				display: none;
+			}
+			&.chain {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 			&.post-id {
 				color: hsl(var(--slave-text-hsl));

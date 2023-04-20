@@ -61,6 +61,8 @@ img {
 
 input {
 	font: inherit;
+	max-width: 100%;
+	min-width: 0;
 }
 
 .btn {
