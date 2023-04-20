@@ -1,12 +1,41 @@
-import { BigInt, Bytes } from "@graphprotocol/graph-ts"
+import { Address, BigInt, Bytes, dataSource } from "@graphprotocol/graph-ts"
 import { Post as PostEvent } from "../generated/PostDB/PostDB"
-import { Post, PostContent, PostMetadata } from "../generated/schema"
+import { ChainPostIndexCounter, ContractPostCounter, Post, PostContent, PostReplyCounter, TipPost } from "../generated/schema"
+import { Post as TipPostEvent } from "../generated/TipPostDB/TipPostDB"
+
+const EMPTY_BYTES = new Bytes(0)
+
+export function handleTipPost(event: TipPostEvent): void {
+	const postId = savePost(event.transaction.from, event.block.timestamp, event.params.postData)
+	const tipPost = new TipPost(postId)
+	tipPost.to = event.params.tipTo
+	tipPost.value = event.transaction.value
+}
 
 export function handlePost(event: PostEvent): void {
-	let post = new Post(Bytes.fromByteArray(Bytes.fromBigInt(event.params.postId)))
-	post.parentId = new Bytes(0)
+	savePost(event.transaction.from, event.block.timestamp, event.params.postData)
+}
 
-	const postData = event.params.postData
+export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postData: Bytes): Bytes {
+	let chainPostCounter = ChainPostIndexCounter.load(EMPTY_BYTES)
+	if (!chainPostCounter) {
+		chainPostCounter = new ChainPostIndexCounter(EMPTY_BYTES)
+		chainPostCounter.count = BigInt.fromI32(0)
+	}
+
+	let contractPostCounter = ContractPostCounter.load(dataSource.address())
+	if (!contractPostCounter) {
+		contractPostCounter = new ContractPostCounter(dataSource.address())
+		contractPostCounter.count = BigInt.fromI32(0)
+	}
+
+	let post = new Post(dataSource.address().concat(Bytes.fromByteArray(Bytes.fromBigInt(contractPostCounter.count))))
+
+	post.index = chainPostCounter.count
+	post.parentId = EMPTY_BYTES
+	post.author = transactionFrom
+	post.blockTimestamp = blockTimestamp
+
 	const view = new DataView(postData.buffer)
 	const contentIds: string[] = []
 
@@ -55,23 +84,25 @@ export function handlePost(event: PostEvent): void {
 		i++
 	}
 
-	post.author = event.transaction.from
 	post.contents = contentIds
-
-	post.blockTimestamp = event.block.timestamp
-
-	const postMetadata = new PostMetadata(post.id)
-	postMetadata.replyCount = BigInt.fromI32(0)
-	postMetadata.save()
-
-	post.metadata = post.id
-
 	post.save()
 
 	if (post.parentId.length > 0) {
-		const parentPostMetadata = PostMetadata.load(post.parentId)
-		if (!parentPostMetadata) return
-		parentPostMetadata.replyCount = parentPostMetadata.replyCount.plus(BigInt.fromI32(1))
-		parentPostMetadata.save()
+		let replyCounter = PostReplyCounter.load(post.parentId)
+		if (!replyCounter) {
+			replyCounter = new PostReplyCounter(post.parentId)
+			replyCounter.count = BigInt.fromI32(1)
+		} else {
+			replyCounter.count = replyCounter.count.plus(BigInt.fromI32(1))
+		}
+		replyCounter.save()
 	}
+
+	contractPostCounter.count = contractPostCounter.count.plus(BigInt.fromI32(1))
+	contractPostCounter.save()
+
+	chainPostCounter.count = chainPostCounter.count.plus(BigInt.fromI32(1))
+	chainPostCounter.save()
+
+	return post.id
 }

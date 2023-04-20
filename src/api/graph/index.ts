@@ -5,13 +5,22 @@ import type { SignalReadable } from "master-ts/library/signal/readable"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 import { networks } from "../networks"
 
+export type PostId = string & { _: "PostId" }
+export function postId(postId: string): PostId {
+	return postId as PostId
+}
 export type PostData = {
-	id: BigNumber
-	parentId: BigNumber | null
-	replyCount: BigNumber
+	id: PostId
+	parentId: PostId | null
+	index: BigNumber
+	tip: {
+		to: Address
+		value: BigNumber
+	} | null
 	author: Address
 	contents: { type: string; value: Uint8Array }[]
 	createdAt: Date
+	replyCount: BigNumber
 	chainKey: networks.ChainKey
 }
 
@@ -23,19 +32,44 @@ const clients = Object.entries(networks.graphApis).map(([key, value]) => ({
 	}),
 }))
 
-export type TimelineOptions = {
-	author?: Address
-	includeReplies?: boolean
-}
-
 export type Timeline = {
 	loadBottom(): Promise<void>
 	posts: SignalReadable<PostData[]>
 	loading: SignalReadable<boolean>
 }
 
-export function getTimeline(timelineOptions: TimelineOptions): Timeline {
-	const query = (count: number, beforeTimestamp: number) => gql`
+export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, BigNumber>> {
+	const query = gql`
+		{
+			postReplyCounters(where: { or: [
+				${postIds.map((postId) => `{ id: "${postId}" }`).join("\n")}
+				] 
+			}) {
+				id
+				count
+			}
+		}
+	`
+
+	const replyCountsByChain = (await Promise.all(clients.map(async ({ client }) => (await client.query(query, {})).data.postReplyCounters))) as {
+		id: string
+		count: string
+	}[][]
+
+	const replyCounts: Record<PostId, BigNumber> = {}
+	for (const replyCountsOfChain of replyCountsByChain) {
+		for (const replyCount of replyCountsOfChain) {
+			const id = postId(replyCount.id)
+			const current = replyCounts[id]
+			replyCounts[id] = current ? current.add(replyCount.count) : BigNumber.from(0)
+		}
+	}
+
+	return replyCounts
+}
+
+export function getTimeline(timelineOptions: { author?: Address; includeReplies?: boolean }): Timeline {
+	const query = (count: number, beforeIndex: BigNumber) => gql`
 	{
 		posts(
 			first: ${count.toString()}
@@ -45,19 +79,21 @@ export function getTimeline(timelineOptions: TimelineOptions): Timeline {
 				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] }, 
 				${timelineOptions.author ? `{ author: "${timelineOptions.author}" }` : ""} ,
 				${timelineOptions.includeReplies ? "" : `{ parentId: "0x" }`}
-				{ blockTimestamp_lt: ${beforeTimestamp.toString()} }
+				{ index_lt: ${beforeIndex.toString()} }
 			] }
 		) {
 			id
 			parentId
+			index
 
 			author
 			contents {
 				type
 				value
 			}
-			metadata {
-				replyCount
+			tip {
+				to
+				value
 			}
 			blockTimestamp
 		}
@@ -66,7 +102,7 @@ export function getTimeline(timelineOptions: TimelineOptions): Timeline {
 	const posts = $.writable<PostData[]>([])
 	const postQueuesOfChains = clients.map(() => [] as PostData[])
 	const isChainFinished = new Array(clients.length).fill(false)
-	const lastTimestamp = new Array(clients.length).fill(Number.MAX_SAFE_INTEGER)
+	const lastIndex = new Array(clients.length).fill(Number.MAX_SAFE_INTEGER)
 
 	let loading = $.writable(false)
 	async function loadBottom(count = 128) {
@@ -79,25 +115,35 @@ export function getTimeline(timelineOptions: TimelineOptions): Timeline {
 					if (postQueue.length >= count) return
 					if (isChainFinished[index]) return
 
-					const newPosts = (await client.query(query(count, lastTimestamp[index]!), {}).toPromise()).data.posts.map(
+					const response = await client.query(query(count, lastIndex[index]!), {}).toPromise()
+					if (response.data.posts.length === 0) return
+
+					const replyCounts = await getReplyCounts(response.data.posts.map((post: any) => postId(post.id)))
+
+					const newPosts = response.data.posts.map(
 						(post: any): PostData => ({
-							id: BigNumber.from(post.id),
-							parentId: post.parentId === "0x" ? null : BigNumber.from(post.parentId),
-							replyCount: BigNumber.from(post.metadata.replyCount),
+							id: postId(post.id),
+							parentId: post.parentId === "0x" ? null : postId(post.parentId),
+							index: BigNumber.from(post.index),
 							author: address(post.author),
 							contents: post.contents.map((content: any): PostData["contents"][number] => ({
 								type: content.type,
 								value: ethers.utils.arrayify(content.value),
 							})),
 							createdAt: new Date(parseInt(post.blockTimestamp) * 1000),
+							replyCount: replyCounts[post.id] ?? BigNumber.from(0),
 							chainKey: key,
+							tip: post.tip
+								? {
+										to: address(post.tip.to),
+										value: BigNumber.from(post.tip.value),
+								  }
+								: null,
 						})
 					) as PostData[]
 
-					if (newPosts.length === 0) return
-
 					if (newPosts.length < count) isChainFinished[index] = true
-					lastTimestamp[index] = newPosts[newPosts.length - 1]!.createdAt.getTime() / 1000
+					lastIndex[index] = newPosts[newPosts.length - 1]!.index
 
 					postQueue.push(...newPosts)
 				})

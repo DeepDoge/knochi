@@ -1,19 +1,36 @@
 type Post @entity(immutable: true) {
-	id: Bytes!
-	parentId: Bytes!
-	author: Bytes!
+	id: Bytes! # transaction hash + event index
+	parentId: Bytes! # post id
+	index: BigInt! # for querying
+	author: Bytes! # address
 	contents: [PostContent!]!
-	metadata: PostMetadata!
 	blockTimestamp: BigInt!
-}
-
-type PostMetadata @entity {
-	id: Bytes!
-	replyCount: BigInt!
+	tip: TipPost
 }
 
 type PostContent @entity(immutable: true) {
 	id: String!
 	type: String!
 	value: Bytes!
+}
+
+type PostReplyCounter @entity {
+	id: Bytes! # post id
+	count: BigInt!
+}
+
+type TipPost @entity(immutable: true) {
+	id: Bytes! # post id
+	to: Bytes! # address
+	value: BigInt!
+}
+
+type ContractPostCounter @entity {
+	id: Bytes! # contract address
+	count: BigInt!
+}
+
+type ChainPostIndexCounter @entity {
+	id: Bytes! # empty bytes
+	count: BigInt!
 }

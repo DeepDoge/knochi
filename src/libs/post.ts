@@ -29,8 +29,8 @@ export function Post(post: SignalReadable<PostData>) {
 			<div class="author">${WalletAddress($.derive(() => post.ref.author))}</div>
 			<div class="chips">
 				<span class="chain" title=${() => networks.chains[post.ref.chainKey].name}>${() => networks.chains[post.ref.chainKey].name}</span>
-				<a class="post-id" href=${() => routeHref({ postId: post.ref.id })}>${() => post.ref.id}</a>
-				<a class="parent-id" href=${routeHref({ postId: post.ref.parentId })}>${() => post.ref.parentId}</a>
+				<a class="post-id" href=${() => routeHref({ postId: post.ref.id })}>${() => post.ref.index}</a>
+				<a class="parent-id" href=${() => routeHref({ postId: post.ref.parentId })}>${() => post.ref.parentId && "parent"}</a>
 			</div>
 		</div>
 		<div class="content">${() => textContents.ref.map((textContent) => html` <div>${textContent}</div> `)}</div>
