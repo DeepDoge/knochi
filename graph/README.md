@@ -2,7 +2,7 @@
 
 Update the `subgraph.yaml` and `abis` by hand if you wanna change contracts and stuff.
 
-Use `graph auth {token}` to auth.
+Use `npx graph auth {token}` to auth (you don't have to `cd` in `graph/`).
 
 Then `npm run deploy` that simple.
 
