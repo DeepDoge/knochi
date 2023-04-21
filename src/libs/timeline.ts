@@ -18,23 +18,26 @@ export function Timeline(timeline: SignalReadable<Timeline>) {
 		timeline.ref.loadBottom()
 	})
 
+	const loading = $.derive(() => timeline.ref.loading.ref)
+
 	component.$html = html`
+		${() => (!loading.ref && timeline.ref.posts.ref.length === 0 ? html`<div class="no-posts">No Posts</div>` : null)}
 		<div class="posts">
 			${$.await(firstload)
 				.placeholder(() => "Loading...")
 				.then(() =>
 					$.each($.derive(() => timeline.ref.posts.ref))
 						.key((post) => `${post.chainKey}-${post.id}`)
-						.as((post) => Post(post))
+						.as((post) => $.derive(() => Post(post.ref)))
 				)}
 		</div>
 		<button
             class="btn load-more"
 			ref:=${loadBottomButton} 
-			disabled=${() => (timeline.ref.loading.ref ? "" : null)} 
+			disabled=${() => (loading.ref ? "" : null)}
 			on:click=${() => timeline.ref.loadBottom()}
 		>
-			Load more
+			${() => (loading.ref ? "Loading..." : "Load More")}
 		</button>
 	`
 	loadBottomButtonObserve.observe(loadBottomButton.ref!)
@@ -49,10 +52,22 @@ TimelineComponent.$css = css`
 
 	button.load-more {
 		justify-self: center;
+
+		&:not(:disabled) {
+			display: none;
+		}
 	}
 
 	.posts {
 		display: grid;
 		gap: calc(var(--span) * 2.2);
+	}
+
+	.no-posts {
+		display: grid;
+		place-items: center;
+		font-style: italic;
+		padding: var(--span);
+		opacity: 0.75;
 	}
 `

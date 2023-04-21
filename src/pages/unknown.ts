@@ -1,13 +1,18 @@
+import { createLayout } from "@/router"
 import { defineComponent } from "master-ts/library/component"
 import { html } from "master-ts/library/template"
 
-const UnknownPageComponent = defineComponent("x-unknown-page")
-export function UnknownPage() {
-	const component = new UnknownPageComponent()
+export const unknownLayout = createLayout<void>(() => {
+	const PageComponent = defineComponent("x-unknown-layout-page")
+	const page = new PageComponent()
+	page.$html = html` <h1>Unknown Page</h1> `
 
-	component.$html = html`
-		<h1>Unknown Page</h1>
-	`
+	const TopComponent = defineComponent("x-unknown-layout-top")
+	const top = new TopComponent()
+	top.$html = html``
 
-	return component
-}
+	return {
+		top,
+		page,
+	}
+})

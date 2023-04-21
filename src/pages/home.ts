@@ -1,13 +1,18 @@
+import { createLayout } from "@/router"
 import { defineComponent } from "master-ts/library/component"
 import { html } from "master-ts/library/template"
 
-const HomePageComponent = defineComponent("x-home-page")
-export function HomePage() {
-	const component = new HomePageComponent()
+export const homeLayout = createLayout<void>(() => {
+	const PageComponent = defineComponent("x-home-layout-page")
+	const page = new PageComponent()
+	page.$html = html` <h1>Home</h1> `
 
-	component.$html = html`
-		<h1>Home</h1>
-	`
+	const TopComponent = defineComponent("x-home-layout-top")
+	const top = new TopComponent()
+	top.$html = html``
 
-	return component
-}
+	return {
+		top,
+		page,
+	}
+})

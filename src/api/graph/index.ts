@@ -1,4 +1,4 @@
-import { address, Address } from "@/utils/address"
+import { Address } from "@/utils/address"
 import { BigNumber, ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal/readable"
@@ -6,7 +6,7 @@ import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 import { networks } from "../networks"
 
 export type PostId = string & { _: "PostId" }
-export function postId(postId: string): PostId {
+export function PostId(postId: string): PostId {
 	return postId as PostId
 }
 export type PostData = {
@@ -26,11 +26,17 @@ export type PostData = {
 
 const clients = Object.entries(networks.graphApis).map(([key, value]) => ({
 	key: key as networks.ChainKey,
-	client: createClient({
+	urqlClient: createClient({
 		url: value.url.href,
 		exchanges: [cacheExchange, fetchExchange],
 	}),
 }))
+const contractAddressToClientMap: Record<Address, typeof clients[number]> = {}
+for (const client of clients) {
+	for (const contract of Object.values(networks.subgraphs[client.key])) {
+		contractAddressToClientMap[Address(contract.address.toLowerCase())] = client
+	}
+}
 
 export type Timeline = {
 	loadBottom(): Promise<void>
@@ -51,7 +57,9 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 		}
 	`
 
-	const replyCountsByChain = (await Promise.all(clients.map(async ({ client }) => (await client.query(query, {})).data.postReplyCounters))) as {
+	const replyCountsByChain = (await Promise.all(
+		clients.map(async ({ urqlClient: client }) => (await client.query(query, {})).data.postReplyCounters)
+	)) as {
 		id: string
 		count: string
 	}[][]
@@ -59,7 +67,7 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 	const replyCounts: Record<PostId, BigNumber> = {}
 	for (const replyCountsOfChain of replyCountsByChain) {
 		for (const replyCount of replyCountsOfChain) {
-			const id = postId(replyCount.id)
+			const id = PostId(replyCount.id)
 			const current = replyCounts[id]
 			replyCounts[id] = current ? current.add(replyCount.count) : BigNumber.from(0)
 		}
@@ -68,7 +76,57 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 	return replyCounts
 }
 
-export function getTimeline(timelineOptions: { author?: Address; includeReplies?: boolean }): Timeline {
+export async function getPost(postId: PostId): Promise<PostData | null> {
+	const query = gql`
+	{
+		post(id: "${postId}") {
+			id
+			parentId
+			index
+
+			author
+			contents {
+				type
+				value
+			}
+			tip {
+				to
+				value
+			}
+			blockTimestamp
+		}
+	}`
+
+	const contractAddress = Address(ethers.utils.hexlify(ethers.utils.arrayify(postId).subarray(0, 20)))
+	const client = contractAddressToClientMap[contractAddress]
+	if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
+
+	const responsePost = await (await client.urqlClient.query(query, {})).data.post
+
+	const post: PostData = {
+		id: PostId(responsePost.id),
+		parentId: responsePost.parentId === "0x" ? null : PostId(responsePost.parentId),
+		index: BigNumber.from(responsePost.index),
+		author: Address(responsePost.author),
+		contents: responsePost.contents.map((content: any): PostData["contents"][number] => ({
+			type: content.type,
+			value: ethers.utils.arrayify(content.value),
+		})),
+		createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
+		replyCount: (await getReplyCounts([postId]))[postId] ?? BigNumber.from(0),
+		chainKey: client.key,
+		tip: responsePost.tip
+			? {
+					to: Address(responsePost.tip.to),
+					value: BigNumber.from(responsePost.tip.value),
+			  }
+			: null,
+	}
+
+	return post
+}
+
+export function getTimeline(timelineOptions: { author?: Address; parentId?: PostId; includeReplies?: boolean }): Timeline {
 	const query = (count: number, beforeIndex: BigNumber) => gql`
 	{
 		posts(
@@ -76,8 +134,9 @@ export function getTimeline(timelineOptions: { author?: Address; includeReplies?
 			orderBy: blockTimestamp
 			orderDirection: desc 
 			where: { and: [
-				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] }, 
-				${timelineOptions.author ? `{ author: "${timelineOptions.author}" }` : ""} ,
+				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] } 
+				${timelineOptions.author ? `{ author: "${timelineOptions.author}" }` : ""}
+				${timelineOptions.parentId ? `{ parentId: "${timelineOptions.parentId}" }` : ""}
 				${timelineOptions.includeReplies ? "" : `{ parentId: "0x" }`}
 				{ index_lt: ${beforeIndex.toString()} }
 			] }
@@ -110,7 +169,7 @@ export function getTimeline(timelineOptions: { author?: Address; includeReplies?
 		loading.ref = true
 		try {
 			await Promise.all(
-				clients.map(async ({ client, key }, index) => {
+				clients.map(async ({ urqlClient: client, key }, index) => {
 					const postQueue = postQueuesOfChains[index]!
 					if (postQueue.length >= count) return
 					if (isChainFinished[index]) return
@@ -118,14 +177,14 @@ export function getTimeline(timelineOptions: { author?: Address; includeReplies?
 					const response = await client.query(query(count, lastIndex[index]!), {}).toPromise()
 					if (response.data.posts.length === 0) return
 
-					const replyCounts = await getReplyCounts(response.data.posts.map((post: any) => postId(post.id)))
+					const replyCounts = await getReplyCounts(response.data.posts.map((post: any) => PostId(post.id)))
 
 					const newPosts = response.data.posts.map(
 						(post: any): PostData => ({
-							id: postId(post.id),
-							parentId: post.parentId === "0x" ? null : postId(post.parentId),
+							id: PostId(post.id),
+							parentId: post.parentId === "0x" ? null : PostId(post.parentId),
 							index: BigNumber.from(post.index),
-							author: address(post.author),
+							author: Address(post.author),
 							contents: post.contents.map((content: any): PostData["contents"][number] => ({
 								type: content.type,
 								value: ethers.utils.arrayify(content.value),
@@ -135,7 +194,7 @@ export function getTimeline(timelineOptions: { author?: Address; includeReplies?
 							chainKey: key,
 							tip: post.tip
 								? {
-										to: address(post.tip.to),
+										to: Address(post.tip.to),
 										value: BigNumber.from(post.tip.value),
 								  }
 								: null,

@@ -1,7 +1,6 @@
 import networksJson from "@/../graph/networks.json"
 import graphVersionLabel from "@/../graph/version-label.json"
 import type { Address } from "@/utils/address"
-import { BigNumber } from "ethers"
 
 export namespace networks {
 	export type ChainKey = keyof typeof networksJson
@@ -57,17 +56,8 @@ export namespace networks {
 		},
 	} satisfies Record<ChainKey, GraphApi>
 
-	export type Subgraph = {
-		contractAddress: Address
-		startBlock: BigNumber
+	type NestedStringToAddress<T extends Record<string, any>> = {
+		[K in keyof T]: T[K] extends Record<string, any> ? NestedStringToAddress<T[K]> : T[K] extends string ? Address : T[K]
 	}
-	export const subgraphs = Object.fromEntries(
-		Object.entries(networksJson).map(([key, value]) => [
-			key,
-			{
-				contractAddress: value.PostDB.address as Address,
-				startBlock: BigNumber.from(value.PostDB.startBlock),
-			},
-		])
-	) as { [K in ChainKey]: Subgraph }
+	export const subgraphs = networksJson as NestedStringToAddress<typeof networksJson>
 }

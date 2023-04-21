@@ -1,42 +1,39 @@
 import type { PostData } from "@/api/graph"
 import { networks } from "@/api/networks"
+import { CommentSvg } from "@/assets/svgs/comment"
 import { routeHref } from "@/route"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
-import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal/readable"
 import { css, html } from "master-ts/library/template"
-import { WalletAddress } from "./wallet-address"
+import { Profile } from "./profile"
 
 const PostComponent = defineComponent("x-post")
-export function Post(post: SignalReadable<PostData>) {
+export function Post(post: PostData) {
 	const component = new PostComponent()
 
-	const textContents = $.derive(() => {
-		let text = post.ref.contents
-			.filter((content) => content.type === "text")
-			.map((content) => ethers.utils.toUtf8String(content.value))
-			.join("\n")
-			.trim()
-		if (text.length > 128) text = `${text.substring(0, 128).trimEnd()}...`
-		return text.split("\n")
-	})
+	let text = post.contents
+		.filter((content) => content.type === "text")
+		.map((content) => ethers.utils.toUtf8String(content.value))
+		.join("\n")
+		.trim()
+	if (text.length > 128) text = `${text.substring(0, 128).trimEnd()}...`
+	const textContents = text.split("\n")
 
 	component.$html = html`
 		<div class="glow-effect"></div>
 		<div class="header">
-			<div class="author">${WalletAddress($.derive(() => post.ref.author))}</div>
+			<x ${Profile(post.author)} class="author"></x>
 			<div class="chips">
-				<span class="chain" title=${() => networks.chains[post.ref.chainKey].name}>${() => networks.chains[post.ref.chainKey].name}</span>
-				<a class="post-id" href=${() => routeHref({ postId: post.ref.id })}>${() => post.ref.index}</a>
-				<a class="parent-id" href=${() => routeHref({ postId: post.ref.parentId })}>${() => post.ref.parentId && "parent"}</a>
+				<span class="chain" title=${networks.chains[post.chainKey].name}> ${networks.chains[post.chainKey].name} </span>
+				<a class="post-id" href=${routeHref({ postId: post.id })}>${post.index.toString()}</a>
+				<a class="parent-id" href=${routeHref({ postId: post.parentId })}>${post.parentId && "parent"}</a>
 			</div>
 		</div>
-		<div class="content">${() => textContents.ref.map((textContent) => html` <div>${textContent}</div> `)}</div>
+		<div class="content">${textContents.map((textContent) => html` <div>${textContent}</div> `)}</div>
 		<div class="footer">
-			<div class="reply-count">Replies: ${() => post.ref.replyCount}</div>
-			<div class="created-at">${() => relativeTimeSignal(post.ref.createdAt)}</div>
+			<div class="reply-count">${CommentSvg()} ${post.replyCount.toString()}</div>
+			<div class="created-at">${relativeTimeSignal(post.createdAt)}</div>
 		</div>
 	`
 
@@ -48,7 +45,7 @@ PostComponent.$css = css`
 		position: relative;
 		display: grid;
 		gap: calc(var(--span) * 0.5);
-		padding: calc(var(--span) * 1);
+		padding: calc(var(--span) * 0.75) calc(var(--span) * 0.75);
 
 		background-color: hsl(var(--base-hsl));
 		color: hsl(var(--base-text-hsl));
@@ -74,6 +71,10 @@ PostComponent.$css = css`
 		align-items: center;
 		justify-content: space-between;
 		font-size: 0.75em;
+	}
+
+	.author {
+		font-size: 0.95em;
 	}
 
 	.chips {
@@ -124,8 +125,12 @@ PostComponent.$css = css`
 		align-items: center;
 		justify-content: space-between;
 
-		/* 		& > * + *::before {
-			content: "·"
-		} */
+		& .reply-count {
+			display: grid;
+			grid-template-columns: 1.25em auto;
+			gap: calc(var(--span) * 0.25);
+			justify-content: start;
+			align-items: center;
+		}
 	}
 `

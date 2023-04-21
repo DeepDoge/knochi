@@ -1,3 +1,8 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
@@ -67,6 +72,8 @@ input {
 
 .btn {
 	position: relative;
+	display: inline-block;
+	text-align: center;
 
 	border-radius: var(--radius);
 	border: 1px solid transparent;
