@@ -1,6 +1,6 @@
 {
 	"type": "module",
-	"name": "dforum",
+	"name": "eternis",
 	"scripts": {
 		"dev": "vite --port 3000",
 		"build": "vite build",
