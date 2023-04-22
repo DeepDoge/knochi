@@ -167,6 +167,7 @@ export function getTimeline(timelineOptions: { author?: Address; parentId?: Post
 	async function loadBottom(count = 128) {
 		await Promise.resolve() // TODO: need this to stop infinite loop, caused by loading.ref, needs to be fixed later.
 		// the problem is if this function gets called in a derive, it calls loading.ref then sets loading.ref which causes infite dependency loop
+		// error is with the master-ts
 		if (loading.ref) return
 		loading.ref = true
 		try {
