@@ -23,7 +23,7 @@ export function Timeline(timeline: Timeline) {
 		${() => (!loading.ref && timeline.posts.ref.length === 0 ? html`<div class="no-posts">No Posts</div>` : null)}
 		<div class="posts">
 			${$.await(firstload).then(() =>
-				$.each(timeline.posts) /* this needs a fix, we are not suppose to do that */
+				$.each(timeline.posts)
 					.key((post) => `${post.chainKey}-${post.id}`)
 					.as((post) => Post(post))
 			)}
