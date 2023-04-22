@@ -17,10 +17,10 @@ function App() {
 	component.$html = html`
 		<header>${Navigation()}</header>
 		<main>
-			<div class="top">${() => routerLayout.ref.top}</div>
+			${() => routerLayout.ref.top && html`<div class="top">${() => routerLayout.ref.top}</div>`}
 			<div class="bottom">
 				<div class="page">${() => routerLayout.ref.page}</div>
-				${() => (route.postId.ref ? html`<div class="post">${PostPage(route.postId.ref)}</div>` : null)}
+				${() => route.postId.ref && html`<div class="post">${PostPage(route.postId.ref)}</div>`}
 			</div>
 		</main>
 	`
@@ -55,10 +55,6 @@ AppComponent.$css = css`
 		gap: var(--span);
 		padding: 0 var(--span);
 
-		& > .top:empty {
-			display: none;
-		}
-
 		& > .bottom {
 			position: relative;
 			display: grid;
@@ -74,6 +70,20 @@ AppComponent.$css = css`
 					top: 0;
 					height: calc(100vh);
 				}
+			}
+		}
+	}
+
+	@media (max-width: 1023px) {
+		main > .bottom:has(.post) {
+			& > .page {
+				position: fixed;
+				left: -200%;
+			}
+
+			& > .post {
+				position: static;
+				height: auto;
 			}
 		}
 	}
