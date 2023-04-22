@@ -1,16 +1,18 @@
 import { getTimeline } from "@/api/graph"
 import { Profile } from "@/libs/profile"
 import { Timeline } from "@/libs/timeline"
+import { routeHref } from "@/route"
 import { createLayout } from "@/router"
 import type { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 
-export const userLayout = createLayout<{ userAddress: Address }>((params) => {
+export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "replies" | "mentions" }>((params) => {
 	const PageComponent = defineComponent("x-user-layout-page")
 	const page = new PageComponent()
-	const timeline = $.derive(() => getTimeline({ author: params.ref.userAddress }))
+	const timeline = $.derive(() => getTimeline({ author: params.userAddress.ref }))
+
 	PageComponent.$css = css`
 		:host {
 			display: grid;
@@ -33,17 +35,17 @@ export const userLayout = createLayout<{ userAddress: Address }>((params) => {
 	page.$html = html` <nav class="tabs">
 			<ul>
 				<li>
-					<a class="btn link" href="">Posts</a>
+					<a class="btn link" href=${() => routeHref({ path: `${params.userAddress.ref}/posts` })}>Posts</a>
 				</li>
 				<li>
-					<a class="btn link" href="">Replies</a>
+					<a class="btn link" href=${() => routeHref({ path: `${params.userAddress.ref}/replies` })}>Replies</a>
 				</li>
 				<li>
-					<a class="btn link" href="">Mentions</a>
+					<a class="btn link" href=${() => routeHref({ path: `${params.userAddress.ref}/mentions` })}>Mentions</a>
 				</li>
 			</ul>
 		</nav>
-		${Timeline(timeline)}`
+		${() => Timeline(timeline.ref)}`
 
 	const TopComponent = defineComponent("x-user-layout-top")
 	const top = new TopComponent()
@@ -52,7 +54,7 @@ export const userLayout = createLayout<{ userAddress: Address }>((params) => {
 			font-size: 1.1em;
 		}
 	`
-	top.$html = html` <div class="profile">${Profile($.derive(() => params.ref.userAddress))}</div> `
+	top.$html = html` <div class="profile">${Profile($.derive(() => params.userAddress.ref))}</div> `
 
 	return {
 		top,

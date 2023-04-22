@@ -4,7 +4,6 @@ import { route, routeHref } from "@/route"
 import { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
 import type { Component } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal/readable"
 import type { SignalWritable } from "master-ts/library/signal/writable"
 import { userLayout } from "./pages/user"
 
@@ -13,23 +12,41 @@ export type Layout = {
 	page: Component
 }
 
-export function createLayout<T>(factory: (params: SignalReadable<T>) => Layout) {
+export function createLayout<T extends Record<PropertyKey, any>>(factory: (params: { [K in keyof T]: SignalWritable<T[K]> }) => Layout) {
 	let cache: Layout | null = null
-	let paramsSignal: SignalWritable<T>
-	return (params: T) => (cache ? ((paramsSignal.ref = params), cache) : (cache = factory((paramsSignal = $.writable(params)))))
+	let paramsSignal: { [K in keyof T]: SignalWritable<T[K]> }
+	return (params: T) =>
+		cache
+			? (Object.keys(params).forEach((key) => (paramsSignal[key]!.ref = params[key])), cache)
+			: (cache = factory(
+					(paramsSignal = Object.fromEntries(Object.entries(params).map(([key, value]) => [key, $.writable(value)])) as {
+						[K in keyof T]: SignalWritable<T[K]>
+					})
+			  ))
 }
 
 export const routerLayout = $.readable<Layout>((set) => {
 	return route.path.subscribe(
 		(path) => {
 			if (path === "") {
-				set(homeLayout())
-			} else if (path.startsWith("0x") && path.length === 42) {
-				const userAddress = Address(path)
-				set(userLayout({ userAddress }))
-				location.replace(routeHref({ path: userAddress }))
+				set(homeLayout({}))
+			} else if (path.startsWith("0x") && path.length >= 42) {
+				const [address, tab] = path.split("/") as [string, string | undefined]
+				const userAddress = Address(address)
+				switch (tab) {
+					case "posts":
+					case "replies":
+					case "mentions":
+						set(userLayout({ userAddress, tab }))
+						location.replace(routeHref({ path: `${userAddress}/${tab}` }))
+						break
+					default:
+						set(userLayout({ userAddress, tab: "posts" }))
+						location.replace(routeHref({ path: `${userAddress}/posts` }))
+						break
+				}
 			} else {
-				set(unknownLayout())
+				set(unknownLayout({}))
 			}
 		},
 		{ mode: "immediate" }

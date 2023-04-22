@@ -31,17 +31,11 @@ const clients = Object.entries(networks.graphApis).map(([key, value]) => ({
 		exchanges: [cacheExchange, fetchExchange],
 	}),
 }))
-const contractAddressToClientMap: Record<Address, typeof clients[number]> = {}
+const contractAddressToClientMap: Record<Address, (typeof clients)[number]> = {}
 for (const client of clients) {
 	for (const contract of Object.values(networks.subgraphs[client.key])) {
 		contractAddressToClientMap[Address(contract.address.toLowerCase())] = client
 	}
-}
-
-export type Timeline = {
-	loadBottom(): Promise<void>
-	posts: SignalReadable<PostData[]>
-	loading: SignalReadable<boolean>
 }
 
 export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, BigNumber>> {
@@ -126,6 +120,12 @@ export async function getPost(postId: PostId): Promise<PostData | null> {
 	return post
 }
 
+export type Timeline = {
+	loadBottom(): Promise<void>
+	posts: SignalReadable<PostData[]>
+	loading: SignalReadable<boolean>
+}
+
 export function getTimeline(timelineOptions: { author?: Address; parentId?: PostId; includeReplies?: boolean }): Timeline {
 	const query = (count: number, beforeIndex: BigNumber) => gql`
 	{
@@ -165,6 +165,8 @@ export function getTimeline(timelineOptions: { author?: Address; parentId?: Post
 
 	let loading = $.writable(false)
 	async function loadBottom(count = 128) {
+		await Promise.resolve() // TODO: need this to stop infinite loop, caused by loading.ref, needs to be fixed later.
+		// the problem is if this function gets called in a derive, it calls loading.ref then sets loading.ref which causes infite dependency loop
 		if (loading.ref) return
 		loading.ref = true
 		try {

@@ -26,7 +26,7 @@ export function PostPage(postId: PostId) {
 			</div>
 			<div class="replies">
 				<h3>Replies</h3>
-				${Timeline(repliesTimeline)}
+				${() => Timeline(repliesTimeline.ref)}
 			</div>
 		</div>
 	`
