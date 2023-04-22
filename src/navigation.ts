@@ -3,6 +3,7 @@ import { css, html } from "master-ts/library/template"
 import { ChartSvg } from "./assets/svgs/chart"
 import { HomeSvg } from "./assets/svgs/home"
 import { SearchSvg } from "./assets/svgs/search"
+import { GlowEffect } from "./libs/effects/glow"
 
 const NavigationComponent = defineComponent("x-navigation")
 export function Navigation() {
@@ -10,6 +11,7 @@ export function Navigation() {
 
 	component.$html = html`
 		<nav>
+			${GlowEffect()}
 			<ul>
 				<li>
 					<a href="#" class="active" aria-label="home" title="Home">
@@ -39,16 +41,6 @@ NavigationComponent.$css = css`
 		background-color: hsl(var(--base-hsl));
 		border: solid 1px hsl(var(--master-hsl));
 		border-radius: var(--radius-fab);
-
-		&::before {
-			content: "";
-			position: absolute;
-			inset: 0;
-			background-color: hsl(var(--master-hsl));
-			border-radius: inherit;
-			z-index: -1;
-			filter: blur(0.25rem);
-		}
 
 		& > ul {
 			list-style: none;

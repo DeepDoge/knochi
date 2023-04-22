@@ -14,11 +14,11 @@
 	--slave-hsl: 156, 86%, 36%;
 	--slave-text-hsl: 0, 0%, 100%;
 
-	--background-hsl: 246, 49%, 8%;
-	--background-text-hsl: 0, 0%, 100%;
-
-	--base-hsl: 249, 48%, 12%;
+	--base-hsl: 246, 49%, 20%;
 	--base-text-hsl: 0, 0%, 100%;
+
+	--background-hsl: 246, 49%, 10%;
+	--background-text-hsl: 0, 0%, 100%;
 
 	--radius: 0.5em;
 	--radius-fab: 100000vw;

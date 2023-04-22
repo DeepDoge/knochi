@@ -8,7 +8,8 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal/readable"
 import { css, html } from "master-ts/library/template"
-import { Profile } from "./profile"
+import { Profile } from "@/libs/profile"
+import { GlowEffect } from "./effects/glow"
 
 const PostComponent = defineComponent("x-post")
 export function Post(post: SignalReadable<PostData>) {
@@ -23,13 +24,13 @@ export function Post(post: SignalReadable<PostData>) {
 	const textContents = text.split("\n")
 
 	component.$html = html`
-		<div class="glow-effect"></div>
+		${GlowEffect()}
 		<div class="header">
 			<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
 			<div class="chips">
 				<span class="chain" title=${() => networks.chains[post.ref.chainKey].name}> ${networks.chains[post.ref.chainKey].name} </span>
-				<a class="post-id" href=${() => routeHref({ postId: post.ref.id })}>${post.ref.index.toString()}</a>
-				<a class="parent-id" href=${() => routeHref({ postId: post.ref.parentId })}>${post.ref.parentId && "parent"}</a>
+				<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}>${post.ref.index.toString()}</a>
+				<a class="id parent-id" href=${() => routeHref({ postId: post.ref.parentId })}>${post.ref.parentId && "parent"}</a>
 			</div>
 		</div>
 		<a class="content" href=${() => routeHref({ postId: post.ref.id })}
@@ -56,16 +57,6 @@ PostComponent.$css = css`
 
 		border-radius: var(--radius);
 		border: calc(var(--span) * 0.1) solid hsl(var(--master-hsl), 25%);
-	}
-
-	.glow-effect {
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-
-		border-radius: inherit;
-		background-color: hsl(var(--master-hsl), 25%);
-		filter: blur(1rem);
 	}
 
 	.header {
@@ -106,13 +97,9 @@ PostComponent.$css = css`
 				text-overflow: ellipsis;
 				white-space: nowrap;
 			}
-			&.post-id {
+			&.id {
 				color: hsl(var(--slave-text-hsl));
-				background-color: hsl(var(--slave-hsl), 50%);
-			}
-			&.parent-id {
-				color: hsl(var(--master-text-hsl));
-				background-color: hsl(var(--master-hsl), 50%);
+				background-color: hsl(var(--slave-hsl), 75%);
 			}
 		}
 	}

@@ -37,7 +37,7 @@ export function PostPage(postId: PostId) {
 PostPageComponent.$css = css`
 	:host {
 		display: grid;
-		gap: calc(var(--span) * 1.5);
+		gap: calc(var(--span) * 1);
 	}
 
 	.top {
