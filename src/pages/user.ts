@@ -11,11 +11,13 @@ import { css, html } from "master-ts/library/template"
 export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "replies" | "mentions" }>((params) => {
 	const PageComponent = defineComponent("x-user-layout-page")
 	const page = new PageComponent()
-	const timeline = $.match(params.tab)
-		.case("posts", () => $.derive(() => getTimeline({ author: params.userAddress.ref })))
-		.case("replies", () => $.derive(() => getTimeline({ author: params.userAddress.ref, replies: "only" })))
-		.case("mentions", () => $.derive(() => getTimeline({}))) // TODO: index mentions
-		.render()
+	const timeline = $.flatten(
+		$.match(params.tab)
+			.case("posts", () => $.derive(() => getTimeline({ author: params.userAddress.ref })))
+			.case("replies", () => $.derive(() => getTimeline({ author: params.userAddress.ref, replies: "only" })))
+			.case("mentions", () => $.derive(() => getTimeline({}))) // TODO: index mentions
+			.render()
+	)
 
 	PageComponent.$css = css`
 		:host {
@@ -68,7 +70,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 				</li>
 			</ul>
 		</nav>
-		${() => Timeline(timeline.ref.ref)}`
+		${() => Timeline(timeline.ref)}`
 
 	const TopComponent = defineComponent("x-user-layout-top")
 	const top = new TopComponent()
