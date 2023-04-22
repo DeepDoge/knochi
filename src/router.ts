@@ -9,7 +9,7 @@ import type { SignalWritable } from "master-ts/library/signal/writable"
 import { userLayout } from "./pages/user"
 
 export type Layout = {
-	top: Component
+	top: Component | null
 	page: Component
 }
 

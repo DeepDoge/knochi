@@ -7,12 +7,8 @@ export const unknownLayout = createLayout<void>(() => {
 	const page = new PageComponent()
 	page.$html = html` <h1>Unknown Page</h1> `
 
-	const TopComponent = defineComponent("x-unknown-layout-top")
-	const top = new TopComponent()
-	top.$html = html``
-
 	return {
-		top,
+		top: null,
 		page,
 	}
 })

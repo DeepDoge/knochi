@@ -7,12 +7,8 @@ export const homeLayout = createLayout<void>(() => {
 	const page = new PageComponent()
 	page.$html = html` <h1>Home</h1> `
 
-	const TopComponent = defineComponent("x-home-layout-top")
-	const top = new TopComponent()
-	top.$html = html``
-
 	return {
-		top,
+		top: null,
 		page,
 	}
 })

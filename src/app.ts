@@ -55,6 +55,10 @@ AppComponent.$css = css`
 		gap: var(--span);
 		padding: 0 var(--span);
 
+		& > .top:empty {
+			display: none;
+		}
+
 		& > .bottom {
 			position: relative;
 			display: grid;
