@@ -33,13 +33,13 @@ export const userLayout = createLayout<{ userAddress: Address }>((params) => {
 	page.$html = html` <nav class="tabs">
 			<ul>
 				<li>
-					<a class="btn" href="">Posts</a>
+					<a class="btn link" href="">Posts</a>
 				</li>
 				<li>
-					<a class="btn" href="">Replies</a>
+					<a class="btn link" href="">Replies</a>
 				</li>
 				<li>
-					<a class="btn" href="">Mentions</a>
+					<a class="btn link" href="">Mentions</a>
 				</li>
 			</ul>
 		</nav>

@@ -2,6 +2,7 @@ import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 import { ChartSvg } from "./assets/svgs/chart"
 import { HomeSvg } from "./assets/svgs/home"
+import { SearchSvg } from "./assets/svgs/search"
 
 const NavigationComponent = defineComponent("x-navigation")
 export function Navigation() {
@@ -13,6 +14,11 @@ export function Navigation() {
 				<li>
 					<a href="#" class="active" aria-label="home" title="Home">
 						<x ${HomeSvg()} class="icon"></x>
+					</a>
+				</li>
+				<li>
+					<a href="#" aria-label="search" title="Search">
+						<x ${SearchSvg()} class="icon"></x>
 					</a>
 				</li>
 				<li>
@@ -51,7 +57,7 @@ NavigationComponent.$css = css`
 			display: grid;
 			grid-auto-flow: column;
 			align-items: center;
-			gap: var(--span);
+			gap: calc(var(--span) * 1.5);
 
 			& .icon {
 				height: min(1.75em, 5vh);

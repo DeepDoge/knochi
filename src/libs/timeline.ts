@@ -23,13 +23,11 @@ export function Timeline(timeline: SignalReadable<Timeline>) {
 	component.$html = html`
 		${() => (!loading.ref && timeline.ref.posts.ref.length === 0 ? html`<div class="no-posts">No Posts</div>` : null)}
 		<div class="posts">
-			${$.await(firstload)
-				.placeholder(() => "Loading...")
-				.then(() =>
-					$.each($.derive(() => timeline.ref.posts.ref))
-						.key((post) => `${post.chainKey}-${post.id}`)
-						.as((post) => $.derive(() => Post(post.ref)))
-				)}
+			${$.await(firstload).then(() =>
+				$.each($.derive(() => timeline.ref.posts.ref))
+					.key((post) => `${post.chainKey}-${post.id}`)
+					.as((post) => $.derive(() => Post(post.ref)))
+			)}
 		</div>
 		<button
             class="btn load-more"

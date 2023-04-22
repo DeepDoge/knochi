@@ -30,7 +30,7 @@ export function Post(post: PostData) {
 				<a class="parent-id" href=${routeHref({ postId: post.parentId })}>${post.parentId && "parent"}</a>
 			</div>
 		</div>
-		<div class="content">${textContents.map((textContent) => html` <div>${textContent}</div> `)}</div>
+		<a class="content" href=${routeHref({ postId: post.id })}>${textContents.map((textContent) => html` <div>${textContent}</div> `)}</a>
 		<div class="footer">
 			<div class="reply-count">${CommentSvg()} ${post.replyCount.toString()}</div>
 			<div class="created-at">${relativeTimeSignal(post.createdAt)}</div>

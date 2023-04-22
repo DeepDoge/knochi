@@ -39,11 +39,14 @@
 }
 
 a {
-	font-weight: 500;
-	color: hsl(var(--slave-hsl));
 	text-decoration: inherit;
+	color: inherit;
 }
-a:hover {
+
+.link {
+	color: hsl(var(--slave-hsl));
+}
+.link:hover {
 	color: hsl(var(--slave-hsl));
 }
 
