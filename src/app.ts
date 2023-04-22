@@ -43,6 +43,11 @@ AppComponent.$css = css`
 		display: grid;
 		justify-content: center;
 		align-items: center;
+
+		pointer-events: none;
+		& > * {
+			pointer-events: all;
+		}
 	}
 
 	main {
