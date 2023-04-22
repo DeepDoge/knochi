@@ -14,7 +14,7 @@
 	--slave-hsl: 156, 86%, 36%;
 	--slave-text-hsl: 0, 0%, 100%;
 
-	--base-hsl: 246, 49%, 20%;
+	--base-hsl: 246, 49%, 16%;
 	--base-text-hsl: 0, 0%, 100%;
 
 	--background-hsl: 246, 49%, 10%;
@@ -29,13 +29,16 @@
 
 	color-scheme: dark;
 	color: hsl(var(--background-text-hsl));
-	background-color: hsl(var(--background-hsl));
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	background-color: hsl(var(--background-hsl));
 }
 
 a {

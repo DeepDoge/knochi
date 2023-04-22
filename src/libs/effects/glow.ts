@@ -16,6 +16,6 @@ GlowEffectComponent.$css = css`
 
 		border-radius: inherit;
 		background-color: hsl(var(--master-hsl), 50%);
-		filter: blur(1rem);
+		filter: blur(0.5rem);
 	}
 `
