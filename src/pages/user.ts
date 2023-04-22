@@ -11,7 +11,11 @@ import { css, html } from "master-ts/library/template"
 export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "replies" | "mentions" }>((params) => {
 	const PageComponent = defineComponent("x-user-layout-page")
 	const page = new PageComponent()
-	const timeline = $.derive(() => getTimeline({ author: params.userAddress.ref }))
+	const timeline = $.match(params.tab)
+		.case("posts", () => $.derive(() => getTimeline({ author: params.userAddress.ref })))
+		.case("replies", () => $.derive(() => getTimeline({ author: params.userAddress.ref, replies: "only" })))
+		.case("mentions", () => $.derive(() => getTimeline({}))) // TODO: index mentions
+		.render()
 
 	PageComponent.$css = css`
 		:host {
@@ -31,21 +35,40 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 		.tabs ul li {
 			display: grid;
 		}
+
+		.tabs ul li a.active {
+			background-color: hsl(var(--master-hsl), 75%);
+		}
 	`
 	page.$html = html` <nav class="tabs">
 			<ul>
 				<li>
-					<a class="btn link" href=${() => routeHref({ path: `${params.userAddress.ref}/posts` })}>Posts</a>
+					<a
+						class="btn"
+						class:active=${() => params.tab.ref === "posts"}
+						href=${() => routeHref({ path: `${params.userAddress.ref}/posts` })}>
+						Posts
+					</a>
 				</li>
 				<li>
-					<a class="btn link" href=${() => routeHref({ path: `${params.userAddress.ref}/replies` })}>Replies</a>
+					<a
+						class="btn"
+						class:active=${() => params.tab.ref === "replies"}
+						href=${() => routeHref({ path: `${params.userAddress.ref}/replies` })}>
+						Replies
+					</a>
 				</li>
 				<li>
-					<a class="btn link" href=${() => routeHref({ path: `${params.userAddress.ref}/mentions` })}>Mentions</a>
+					<a
+						class="btn"
+						class:active=${() => params.tab.ref === "mentions"}
+						href=${() => routeHref({ path: `${params.userAddress.ref}/mentions` })}>
+						Mentions
+					</a>
 				</li>
 			</ul>
 		</nav>
-		${() => Timeline(timeline.ref)}`
+		${() => Timeline(timeline.ref.ref)}`
 
 	const TopComponent = defineComponent("x-user-layout-top")
 	const top = new TopComponent()

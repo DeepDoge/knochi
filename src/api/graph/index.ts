@@ -126,7 +126,7 @@ export type Timeline = {
 	loading: SignalReadable<boolean>
 }
 
-export function getTimeline(timelineOptions: { author?: Address; parentId?: PostId; includeReplies?: boolean }): Timeline {
+export function getTimeline(timelineOptions: { author?: Address; parentId?: PostId; replies?: "include" | "only" }): Timeline {
 	const query = (count: number, beforeIndex: BigNumber) => gql`
 	{
 		posts(
@@ -137,7 +137,7 @@ export function getTimeline(timelineOptions: { author?: Address; parentId?: Post
 				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] } 
 				${timelineOptions.author ? `{ author: "${timelineOptions.author}" }` : ""}
 				${timelineOptions.parentId ? `{ parentId: "${timelineOptions.parentId}" }` : ""}
-				${timelineOptions.includeReplies ? "" : `{ parentId: "0x" }`}
+				${timelineOptions.replies === "include" ? "" : timelineOptions.replies === "only" ? `{ parentId_not: "0x" }` : `{ parentId: "0x" }`}
 				{ index_lt: ${beforeIndex.toString()} }
 			] }
 		) {
