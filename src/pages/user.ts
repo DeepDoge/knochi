@@ -16,7 +16,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 			.case("posts", () => $.derive(() => getTimeline({ author: params.userAddress.ref })))
 			.case("replies", () => $.derive(() => getTimeline({ author: params.userAddress.ref, replies: "only" })))
 			.case("mentions", () => $.derive(() => getTimeline({}))) // TODO: index mentions
-			.render()
+			.default()
 	)
 
 	PageComponent.$css = css`
