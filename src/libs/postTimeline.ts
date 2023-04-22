@@ -19,7 +19,11 @@ export function PostPage(postId: PostId) {
 			<span class="title">Post</span>
 		</div>
 		<div class="content">
-			<div class="family">${() => post.ref && Post(post.ref)}</div>
+			<div class="family">
+				${$.match(post)
+					.case(null, () => null)
+					.default((post) => Post(post))}
+			</div>
 			<div class="replies">
 				<h3>Replies</h3>
 				${Timeline(repliesTimeline)}

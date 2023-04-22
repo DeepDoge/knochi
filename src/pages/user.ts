@@ -52,7 +52,7 @@ export const userLayout = createLayout<{ userAddress: Address }>((params) => {
 			font-size: 1.1em;
 		}
 	`
-	top.$html = html` <div class="profile">${() => Profile(params.ref.userAddress)}</div> `
+	top.$html = html` <div class="profile">${Profile($.derive(() => params.ref.userAddress))}</div> `
 
 	return {
 		top,

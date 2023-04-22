@@ -4,15 +4,17 @@ import { CommentSvg } from "@/assets/svgs/comment"
 import { routeHref } from "@/route"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
+import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
+import type { SignalReadable } from "master-ts/library/signal/readable"
 import { css, html } from "master-ts/library/template"
 import { Profile } from "./profile"
 
 const PostComponent = defineComponent("x-post")
-export function Post(post: PostData) {
+export function Post(post: SignalReadable<PostData>) {
 	const component = new PostComponent()
 
-	let text = post.contents
+	let text = post.ref.contents
 		.filter((content) => content.type === "text")
 		.map((content) => ethers.utils.toUtf8String(content.value))
 		.join("\n")
@@ -23,17 +25,19 @@ export function Post(post: PostData) {
 	component.$html = html`
 		<div class="glow-effect"></div>
 		<div class="header">
-			<x ${Profile(post.author)} class="author"></x>
+			<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
 			<div class="chips">
-				<span class="chain" title=${networks.chains[post.chainKey].name}> ${networks.chains[post.chainKey].name} </span>
-				<a class="post-id" href=${routeHref({ postId: post.id })}>${post.index.toString()}</a>
-				<a class="parent-id" href=${routeHref({ postId: post.parentId })}>${post.parentId && "parent"}</a>
+				<span class="chain" title=${() => networks.chains[post.ref.chainKey].name}> ${networks.chains[post.ref.chainKey].name} </span>
+				<a class="post-id" href=${() => routeHref({ postId: post.ref.id })}>${post.ref.index.toString()}</a>
+				<a class="parent-id" href=${() => routeHref({ postId: post.ref.parentId })}>${post.ref.parentId && "parent"}</a>
 			</div>
 		</div>
-		<a class="content" href=${routeHref({ postId: post.id })}>${textContents.map((textContent) => html` <div>${textContent}</div> `)}</a>
+		<a class="content" href=${() => routeHref({ postId: post.ref.id })}
+			>${textContents.map((textContent) => html` <div>${textContent}</div> `)}</a
+		>
 		<div class="footer">
-			<div class="reply-count">${CommentSvg()} ${post.replyCount.toString()}</div>
-			<div class="created-at">${relativeTimeSignal(post.createdAt)}</div>
+			<div class="reply-count">${() => CommentSvg()} ${post.ref.replyCount.toString()}</div>
+			<div class="created-at">${() => relativeTimeSignal(post.ref.createdAt)}</div>
 		</div>
 	`
 

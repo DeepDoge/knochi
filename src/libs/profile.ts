@@ -1,10 +1,11 @@
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
+import type { SignalReadable } from "master-ts/library/signal/readable"
 import { css, html } from "master-ts/library/template"
 import { WalletAddress } from "./wallet-address"
 
 const ProfileComponent = defineComponent("x-profile")
-export function Profile(address: Address) {
+export function Profile(address: SignalReadable<Address>) {
 	const component = new ProfileComponent()
 
 	component.$html = html`

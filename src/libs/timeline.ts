@@ -26,7 +26,7 @@ export function Timeline(timeline: SignalReadable<Timeline>) {
 			${$.await(firstload).then(() =>
 				$.each($.derive(() => timeline.ref.posts.ref))
 					.key((post) => `${post.chainKey}-${post.id}`)
-					.as((post) => $.derive(() => Post(post.ref)))
+					.as((post) => Post(post))
 			)}
 		</div>
 		<button
