@@ -36,12 +36,11 @@ AppComponent.$css = css`
 
 	header {
 		position: fixed;
-		bottom: var(--span);
+		bottom: 0;
 		width: 100%;
 		z-index: 10;
 
 		display: grid;
-		justify-content: center;
 		align-items: center;
 
 		pointer-events: none;

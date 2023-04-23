@@ -1,3 +1,4 @@
+import { routeHref } from "@/route"
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal/readable"
@@ -9,8 +10,8 @@ export function Profile(address: SignalReadable<Address>) {
 	const component = new ProfileComponent()
 
 	component.$html = html`
-		<div class="avatar"></div>
-		<div class="name">Nameless</div>
+		<a class="avatar" href=${() => routeHref({ path: address.ref, postId: null })}></a>
+		<a class="name" href=${() => routeHref({ path: address.ref, postId: null })}>Nameless</a>
 		<div class="address">${WalletAddress(address)}</div>
 	`
 
