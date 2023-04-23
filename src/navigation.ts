@@ -51,7 +51,7 @@ NavigationComponent.$css = css`
 		padding-bottom: calc(var(--span) * 0.5);
 		gap: var(--span);
 
-		background: linear-gradient(to top, hsl(var(--master-hsl), 25%), transparent);
+		background: linear-gradient(to top, hsl(var(--master-hsl), 15%), transparent);
 	}
 
 	.profile {
@@ -70,15 +70,18 @@ NavigationComponent.$css = css`
 		display: grid;
 		grid-auto-flow: column;
 		align-items: center;
+		padding: 0;
 
 		& > li {
 			display: grid;
 			grid-auto-flow: column;
+			align-items: center;
 
 			& + li::before {
 				content: "";
 				border-left: solid hsl(var(--master-hsl)) 1px;
 				padding-left: calc(var(--span) * 1);
+				height: 25%;
 			}
 			&:has(+ *) {
 				padding-right: calc(var(--span) * 1);
@@ -86,7 +89,7 @@ NavigationComponent.$css = css`
 		}
 
 		& .icon {
-			height: min(1.75em, 5vh);
+			height: min(1.5em, 5vh);
 			color: hsl(var(--base-text-hsl));
 		}
 
