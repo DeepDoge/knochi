@@ -9,6 +9,14 @@ export type PostId = string & { _: "PostId" }
 export function PostId(postId: string): PostId {
 	return postId as PostId
 }
+export function PostIdFromHex(postIdHex: string): PostId {
+	return ethers.utils.base58.encode(postIdHex) as PostId
+}
+
+export function PostIdToHex(postId: PostId): string {
+	return ethers.utils.hexlify(ethers.utils.base58.decode(postId))
+}
+
 export type PostData = {
 	id: PostId
 	parentId: PostId | null
@@ -42,7 +50,7 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 	const query = gql`
 		{
 			postReplyCounters(where: { or: [
-				${postIds.map((postId) => `{ id: "${postId}" }`).join("\n")}
+				${postIds.map((postId) => `{ id: "${PostIdToHex(postId)}" }`).join("\n")}
 				] 
 			}) {
 				id
@@ -73,7 +81,7 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 export async function getPost(postId: PostId): Promise<PostData | null> {
 	const query = gql`
 	{
-		post(id: "${postId}") {
+		post(id: "${PostIdToHex(postId)}") {
 			id
 			parentId
 			index
@@ -91,15 +99,15 @@ export async function getPost(postId: PostId): Promise<PostData | null> {
 		}
 	}`
 
-	const contractAddress = Address(ethers.utils.hexlify(ethers.utils.arrayify(postId).subarray(0, 20)))
+	const contractAddress = Address(ethers.utils.hexlify(ethers.utils.arrayify(PostIdToHex(postId)).subarray(0, 20)))
 	const client = contractAddressToClientMap[contractAddress]
 	if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
 
 	const responsePost = await (await client.urqlClient.query(query, {})).data.post
 
 	const post: PostData = {
-		id: PostId(responsePost.id),
-		parentId: responsePost.parentId === "0x" ? null : PostId(responsePost.parentId),
+		id: PostIdFromHex(responsePost.id),
+		parentId: responsePost.parentId === "0x" ? null : PostIdFromHex(responsePost.parentId),
 		index: BigNumber.from(responsePost.index),
 		author: Address(responsePost.author),
 		contents: responsePost.contents.map((content: any): PostData["contents"][number] => ({
@@ -126,7 +134,7 @@ export type Timeline = {
 	loading: SignalReadable<boolean>
 }
 
-export function getTimeline(timelineOptions: { author?: Address; parentId?: PostId; replies?: "include" | "only" }): Timeline {
+export function getTimeline(options: { author?: Address; parentId?: PostId; replies?: "include" | "only"; mention?: Address }): Timeline {
 	const query = (count: number, beforeIndex: BigNumber) => gql`
 	{
 		posts(
@@ -135,9 +143,10 @@ export function getTimeline(timelineOptions: { author?: Address; parentId?: Post
 			orderDirection: desc 
 			where: { and: [
 				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] } 
-				${timelineOptions.author ? `{ author: "${timelineOptions.author}" }` : ""}
-				${timelineOptions.parentId ? `{ parentId: "${timelineOptions.parentId}" }` : ""}
-				${timelineOptions.replies === "include" ? "" : timelineOptions.replies === "only" ? `{ parentId_not: "0x" }` : `{ parentId: "0x" }`}
+				${options.author ? `{ author: "${options.author}" }` : ""}
+				${options.parentId ? `{ parentId: "${PostIdToHex(options.parentId)}" }` : ""}
+				${options.replies === "include" ? "" : options.replies === "only" ? `{ parentId_not: "0x" }` : `{ parentId: "0x" }`}
+				${options.mention ? `{ contents_: { type: "mention",  value: "${options.mention}" } }` : ""}
 				{ index_lt: ${beforeIndex.toString()} }
 			] }
 		) {
@@ -180,12 +189,12 @@ export function getTimeline(timelineOptions: { author?: Address; parentId?: Post
 					const response = await client.query(query(count, lastIndex[index]!), {}).toPromise()
 					if (response.data.posts.length === 0) return
 
-					const replyCounts = await getReplyCounts(response.data.posts.map((post: any) => PostId(post.id)))
+					const replyCounts = await getReplyCounts(response.data.posts.map((post: any) => PostIdFromHex(post.id)))
 
 					const newPosts = response.data.posts.map(
 						(post: any): PostData => ({
-							id: PostId(post.id),
-							parentId: post.parentId === "0x" ? null : PostId(post.parentId),
+							id: PostIdFromHex(post.id),
+							parentId: post.parentId === "0x" ? null : PostIdFromHex(post.parentId),
 							index: BigNumber.from(post.index),
 							author: Address(post.author),
 							contents: post.contents.map((content: any): PostData["contents"][number] => ({

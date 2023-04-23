@@ -15,7 +15,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 		$.match(params.tab)
 			.case("posts", () => $.derive(() => getTimeline({ author: params.userAddress.ref })))
 			.case("replies", () => $.derive(() => getTimeline({ author: params.userAddress.ref, replies: "only" })))
-			.case("mentions", () => $.derive(() => getTimeline({}))) // TODO: index mentions
+			.case("mentions", () => $.derive(() => getTimeline({ mention: params.userAddress.ref, replies: "include" })))
 			.default()
 	)
 

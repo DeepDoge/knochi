@@ -7,7 +7,7 @@ const route = {
 	path: $.writable(""),
 	postId: $.writable<PostId | null>(null),
 }
-const routeReadable = route as { [K in keyof typeof route]: typeof route[K] extends SignalWritable<infer U> ? SignalReadable<U> : never }
+const routeReadable = route as { [K in keyof typeof route]: (typeof route)[K] extends SignalWritable<infer U> ? SignalReadable<U> : never }
 export { routeReadable as route }
 function updateRoute() {
 	const [page, modal] = location.hash.substring(1).split("@")

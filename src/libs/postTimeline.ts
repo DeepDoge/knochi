@@ -6,9 +6,9 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 
-const PostPageComponent = defineComponent("x-post-page")
-export function PostPage(postId: PostId) {
-	const component = new PostPageComponent()
+const PostTimelineComponent = defineComponent("x-post-timeline")
+export function PostTimeline(postId: PostId) {
+	const component = new PostTimelineComponent()
 
 	const post = $.await($.derive(() => getPost(postId))).then()
 	const repliesTimeline = $.derive(() => getTimeline({ parentId: postId }))
@@ -34,7 +34,7 @@ export function PostPage(postId: PostId) {
 	return component
 }
 
-PostPageComponent.$css = css`
+PostTimelineComponent.$css = css`
 	:host {
 		display: grid;
 		gap: calc(var(--span) * 1);

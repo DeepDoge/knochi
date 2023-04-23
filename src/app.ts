@@ -1,7 +1,7 @@
 import globalCss from "@/styles/global.css"
 import { Component, defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
-import { PostPage } from "./libs/postTimeline"
+import { PostTimeline } from "./libs/postTimeline"
 import { Navigation } from "./navigation"
 import { route } from "./route"
 import { routerLayout } from "./router"
@@ -20,7 +20,7 @@ function App() {
 			${() => routerLayout.ref.top && html`<div class="top">${() => routerLayout.ref.top}</div>`}
 			<div class="bottom">
 				<div class="page">${() => routerLayout.ref.page}</div>
-				${() => route.postId.ref && html`<div class="post">${PostPage(route.postId.ref)}</div>`}
+				${() => route.postId.ref && html`<div class="post">${PostTimeline(route.postId.ref)}</div>`}
 			</div>
 		</main>
 	`
