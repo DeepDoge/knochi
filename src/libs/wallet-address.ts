@@ -53,6 +53,7 @@ WalletAddressComponent.$css = css`
 		grid-template-columns: 1fr auto 0.5ch 1em;
 		align-items: center;
 		max-width: 20ch;
+		min-width: 9ch;
 		color: inherit;
 
 		& > svg {

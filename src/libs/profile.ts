@@ -36,7 +36,7 @@ ProfileComponent.$css = css`
 			"avatar . ."
 			"avatar . address"
 			"avatar . . ";
-		grid-template-columns: 2.5em calc(var(--span) * 0.5) auto;
+		grid-template-columns: 2.3em calc(var(--span) * 0.5) auto;
 		grid-template-rows: auto auto auto auto;
 		place-content: start;
 	}

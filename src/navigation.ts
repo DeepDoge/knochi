@@ -47,7 +47,7 @@ NavigationComponent.$css = css`
 		justify-content: space-between;
 		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
-		padding-inline: var(--span);
+		padding-inline: calc(var(--span) * 0.65);
 		padding-bottom: calc(var(--span) * 0.5);
 		gap: var(--span);
 

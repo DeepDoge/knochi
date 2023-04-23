@@ -62,6 +62,7 @@ AppComponent.$css = css`
 
 			& > * {
 				overflow: auto;
+				padding-top: var(--span);
 				padding-bottom: 10vh;
 
 				&.post {
@@ -74,6 +75,10 @@ AppComponent.$css = css`
 	}
 
 	@media (max-width: 1023px) {
+		:host {
+			font-size: 0.8em;
+		}
+
 		main > .bottom:has(.post) {
 			& > .page {
 				position: fixed;
