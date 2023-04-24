@@ -70,7 +70,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 				</li>
 			</ul>
 		</nav>
-		${() => Timeline(timeline.ref)}`
+		${$.derive(() => Timeline(timeline.ref), [timeline])}`
 
 	const TopComponent = defineComponent("x-user-layout-top")
 	const top = new TopComponent()
