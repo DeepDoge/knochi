@@ -26,7 +26,7 @@ export function PostTimeline(postId: PostId) {
 			</div>
 			<div class="replies">
 				<h3>Replies</h3>
-				${() => Timeline(repliesTimeline.ref)}
+				${$.derive(() => Timeline(repliesTimeline.ref), [repliesTimeline])}
 			</div>
 		</div>
 	`
