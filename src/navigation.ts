@@ -46,7 +46,7 @@ export function Navigation() {
 			</ul>
 		</nav>
 
-		<div class="right">Other</div>
+		<div class="right"></div>
 	`
 
 	return component
