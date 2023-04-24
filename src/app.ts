@@ -1,4 +1,5 @@
 import globalCss from "@/styles/global.css"
+import { $ } from "master-ts/library/$"
 import { Component, defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 import { PostTimeline } from "./libs/postTimeline"
@@ -20,7 +21,9 @@ function App() {
 			${() => routerLayout.ref.top && html`<div class="top">${() => routerLayout.ref.top}</div>`}
 			<div class="bottom">
 				<div class="page">${() => routerLayout.ref.page}</div>
-				${() => route.postId.ref && html`<div class="post">${PostTimeline(route.postId.ref)}</div>`}
+				${$.match(route.postId)
+					.case(null, () => null)
+					.default((postId) => html`<div class="post">${PostTimeline(postId)}</div>`)}
 			</div>
 		</main>
 	`

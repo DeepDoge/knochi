@@ -5,6 +5,7 @@ import { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
 import type { Component } from "master-ts/library/component"
 import type { SignalWritable } from "master-ts/library/signal/writable"
+import { searchLayout } from "./pages/search"
 import { userLayout } from "./pages/user"
 
 export type Layout = {
@@ -30,6 +31,10 @@ export const routerLayout = $.readable<Layout>((set) => {
 		(path) => {
 			if (path === "") {
 				set(homeLayout({}))
+			} else if (path === "search") {
+				set(searchLayout({}))
+			} else if (path === "top") {
+				set(searchLayout({}))
 			} else if (path.startsWith("0x") && path.length >= 42) {
 				const [address, tab] = path.split("/") as [string, string | undefined]
 				const userAddress = Address(address)

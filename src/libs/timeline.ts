@@ -2,37 +2,40 @@ import type { Timeline } from "@/api/graph"
 import { Post } from "@/libs/post"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
+import type { SignalReadable } from "master-ts/library/signal/readable"
 import { css, html } from "master-ts/library/template"
 
 const TimelineComponent = defineComponent("x-timeline")
-export function Timeline(timeline: Timeline) {
+export function Timeline(timeline: SignalReadable<Timeline>) {
 	const component = new TimelineComponent()
-
-	const firstload = timeline.loadBottom()
 
 	const loadBottomButton = $.writable<HTMLButtonElement | null>(null)
 	component.$subscribe(loadBottomButton, (button) => (loadBottomButtonObserve.disconnect(), button && loadBottomButtonObserve.observe(button)))
 	const loadBottomButtonObserve = new IntersectionObserver((entries) => {
 		if (!entries[0] || entries[0].intersectionRatio <= 0) return
-		timeline.loadBottom()
+		timeline.ref.loadBottom()
 	})
 
-	const loading = $.derive(() => timeline.loading.ref)
+	const loading = $.derive(() => timeline.ref.loading.ref)
 
 	component.$html = html`
-		${() => (!loading.ref && timeline.posts.ref.length === 0 ? html`<div class="no-posts">No Posts</div>` : null)}
+		${() => (!loading.ref && timeline.ref.posts.ref.length === 0 ? html`<div class="no-posts">No Posts</div>` : null)}
 		<div class="posts">
-			${$.await(firstload).then(() =>
-				$.each(timeline.posts)
-					.key((post) => `${post.chainKey}-${post.id}`)
-					.as((post) => Post(post))
-			)}
+			${$.derive(() => {
+				const posts = timeline.ref.posts
+
+				return $.await(timeline.ref.loadBottom()).then(() =>
+					$.each(posts)
+						.key((post) => `${post.chainKey}-${post.id}`)
+						.as((post) => Post(post))
+				)
+			}, [timeline])}
 		</div>
 		<button
             class="btn load-more"
 			ref:=${loadBottomButton} 
 			disabled=${() => (loading.ref ? "" : null)}
-			on:click=${() => timeline.loadBottom()}
+			on:click=${() => timeline.ref.loadBottom()}
 		>
 			${() => (loading.ref ? "Loading..." : "Load More")}
 		</button>
