@@ -1,6 +1,5 @@
 import { $ } from "master-ts/library/$"
-import type { SignalReadable } from "master-ts/library/signal"
-import type { SignalWritable } from "master-ts/library/signal"
+import type { SignalReadable, SignalWritable } from "master-ts/library/signal"
 import { PostId } from "./api/graph"
 
 const route = {

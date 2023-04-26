@@ -27,7 +27,7 @@ export function createLayout<T extends Record<PropertyKey, any>>(factory: (param
 }
 
 export const routerLayout = $.readable<Layout>((set) => {
-	return route.path.subscribe(
+	const sub = route.path.subscribe(
 		(path) => {
 			if (path === "") {
 				set(homeLayout({}))
@@ -55,5 +55,10 @@ export const routerLayout = $.readable<Layout>((set) => {
 			}
 		},
 		{ mode: "immediate" }
-	).unsubscribe
+	)
+
+	return () => {
+		console.log("unsub")
+		sub.unsubscribe()
+	}
 })
