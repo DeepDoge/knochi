@@ -6,7 +6,7 @@ import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal/readable"
+import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 import { Profile } from "@/libs/profile"
 import { GlowEffect } from "./effects/glow"
@@ -29,7 +29,7 @@ export function Post(post: SignalReadable<PostData>) {
 			<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
 			<div class="chips">
 				<span class="chain" title=${() => networks.chains[post.ref.chainKey].name}> ${networks.chains[post.ref.chainKey].name} </span>
-				<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}>${post.ref.index.toString()}</a>
+				<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}>${post.ref.id.toString().slice(0, 8)}</a>
 				<a class="id parent-id" href=${() => routeHref({ postId: post.ref.parentId })}>${post.ref.parentId && "parent"}</a>
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 import { Address } from "@/utils/address"
 import { BigNumber, ethers } from "ethers"
 import { $ } from "master-ts/library/$"
-import type { SignalReadable } from "master-ts/library/signal/readable"
+import type { SignalReadable } from "master-ts/library/signal"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 import { networks } from "../networks"
 
