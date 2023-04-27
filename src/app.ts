@@ -15,15 +15,24 @@ const AppComponent = defineComponent("x-app")
 function App() {
 	const component = new AppComponent()
 
+	const post = $.match(route.postId)
+		.case(null, () => {
+			console.log("is null")
+			return null
+		})
+		.default((postId) => html` <div class="post">${PostTimeline(postId)}</div>`)
+
+	component.$subscribe(post, (post) => console.log("match change", post))
+
 	component.$html = html`
 		<header>${Navigation()}</header>
 		<main>
-			${() => routerLayout.ref.top && html`<div class="top">${() => routerLayout.ref.top}</div>`}
+			${$.match($.derive(() => routerLayout.ref.top))
+				.case(null, () => null)
+				.default((layoutTop) => html`<div class="top">${layoutTop}</div>`)}
 			<div class="bottom">
 				<div class="page">${() => routerLayout.ref.page}</div>
-				${$.match(route.postId)
-					.case(null, () => null)
-					.default((postId) => html`<div class="post">${PostTimeline(postId)}</div>`)}
+				${post}
 			</div>
 		</main>
 	`

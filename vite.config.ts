@@ -3,7 +3,7 @@ import { masterTsPlugin } from "master-ts-vite-plugin/plugin"
 import { viteSingleFile } from "vite-plugin-singlefile"
 
 export default defineConfig({
-	plugins: [masterTsPlugin, viteSingleFile()],
+	plugins: [viteSingleFile()],
 	build: {
 		target: "esnext",
 	},
