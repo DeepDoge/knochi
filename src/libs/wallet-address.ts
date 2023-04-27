@@ -12,12 +12,15 @@ export function WalletAddress(address: SignalReadable<Address>) {
 		<button
 			on:click=${(e) => (
 				e.preventDefault(),
-				navigator.clipboard.writeText(address.ref).then(() => alert(`Address copied to clipboard\nTODO: Add toast notifactions etc..`))
+				navigator.clipboard
+					.writeText(address.ref)
+					.then(() => alert(`Address copied to clipboard\nTODO: Add toast notifactions etc..`))
 			)}
 			title=${address}
 			aria-label="wallet address, click to copy">
 			<x ${Copy2Svg()} aria-hidden></x>
-			<span>${() => address.ref.substring(0, address.ref.length - 4)}</span><span>${() => address.ref.substring(address.ref.length - 4)}</span>
+			<span>${() => address.ref.substring(0, address.ref.length - 4)}</span
+			><span>${() => address.ref.substring(address.ref.length - 4)}</span>
 		</button>
 	`
 

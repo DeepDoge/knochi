@@ -134,7 +134,12 @@ export type Timeline = {
 	loading: SignalReadable<boolean>
 }
 
-export function getTimeline(options: { author?: Address; parentId?: PostId; replies?: "include" | "only"; mention?: Address }): Timeline {
+export function getTimeline(options: {
+	author?: Address
+	parentId?: PostId
+	replies?: "include" | "only"
+	mention?: Address
+}): Timeline {
 	const query = (count: number, beforeIndex: BigNumber) => gql`
 	{
 		posts(

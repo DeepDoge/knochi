@@ -1,6 +1,7 @@
 import type { PostData } from "@/api/graph"
 import { networks } from "@/api/networks"
 import { CommentSvg } from "@/assets/svgs/comment"
+import { Profile } from "@/libs/profile"
 import { routeHref } from "@/route"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
@@ -8,7 +9,6 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { Profile } from "@/libs/profile"
 import { GlowEffect } from "./effects/glow"
 
 const PostComponent = defineComponent("x-post")
