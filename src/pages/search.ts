@@ -42,6 +42,7 @@ export const searchLayout = createLayout<{ search: string }>(() => {
 	const search = $.writable("")
 	const searchDeferred = $.deferred(search)
 	page.$subscribe(searchDeferred, (search) => location.replace(routeHref({ path: `search/${search}` })), { mode: "immediate" })
+	page.$subscribe(route.pathArr, (pathArr) => (search.ref = pathArr[1] ?? ""))
 	const timeline = $.derive(() =>
 		route.pathArr.ref[1] ? getTimeline({ search: route.pathArr.ref[1], replies: "include" }) : null
 	)
