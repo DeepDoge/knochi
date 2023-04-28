@@ -14,31 +14,33 @@ const NavigationComponent = defineComponent("x-navigation")
 export function Navigation() {
 	const component = new NavigationComponent()
 
+	const firstPartOfPath = $.derive(() => route.pathArr.ref[0])
+
 	component.$html = html`
 		<div class="left">
 			<x
 				${Profile($.derive(() => Address("0xE272C9a263701DAFFe940FB4ecEACFa9b2c1217D")))}
 				class="profile"
-				class:active=${() => route.path.ref.startsWith(Address("0xE272C9a263701DAFFe940FB4ecEACFa9b2c1217D"))}></x>
+				class:active=${() => firstPartOfPath.ref === Address("0xE272C9a263701DAFFe940FB4ecEACFa9b2c1217D")}></x>
 		</div>
 
 		<nav>
 			<ul>
 				<li>
-					<a href="#" class:active=${() => route.path.ref === ""} aria-label="home" title="Home">
-						${$.match(route.path)
+					<a href="#" class:active=${() => firstPartOfPath.ref === ""} aria-label="home" title="Home">
+						${$.match(firstPartOfPath)
 							.case("", () => html`<x ${HomeFilledSvg()} class="icon"></x>`)
 							.default(() => html`<x ${HomeOutlineSvg()} class="icon"></x>`)}
 					</a>
 				</li>
 				<li>
-					<a href="#search" class:active=${() => route.path.ref === "search"} aria-label="search" title="Search">
+					<a href="#search" class:active=${() => firstPartOfPath.ref === "search"} aria-label="search" title="Search">
 						<x ${SearchSvg()} class="icon"></x>
 					</a>
 				</li>
 				<li>
-					<a href="#top" class:active=${() => route.path.ref === "top"} aria-label="top posts" title="Top Posts">
-						${$.match(route.path)
+					<a href="#top" class:active=${() => firstPartOfPath.ref === "top"} aria-label="top posts" title="Top Posts">
+						${$.match(firstPartOfPath)
 							.case("top", () => html`<x ${ChartFilledSvg()} class="icon"></x>`)
 							.default(() => html`<x ${ChartOutlineSvg()} class="icon"></x>`)}
 					</a>

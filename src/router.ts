@@ -31,16 +31,16 @@ export function createLayout<T extends Record<PropertyKey, any>>(
 }
 
 export const routerLayout = $.readable<Layout>((set) => {
-	const sub = route.path.subscribe(
+	const sub = route.pathArr.subscribe(
 		(path) => {
-			if (path === "") {
+			if (path[0] === "") {
 				set(homeLayout({}))
-			} else if (path === "search") {
-				set(searchLayout({}))
-			} else if (path === "top") {
-				set(searchLayout({}))
-			} else if (path.startsWith("0x") && path.length >= 42) {
-				const [address, tab] = path.split("/") as [string, string | undefined]
+			} else if (path[0] === "search") {
+				set(searchLayout({ search: path[1] ?? "" }))
+			} else if (path[0] === "top") {
+				set(searchLayout({ search: "" }))
+			} else if (path[0]?.startsWith("0x") && path[0].length === 42) {
+				const [address, tab] = path
 				const userAddress = Address(address)
 				switch (tab) {
 					case "posts":

@@ -1,12 +1,13 @@
 import { getTimeline } from "@/api/graph"
 import { SearchSvg } from "@/assets/svgs/search"
 import { Timeline } from "@/libs/timeline"
+import { route, routeHref } from "@/route"
 import { createLayout } from "@/router"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 
-export const searchLayout = createLayout<{}>(() => {
+export const searchLayout = createLayout<{ search: string }>(() => {
 	const PageComponent = defineComponent("x-search-layout-page")
 	const page = new PageComponent()
 
@@ -40,7 +41,10 @@ export const searchLayout = createLayout<{}>(() => {
 
 	const search = $.writable("")
 	const searchDeferred = $.deferred(search)
-	const timeline = $.derive(() => (searchDeferred.ref ? getTimeline({ search: searchDeferred.ref, replies: "include" }) : null))
+	page.$subscribe(searchDeferred, (search) => location.replace(routeHref({ path: `search/${search}` })), { mode: "immediate" })
+	const timeline = $.derive(() =>
+		route.pathArr.ref[1] ? getTimeline({ search: route.pathArr.ref[1], replies: "include" }) : null
+	)
 
 	page.$html = html`
 		<div class="search input">
