@@ -8,16 +8,20 @@
 	line-height: 1.5;
 	font-weight: 400;
 
-	--master-hsl: 251, 54%, 45%;
+	--master-hue: 251;
+	--master-hsl: var(--master-hue), 54%, 45%;
 	--master-text-hsl: 0, 0%, 100%;
 
-	--slave-hsl: 156, 86%, 36%;
+	--slave-hue: 156;
+	--slave-hsl: var(--slave-hue), 86%, 36%;
 	--slave-text-hsl: 0, 0%, 100%;
 
-	--base-hsl: 246, 49%, 14%;
+	--base-hue: 246;
+	--base-hsl: var(--base-hue), 49%, 14%;
 	--base-text-hsl: 0, 0%, 100%;
 
-	--background-hsl: 246, 49%, 10%;
+	--background-hue: 246;
+	--background-hsl: var(--background-hue), 49%, 10%;
 	--background-text-hsl: 0, 0%, 100%;
 
 	--radius: 0.5em;
@@ -76,6 +80,40 @@ input {
 	min-width: 0;
 }
 
+.input {
+	display: block;
+	appearance: none;
+	border-radius: var(--radius);
+	border: 1px solid transparent;
+	padding: calc(var(--span) * 0.6) calc(var(--span) * 1.2);
+
+	font-size: 1em;
+	font-family: inherit;
+
+	background-color: hsl(var(--base-hsl));
+	color: hsl(var(--base-text-hsl));
+}
+
+.input:focus-within,
+.input:focus {
+	outline: solid currentColor 0.1em;
+}
+
+.transparent-input {
+	display: block;
+	appearance: none;
+	border: none;
+	padding: 0;
+
+	font: inherit;
+
+	background-color: transparent;
+	color: inherit;
+}
+.transparent-input:focus-visible {
+	outline: none;
+}
+
 .btn {
 	position: relative;
 	display: inline-block;
@@ -116,4 +154,14 @@ input {
 .btn:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
+}
+
+.glow-effect {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+
+	border-radius: inherit;
+	background-color: hsl(var(--master-hsl), 50%);
+	filter: blur(0.5rem);
 }

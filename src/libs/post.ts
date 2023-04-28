@@ -2,14 +2,13 @@ import type { PostData } from "@/api/graph"
 import { networks } from "@/api/networks"
 import { CommentSvg } from "@/assets/svgs/comment"
 import { Profile } from "@/libs/profile"
-import { routeHref } from "@/route"
+import { route, routeHref } from "@/route"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { GlowEffect } from "./effects/glow"
 
 const PostComponent = defineComponent("x-post")
 export function Post(post: SignalReadable<PostData>) {
@@ -24,25 +23,29 @@ export function Post(post: SignalReadable<PostData>) {
 	const textContents = text.split("\n")
 
 	component.$html = html`
-		${GlowEffect()}
-		<div class="header">
-			<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
-			<div class="chips">
-				<span class="chain" title=${() => networks.chains[post.ref.chainKey].name}>
-					${networks.chains[post.ref.chainKey].name}
-				</span>
-				<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}>${post.ref.id.toString().slice(0, 8)}</a>
-				<a class="id parent-id" href=${() => routeHref({ postId: post.ref.parentId })}
-					>${post.ref.parentId && "parent"}</a
-				>
+		<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
+			<div class="glow-effect"></div>
+			<div class="header">
+				<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
+				<div class="chips">
+					<span class="chain" title=${() => networks.chains[post.ref.chainKey].name}>
+						${networks.chains[post.ref.chainKey].name}
+					</span>
+					<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}>
+						${post.ref.id.toString().slice(0, 8)}
+					</a>
+					<a class="id parent-id" href=${() => routeHref({ postId: post.ref.parentId })}>
+						${post.ref.parentId && "parent"}
+					</a>
+				</div>
 			</div>
-		</div>
-		<a class="content" href=${() => routeHref({ postId: post.ref.id })}
-			>${textContents.map((textContent) => html` <div>${textContent}</div> `)}</a
-		>
-		<div class="footer">
-			<div class="reply-count">${() => CommentSvg()} ${post.ref.replyCount.toString()}</div>
-			<div class="created-at">${() => relativeTimeSignal(post.ref.createdAt)}</div>
+			<a class="content" href=${() => routeHref({ postId: post.ref.id })}>
+				${textContents.map((textContent) => html` <div>${textContent}</div> `)}
+			</a>
+			<div class="footer">
+				<div class="reply-count">${() => CommentSvg()} ${post.ref.replyCount.toString()}</div>
+				<div class="created-at">${() => relativeTimeSignal(post.ref.createdAt)}</div>
+			</div>
 		</div>
 	`
 
@@ -51,6 +54,10 @@ export function Post(post: SignalReadable<PostData>) {
 
 PostComponent.$css = css`
 	:host {
+		display: contents;
+	}
+
+	.post {
 		position: relative;
 		display: grid;
 		gap: calc(var(--span) * 0.5);
@@ -61,6 +68,10 @@ PostComponent.$css = css`
 
 		border-radius: var(--radius);
 		border: calc(var(--span) * 0.1) solid hsl(var(--master-hsl), 25%);
+
+		&.active {
+			border-color: hsl(var(--slave-hsl));
+		}
 	}
 
 	.header {

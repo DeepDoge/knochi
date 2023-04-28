@@ -36,7 +36,6 @@ function App() {
 AppComponent.$css = css`
 	:host {
 		display: grid;
-		padding-top: var(--span);
 	}
 
 	header {
@@ -56,25 +55,26 @@ AppComponent.$css = css`
 
 	main {
 		display: grid;
-		gap: var(--span);
-		padding: 0 var(--span);
+
+		& .top,
+		& .bottom > * {
+			padding-top: var(--span);
+			padding-inline: calc(var(--span));
+		}
 
 		& > .bottom {
 			position: relative;
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-			gap: var(--span);
 
 			& > * {
 				overflow: auto;
-				padding-top: var(--span);
 				padding-bottom: 10vh;
-
-				&.post {
-					position: sticky;
-					top: 0;
-					height: calc(100vh);
-				}
+			}
+			& > .post {
+				position: sticky;
+				top: 0;
+				height: calc(100vh);
 			}
 		}
 	}

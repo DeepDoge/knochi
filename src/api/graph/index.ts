@@ -139,6 +139,7 @@ export function getTimeline(options: {
 	parentId?: PostId
 	replies?: "include" | "only"
 	mention?: Address
+	search?: string
 }): Timeline {
 	const query = (count: number, beforeIndex: BigNumber) => gql`
 	{
@@ -152,6 +153,13 @@ export function getTimeline(options: {
 				${options.parentId ? `{ parentId: "${postIdToHex(options.parentId)}" }` : ""}
 				${options.replies === "include" ? "" : options.replies === "only" ? `{ parentId_not: "0x" }` : `{ parentId: "0x" }`}
 				${options.mention ? `{ contents_: { type: "mention",  value: "${options.mention}" } }` : ""}
+				${
+					options.search
+						? `{ contents_: { value_contains: "${ethers.utils
+								.hexlify(ethers.utils.toUtf8Bytes(options.search))
+								.substring(2)}" } }`
+						: ""
+				}
 				{ index_lt: ${beforeIndex.toString()} }
 			] }
 		) {
