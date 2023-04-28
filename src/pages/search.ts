@@ -39,8 +39,8 @@ export const searchLayout = createLayout<{}>(() => {
 	`
 
 	const search = $.writable("")
-	const searchDefered = $.deferred(search)
-	const timeline = $.derive(() => (searchDefered.ref ? getTimeline({ search: searchDefered.ref, replies: "include" }) : null))
+	const searchDeferred = $.deferred(search)
+	const timeline = $.derive(() => (searchDeferred.ref ? getTimeline({ search: searchDeferred.ref, replies: "include" }) : null))
 
 	page.$html = html`
 		<div class="search input">
@@ -51,7 +51,9 @@ export const searchLayout = createLayout<{}>(() => {
 			.case(null, () => html`<p class="none">...</p>`)
 			.default(
 				(timeline) => html`
-					<p><span class="result-title">Search results for:</span> <span class="result-text">${searchDefered}</span></p>
+					<p>
+						<span class="result-title">Search results for:</span> <span class="result-text">${searchDeferred}</span>
+					</p>
 					<x ${Timeline(timeline)} class="timeline"></x>
 				`
 			)}
