@@ -7,7 +7,7 @@ import { HomeFilledSvg } from "./assets/svgs/home-filled"
 import { HomeOutlineSvg } from "./assets/svgs/home-outline"
 import { SearchSvg } from "./assets/svgs/search"
 import { Profile } from "./libs/profile"
-import { route } from "./route"
+import { route } from "./router"
 import { Address } from "./utils/address"
 
 const NavigationComponent = defineComponent("x-navigation")

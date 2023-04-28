@@ -1,68 +1,32 @@
-import { homeLayout } from "@/pages/home"
-import { unknownLayout } from "@/pages/unknown"
-import { route, routeHref } from "@/route"
-import { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
-import type { Component } from "master-ts/library/component"
-import type { SignalWritable } from "master-ts/library/signal"
-import { searchLayout } from "./pages/search"
-import { userLayout } from "./pages/user"
+import type { SignalReadable, SignalWritable } from "master-ts/library/signal"
+import { PostId } from "./api/graph"
 
-export type Layout = {
-	top: Component | null
-	page: Component
+const routePath = $.writable("")
+const routePathArr = $.derive(() => routePath.ref.split("/"))
+const routePostId = $.writable<PostId | null>(null)
+const route = {
+	path: routePath,
+	pathArr: routePathArr,
+	postId: routePostId,
 }
-
-export function createLayout<T extends Record<PropertyKey, any>>(
-	factory: (params: { [K in keyof T]: SignalWritable<T[K]> }) => Layout
-) {
-	let cache: Layout | null = null
-	let paramsSignal: { [K in keyof T]: SignalWritable<T[K]> }
-	return (params: T) =>
-		cache
-			? (Object.keys(params).forEach((key) => (paramsSignal[key]!.ref = params[key])), cache)
-			: (cache = factory(
-					(paramsSignal = Object.fromEntries(
-						Object.entries(params).map(([key, value]) => [key, $.writable(value)])
-					) as {
-						[K in keyof T]: SignalWritable<T[K]>
-					})
-			  ))
+const routeReadable = route as {
+	[K in keyof typeof route]: (typeof route)[K] extends SignalWritable<infer U> ? SignalReadable<U> : (typeof route)[K]
 }
+export { routeReadable as route }
+function updateRoute() {
+	const [path, postId] = location.hash.substring(1).split("@")
 
-export const routerLayout = $.readable<Layout>((set) => {
-	const sub = route.pathArr.subscribe(
-		(path) => {
-			if (path[0] === "") {
-				set(homeLayout({}))
-			} else if (path[0] === "search") {
-				set(searchLayout({ search: path[1] ?? "" }))
-			} else if (path[0] === "top") {
-				set(searchLayout({ search: "" }))
-			} else if (path[0]?.startsWith("0x") && path[0].length === 42) {
-				const [address, tab] = path
-				const userAddress = Address(address)
-				switch (tab) {
-					case "posts":
-					case "replies":
-					case "mentions":
-						set(userLayout({ userAddress, tab }))
-						location.replace(routeHref({ path: `${userAddress}/${tab}` }))
-						break
-					default:
-						set(userLayout({ userAddress, tab: "posts" }))
-						location.replace(routeHref({ path: `${userAddress}/posts` }))
-						break
-				}
-			} else {
-				set(unknownLayout({}))
-			}
-		},
-		{ mode: "immediate" }
-	)
+	routePath.ref = path ?? ""
+	routePostId.ref = postId ? PostId(postId) : null
+}
+updateRoute()
+window.addEventListener("hashchange", updateRoute)
+setInterval(updateRoute, 100)
 
-	return () => {
-		console.log("unsub")
-		sub.unsubscribe()
-	}
-})
+export function routeHref({ path, postId }: { path?: string; postId?: PostId | null }): string {
+	if (path === undefined) path = routePath.ref
+	if (postId === undefined) postId = routePostId.ref
+
+	return `#${path}${postId ? `@${postId}` : ""}`
+}

@@ -1,8 +1,8 @@
 import { getTimeline } from "@/api/graph"
 import { SearchSvg } from "@/assets/svgs/search"
 import { Timeline } from "@/libs/timeline"
-import { route, routeHref } from "@/route"
-import { createLayout } from "@/router"
+import { route, routeHref } from "@/router"
+import { createLayout } from "@/routes"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
@@ -41,6 +41,7 @@ export const searchLayout = createLayout<{ search: string }>(() => {
 
 	const search = $.writable("")
 	const searchDeferred = $.deferred(search)
+	// this is all kinda weird but need to make a fully featured router later to removed this uglyness
 	page.$subscribe(searchDeferred, (search) => location.replace(routeHref({ path: `search/${search}` })), { mode: "immediate" })
 	page.$subscribe(route.pathArr, (pathArr) => (search.ref = pathArr[1] ?? ""))
 	const timeline = $.derive(() =>

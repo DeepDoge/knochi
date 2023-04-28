@@ -1,4 +1,4 @@
-import { routeHref } from "@/route"
+import { routeHref } from "@/router"
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"

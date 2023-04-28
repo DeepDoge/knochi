@@ -4,8 +4,8 @@ import { Component, defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 import { PostTimeline } from "./libs/postTimeline"
 import { Navigation } from "./navigation"
-import { route } from "./route"
-import { routerLayout } from "./router"
+import { route } from "./router"
+import { routerLayout } from "./routes"
 
 const appCssSheet = new CSSStyleSheet()
 appCssSheet.replace(globalCss)

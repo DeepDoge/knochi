@@ -1,7 +1,7 @@
 import { getPost, getTimeline, PostId } from "@/api/graph"
 import { Post } from "@/libs/post"
 import { Timeline } from "@/libs/timeline"
-import { routeHref } from "@/route"
+import { routeHref } from "@/router"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
