@@ -34,9 +34,12 @@ export function Post(post: SignalReadable<PostData>) {
 					<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}>
 						${post.ref.id.toString().slice(0, 8)}
 					</a>
-					<a class="id parent-id" href=${() => routeHref({ postId: post.ref.parentId })}>
-						${post.ref.parentId && "parent"}
-					</a>
+					${$.match($.derive(() => post.ref.parentId))
+						.case(null, () => null)
+						.default(
+							(parentId) =>
+								html`<a class="id parent-id" href=${() => routeHref({ postId: parentId.ref })}> ${"parent"} </a>`
+						)}
 				</div>
 			</div>
 			<a class="content" href=${() => routeHref({ postId: post.ref.id })}>
@@ -104,9 +107,6 @@ PostComponent.$css = css`
 			display: block;
 			border-radius: var(--radius);
 
-			&:empty {
-				display: none;
-			}
 			&.chain {
 				overflow: hidden;
 				text-overflow: ellipsis;
