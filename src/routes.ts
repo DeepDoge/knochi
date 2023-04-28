@@ -4,7 +4,7 @@ import { route, routeHref } from "@/router"
 import { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
 import type { Component } from "master-ts/library/component"
-import type { SignalWritable } from "master-ts/library/signal"
+import type { SignalReadable, SignalWritable } from "master-ts/library/signal"
 import { searchLayout } from "./pages/search"
 import { userLayout } from "./pages/user"
 
@@ -14,15 +14,15 @@ export type Layout = {
 }
 
 export function createLayout<T extends Record<PropertyKey, any>>(
-	factory: (params: { [K in keyof T]: SignalWritable<T[K]> }) => Layout
+	factory: (params: { [K in keyof T]: SignalReadable<T[K]> }) => Layout
 ) {
 	let cache: Layout | null = null
-	let paramsSignal: { [K in keyof T]: SignalWritable<T[K]> }
+	let paramSignals: { [K in keyof T]: SignalWritable<T[K]> }
 	return (params: T) =>
 		cache
-			? (Object.keys(params).forEach((key) => (paramsSignal[key]!.ref = params[key])), cache)
+			? (Object.entries(paramSignals).forEach(([key, signal]) => (signal.ref = params[key])), cache)
 			: (cache = factory(
-					(paramsSignal = Object.fromEntries(
+					(paramSignals = Object.fromEntries(
 						Object.entries(params).map(([key, value]) => [key, $.writable(value)])
 					) as {
 						[K in keyof T]: SignalWritable<T[K]>

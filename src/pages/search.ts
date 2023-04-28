@@ -1,13 +1,13 @@
 import { getTimeline } from "@/api/graph"
 import { SearchSvg } from "@/assets/svgs/search"
 import { Timeline } from "@/libs/timeline"
-import { route, routeHref } from "@/router"
+import { routeHref } from "@/router"
 import { createLayout } from "@/routes"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 
-export const searchLayout = createLayout<{ search: string }>(() => {
+export const searchLayout = createLayout<{ search: string }>((params) => {
 	const PageComponent = defineComponent("x-search-layout-page")
 	const page = new PageComponent()
 
@@ -39,26 +39,27 @@ export const searchLayout = createLayout<{ search: string }>(() => {
 		}
 	`
 
-	const search = $.writable("")
-	const searchDeferred = $.deferred(search)
-	// this is all kinda weird but need to make a fully featured router later to removed this uglyness
-	page.$subscribe(searchDeferred, (search) => location.replace(routeHref({ path: `search/${search}` })), { mode: "immediate" })
-	page.$subscribe(route.pathArr, (pathArr) => (search.ref = pathArr[1] ?? ""))
-	const timeline = $.derive(() =>
-		route.pathArr.ref[1] ? getTimeline({ search: route.pathArr.ref[1], replies: "include" }) : null
+	const searchInput = $.writable("")
+	page.$subscribe(params.search, (search) => (searchInput.ref = search), { mode: "immediate" })
+	const searchInputDeferred = $.deferred(searchInput)
+	page.$subscribe(searchInputDeferred, (search) =>
+		location.replace(routeHref({ path: ["search", search].filter(Boolean).join("/") }))
 	)
+
+	const timeline = $.derive(() => (params.search.ref ? getTimeline({ search: params.search.ref, replies: "include" }) : null))
 
 	page.$html = html`
 		<div class="search input">
 			<x ${SearchSvg()} class="icon"></x>
-			<input type="text" class="transparent-input" bind:value=${search} placeholder="Search anything" />
+			<input type="text" class="transparent-input" bind:value=${searchInput} placeholder="Search anything" />
 		</div>
 		${$.match(timeline)
 			.case(null, () => html`<p class="none">...</p>`)
 			.default(
 				(timeline) => html`
 					<p>
-						<span class="result-title">Search results for:</span> <span class="result-text">${searchDeferred}</span>
+						<span class="result-title">Search results for:</span>
+						<span class="result-text">${searchInputDeferred}</span>
 					</p>
 					<x ${Timeline(timeline)} class="timeline"></x>
 				`
