@@ -140,6 +140,7 @@ export function getTimeline(options: {
 	replies?: "include" | "only"
 	mention?: Address
 	search?: string
+	top?: "minute" | "hour" | "day" | "week" | "month" | "year" | "all-time"
 }): Timeline {
 	const query = (count: number, beforeIndex: BigNumber) => gql`
 	{
