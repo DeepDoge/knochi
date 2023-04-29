@@ -1,6 +1,6 @@
 # Off-chain post metadata for the post, per chain
 type Post @entity(immutable: true) {
-	id: Bytes! # contract address + contract post index(u64)
+	id: Bytes! # contract address + contract post index(u256) // can't be changed later since used as parentId, so we use u256
 	parentId: Bytes! # post id
 	index: BigInt! # for querying
 	author: Bytes! # address
@@ -12,7 +12,7 @@ type Post @entity(immutable: true) {
 # Off-chain content metadata for the post, per chain
 type PostContent @entity(immutable: true) {
 	id: Bytes! # post id + content index(u8)
-	type: String!
+	type: Bytes!
 	value: Bytes!
 }
 
@@ -43,6 +43,6 @@ type PostReplyCounter @entity {
 
 # Used for finding the top posts of last 24+(0 to 4) hour, per chain
 type PostReplyCounter_FourHourTimeframe @entity {
-	id: Bytes! # post id + timeframe(timestamp(second) / (60 * 60 * 4))(bigint, dynamic length)
+	id: Bytes! # post id + timeframe(timestamp(second) / (60 * 60 * 4))(u64)
 	count: BigInt!
 }

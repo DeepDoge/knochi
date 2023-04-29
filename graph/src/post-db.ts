@@ -12,6 +12,10 @@ import {
 import { Post as TipPostEvent } from "../generated/TipPostDB/TipPostDB"
 
 const EMPTY_BYTES = new Bytes(0)
+const PARENT_TYPE = Bytes.fromUint8Array(Uint8Array.wrap(String.UTF8.encode("parent")))
+const BIGINT_ZERO = BigInt.fromI32(0)
+const BIGINT_ONE = BigInt.fromI32(1)
+const BIGINT_14400 = BigInt.fromI32(14400)
 
 export function handleTipPost(event: TipPostEvent): void {
 	const postId = savePost(event.transaction.from, event.block.timestamp, event.params.postData)
@@ -28,33 +32,33 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 	let chainPostCounter = ChainPostIndexCounter.load(EMPTY_BYTES)
 	if (!chainPostCounter) {
 		chainPostCounter = new ChainPostIndexCounter(EMPTY_BYTES)
-		chainPostCounter.count = BigInt.fromI32(0)
+		chainPostCounter.count = BIGINT_ZERO
 	}
 
 	let contractPostCounter = ContractPostCounter.load(dataSource.address())
 	if (!contractPostCounter) {
 		contractPostCounter = new ContractPostCounter(dataSource.address())
-		contractPostCounter.count = BigInt.fromI32(0)
+		contractPostCounter.count = BIGINT_ZERO
 	}
 
-	let post = new Post(dataSource.address().concat(Bytes.fromByteArray(ByteArray.fromU64(contractPostCounter.count.toU64()))))
+	let post = new Post(dataSource.address().concat(Bytes.fromByteArray(ByteArray.fromBigInt(contractPostCounter.count))))
 
 	post.index = chainPostCounter.count
 	post.parentId = EMPTY_BYTES
 	post.author = transactionFrom
 	post.blockTimestamp = blockTimestamp
+	const contentsIds = new Array<Bytes>()
 
 	const view = new DataView(postData.buffer)
-	const contentIds: Bytes[] = []
 
 	let offset = 0
 	let offsetCache = -1
 
-	const types: string[] = []
+	const types: Bytes[] = []
 	while (offset < postData.length) {
 		const byte = view.getUint8(offset)
 		if (byte === 10 || byte === 0) {
-			types.push(String.UTF8.decode(postData.slice(offsetCache + 1, (offsetCache = offset)).buffer))
+			types.push(Bytes.fromUint8Array(postData.subarray(offsetCache + 1, (offsetCache = offset))))
 			if (byte === 10) break
 		}
 		offset++
@@ -85,43 +89,43 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 		content.type = type
 		content.value = Bytes.fromUint8Array(value)
 		content.save()
-		contentIds.push(content.id)
+		contentsIds.push(content.id)
 
-		if (type == "parent") post.parentId = content.value
+		if (type.equals(PARENT_TYPE)) post.parentId = content.value
 
 		i++
 	}
 
-	post.contents = contentIds
+	post.contents = contentsIds
 	post.save()
 
 	if (post.parentId.length > 0) {
 		let replyCounter = PostReplyCounter.load(post.parentId)
 		if (!replyCounter) {
 			replyCounter = new PostReplyCounter(post.parentId)
-			replyCounter.count = BigInt.fromI32(1)
+			replyCounter.count = BIGINT_ONE
 		} else {
-			replyCounter.count = replyCounter.count.plus(BigInt.fromI32(1))
+			replyCounter.count = replyCounter.count.plus(BIGINT_ONE)
 		}
 		replyCounter.save()
 
 		const fourHourId = post.parentId.concat(
-			Bytes.fromByteArray(ByteArray.fromBigInt(post.blockTimestamp.div(BigInt.fromI32(14400))))
+			Bytes.fromByteArray(ByteArray.fromU64(post.blockTimestamp.div(BIGINT_14400).toU64()))
 		)
 		let replyCounterFourHour = PostReplyCounter_FourHourTimeframe.load(fourHourId)
 		if (!replyCounterFourHour) {
 			replyCounterFourHour = new PostReplyCounter_FourHourTimeframe(fourHourId)
-			replyCounterFourHour.count = BigInt.fromI32(1)
+			replyCounterFourHour.count = BIGINT_ONE
 		} else {
-			replyCounterFourHour.count = replyCounterFourHour.count.plus(BigInt.fromI32(1))
+			replyCounterFourHour.count = replyCounterFourHour.count.plus(BIGINT_ONE)
 		}
 		replyCounterFourHour.save()
 	}
 
-	contractPostCounter.count = contractPostCounter.count.plus(BigInt.fromI32(1))
+	contractPostCounter.count = contractPostCounter.count.plus(BIGINT_ONE)
 	contractPostCounter.save()
 
-	chainPostCounter.count = chainPostCounter.count.plus(BigInt.fromI32(1))
+	chainPostCounter.count = chainPostCounter.count.plus(BIGINT_ONE)
 	chainPostCounter.save()
 
 	return post.id

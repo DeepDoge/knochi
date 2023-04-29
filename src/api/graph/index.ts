@@ -113,7 +113,7 @@ export async function getPost(postId: PostId): Promise<PostData | null> {
 		index: BigNumber.from(responsePost.index),
 		author: Address(responsePost.author),
 		contents: responsePost.contents.map((content: any): PostData["contents"][number] => ({
-			type: content.type,
+			type: ethers.utils.toUtf8String(ethers.utils.arrayify(content.type)),
 			value: ethers.utils.arrayify(content.value),
 		})),
 		createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
@@ -212,7 +212,7 @@ export function getTimeline(options: {
 							index: BigNumber.from(post.index),
 							author: Address(post.author),
 							contents: post.contents.map((content: any): PostData["contents"][number] => ({
-								type: content.type,
+								type: ethers.utils.toUtf8String(ethers.utils.arrayify(content.type)),
 								value: ethers.utils.arrayify(content.value),
 							})),
 							createdAt: new Date(parseInt(post.blockTimestamp) * 1000),
