@@ -1,6 +1,14 @@
 import { Address, BigInt, Bytes, dataSource } from "@graphprotocol/graph-ts"
 import { Post as PostEvent } from "../generated/PostDB/PostDB"
-import { ChainPostIndexCounter, ContractPostCounter, Post, PostContent, PostReplyCounter, TipPost } from "../generated/schema"
+import {
+	ChainPostIndexCounter,
+	ContractPostCounter,
+	Post,
+	PostContent,
+	PostReplyCounter,
+	PostReplyCounterFourHour,
+	TipPost
+} from "../generated/schema"
 import { Post as TipPostEvent } from "../generated/TipPostDB/TipPostDB"
 
 const EMPTY_BYTES = new Bytes(0)
@@ -96,6 +104,16 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 			replyCounter.count = replyCounter.count.plus(BigInt.fromI32(1))
 		}
 		replyCounter.save()
+
+		let replyCounterFourHour = PostReplyCounterFourHour.load(post.parentId)
+		if (!replyCounterFourHour) {
+			replyCounterFourHour = new PostReplyCounterFourHour(post.parentId)
+			replyCounterFourHour.timeframeId = post.blockTimestamp.div(BigInt.fromI32(14400))
+			replyCounterFourHour.count = BigInt.fromI32(1)
+		} else {
+			replyCounterFourHour.count = replyCounterFourHour.count.plus(BigInt.fromI32(1))
+		}
+		replyCounterFourHour.save()
 	}
 
 	contractPostCounter.count = contractPostCounter.count.plus(BigInt.fromI32(1))

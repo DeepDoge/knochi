@@ -146,7 +146,7 @@ export function getTimeline(options: {
 	{
 		posts(
 			first: ${count.toString()}
-			orderBy: blockTimestamp
+			orderBy: index
 			orderDirection: desc 
 			where: { and: [
 				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] } 
