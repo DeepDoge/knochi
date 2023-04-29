@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes, dataSource } from "@graphprotocol/graph-ts"
+import { Address, BigInt, ByteArray, Bytes, dataSource } from "@graphprotocol/graph-ts"
 import { Post as PostEvent } from "../generated/PostDB/PostDB"
 import {
 	ChainPostIndexCounter,
@@ -6,7 +6,7 @@ import {
 	Post,
 	PostContent,
 	PostReplyCounter,
-	PostReplyCounterFourHour,
+	PostReplyCounter_FourHourTimeframe,
 	TipPost
 } from "../generated/schema"
 import { Post as TipPostEvent } from "../generated/TipPostDB/TipPostDB"
@@ -37,7 +37,7 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 		contractPostCounter.count = BigInt.fromI32(0)
 	}
 
-	let post = new Post(dataSource.address().concat(Bytes.fromByteArray(Bytes.fromBigInt(contractPostCounter.count))))
+	let post = new Post(dataSource.address().concat(Bytes.fromByteArray(ByteArray.fromU64(contractPostCounter.count.toU64()))))
 
 	post.index = chainPostCounter.count
 	post.parentId = EMPTY_BYTES
@@ -45,7 +45,7 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 	post.blockTimestamp = blockTimestamp
 
 	const view = new DataView(postData.buffer)
-	const contentIds: string[] = []
+	const contentIds: Bytes[] = []
 
 	let offset = 0
 	let offsetCache = -1
@@ -79,9 +79,9 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 		const value = postData.subarray(offset, offset + valueBufferSize)
 		offset += valueBufferSize
 
-		const idSuffix = new Uint8Array(1)
-		new DataView(idSuffix.buffer).setUint8(0, u8(i))
-		const content = new PostContent(`${post.id.toHex()}-${i}`)
+		const contentIndex = new Uint8Array(1)
+		new DataView(contentIndex.buffer).setUint8(0, u8(i))
+		const content = new PostContent(post.id.concat(Bytes.fromUint8Array(contentIndex)))
 		content.type = type
 		content.value = Bytes.fromUint8Array(value)
 		content.save()
@@ -106,11 +106,11 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 		replyCounter.save()
 
 		const fourHourId = post.parentId.concat(
-			Bytes.fromByteArray(Bytes.fromBigInt(post.blockTimestamp.div(BigInt.fromI32(14400))))
+			Bytes.fromByteArray(ByteArray.fromBigInt(post.blockTimestamp.div(BigInt.fromI32(14400))))
 		)
-		let replyCounterFourHour = PostReplyCounterFourHour.load(fourHourId)
+		let replyCounterFourHour = PostReplyCounter_FourHourTimeframe.load(fourHourId)
 		if (!replyCounterFourHour) {
-			replyCounterFourHour = new PostReplyCounterFourHour(fourHourId)
+			replyCounterFourHour = new PostReplyCounter_FourHourTimeframe(fourHourId)
 			replyCounterFourHour.count = BigInt.fromI32(1)
 		} else {
 			replyCounterFourHour.count = replyCounterFourHour.count.plus(BigInt.fromI32(1))
