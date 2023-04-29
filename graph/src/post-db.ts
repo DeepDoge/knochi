@@ -105,10 +105,12 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 		}
 		replyCounter.save()
 
-		let replyCounterFourHour = PostReplyCounterFourHour.load(post.parentId)
+		const fourHourId = post.parentId.concat(
+			Bytes.fromByteArray(Bytes.fromBigInt(post.blockTimestamp.div(BigInt.fromI32(14400))))
+		)
+		let replyCounterFourHour = PostReplyCounterFourHour.load(fourHourId)
 		if (!replyCounterFourHour) {
-			replyCounterFourHour = new PostReplyCounterFourHour(post.parentId)
-			replyCounterFourHour.timeframeId = post.blockTimestamp.div(BigInt.fromI32(14400))
+			replyCounterFourHour = new PostReplyCounterFourHour(fourHourId)
 			replyCounterFourHour.count = BigInt.fromI32(1)
 		} else {
 			replyCounterFourHour.count = replyCounterFourHour.count.plus(BigInt.fromI32(1))

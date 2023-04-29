@@ -20,9 +20,8 @@ type PostReplyCounter @entity {
 }
 
 type PostReplyCounterFourHour @entity {
-	id: Bytes! # post id
+	id: Bytes! # post id + timeframe
 	count: BigInt!
-	timeframeId: BigInt!
 }
 
 type TipPost @entity(immutable: true) {
