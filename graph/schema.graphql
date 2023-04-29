@@ -1,5 +1,6 @@
+# Off-chain post metadata for the post, per chain
 type Post @entity(immutable: true) {
-	id: Bytes! # transaction hash + event index
+	id: Bytes! # contract address + contract post index
 	parentId: Bytes! # post id
 	index: BigInt! # for querying
 	author: Bytes! # address
@@ -8,33 +9,39 @@ type Post @entity(immutable: true) {
 	tip: TipPost
 }
 
+# Off-chain content metadata for the post, per chain
 type PostContent @entity(immutable: true) {
-	id: String!
+	id: String! # just a unique id
 	type: String!
 	value: Bytes!
 }
 
-type PostReplyCounter @entity {
-	id: Bytes! # post id
-	count: BigInt!
-}
-
-type PostReplyCounterFourHour @entity {
-	id: Bytes! # post id + timeframe
-	count: BigInt!
-}
-
+# Tip metadata for the post
 type TipPost @entity(immutable: true) {
 	id: Bytes! # post id
 	to: Bytes! # address
 	value: BigInt!
 }
 
+# Used counting the replies of a post, per chain
+type PostReplyCounter @entity {
+	id: Bytes! # post id
+	count: BigInt!
+}
+
+# Used for finding the top posts of last 24+(0 to 4) hour, per chain
+type PostReplyCounter_FourHourTimeframe @entity {
+	id: Bytes! # post id + timeframe(timestamp(second) / (60 * 60 * 4))
+	count: BigInt!
+}
+
+# For counting post index per contract, used in post id
 type ContractPostCounter @entity {
 	id: Bytes! # contract address
 	count: BigInt!
 }
 
+# For counting post index per chain, used for ordering the query
 type ChainPostIndexCounter @entity {
 	id: Bytes! # empty bytes
 	count: BigInt!
