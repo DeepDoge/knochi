@@ -14,9 +14,9 @@ Eternis uses a combination of existing solutions to achieve its functionality. T
 
 While Eternis shares some similarities with LBRY, there are several key differences between the two platforms. One major difference is that Eternis is multichain, while LBRY is limited to the LBRY blockchain. This allows for greater scalability and flexibility on the Eternis platform.
 
-Additionally, Eternis uses The Graph to index chains, which provides a decentralized incentive mechanism for indexing and hosting the index. LBRY does not have this capability, which could potentially limit its ability to scale and grow over time.
+Additionally, Eternis uses The Graph to index chains, which provides a decentralized incentive mechanism for indexing and hosting the index. LBRY does not have this.
 
-Finally, Eternis allows for the creation of custom smart contracts with on-chain logic, while LBRY does not have this capability, enabling Eternis to provide a wide range of functionality to its users beyond what is available on LBRY.
+Finally, Eternis is designed to be highly customizable, with the ability to create and deploy custom smart contracts with on-chain logic, while LBRY does not have this capability, This flexibility allows for a wide range of additional functionality to be added to the platforms, such as tipping and sponsored posts.
 
 # Also
 
