@@ -78,6 +78,8 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 	return replyCounts
 }
 
+// TODO: make this getPosts
+// TODO: dont export getPosts or getReplyCounts, instead have getReplyCount or getPost, batch them and internally call getPosts or getReplyCounts etc. or dont have the (s) functions all together tbh
 export async function getPost(postId: PostId): Promise<PostData | null> {
 	const query = gql`
 	{
@@ -134,6 +136,7 @@ export type Timeline = {
 	loading: SignalReadable<boolean>
 }
 
+// TODO: only get ids then request for the posts seperately for caching. Also, PostData shouldnt include replyCount because thats mutable data
 export function getTimeline(options: {
 	author?: Address
 	parentId?: PostId
