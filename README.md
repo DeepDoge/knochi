@@ -10,14 +10,6 @@ Eternis is a multichain social media-ish platform that provides an alternative t
 
 Eternis uses a combination of existing solutions to achieve its functionality. The platform uses IPFS to host media content, The Graph to index chains, and smart contracts to enable on-chain logic. This architecture allows for a flexible and adaptable platform that can be customized to meet the needs of content creators and users.
 
-## How Eternis is Different from Others
-
-Eternis differs from other social media platforms in several ways. First, Eternis is multichain, meaning that content can be hosted on multiple blockchains. This allows for greater scalability and flexibility compared to platforms that are limited to a single blockchain.
-
-Second, Eternis is designed to be highly customizable, with the ability to create and deploy custom smart contracts with on-chain logic. This flexibility allows for a wide range of functionality to be added to the platform, such as tipping and sponsored posts.
-
-Eternis is designed to be a decentralized platform that is driven by its community. While it does not have a central owner or DAO, it is important to note that the indexing and front-end can be controlled by subgraph or front-end owners. Nonetheless, the content and data on Eternis remains unstoppable and cannot be changed or removed by any central authority, ensuring that the platform is open and accessible to all.
-
 ## How Eternis Compares to LBRY
 
 While Eternis shares some similarities with LBRY, there are several key differences between the two platforms. One major difference is that Eternis is multichain, while LBRY is limited to the LBRY blockchain. This allows for greater scalability and flexibility on the Eternis platform.
