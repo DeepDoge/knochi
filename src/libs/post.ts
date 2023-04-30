@@ -29,10 +29,10 @@ export function Post(post: SignalReadable<PostData>) {
 				<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
 				<div class="chips">
 					<span class="chain" title=${() => networks.chains[post.ref.chainKey].name}>
-						${networks.chains[post.ref.chainKey].name}
+						${() => networks.chains[post.ref.chainKey].name}
 					</span>
 					<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}>
-						${post.ref.id.toString().slice(0, 8)}
+						${() => post.ref.id.toString().slice(0, 8)}
 					</a>
 					${$.match($.derive(() => post.ref.parentId))
 						.case(null, () => null)
@@ -46,7 +46,7 @@ export function Post(post: SignalReadable<PostData>) {
 				${textContents.map((textContent) => html` <div>${textContent}</div> `)}
 			</a>
 			<div class="footer">
-				<div class="reply-count">${() => CommentSvg()} ${post.ref.replyCount.toString()}</div>
+				<div class="reply-count">${() => CommentSvg()} ${() => post.ref.replyCount.toString()}</div>
 				<div class="created-at">${() => relativeTimeSignal(post.ref.createdAt)}</div>
 			</div>
 		</div>

@@ -156,7 +156,13 @@ export function getTimeline(options: {
 				${options.author ? `{ author: "${options.author}" }` : ""}
 				${options.parentId ? `{ parentId: "${postIdToHex(options.parentId)}" }` : ""}
 				${options.replies === "include" ? "" : options.replies === "only" ? `{ parentId_not: "0x" }` : `{ parentId: "0x" }`}
-				${options.mention ? `{ contents_: { type: "mention",  value: "${options.mention}" } }` : ""}
+				${
+					options.mention
+						? `{ contents_: { type: "${ethers.utils.hexlify(ethers.utils.toUtf8Bytes("mention"))}",  value: "${
+								options.mention
+						  }" } }`
+						: ""
+				}
 				${
 					options.search
 						? `{ contents_: { value_contains: "${ethers.utils
