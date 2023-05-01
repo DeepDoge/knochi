@@ -28,7 +28,6 @@ export type PostData = {
 	author: Address
 	contents: { type: string; value: Uint8Array }[]
 	createdAt: Date
-	replyCount: BigNumber
 	chainKey: networks.ChainKey
 }
 
@@ -39,7 +38,8 @@ const clients = Object.entries(networks.graphApis).map(([key, value]) => ({
 		exchanges: [cacheExchange, fetchExchange],
 	}),
 }))
-const contractAddressToClientMap: Record<Address, (typeof clients)[number]> = {}
+type GraphClient = (typeof clients)[number]
+const contractAddressToClientMap: Record<Address, GraphClient> = {}
 for (const client of clients) {
 	for (const contract of Object.values(networks.subgraphs[client.key])) {
 		contractAddressToClientMap[Address(contract.address.toLowerCase())] = client
@@ -78,12 +78,11 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 	return replyCounts
 }
 
-// TODO: make this getPosts
-// TODO: dont export getPosts or getReplyCounts, instead have getReplyCount or getPost, batch them and internally call getPosts or getReplyCounts etc. or dont have the (s) functions all together tbh
-export async function getPost(postId: PostId): Promise<PostData | null> {
-	const query = gql`
+const postsCache: Record<PostId, PostData> = {}
+export async function getPosts(postIds: PostId[]): Promise<PostData[]> {
+	const query = (postIds: PostId[]) => gql`
 	{
-		post(id: "${postIdToHex(postId)}") {
+		posts(where: { or: [ ${postIds.map((postId) => `{ id: "${postIdToHex(postId)}" }`).join("\n")} ] }) {
 			id
 			parentId
 			index
@@ -101,33 +100,52 @@ export async function getPost(postId: PostId): Promise<PostData | null> {
 		}
 	}`
 
-	const contractAddress = Address(ethers.utils.hexlify(ethers.utils.arrayify(postIdToHex(postId)).subarray(0, 20)))
-	const client = contractAddressToClientMap[contractAddress]
-	if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
+	const toQuery = new Map<GraphClient, Set<PostId>>()
+	const posts: PostData[] = []
+	for (const postId of postIds) {
+		const cache = postsCache[postId]
+		if (cache) {
+			posts.push(cache)
+			continue
+		}
 
-	const responsePost = await (await client.urqlClient.query(query, {})).data.post
+		const contractAddress = Address(ethers.utils.hexlify(ethers.utils.arrayify(postIdToHex(postId)).subarray(0, 20)))
+		const client = contractAddressToClientMap[contractAddress]
+		if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
 
-	const post: PostData = {
-		id: postIdFromHex(responsePost.id),
-		parentId: responsePost.parentId === "0x" ? null : postIdFromHex(responsePost.parentId),
-		index: BigNumber.from(responsePost.index),
-		author: Address(responsePost.author),
-		contents: responsePost.contents.map((content: any): PostData["contents"][number] => ({
-			type: ethers.utils.toUtf8String(ethers.utils.arrayify(content.type)),
-			value: ethers.utils.arrayify(content.value),
-		})),
-		createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
-		replyCount: (await getReplyCounts([postId]))[postId] ?? BigNumber.from(0),
-		chainKey: client.key,
-		tip: responsePost.tip
-			? {
-					to: Address(responsePost.tip.to),
-					value: BigNumber.from(responsePost.tip.value),
-			  }
-			: null,
+		const postIds = toQuery.get(client) ?? toQuery.set(client, new Set()).get(client)!
+		postIds.add(postId)
 	}
 
-	return post
+	for (const [client, postIds] of toQuery.entries()) {
+		const responsePosts = (await (
+			await client.urqlClient.query(query(Array.from(postIds)), {})
+		).data.posts.map((responsePost: any) => ({
+			id: postIdFromHex(responsePost.id),
+			parentId: responsePost.parentId === "0x" ? null : postIdFromHex(responsePost.parentId),
+			index: BigNumber.from(responsePost.index),
+			author: Address(responsePost.author),
+			contents: responsePost.contents.map((content: any): PostData["contents"][number] => ({
+				type: ethers.utils.toUtf8String(ethers.utils.arrayify(content.type)),
+				value: ethers.utils.arrayify(content.value),
+			})),
+			createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
+			chainKey: client.key,
+			tip: responsePost.tip
+				? {
+						to: Address(responsePost.tip.to),
+						value: BigNumber.from(responsePost.tip.value),
+				  }
+				: null,
+		}))) as PostData[]
+
+		for (const post of responsePosts) {
+			postsCache[post.id] = post
+			if (post) posts.push(post)
+		}
+	}
+
+	return posts
 }
 
 export type Timeline = {
@@ -136,7 +154,6 @@ export type Timeline = {
 	loading: SignalReadable<boolean>
 }
 
-// TODO: only get ids then request for the posts seperately for caching. Also, PostData shouldnt include replyCount because thats mutable data
 export function getTimeline(options: {
 	author?: Address
 	parentId?: PostId
@@ -145,7 +162,7 @@ export function getTimeline(options: {
 	search?: string
 	top?: "minute" | "hour" | "day" | "week" | "month" | "year" | "all-time"
 }): Timeline {
-	const query = (count: number, beforeIndex: BigNumber) => gql`
+	const listQuery = (count: number, beforeIndex: BigNumber) => gql`
 	{
 		posts(
 			first: ${count.toString()}
@@ -155,7 +172,15 @@ export function getTimeline(options: {
 				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] } 
 				${options.author ? `{ author: "${options.author}" }` : ""}
 				${options.parentId ? `{ parentId: "${postIdToHex(options.parentId)}" }` : ""}
-				${options.replies === "include" ? "" : options.replies === "only" ? `{ parentId_not: "0x" }` : `{ parentId: "0x" }`}
+				${
+					options.parentId
+						? ""
+						: options.replies === "include"
+						? ""
+						: options.replies === "only"
+						? `{ parentId_not: "0x" }`
+						: `{ parentId: "0x" }`
+				}
 				${
 					options.mention
 						? `{ contents_: { type: "${ethers.utils.hexlify(ethers.utils.toUtf8Bytes("mention"))}",  value: "${
@@ -174,19 +199,7 @@ export function getTimeline(options: {
 			] }
 		) {
 			id
-			parentId
 			index
-
-			author
-			contents {
-				type
-				value
-			}
-			tip {
-				to
-				value
-			}
-			blockTimestamp
 		}
 	}`
 
@@ -201,42 +214,23 @@ export function getTimeline(options: {
 		loading.ref = true
 		try {
 			await Promise.all(
-				clients.map(async ({ urqlClient: client, key }, index) => {
+				clients.map(async ({ urqlClient: client }, index) => {
 					const postQueue = postQueuesOfChains[index]!
 					if (postQueue.length >= count) return
 					if (isChainFinished[index]) return
 
-					const response = await client.query(query(count, lastIndex[index]!), {}).toPromise()
-					if (response.data.posts.length === 0) return
+					const listResponse = await client.query(listQuery(count, lastIndex[index]!), {}).toPromise()
+					if (listResponse.data.posts.length === 0) return
 
-					const replyCounts = await getReplyCounts(response.data.posts.map((post: any) => postIdFromHex(post.id)))
+					const listOfNewPosts = listResponse.data.posts.map((post: any) => ({
+						id: postIdFromHex(post.id),
+						index: BigNumber.from(post.index),
+					})) as { id: PostId; index: BigNumber }[]
 
-					const newPosts = response.data.posts.map(
-						(post: any): PostData => ({
-							id: postIdFromHex(post.id),
-							parentId: post.parentId === "0x" ? null : postIdFromHex(post.parentId),
-							index: BigNumber.from(post.index),
-							author: Address(post.author),
-							contents: post.contents.map((content: any): PostData["contents"][number] => ({
-								type: ethers.utils.toUtf8String(ethers.utils.arrayify(content.type)),
-								value: ethers.utils.arrayify(content.value),
-							})),
-							createdAt: new Date(parseInt(post.blockTimestamp) * 1000),
-							replyCount: replyCounts[post.id] ?? BigNumber.from(0),
-							chainKey: key,
-							tip: post.tip
-								? {
-										to: Address(post.tip.to),
-										value: BigNumber.from(post.tip.value),
-								  }
-								: null,
-						})
-					) as PostData[]
+					if (listOfNewPosts.length < count) isChainFinished[index] = true
+					lastIndex[index] = listOfNewPosts[listOfNewPosts.length - 1]!.index
 
-					if (newPosts.length < count) isChainFinished[index] = true
-					lastIndex[index] = newPosts[newPosts.length - 1]!.index
-
-					postQueue.push(...newPosts)
+					postQueue.push(...(await getPosts(listOfNewPosts.map((post) => post.id))))
 				})
 			)
 
@@ -271,3 +265,5 @@ export function getTimeline(options: {
 		loadBottom,
 	}
 }
+
+// TODO: Get top posts

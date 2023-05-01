@@ -32,13 +32,15 @@ export function Post(post: SignalReadable<PostData>) {
 						${() => networks.chains[post.ref.chainKey].name}
 					</span>
 					<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}>
-						${() => post.ref.id.toString().slice(0, 8)}
+						${() => post.ref.id.slice(post.ref.id.length - 5)}
 					</a>
 					${$.match($.derive(() => post.ref.parentId))
 						.case(null, () => null)
 						.default(
 							(parentId) =>
-								html`<a class="id parent-id" href=${() => routeHref({ postId: parentId.ref })}> ${"parent"} </a>`
+								html`<a class="id parent-id" href=${() => routeHref({ postId: parentId.ref })}>
+									${() => parentId.ref.slice(parentId.ref.length - 5)}
+								</a>`
 						)}
 				</div>
 			</div>
@@ -46,7 +48,7 @@ export function Post(post: SignalReadable<PostData>) {
 				${textContents.map((textContent) => html` <div>${textContent}</div> `)}
 			</a>
 			<div class="footer">
-				<div class="reply-count">${() => CommentSvg()} ${() => post.ref.replyCount.toString()}</div>
+				<div class="reply-count">${() => CommentSvg()} ${() => "TODO"}</div>
 				<div class="created-at">${() => relativeTimeSignal(post.ref.createdAt)}</div>
 			</div>
 		</div>
@@ -112,9 +114,13 @@ PostComponent.$css = css`
 				text-overflow: ellipsis;
 				white-space: nowrap;
 			}
-			&.id {
+			&.post-id {
 				color: hsl(var(--slave-text-hsl));
 				background-color: hsl(var(--slave-hsl), 75%);
+			}
+			&.parent-id {
+				color: hsl(var(--master-text-hsl));
+				background-color: hsl(var(--master-hsl), 75%);
 			}
 		}
 	}

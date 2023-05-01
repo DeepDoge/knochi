@@ -1,4 +1,4 @@
-import { getPost, getTimeline, PostId } from "@/api/graph"
+import { getPosts, getTimeline, PostId } from "@/api/graph"
 import { Post } from "@/libs/post"
 import { Timeline } from "@/libs/timeline"
 import { routeHref } from "@/router"
@@ -6,12 +6,13 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
+import { PostForm } from "./post-form"
 
 const PostTimelineComponent = defineComponent("x-post-timeline")
 export function PostTimeline(postId: SignalReadable<PostId>) {
 	const component = new PostTimelineComponent()
 
-	const post = $.await($.derive(() => getPost(postId.ref))).then()
+	const post = $.await($.derive(() => getPosts([postId.ref]))).then((posts) => posts.ref[0] ?? null)
 	const repliesTimeline = $.derive(() => getTimeline({ parentId: postId.ref }))
 
 	component.$html = html`
@@ -27,7 +28,7 @@ export function PostTimeline(postId: SignalReadable<PostId>) {
 			</div>
 			<div class="replies">
 				<h3>Replies</h3>
-				${Timeline(repliesTimeline)}
+				${PostForm(postId)} ${Timeline(repliesTimeline)}
 			</div>
 		</div>
 	`

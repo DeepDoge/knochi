@@ -1,14 +1,14 @@
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
+import { walletApi } from "./api/wallet"
 import { ChartFilledSvg } from "./assets/svgs/chart-filled"
 import { ChartOutlineSvg } from "./assets/svgs/chart-outline"
 import { HomeFilledSvg } from "./assets/svgs/home-filled"
 import { HomeOutlineSvg } from "./assets/svgs/home-outline"
 import { SearchSvg } from "./assets/svgs/search"
-import { Profile } from "./libs/profile"
 import { route } from "./router"
-import { Address } from "./utils/address"
+import { Wallet } from "./wallet"
 
 const NavigationComponent = defineComponent("x-navigation")
 export function Navigation() {
@@ -18,10 +18,7 @@ export function Navigation() {
 
 	component.$html = html`
 		<div class="left">
-			<x
-				${Profile($.derive(() => Address("0xE272C9a263701DAFFe940FB4ecEACFa9b2c1217D")))}
-				class="profile"
-				class:active=${() => firstPartOfPath.ref === Address("0xE272C9a263701DAFFe940FB4ecEACFa9b2c1217D")}></x>
+			<x ${Wallet()} class="profile" class:active=${() => firstPartOfPath.ref === walletApi.web3Wallet.ref?.address}></x>
 		</div>
 
 		<nav>
