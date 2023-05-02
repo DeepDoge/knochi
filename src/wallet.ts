@@ -11,12 +11,10 @@ export function Wallet() {
 	component.$html = html`
 		${$.match(walletApi.web3Wallet)
 			.case(
-				null,
-				() =>
-					html`<button class="btn" on:click=${(e) => (e.preventDefault(), walletApi.connectWallet())}>
-						Connect Wallet
-					</button>`
+				walletApi.NotConnectedSymbol,
+				() => html`<button class="btn" on:click=${(e) => (e.preventDefault(), walletApi.connectWallet())}>Connect Wallet</button>`
 			)
+			.case(walletApi.WrongNetworkSymbol, () => html` <button class="btn" on:click=${(e) => (e.preventDefault(), e)}>Wrong Network</button> `)
 			.default((web3Wallet) => html` <x ${Profile($.derive(() => web3Wallet.ref.address))}></x>`)}
 	`
 

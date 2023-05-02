@@ -4,7 +4,7 @@ import { BigNumber, ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
-import { networks } from "../networks"
+import { networkConfigs } from "../networks"
 
 export type PostData = {
 	id: PostId
@@ -17,20 +17,20 @@ export type PostData = {
 	author: Address
 	contents: { type: string; value: Uint8Array }[]
 	createdAt: Date
-	chainKey: networks.ChainKey
+	chainKey: networkConfigs.ChainKey
 }
 
-const clients = Object.entries(networks.graphApis).map(([key, value]) => ({
-	key: key as networks.ChainKey,
+const clients = Object.entries(networkConfigs.graphs).map(([key, value]) => ({
+	key: key as networkConfigs.ChainKey,
 	urqlClient: createClient({
-		url: value.url.href,
+		url: value.api.href,
 		exchanges: [cacheExchange, fetchExchange],
 	}),
 }))
 type GraphClient = (typeof clients)[number]
 const contractAddressToClientMap: Record<Address, GraphClient> = {}
 for (const client of clients) {
-	for (const contract of Object.values(networks.subgraphs[client.key])) {
+	for (const contract of Object.values(networkConfigs.graphs[client.key].subgraphs)) {
 		contractAddressToClientMap[Address(contract.address.toLowerCase())] = client
 	}
 }
