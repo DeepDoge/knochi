@@ -8,7 +8,7 @@ Eternis is a multichain social media-ish platform that provides an alternative t
 
 ## How Eternis Works
 
-Eternis uses a combination of existing solutions to achieve its functionality. The platform uses IPFS to host media content, The Graph to index chains, and smart contracts to enable on-chain logic. This architecture allows for a flexible and adaptable platform that can be customized to meet the needs of content creators and users.
+Eternis uses a combination of existing solutions to achieve its functionality. The platform uses IPFS to host front-end and media content, The Graph to index chains, and smart contracts to enable on-chain logic. This architecture allows for a flexible and adaptable platform that can be customized to meet the needs of content creators and users.
 
 ## How Eternis Compares to LBRY
 
@@ -18,6 +18,6 @@ Additionally, Eternis uses The Graph to index chains, which provides a decentral
 
 Finally, Eternis is designed to be highly customizable, with the ability to create and deploy custom smart contracts with on-chain logic, while LBRY does not have this capability, This flexibility allows for a wide range of additional functionality to be added to the platforms, such as tipping and sponsored posts.
 
-# Also
+## MasterTS
 
-It's made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library.
+Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library.
