@@ -8,7 +8,7 @@ Eternis is a multichain social media-ish platform that provides an alternative t
 
 ## How Eternis Works
 
-Eternis uses a combination of existing solutions to achieve its functionality. The platform uses IPFS to host front-end and media content, The Graph to index chains, and smart contracts to enable on-chain logic. This architecture allows for a flexible and adaptable platform that can be customized to meet the needs of content creators and users.
+Eternis uses a combination of existing solutions to achieve its functionality. The platform uses IPFS to host front-end and content media, The Graph to index chains, and smart contracts to enable on-chain logic. This architecture allows for a flexible and adaptable platform that can be customized to meet the needs of content creators and users.
 
 ## How Eternis Compares to LBRY
 
