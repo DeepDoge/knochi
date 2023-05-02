@@ -36,7 +36,7 @@ export const routerLayout = $.readable<Layout>((set) => {
 			if (path[0] === "") {
 				set(homeLayout({}))
 			} else if (path[0] === "search") {
-				set(searchLayout({ search: path[1] ?? "" }))
+				set(searchLayout({ search: path[1] ? decodeURIComponent(path[1]) : "" }))
 			} else if (path[0] === "top") {
 				set(searchLayout({ search: "" }))
 			} else if (path[0]?.startsWith("0x") && path[0].length === 42) {

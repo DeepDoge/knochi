@@ -1,4 +1,4 @@
-import { PostId, postIdToHex } from "@/api/graph"
+import { PostId, postIdToHex } from "@/utils/post-id"
 import { walletApi } from "@/api/wallet"
 import { encodePostContent, PostContent } from "@/utils/post-db"
 import { ethers } from "ethers"

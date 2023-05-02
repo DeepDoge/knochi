@@ -1,21 +1,10 @@
 import { Address } from "@/utils/address"
+import { PostId, postIdFromHex, postIdToHex } from "@/utils/post-id"
 import { BigNumber, ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 import { networks } from "../networks"
-
-export type PostId = string & { _: "PostId" }
-export function PostId(postId: string): PostId {
-	return postId as PostId
-}
-export function postIdFromHex(postIdHex: string): PostId {
-	return ethers.utils.base58.encode(postIdHex) as PostId
-}
-
-export function postIdToHex(postId: PostId): string {
-	return ethers.utils.hexlify(ethers.utils.base58.decode(postId))
-}
 
 export type PostData = {
 	id: PostId
@@ -152,17 +141,20 @@ export type Timeline = {
 	loadBottom(): Promise<void>
 	posts: SignalReadable<PostData[]>
 	loading: SignalReadable<boolean>
+	newPostCountAtTop: SignalReadable<number>
 }
 
-export function getTimeline<TParentID extends PostId = never>(options: {
+export type PostQueryOptions<TParentID extends PostId> = {
 	author?: Address
 	parentId?: TParentID
 	replies?: [TParentID] extends [never] ? "include" | "only" : never
 	mention?: Address
 	search?: string
 	top?: "minute" | "hour" | "day" | "week" | "month" | "year" | "all-time"
-}): Timeline {
-	const listQuery = (count: number, beforeIndex: BigNumber) => gql`
+}
+
+export function getTimeline<TParentID extends PostId = never>(options: PostQueryOptions<TParentID>): Timeline {
+	const query = (count: number, beforeIndex?: BigNumber) => gql`
 	{
 		posts(
 			first: ${count.toString()}
@@ -194,7 +186,13 @@ export function getTimeline<TParentID extends PostId = never>(options: {
 								.substring(2)}" } }`
 						: ""
 				}
-				{ index_lt: ${beforeIndex.toString()} }
+				${
+					beforeIndex
+						? beforeIndex.gte(0)
+							? `{ index_lt: ${beforeIndex.toString()} }`
+							: `{ index_gt: ${beforeIndex.abs().toString()} }`
+						: ""
+				} 
 			] }
 		) {
 			id
@@ -205,7 +203,9 @@ export function getTimeline<TParentID extends PostId = never>(options: {
 	const posts = $.writable<PostData[]>([])
 	const postQueuesOfChains = clients.map(() => [] as PostData[])
 	const isChainFinished = new Array(clients.length).fill(false)
-	const lastIndex = new Array(clients.length).fill(Number.MAX_SAFE_INTEGER)
+	const lastIndex = new Array<BigNumber>(clients.length)
+
+	const loadedOnce = $.writable(false)
 
 	let loading = $.writable(false)
 	async function loadBottom(count = 128) {
@@ -213,20 +213,22 @@ export function getTimeline<TParentID extends PostId = never>(options: {
 		loading.ref = true
 		try {
 			await Promise.all(
-				clients.map(async ({ urqlClient: client }, index) => {
+				clients.map(async (client, index) => {
 					const postQueue = postQueuesOfChains[index]!
 					if (postQueue.length >= count) return
 					if (isChainFinished[index]) return
 
-					const listResponse = await client.query(listQuery(count, lastIndex[index]!), {}).toPromise()
-					if (listResponse.data.posts.length === 0) return
+					const listResponse = await client.urqlClient.query(query(count, lastIndex[index]), {}).toPromise()
 
 					const listOfNewPosts = listResponse.data.posts.map((post: any) => ({
 						id: postIdFromHex(post.id),
 						index: BigNumber.from(post.index),
 					})) as { id: PostId; index: BigNumber }[]
 
-					if (listOfNewPosts.length < count) isChainFinished[index] = true
+					if (listOfNewPosts.length < count) {
+						isChainFinished[index] = true
+						if (listOfNewPosts.length === 0) return
+					}
 					lastIndex[index] = listOfNewPosts[listOfNewPosts.length - 1]!.index
 
 					postQueue.push(...(await getPosts(listOfNewPosts.map((post) => post.id))))
@@ -250,18 +252,39 @@ export function getTimeline<TParentID extends PostId = never>(options: {
 				if (newestChainIndex === null) break
 				posts.ref.push(postQueuesOfChains[newestChainIndex]!.shift()!)
 			}
+
 			if (posts.ref.length !== postsLengthCache) posts.signal()
 		} catch (error) {
 			console.error(error)
 		} finally {
 			loading.ref = false
+			loadedOnce.ref = true
 		}
 	}
+
+	const newPostsAtTop = $.writable(0)
+
+	// TODO: do this.
+	/* {
+		const unsubscribe = loadedOnce.subscribe(async (loadedOnce) => {
+			if (!loadedOnce) return
+			unsubscribe()
+
+			let index = 0
+			for (const client of clients) {
+				client.urqlClient.subscription(query(10, posts.ref[0]?.index), {}).subscribe((value) => {
+					newPostsAtTop.ref += value.data.posts.length
+				})
+				index++
+			}
+		}).unsubscribe
+	} */
 
 	return {
 		posts,
 		loading,
 		loadBottom,
+		newPostCountAtTop: newPostsAtTop,
 	}
 }
 

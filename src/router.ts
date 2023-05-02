@@ -1,6 +1,6 @@
 import { $ } from "master-ts/library/$"
 import type { SignalReadable, SignalWritable } from "master-ts/library/signal"
-import { PostId } from "./api/graph"
+import { PostId } from "@/utils/post-id"
 
 const routePath = $.writable("")
 const routePathArr = $.derive(() => routePath.ref.split("/"))
