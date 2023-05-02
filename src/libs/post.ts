@@ -13,14 +13,15 @@ import { css, html } from "master-ts/library/template"
 const PostComponent = defineComponent("x-post")
 export function Post(post: SignalReadable<PostData>) {
 	const component = new PostComponent()
-
-	let text = post.ref.contents
-		.filter((content) => content.type === "text")
-		.map((content) => ethers.utils.toUtf8String(content.value))
-		.join("\n")
-		.trim()
-	if (text.length > 128) text = `${text.substring(0, 128).trimEnd()}...`
-	const textContents = text.split("\n")
+	const textContents = $.derive(() => {
+		let text = post.ref.contents
+			.filter((content) => content.type === "text")
+			.map((content) => ethers.utils.toUtf8String(content.value))
+			.join("\n")
+			.trim()
+		if (text.length > 128) text = `${text.substring(0, 128).trimEnd()}...`
+		return text.split("\n")
+	})
 
 	component.$html = html`
 		<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
@@ -45,7 +46,7 @@ export function Post(post: SignalReadable<PostData>) {
 				</div>
 			</div>
 			<a class="content" href=${() => routeHref({ postId: post.ref.id })}>
-				${textContents.map((textContent) => html` <div>${textContent}</div> `)}
+				${() => textContents.ref.map((textContent) => html` <div>${textContent}</div> `)}
 			</a>
 			<div class="footer">
 				<div class="reply-count">${() => CommentSvg()} ${() => "TODO"}</div>

@@ -12,7 +12,7 @@ const PostTimelineComponent = defineComponent("x-post-timeline")
 export function PostTimeline(postId: SignalReadable<PostId>) {
 	const component = new PostTimelineComponent()
 
-	const post = $.await($.derive(() => getPosts([postId.ref]))).then((posts) => posts.ref[0] ?? null)
+	const post = $.await($.derive(() => getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId])).then()
 	const repliesTimeline = $.derive(() => getTimeline({ parentId: postId.ref }))
 
 	component.$html = html`
