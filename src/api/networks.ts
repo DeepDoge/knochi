@@ -2,6 +2,8 @@ import networksJson from "@/../graph/networks.json"
 import graphVersionLabel from "@/../graph/version-label.json"
 import type { Address } from "@/utils/address"
 
+// TODO: all of these should be able to be changed by the user, so make something like config page, dont bother with the reactivity just reload on save
+
 export namespace networkConfigs {
 	type NestedStringToAddress<T extends Record<string, any>> = {
 		[K in keyof T]: T[K] extends Record<string, any> ? NestedStringToAddress<T[K]> : T[K] extends string ? Address : T[K]
