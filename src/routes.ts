@@ -13,18 +13,14 @@ export type Layout = {
 	page: Component
 }
 
-export function createLayout<T extends Record<PropertyKey, any>>(
-	factory: (params: { [K in keyof T]: SignalReadable<T[K]> }) => Layout
-) {
+export function createLayout<T extends Record<PropertyKey, any>>(factory: (params: { [K in keyof T]: SignalReadable<T[K]> }) => Layout) {
 	let cache: Layout | null = null
 	let paramSignals: { [K in keyof T]: SignalWritable<T[K]> }
 	return (params: T) =>
 		cache
 			? (Object.entries(paramSignals).forEach(([key, signal]) => (signal.ref = params[key])), cache)
 			: (cache = factory(
-					(paramSignals = Object.fromEntries(
-						Object.entries(params).map(([key, value]) => [key, $.writable(value)])
-					) as {
+					(paramSignals = Object.fromEntries(Object.entries(params).map(([key, value]) => [key, $.writable(value)])) as {
 						[K in keyof T]: SignalWritable<T[K]>
 					})
 			  ))

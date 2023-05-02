@@ -172,27 +172,9 @@ export function getTimeline<TParentID extends PostId = never>(options: PostQuery
 						? `{ parentId_not: "0x" }`
 						: `{ parentId: "0x" }`
 				}
-				${
-					options.mention
-						? `{ contents_: { type: "${ethers.utils.hexlify(ethers.utils.toUtf8Bytes("mention"))}",  value: "${
-								options.mention
-						  }" } }`
-						: ""
-				}
-				${
-					options.search
-						? `{ contents_: { value_contains: "${ethers.utils
-								.hexlify(ethers.utils.toUtf8Bytes(options.search))
-								.substring(2)}" } }`
-						: ""
-				}
-				${
-					beforeIndex
-						? beforeIndex.gte(0)
-							? `{ index_lt: ${beforeIndex.toString()} }`
-							: `{ index_gt: ${beforeIndex.abs().toString()} }`
-						: ""
-				} 
+				${options.mention ? `{ contents_: { type: "${ethers.utils.hexlify(ethers.utils.toUtf8Bytes("mention"))}",  value: "${options.mention}" } }` : ""}
+				${options.search ? `{ contents_: { value_contains: "${ethers.utils.hexlify(ethers.utils.toUtf8Bytes(options.search)).substring(2)}" } }` : ""}
+				${beforeIndex ? (beforeIndex.gte(0) ? `{ index_lt: ${beforeIndex.toString()} }` : `{ index_gt: ${beforeIndex.abs().toString()} }`) : ""} 
 			] }
 		) {
 			id

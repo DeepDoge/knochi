@@ -1,13 +1,13 @@
-import type { PostId } from "@/utils/post-id"
+import { getPosts, getTimeline } from "@/api/graph"
 import { Post } from "@/libs/post"
 import { Timeline } from "@/libs/timeline"
 import { routeHref } from "@/router"
+import type { PostId } from "@/utils/post-id"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 import { PostForm } from "./post-form"
-import { getPosts, getTimeline } from "@/api/graph"
 
 const PostTimelineComponent = defineComponent("x-post-timeline")
 export function PostTimeline(postId: SignalReadable<PostId>) {

@@ -10,10 +10,7 @@ export function Timeline(timeline: SignalReadable<Timeline>) {
 	const component = new TimelineComponent()
 
 	const loadBottomButton = $.writable<HTMLButtonElement | null>(null)
-	component.$subscribe(
-		loadBottomButton,
-		(button) => (loadBottomButtonObserve.disconnect(), button && loadBottomButtonObserve.observe(button))
-	)
+	component.$subscribe(loadBottomButton, (button) => (loadBottomButtonObserve.disconnect(), button && loadBottomButtonObserve.observe(button)))
 	const loadBottomButtonObserve = new IntersectionObserver((entries) => {
 		if (!entries[0] || entries[0].intersectionRatio <= 0) return
 		timeline.ref.loadBottom()

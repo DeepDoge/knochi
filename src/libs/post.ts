@@ -32,9 +32,7 @@ export function Post(post: SignalReadable<PostData>) {
 					<span class="chain" title=${() => networkConfigs.chains[post.ref.chainKey].name}>
 						${() => networkConfigs.chains[post.ref.chainKey].name}
 					</span>
-					<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}>
-						${() => post.ref.id.slice(post.ref.id.length - 5)}
-					</a>
+					<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}> ${() => post.ref.id.slice(post.ref.id.length - 5)} </a>
 					${$.match($.derive(() => post.ref.parentId))
 						.case(null, () => null)
 						.default(

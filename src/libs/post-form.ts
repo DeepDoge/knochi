@@ -1,6 +1,6 @@
-import { PostId, postIdToHex } from "@/utils/post-id"
 import { walletApi } from "@/api/wallet"
 import { encodePostContent, PostContent } from "@/utils/post-db"
+import { PostId, postIdToHex } from "@/utils/post-id"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
@@ -24,8 +24,9 @@ export function PostForm(parentId: SignalReadable<PostId>) {
 	async function sendPost() {
 		try {
 			state.ref = "loading"
-			alert()
-			await (await walletApi.web3Wallet.ref?.contracts.PostDB.post(bytes.ref))?.wait(1)
+			if (walletApi.web3Wallet.ref === walletApi.NotConnectedSymbol) throw new Error("Wallet not connected.")
+			if (walletApi.web3Wallet.ref === walletApi.WrongNetworkSymbol) throw new Error("Wrong Network.")
+			await (await walletApi.web3Wallet.ref.contracts.PostDB.post(bytes.ref))?.wait(1)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)
