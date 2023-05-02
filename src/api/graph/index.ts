@@ -101,11 +101,11 @@ export async function getPosts(postIds: PostId[]): Promise<PostData[]> {
 	}`
 
 	const toQuery = new Map<GraphClient, Set<PostId>>()
-	const posts: PostData[] = []
+	const posts: Record<PostId, PostData> = {}
 	for (const postId of postIds) {
 		const cache = postsCache[postId]
 		if (cache) {
-			posts.push(cache)
+			posts[cache.id] = cache
 			continue
 		}
 
@@ -141,11 +141,11 @@ export async function getPosts(postIds: PostId[]): Promise<PostData[]> {
 
 		for (const post of responsePosts) {
 			postsCache[post.id] = post
-			if (post) posts.push(post)
+			if (post) posts[post.id] = post
 		}
 	}
 
-	return posts
+	return postIds.map((postId) => posts[postId]).filter(Boolean)
 }
 
 export type Timeline = {
@@ -154,10 +154,10 @@ export type Timeline = {
 	loading: SignalReadable<boolean>
 }
 
-export function getTimeline(options: {
+export function getTimeline<TParentID extends PostId = never>(options: {
 	author?: Address
-	parentId?: PostId
-	replies?: "include" | "only"
+	parentId?: TParentID
+	replies?: [TParentID] extends [never] ? "include" | "only" : never
 	mention?: Address
 	search?: string
 	top?: "minute" | "hour" | "day" | "week" | "month" | "year" | "all-time"
@@ -171,10 +171,9 @@ export function getTimeline(options: {
 			where: { and: [
 				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] } 
 				${options.author ? `{ author: "${options.author}" }` : ""}
-				${options.parentId ? `{ parentId: "${postIdToHex(options.parentId)}" }` : ""}
 				${
 					options.parentId
-						? ""
+						? `{ parentId: "${postIdToHex(options.parentId)}" }`
 						: options.replies === "include"
 						? ""
 						: options.replies === "only"
