@@ -24,7 +24,7 @@ LBRY/Odysee is a decentralized content sharing and streaming platform that utili
 
 One of the major differences is that LBRY/Odysee is limited to the LBRY blockchain, while Eternis is multichain and can operate on multiple blockchains. This provides Eternis with greater scalability and flexibility, as it users choose to post their content on anychain without being stuck on one.
 
-Finally, Eternis provides greater customization and flexibility than LBRY/Odysee thanks to its smart contract based architecture. Platforms can create and deploy custom smart contracts with additional on-chain logic to enable a wide range of functionality, such as tipping and sponsored posts and many more.
+Finally, Eternis provides greater customization and flexibility than LBRY/Odysee thanks to its smart contract based architecture. Platforms can create and deploy custom smart contracts with additional on-chain logic to enable a wide range of functionality, such as tipping, sponsored posts and many more.
 
 In summary, while both LBRY/Odysee and Eternis are decentralized content sharing platforms with very similar design, they have different architectures which allows more flexablity for Eternis platform developers and users.
 
