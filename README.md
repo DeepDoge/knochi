@@ -24,11 +24,9 @@ LBRY/Odysee is a decentralized content sharing and streaming platform that utili
 
 One of the major differences is that LBRY/Odysee is limited to the LBRY blockchain, while Eternis is multichain and can operate on multiple blockchains. This provides Eternis with greater scalability and flexibility, as it can leverage multiple chains for various purposes.
 
-Another key difference is that while LBRY/Odysee utilizes blockchain technology to enable direct monetization for content creators, Eternis is designed to be an ownerless platform from the ground up. Eternis utilizes a combination of IPFS, The Graph, and smart contracts to host front-end and content media in a decentralized manner, with content creators retaining full ownership and control over their content.
+Finally, Eternis provides greater customization and flexibility than LBRY/Odysee thanks to its smart contract based architecture. Platforms can create and deploy custom smart contracts with additional on-chain logic to enable a wide range of functionality, such as tipping and sponsored posts and many more.
 
-Finally, Eternis provides greater customization and flexibility than LBRY/Odysee thanks to its smart contract-based architecture. Developers can create and deploy custom smart contracts with on-chain logic to enable a wide range of additional functionality, such as tipping and sponsored posts.
-
-In summary, while both LBRY/Odysee and Eternis are decentralized content sharing platforms, they have different architectures and priorities. LBRY/Odysee is focused on enabling direct monetization for content creators on the LBRY blockchain, while Eternis prioritizes an ownerless, decentralized environment for content creation and interaction, with greater flexibility and customization through smart contracts.
+In summary, while both LBRY/Odysee and Eternis are decentralized content sharing platforms with very similar design, they have different architectures which allows more flexablity for Eternis platform developers and users.
 
 ## MasterTS
 
