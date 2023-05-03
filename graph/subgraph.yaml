@@ -3,42 +3,21 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: PostDB
+    name: IEternisPostDB
     network: sepolia
     source:
-      abi: PostDB
-      address: "0x080EBE3EFb387120306E36a93F30ADb37c7e73A6"
+      abi: IEternisPostDB
       startBlock: 3325895
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Post
+        - EternisPost
       abis:
-        - name: PostDB
-          file: ./abis/PostDB.json
+        - name: IEternisPostDB
+          file: ./abis/IEternisPostDB.json
       eventHandlers:
-        - event: Post(bytes)
+        - event: EternisPost(uint256,bytes)
           handler: handlePost
-      file: ./src/post-db.ts
-  - kind: ethereum
-    name: TipPostDB
-    network: sepolia
-    source:
-      abi: TipPostDB
-      address: "0x1d42BcB1Ef482fB8dcCE55eDE355d3F2dCAfC82A"
-      startBlock: 3325898
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Post
-      abis:
-        - name: TipPostDB
-          file: ./abis/TipPostDB.json
-      eventHandlers:
-        - event: Post(bytes,address)
-          handler: handleTipPost
       file: ./src/post-db.ts

@@ -5,8 +5,6 @@
 		"dev": "vite --port 3000",
 		"build": "vite build",
 		"preview": "vite preview --port 3000",
-		"hardhat:compile": "npm run compile --prefix ./hardhat",
-		"hardhat:clean": "npm run clean --prefix ./hardhat",
 		"graph:codegen": "npm run codegen --prefix ./graph",
 		"graph:build": "npm run build --prefix ./graph",
 		"graph:deploy": "npm run deploy --prefix ./graph"

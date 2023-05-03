@@ -23,12 +23,6 @@ type TipPost @entity(immutable: true) {
 	value: BigInt!
 }
 
-# For counting post index per contract, used in post id
-type ContractPostCounter @entity {
-	id: Bytes! # contract address
-	count: BigInt!
-}
-
 # For counting post index per chain, used for ordering the query
 type ChainPostIndexCounter @entity {
 	id: Bytes! # empty bytes

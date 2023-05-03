@@ -17,7 +17,8 @@
 				"GitHub.copilot",
 				"Gruntfuggly.todo-tree",
 				"NomicFoundation.hardhat-solidity",
-				"GraphQL.vscode-graphql"
+				"GraphQL.vscode-graphql",
+				"RemixProject.ethereum-remix"
 			]
 		}
 	}

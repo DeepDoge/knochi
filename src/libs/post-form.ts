@@ -8,7 +8,7 @@ import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 
 const PostFormComponent = defineComponent("x-post-form")
-export function PostForm(parentId: SignalReadable<PostId>) {
+export function PostForm(parentId: SignalReadable<PostId | null>) {
 	const component = new PostFormComponent()
 
 	const state = $.writable<"loading" | "idle" | Error>("idle")
@@ -26,7 +26,7 @@ export function PostForm(parentId: SignalReadable<PostId>) {
 			state.ref = "loading"
 			if (walletApi.web3Wallet.ref === walletApi.NotConnectedSymbol) throw new Error("Wallet not connected.")
 			if (walletApi.web3Wallet.ref === walletApi.WrongNetworkSymbol) throw new Error("Wrong Network.")
-			await (await walletApi.web3Wallet.ref.contracts.PostDB.post(bytes.ref))?.wait(1)
+			await (await walletApi.web3Wallet.ref.contracts.EternisPostDB.post(bytes.ref))?.wait(1)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)

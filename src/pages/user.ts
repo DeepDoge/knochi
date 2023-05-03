@@ -1,4 +1,6 @@
 import { getTimeline } from "@/api/graph"
+import { walletApi } from "@/api/wallet"
+import { PostForm } from "@/libs/post-form"
 import { Profile } from "@/libs/profile"
 import { Timeline } from "@/libs/timeline"
 import { routeHref } from "@/router"
@@ -42,6 +44,9 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 			background-color: hsl(var(--master-hsl), 75%);
 		}
 	`
+
+	const isMyProfile = $.derive(() => typeof walletApi.web3Wallet.ref === "object" && params.userAddress.ref === walletApi.web3Wallet.ref.address)
+
 	page.$html = html` <nav class="tabs">
 			<ul>
 				<li>
@@ -70,6 +75,9 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 				</li>
 			</ul>
 		</nav>
+		${$.match(isMyProfile)
+			.case(true, () => html`${PostForm($.writable(null))}`)
+			.default(() => null)}
 		${Timeline(timeline)}`
 
 	const TopComponent = defineComponent("x-user-layout-top")

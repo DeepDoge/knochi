@@ -30,8 +30,8 @@ const clients = Object.entries(networkConfigs.graphs).map(([key, value]) => ({
 type GraphClient = (typeof clients)[number]
 const contractAddressToClientMap: Record<Address, GraphClient> = {}
 for (const client of clients) {
-	for (const contract of Object.values(networkConfigs.graphs[client.key].subgraphs)) {
-		contractAddressToClientMap[Address(contract.address.toLowerCase())] = client
+	for (const contract of Object.values(networkConfigs.contracts[client.key])) {
+		contractAddressToClientMap[Address(contract)] = client
 	}
 }
 

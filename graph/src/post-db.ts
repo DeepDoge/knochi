@@ -1,15 +1,6 @@
 import { Address, BigInt, ByteArray, Bytes, dataSource } from "@graphprotocol/graph-ts"
-import { Post as PostEvent } from "../generated/PostDB/PostDB"
-import {
-	ChainPostIndexCounter,
-	ContractPostCounter,
-	Post,
-	PostContent,
-	PostReplyCounter,
-	PostReplyCounter_FourHourTimeframe,
-	TipPost
-} from "../generated/schema"
-import { Post as TipPostEvent } from "../generated/TipPostDB/TipPostDB"
+import { ChainPostIndexCounter, Post, PostContent, PostReplyCounter, PostReplyCounter_FourHourTimeframe } from "../generated/schema"
+import { EternisPost } from "../generated/IEternisPostDB/IEternisPostDB"
 
 const EMPTY_BYTES = new Bytes(0)
 const PARENT_TYPE = Bytes.fromUint8Array(Uint8Array.wrap(String.UTF8.encode("parent")))
@@ -17,31 +8,19 @@ const BIGINT_ZERO = BigInt.fromI32(0)
 const BIGINT_ONE = BigInt.fromI32(1)
 const BIGINT_14400 = BigInt.fromI32(14400)
 
-export function handleTipPost(event: TipPostEvent): void {
-	const postId = savePost(event.transaction.from, event.block.timestamp, event.params.postData)
-	const tipPost = new TipPost(postId)
-	tipPost.to = event.params.tipTo
-	tipPost.value = event.transaction.value
+export function handlePost(event: EternisPost): void {
+	const postId = event.address.concat(Bytes.fromByteArray(ByteArray.fromBigInt(event.params.postIndex)))
+	savePost(event.transaction.from, event.block.timestamp, postId, event.params.postData)
 }
 
-export function handlePost(event: PostEvent): void {
-	savePost(event.transaction.from, event.block.timestamp, event.params.postData)
-}
-
-export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postData: Bytes): Bytes {
+export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postId: Bytes, postData: Bytes): Bytes {
 	let chainPostCounter = ChainPostIndexCounter.load(EMPTY_BYTES)
 	if (!chainPostCounter) {
 		chainPostCounter = new ChainPostIndexCounter(EMPTY_BYTES)
 		chainPostCounter.count = BIGINT_ZERO
 	}
 
-	let contractPostCounter = ContractPostCounter.load(dataSource.address())
-	if (!contractPostCounter) {
-		contractPostCounter = new ContractPostCounter(dataSource.address())
-		contractPostCounter.count = BIGINT_ZERO
-	}
-
-	let post = new Post(dataSource.address().concat(Bytes.fromByteArray(ByteArray.fromBigInt(contractPostCounter.count))))
+	let post = new Post(postId)
 
 	post.index = chainPostCounter.count
 	post.parentId = EMPTY_BYTES
@@ -109,9 +88,7 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 		}
 		replyCounter.save()
 
-		const fourHourId = post.parentId.concat(
-			Bytes.fromByteArray(ByteArray.fromU64(post.blockTimestamp.div(BIGINT_14400).toU64()))
-		)
+		const fourHourId = post.parentId.concat(Bytes.fromByteArray(ByteArray.fromU64(post.blockTimestamp.div(BIGINT_14400).toU64())))
 		let replyCounterFourHour = PostReplyCounter_FourHourTimeframe.load(fourHourId)
 		if (!replyCounterFourHour) {
 			replyCounterFourHour = new PostReplyCounter_FourHourTimeframe(fourHourId)
@@ -121,9 +98,6 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postD
 		}
 		replyCounterFourHour.save()
 	}
-
-	contractPostCounter.count = contractPostCounter.count.plus(BIGINT_ONE)
-	contractPostCounter.save()
 
 	chainPostCounter.count = chainPostCounter.count.plus(BIGINT_ONE)
 	chainPostCounter.save()

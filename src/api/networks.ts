@@ -1,16 +1,10 @@
-import networksJson from "@/../graph/networks.json"
+import type networksJson from "@/../graph/networks.json"
 import graphVersionLabel from "@/../graph/version-label.json"
-import type { Address } from "@/utils/address"
+import { Address } from "@/utils/address"
 
 // TODO: all of these should be able to be changed by the user, so make something like config page, dont bother with the reactivity just reload on save
 
 export namespace networkConfigs {
-	type NestedStringToAddress<T extends Record<string, any>> = {
-		[K in keyof T]: T[K] extends Record<string, any> ? NestedStringToAddress<T[K]> : T[K] extends string ? Address : T[K]
-	}
-
-	const subgraphs = networksJson as NestedStringToAddress<typeof networksJson>
-
 	export type ChainKey = keyof typeof networksJson
 	export type ContractName = keyof (typeof networksJson)[keyof typeof networksJson]
 
@@ -32,14 +26,12 @@ export namespace networkConfigs {
 		url: URL
 	}
 
-	export type SubgraphConfig = {
-		address: Address
-		startBlock: number
+	export type GraphConfig = {
+		api: URL
 	}
 
-	export type GraphConfig = {
-		subgraphs: Partial<Record<ContractName, SubgraphConfig>>
-		api: URL
+	export type ContractsConfig = {
+		EternisPostDB: Address
 	}
 
 	export const chains = {
@@ -81,12 +73,19 @@ export namespace networkConfigs {
 
 	export const graphs = {
 		mumbai: {
-			subgraphs: subgraphs.mumbai,
 			api: new URL(`https://api.studio.thegraph.com/query/45351/dforum-mumbai/${graphVersionLabel.versionLabel}`),
 		} as const,
 		sepolia: {
-			subgraphs: subgraphs.sepolia,
 			api: new URL(`https://api.studio.thegraph.com/query/45351/dforum-sepolia/${graphVersionLabel.versionLabel}`),
 		} as const,
 	} satisfies Record<ChainKey, GraphConfig>
+
+	export const contracts = {
+		mumbai: {
+			EternisPostDB: Address("0xA4A0Db3C5739C5E8cb63Fe86c6d5103558D8B19d"),
+		} as const,
+		sepolia: {
+			EternisPostDB: Address("0xcE1EEfdf8A9F638D4134F240ED134ECBedac7730"),
+		} as const,
+	} satisfies Record<ChainKey, ContractsConfig>
 }
