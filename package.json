@@ -5,6 +5,7 @@
 		"dev": "vite --port 3000",
 		"build": "vite build",
 		"preview": "vite preview --port 3000",
+		"compile:contract:types": "npx tsx ./src/typify-contracts/index.ts",
 		"graph:codegen": "npm run codegen --prefix ./graph",
 		"graph:build": "npm run build --prefix ./graph",
 		"graph:deploy": "npm run deploy --prefix ./graph"
