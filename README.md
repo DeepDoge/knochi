@@ -22,7 +22,7 @@ In summary, while both Mastodon and Eternis are decentralized social media platf
 
 LBRY/Odysee is a decentralized content sharing and streaming platform that utilizes blockchain technology to enable content creators to monetize their work directly from their audience. Like Eternis, LBRY/Odysee is decentralized, but there are some key differences between the two platforms.
 
-One of the major differences is that LBRY/Odysee is limited to the LBRY blockchain, while Eternis is multichain and can operate on multiple blockchains. This provides Eternis with greater scalability and flexibility, as it can leverage multiple chains for various purposes.
+One of the major differences is that LBRY/Odysee is limited to the LBRY blockchain, while Eternis is multichain and can operate on multiple blockchains. This provides Eternis with greater scalability and flexibility, as it users choose to post their content on anychain without being stuck on one.
 
 Finally, Eternis provides greater customization and flexibility than LBRY/Odysee thanks to its smart contract based architecture. Platforms can create and deploy custom smart contracts with additional on-chain logic to enable a wide range of functionality, such as tipping and sponsored posts and many more.
 
