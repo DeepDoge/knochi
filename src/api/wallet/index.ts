@@ -1,4 +1,4 @@
-import { EternisPostDB, EternisPostDB__factory } from "@/typechain"
+import { connect_EternisPostDB, EternisPostDB_Contract } from "@/contracts/artifacts/EternisPostDB"
 import { Address } from "@/utils/address"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
@@ -27,7 +27,7 @@ export namespace walletApi {
 				provider: ethers.providers.Web3Provider
 				address: Address
 				contracts: {
-					EternisPostDB: EternisPostDB
+					EternisPostDB: EternisPostDB_Contract
 				}
 		  }
 		| WrongNetworkSymbol
@@ -48,7 +48,7 @@ export namespace walletApi {
 					provider: web3Provider,
 					address: Address(await signer.getAddress()),
 					contracts: {
-						EternisPostDB: EternisPostDB__factory.connect(networkConfigs.contracts[chainKey].EternisPostDB, signer),
+						EternisPostDB: connect_EternisPostDB(networkConfigs.contracts[chainKey].EternisPostDB, signer),
 					},
 			  }
 			: WrongNetworkSymbol

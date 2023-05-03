@@ -26,7 +26,7 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 			state.ref = "loading"
 			if (walletApi.web3Wallet.ref === walletApi.NotConnectedSymbol) throw new Error("Wallet not connected.")
 			if (walletApi.web3Wallet.ref === walletApi.WrongNetworkSymbol) throw new Error("Wrong Network.")
-			await (await walletApi.web3Wallet.ref.contracts.EternisPostDB.post(bytes.ref))?.wait(1)
+			await (await walletApi.web3Wallet.ref.contracts.EternisPostDB.functions.post(bytes.ref)).wait(1)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)

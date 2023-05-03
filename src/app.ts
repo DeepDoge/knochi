@@ -55,7 +55,7 @@ AppComponent.$css = css`
 
 	main {
 		display: grid;
-
+		/* Using paddings and not gaps, because of the glow effects */
 		& .top,
 		& .bottom > * {
 			padding-top: var(--span);

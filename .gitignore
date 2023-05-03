@@ -13,4 +13,4 @@ dist
 # OS generated files
 .DS_Store
 
-/contracts/artifacts
+artifacts

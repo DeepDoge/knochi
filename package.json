@@ -13,6 +13,7 @@
 		"@ethersproject/providers": "^5.1.3",
 		"@total-typescript/ts-reset": "^0.4.2",
 		"ethers": "^5.1.3",
+		"hotscript": "^1.0.11",
 		"master-ts": "github:DeepDoge/master-ts",
 		"master-ts-vite-plugin": "github:DeepDoge/master-ts-vite-plugin",
 		"typescript": "^4.6.4",
