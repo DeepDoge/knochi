@@ -1,12 +1,12 @@
 import { homeLayout } from "@/pages/home"
+import { searchLayout } from "@/pages/search"
 import { unknownLayout } from "@/pages/unknown"
+import { userLayout } from "@/pages/user"
 import { route, routeHref } from "@/router"
 import { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
 import type { Component } from "master-ts/library/component"
 import type { SignalReadable, SignalWritable } from "master-ts/library/signal"
-import { searchLayout } from "@/pages/search"
-import { userLayout } from "@/pages/user"
 
 export type Layout = {
 	top: Component | null

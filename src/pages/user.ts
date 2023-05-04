@@ -50,26 +50,17 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 	page.$html = html` <nav class="tabs">
 			<ul>
 				<li>
-					<a
-						class="btn"
-						class:active=${() => params.tab.ref === "posts"}
-						href=${() => routeHref({ path: `${params.userAddress.ref}/posts` })}>
+					<a class="btn" class:active=${() => params.tab.ref === "posts"} href=${() => routeHref({ path: `${params.userAddress.ref}/posts` })}>
 						Posts
 					</a>
 				</li>
 				<li>
-					<a
-						class="btn"
-						class:active=${() => params.tab.ref === "replies"}
-						href=${() => routeHref({ path: `${params.userAddress.ref}/replies` })}>
+					<a class="btn" class:active=${() => params.tab.ref === "replies"} href=${() => routeHref({ path: `${params.userAddress.ref}/replies` })}>
 						Replies
 					</a>
 				</li>
 				<li>
-					<a
-						class="btn"
-						class:active=${() => params.tab.ref === "mentions"}
-						href=${() => routeHref({ path: `${params.userAddress.ref}/mentions` })}>
+					<a class="btn" class:active=${() => params.tab.ref === "mentions"} href=${() => routeHref({ path: `${params.userAddress.ref}/mentions` })}>
 						Mentions
 					</a>
 				</li>

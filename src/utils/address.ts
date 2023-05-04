@@ -1,5 +1,5 @@
-import { ethers } from "ethers"
 import type { BrandedType } from "@/utils/branded-type"
+import { ethers } from "ethers"
 
 export type Address = BrandedType<string, "Address">
 export function Address(value: string): Address {

@@ -1,6 +1,6 @@
-import { Address, BigInt, ByteArray, Bytes, dataSource } from "@graphprotocol/graph-ts"
-import { ChainPostIndexCounter, Post, PostContent, PostReplyCounter, PostReplyCounter_FourHourTimeframe } from "../generated/schema"
+import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts"
 import { EternisPost } from "../generated/IEternisPostDB/IEternisPostDB"
+import { ChainPostIndexCounter, Post, PostContent, PostReplyCounter, PostReplyCounter_FourHourTimeframe } from "../generated/schema"
 
 const EMPTY_BYTES = new Bytes(0)
 const PARENT_TYPE = Bytes.fromUint8Array(Uint8Array.wrap(String.UTF8.encode("parent")))

@@ -1,14 +1,14 @@
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import { css, html } from "master-ts/library/template"
 import { walletApi } from "@/api/wallet"
 import { ChartFilledSvg } from "@/assets/svgs/chart-filled"
 import { ChartOutlineSvg } from "@/assets/svgs/chart-outline"
 import { HomeFilledSvg } from "@/assets/svgs/home-filled"
 import { HomeOutlineSvg } from "@/assets/svgs/home-outline"
 import { SearchSvg } from "@/assets/svgs/search"
-import { route } from "@/router"
 import { Wallet } from "@/libs/wallet"
+import { route } from "@/router"
+import { $ } from "master-ts/library/$"
+import { defineComponent } from "master-ts/library/component"
+import { css, html } from "master-ts/library/template"
 
 const NavigationComponent = defineComponent("x-navigation")
 export function Navigation() {

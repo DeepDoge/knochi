@@ -42,9 +42,7 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	const searchInput = $.writable("")
 	page.$subscribe(params.search, (search) => (searchInput.ref = search), { mode: "immediate" })
 	const searchInputDeferred = $.deferred(searchInput)
-	page.$subscribe(searchInputDeferred, (search) =>
-		location.replace(routeHref({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") }))
-	)
+	page.$subscribe(searchInputDeferred, (search) => location.replace(routeHref({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") })))
 
 	const timeline = $.derive(() => (params.search.ref ? getTimeline({ search: params.search.ref, replies: "include" }) : null))
 

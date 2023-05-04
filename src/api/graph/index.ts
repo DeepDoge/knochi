@@ -49,9 +49,7 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 		}
 	`
 
-	const replyCountsByChain = (await Promise.all(
-		clients.map(async ({ urqlClient: client }) => (await client.query(query, {})).data.postReplyCounters)
-	)) as {
+	const replyCountsByChain = (await Promise.all(clients.map(async ({ urqlClient: client }) => (await client.query(query, {})).data.postReplyCounters))) as {
 		id: string
 		count: string
 	}[][]

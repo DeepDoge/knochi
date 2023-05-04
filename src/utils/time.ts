@@ -1,6 +1,6 @@
+import { oneHourTick, oneMinuteTick, oneSecondTick } from "@/utils/ticks"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
-import { oneHourTick, oneMinuteTick, oneSecondTick } from "@/utils/ticks"
 
 const relativeTimeFormat = new Intl.RelativeTimeFormat()
 

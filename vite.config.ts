@@ -1,5 +1,5 @@
-import { defineConfig } from "vite"
 import { masterTsPlugin } from "master-ts-vite-plugin/plugin"
+import { defineConfig } from "vite"
 import { viteSingleFile } from "vite-plugin-singlefile"
 
 export default defineConfig({
