@@ -4,10 +4,14 @@ import type { Booleans, Call, Fn, Objects, Pipe, Tuples } from "hotscript"
 
 interface ToType extends Fn {
 	$type: this["arg0"]["type"]
-	return: this["$type"] extends "uint256"
+	return: this["$type"] extends `${"u" | ""}${"fixed" | "int"}${number | ""}`
 		? BigNumber
-		: this["$type"] extends "bytes"
+		: this["$type"] extends `bytes${number | ""}`
 		? Promise<BytesLike> | BytesLike
+		: this["$type"] extends "string"
+		? string
+		: this["$type"] extends "bool"
+		? boolean
 		: this["$type"] extends "address"
 		? Address
 		: unknown
