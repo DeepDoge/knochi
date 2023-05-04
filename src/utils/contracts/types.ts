@@ -1,4 +1,3 @@
-import type { Address } from "@/utils/address"
 import type { BigNumber, BytesLike, Contract, ContractInterface, ContractTransaction, Overrides as Overrides_ } from "ethers"
 import type { Booleans, ComposeLeft, Fn, Match, Objects, Pipe, Tuples, _ } from "hotscript"
 
@@ -19,7 +18,7 @@ interface ToType extends Fn {
 					Match.With<`bytes${number | ""}`, PromiseOrValue<BytesLike>>,
 					Match.With<"string", string>,
 					Match.With<"bool", boolean>,
-					Match.With<"address", Address>,
+					Match.With<"address", string>,
 					Match.With<_, unknown>
 				]
 			>
@@ -34,22 +33,21 @@ interface ToFunction extends Fn {
 	$inputs: this["arg0"]["inputs"]
 	$outputs: this["arg0"]["outputs"]
 
-	$args: Pipe<this["$inputs"], [Tuples.Map<ComposeLeft<[Objects.Get<"type">, ToType]>>]>
+	$inputsAsArgs: Pipe<this["$inputs"], [Tuples.Map<ComposeLeft<[Objects.Get<"type">, ToType]>>]>
+	$outputsAsTuple: Pipe<this["arg0"]["outputs"], [Tuples.Map<ComposeLeft<[Objects.Get<"type">, ToType]>>]>
+
 	return: [
 		this["$name"],
 		(
-			...args: readonly [...args: this["$args"], overrides?: Overrides]
+			...args: Pipe<[overrides?: Overrides], [Tuples.Concat<this["$inputsAsArgs"]>]>
 		) => Pipe<
-			this["$outputs"],
+			this["$outputsAsTuple"]["length"],
 			[
 				Match<
 					[
-						Match.With<readonly [], ContractTransaction>,
-						Match.With<
-							readonly [any],
-							Pipe<this["arg0"]["outputs"], [Tuples.Map<ComposeLeft<[Objects.Get<"type">, ToType]>>, Tuples.At<0>]>
-						>,
-						Match.With<_, Pipe<this["arg0"]["outputs"], [Tuples.Map<ComposeLeft<[Objects.Get<"type">, ToType]>>]>>
+						Match.With<0, ContractTransaction>,
+						Match.With<1, Pipe<this["$outputsAsTuple"], [Tuples.Head]>>,
+						Match.With<_, this["$outputsAsTuple"]>
 					]
 				>,
 				ToPromise
