@@ -2,7 +2,8 @@ import fs from "fs"
 import { compileAndSave } from "@ethereum-waffle/compiler"
 import path from "path"
 
-const contractsDirPath = "./src/contracts"
+let [contractsDirPath] = process.argv.slice(2)
+contractsDirPath ??= "./src/contracts"
 const contractFilenames = fs.readdirSync(contractsDirPath).filter((filename) => filename.endsWith(".sol"))
 
 const artifactsDirPath = path.join(contractsDirPath, "artifacts")
