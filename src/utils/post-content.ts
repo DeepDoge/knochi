@@ -16,7 +16,7 @@ export function decodePostContent(buffer: Uint8Array): PostContent[] {
 	while (offset < buffer.length) {
 		const byte = view.getUint8(offset)
 		if (byte === 10 || byte === 0) {
-			types.push(ethers.utils.toUtf8String(buffer.subarray(offsetCache + 1, (offsetCache = offset))))
+			types.push(ethers.toUtf8String(buffer.subarray(offsetCache + 1, (offsetCache = offset))))
 			if (byte === 10) break
 		}
 		offset++
@@ -56,7 +56,7 @@ export function encodePostContent(contents: PostContent[]): Uint8Array {
 
 	const bytes: number[] = []
 	typeNameToIndexMap.forEach((index, name) => {
-		bytes.push(...ethers.utils.toUtf8Bytes(name), index !== typeNameToIndexMap.size - 1 ? 0 : 10)
+		bytes.push(...ethers.toUtf8Bytes(name), index !== typeNameToIndexMap.size - 1 ? 0 : 10)
 	})
 
 	for (const content of contents) {

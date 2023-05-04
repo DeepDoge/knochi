@@ -11,7 +11,7 @@ export namespace networkConfigs {
 	export type ChainCurrencyConfig = { name: string; decimals: number; symbol: string }
 
 	export type ChainConfig = {
-		id: number
+		id: bigint
 		name: string
 		currency: ChainCurrencyConfig
 		iconHref: string
@@ -36,7 +36,7 @@ export namespace networkConfigs {
 
 	export const chains = {
 		mumbai: {
-			id: 80001,
+			id: 80001n,
 			name: "Mumbai Testnet",
 			currency: {
 				name: "MATIC",
@@ -46,7 +46,7 @@ export namespace networkConfigs {
 			iconHref: "",
 		} as const,
 		sepolia: {
-			id: 11155111,
+			id: 11155111n,
 			name: "Sepolia Testnet",
 			currency: {
 				name: "SepoliaETH",
@@ -57,8 +57,7 @@ export namespace networkConfigs {
 		} as const,
 	} satisfies Record<ChainKey, ChainConfig>
 
-	// type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never
-	export const chainIdToKey = Object.fromEntries(Object.entries(chains).map(([key, chain]) => [chain.id, key])) as Record<number, ChainKey> // UnionToIntersection<{ [K in ChainKey]: { [k in (typeof chains)[K]["id"]]: K } }[ChainKey]>
+	export const chainIdToKeyMap = new Map<bigint, ChainKey>(Object.entries(chains).map(([key, chain]) => [chain.id, key as ChainKey]))
 
 	export const rpcProviders = {
 		mumbai: {

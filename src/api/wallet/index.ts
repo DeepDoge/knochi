@@ -12,8 +12,8 @@ export namespace walletApi {
 	export const NotConnectedSymbol = Symbol()
 	export type NotConnectedSymbol = typeof NotConnectedSymbol
 
-	const web3Provider = new ethers.providers.Web3Provider(ethereum, "any")
-	web3Provider.listAccounts().then((accounts) => {
+	const browserProvider = new ethers.BrowserProvider(ethereum, "any")
+	browserProvider.listAccounts().then((accounts) => {
 		const isConnected = accounts.length > 0
 		if (isConnected) connectWallet()
 	})
@@ -23,8 +23,8 @@ export namespace walletApi {
 
 	const web3WalletWritable = $.writable<
 		| {
-				signer: ethers.providers.JsonRpcSigner
-				provider: ethers.providers.Web3Provider
+				signer: ethers.JsonRpcSigner
+				provider: ethers.BrowserProvider
 				address: Address
 				contracts: {
 					EternisPostDB: EternisPostDB_Contract
@@ -36,16 +36,16 @@ export namespace walletApi {
 	export const web3Wallet = $.derive(() => web3WalletWritable.ref)
 
 	export async function connectWallet() {
-		await web3Provider.send("eth_requestAccounts", [])
-		await web3Provider.ready
-		const signer = web3Provider.getSigner()
+		await browserProvider.send("eth_requestAccounts", [])
+		const signer = await browserProvider.getSigner()
 
-		const chainKey = networkConfigs.chainIdToKey[web3Provider.network.chainId]
+		const chainKey = networkConfigs.chainIdToKeyMap.get((await browserProvider.getNetwork()).chainId)
+		if (!chainKey) throw new Error(`Chain key for ${chainKey} cannot be found`)
 
 		web3WalletWritable.ref = chainKey
 			? {
 					signer,
-					provider: web3Provider,
+					provider: browserProvider,
 					address: Address(await signer.getAddress()),
 					contracts: {
 						EternisPostDB: connect_EternisPostDB(networkConfigs.contracts[chainKey].EternisPostDB, signer),
@@ -59,7 +59,7 @@ export namespace walletApi {
 		const providerConfig = networkConfigs.rpcProviders[chainKey]
 		if (typeof web3Wallet.ref === "object") {
 			try {
-				await web3Wallet.ref.provider.send("wallet_switchEthereumChain", [{ chainId: ethers.utils.hexlify(chainConfig.id) }])
+				await web3Wallet.ref.provider.send("wallet_switchEthereumChain", [{ chainId: ethers.toBeHex(chainConfig.id) }])
 			} catch (err) {
 				// This error code indicates that the chain has not been added to MetaMask
 				if (err && typeof err === "object" && "code" in err && err.code === 4902) {
@@ -73,7 +73,7 @@ export namespace walletApi {
 
 					const config = {
 						chainName: chainConfig.name,
-						chainId: ethers.utils.hexlify(chainConfig.id),
+						chainId: ethers.toBeHex(chainConfig.id),
 						nativeCurrency: chainConfig.currency,
 						blockExplorerUrls: [providerConfig.blockExplorer.href],
 						rpcUrls: [providerConfig.rpc.href],

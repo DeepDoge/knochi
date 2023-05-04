@@ -16,7 +16,7 @@ export function Post(post: SignalReadable<PostData>) {
 	const textContents = $.derive(() => {
 		let text = post.ref.contents
 			.filter((content) => content.type === "text")
-			.map((content) => ethers.utils.toUtf8String(content.value))
+			.map((content) => ethers.toUtf8String(content.value))
 			.join("\n")
 			.trim()
 		if (text.length > 128) text = `${text.substring(0, 128).trimEnd()}...`

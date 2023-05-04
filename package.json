@@ -9,18 +9,15 @@
 		"graph:codegen": "npm run codegen --prefix ./graph",
 		"graph:build": "npm run build --prefix ./graph",
 		"graph:deploy": "npm run deploy --prefix ./graph",
-		"postinstall": "yarn --cwd ./graph && npm run contracts:compile && npm run graph:codegen"
+		"postinstall": "yarn --cwd ./graph && typify-contracts --src ./src/contracts && npm run graph:codegen"
 	},
 	"devDependencies": {
-		"@ethereum-waffle/compiler": "^4.0.3",
-		"@ethersproject/providers": "^5.1.3",
 		"@total-typescript/ts-reset": "^0.4.2",
-		"ethers": "^5.1.3",
-		"hotscript": "^1.0.11",
+		"ethers": "^6.3.0",
 		"master-ts": "github:DeepDoge/master-ts",
 		"master-ts-vite-plugin": "github:DeepDoge/master-ts-vite-plugin",
-		"tsx": "^3.12.7",
 		"typescript": "^4.6.4",
+		"typify-contracts": "github:DeepDoge/typify-contracts",
 		"urql": "^4.0.0",
 		"vite": "^3.2.3",
 		"vite-plugin-singlefile": "^0.13.5"

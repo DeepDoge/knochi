@@ -1,5 +1,5 @@
 import { walletApi } from "@/api/wallet"
-import { encodePostContent, PostContent } from "@/utils/post-db"
+import { encodePostContent, PostContent } from "@/utils/post-content"
 import { PostId, postIdToHex } from "@/utils/post-id"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
@@ -16,8 +16,8 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 
 	const text = $.writable("")
 	const postContents = $.derive<PostContent[]>(() => [
-		{ type: "text", value: ethers.utils.toUtf8Bytes(text.ref) },
-		...(parentId.ref ? [{ type: "parent", value: ethers.utils.arrayify(postIdToHex(parentId.ref)) }] : []),
+		{ type: "text", value: ethers.toUtf8Bytes(text.ref) },
+		...(parentId.ref ? [{ type: "parent", value: ethers.toBeArray(postIdToHex(parentId.ref)) }] : []),
 	])
 	const bytes = $.derive(() => encodePostContent(postContents.ref))
 
@@ -26,7 +26,7 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 			state.ref = "loading"
 			if (walletApi.web3Wallet.ref === walletApi.NotConnectedSymbol) throw new Error("Wallet not connected.")
 			if (walletApi.web3Wallet.ref === walletApi.WrongNetworkSymbol) throw new Error("Wrong Network.")
-			await (await walletApi.web3Wallet.ref.contracts.EternisPostDB.functions.post(bytes.ref)).wait(1)
+			await walletApi.web3Wallet.ref.contracts.EternisPostDB.functions.post(bytes.ref)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)

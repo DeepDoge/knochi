@@ -1,18 +1,19 @@
 import { Address } from "@/utils/address"
 import { PostId, postIdFromHex, postIdToHex } from "@/utils/post-id"
-import { BigNumber, ethers } from "ethers"
+import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
+import { BigMath } from "../../utils/bigmath"
 import { networkConfigs } from "../networks"
 
 export type PostData = {
 	id: PostId
 	parentId: PostId | null
-	index: BigNumber
+	index: bigint
 	tip: {
 		to: Address
-		value: BigNumber
+		value: bigint
 	} | null
 	author: Address
 	contents: { type: string; value: Uint8Array }[]
@@ -35,7 +36,7 @@ for (const client of clients) {
 	}
 }
 
-export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, BigNumber>> {
+export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, bigint>> {
 	const query = gql`
 		{
 			postReplyCounters(where: { or: [
@@ -55,12 +56,12 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 		count: string
 	}[][]
 
-	const replyCounts: Record<PostId, BigNumber> = {}
+	const replyCounts: Record<PostId, bigint> = {}
 	for (const replyCountsOfChain of replyCountsByChain) {
 		for (const replyCount of replyCountsOfChain) {
 			const id = PostId(replyCount.id)
 			const current = replyCounts[id]
-			replyCounts[id] = current ? current.add(replyCount.count) : BigNumber.from(0)
+			replyCounts[id] = current ? current + ethers.toBigInt(replyCount.count) : 0n
 		}
 	}
 
@@ -98,7 +99,7 @@ export async function getPosts(postIds: PostId[]): Promise<PostData[]> {
 			continue
 		}
 
-		const contractAddress = Address(ethers.utils.hexlify(ethers.utils.arrayify(postIdToHex(postId)).subarray(0, 20)))
+		const contractAddress = Address(ethers.hexlify(ethers.toBeArray(postIdToHex(postId)).subarray(0, 20)))
 		const client = contractAddressToClientMap[contractAddress]
 		if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
 
@@ -112,18 +113,18 @@ export async function getPosts(postIds: PostId[]): Promise<PostData[]> {
 		).data.posts.map((responsePost: any) => ({
 			id: postIdFromHex(responsePost.id),
 			parentId: responsePost.parentId === "0x" ? null : postIdFromHex(responsePost.parentId),
-			index: BigNumber.from(responsePost.index),
+			index: ethers.toBigInt(responsePost.index),
 			author: Address(responsePost.author),
 			contents: responsePost.contents.map((content: any): PostData["contents"][number] => ({
-				type: ethers.utils.toUtf8String(ethers.utils.arrayify(content.type)),
-				value: ethers.utils.arrayify(content.value),
+				type: ethers.toUtf8String(ethers.toBeArray(content.type)),
+				value: ethers.toBeArray(content.value),
 			})),
 			createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
 			chainKey: client.key,
 			tip: responsePost.tip
 				? {
 						to: Address(responsePost.tip.to),
-						value: BigNumber.from(responsePost.tip.value),
+						value: ethers.toBigInt(responsePost.tip.value),
 				  }
 				: null,
 		}))) as PostData[]
@@ -154,7 +155,7 @@ export type PostQueryOptions<TParentID extends PostId> = {
 }
 
 export function getTimeline<TParentID extends PostId = never>(options: PostQueryOptions<TParentID>): Timeline {
-	const query = (count: number, beforeIndex?: BigNumber) => gql`
+	const query = (count: number, beforeIndex?: bigint) => gql`
 	{
 		posts(
 			first: ${count.toString()}
@@ -172,9 +173,9 @@ export function getTimeline<TParentID extends PostId = never>(options: PostQuery
 						? `{ parentId_not: "0x" }`
 						: `{ parentId: "0x" }`
 				}
-				${options.mention ? `{ contents_: { type: "${ethers.utils.hexlify(ethers.utils.toUtf8Bytes("mention"))}",  value: "${options.mention}" } }` : ""}
-				${options.search ? `{ contents_: { value_contains: "${ethers.utils.hexlify(ethers.utils.toUtf8Bytes(options.search)).substring(2)}" } }` : ""}
-				${beforeIndex ? (beforeIndex.gte(0) ? `{ index_lt: ${beforeIndex.toString()} }` : `{ index_gt: ${beforeIndex.abs().toString()} }`) : ""} 
+				${options.mention ? `{ contents_: { type: "${ethers.hexlify(ethers.toUtf8Bytes("mention"))}",  value: "${options.mention}" } }` : ""}
+				${options.search ? `{ contents_: { value_contains: "${ethers.hexlify(ethers.toUtf8Bytes(options.search)).substring(2)}" } }` : ""}
+				${beforeIndex ? (beforeIndex >= 0n ? `{ index_lt: ${beforeIndex.toString()} }` : `{ index_gt: ${BigMath.abs(beforeIndex).toString()} }`) : ""} 
 			] }
 		) {
 			id
@@ -185,7 +186,7 @@ export function getTimeline<TParentID extends PostId = never>(options: PostQuery
 	const posts = $.writable<PostData[]>([])
 	const postQueuesOfChains = clients.map(() => [] as PostData[])
 	const isChainFinished = new Array(clients.length).fill(false)
-	const lastIndex = new Array<BigNumber>(clients.length)
+	const lastIndex = new Array<bigint>(clients.length)
 
 	const loadedOnce = $.writable(false)
 
@@ -204,8 +205,8 @@ export function getTimeline<TParentID extends PostId = never>(options: PostQuery
 
 					const listOfNewPosts = listResponse.data.posts.map((post: any) => ({
 						id: postIdFromHex(post.id),
-						index: BigNumber.from(post.index),
-					})) as { id: PostId; index: BigNumber }[]
+						index: ethers.toBigInt(post.index),
+					})) as { id: PostId; index: bigint }[]
 
 					if (listOfNewPosts.length < count) {
 						isChainFinished[index] = true
