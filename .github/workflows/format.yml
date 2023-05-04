@@ -13,6 +13,7 @@ jobs:
             - uses: actions/setup-node@v2
               with:
                   node-version: "14.x"
+            - run: npm i
             - run: npm i prettier prettier-plugin-organize-imports -D
             - run: npx prettier -w ./
             - name: Commit changes
