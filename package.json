@@ -13,16 +13,16 @@
 		"postinstall": "yarn --cwd ./graph && typify-contracts --src ./src/contracts && npm run graph:codegen && npm run format"
 	},
 	"devDependencies": {
-		"@total-typescript/ts-reset": "^0.4.2",
-		"ethers": "^6.3.0",
+		"@total-typescript/ts-reset": "latest",
+		"ethers": "latest",
 		"master-ts": "github:DeepDoge/master-ts",
 		"master-ts-vite-plugin": "github:DeepDoge/master-ts-vite-plugin",
-		"prettier": "^2.8.8",
-		"prettier-plugin-organize-imports": "^3.2.2",
-		"typescript": "^4.6.4",
+		"prettier": "latest",
+		"prettier-plugin-organize-imports": "latest",
+		"typescript": "latest",
 		"typify-contracts": "github:DeepDoge/typify-contracts",
-		"urql": "^4.0.0",
-		"vite": "^3.2.3",
-		"vite-plugin-singlefile": "^0.13.5"
+		"urql": "latest",
+		"vite": "latest",
+		"vite-plugin-singlefile": "latest"
 	}
 }
