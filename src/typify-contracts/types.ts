@@ -4,7 +4,7 @@ import type { Booleans, Call, Fn, Objects, Pipe, Tuples } from "hotscript"
 
 interface ToType extends Fn {
 	$type: this["arg0"]["type"]
-	return: this["$type"] extends `${"u" | ""}${"fixed" | "int"}${number | ""}`
+	return: this["$type"] extends `${"u" | ""}int${number | ""}` | `${"u" | ""}fixed`
 		? BigNumber
 		: this["$type"] extends `bytes${number | ""}`
 		? Promise<BytesLike> | BytesLike
