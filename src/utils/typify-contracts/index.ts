@@ -14,7 +14,7 @@ for (const filename of abiFilenames) {
 		throw new Error("Json file is doesn't contain abi.")
 	const abi = jsonObj.abi
 	const type = [
-		`import type { TypifyContract } from "@/typify-contracts/types"`,
+		`import type { TypifyContract } from "@/utils/typify-contracts/types"`,
 		`import type { Provider } from "@ethersproject/providers"`,
 		`import { Contract, Signer } from "ethers"`,
 		`export type ${name}_Contract = TypifyContract<typeof abi> & {}`,
