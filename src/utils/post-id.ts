@@ -1,6 +1,7 @@
 import { ethers } from "ethers"
+import type { _ } from "@/utils/_"
 
-export type PostId = string & { _: "PostId" }
+export type PostId = string & { [_]: "PostId" }
 export function PostId(postId: string): PostId {
 	return postId as PostId
 }
