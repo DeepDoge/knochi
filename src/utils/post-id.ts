@@ -1,7 +1,7 @@
+import type { BrandedType } from "@/utils/branded-type"
 import { ethers } from "ethers"
-import type { _ } from "@/utils/_"
 
-export type PostId = string & { [_]: "PostId" }
+export type PostId = BrandedType<string, "PostId">
 export function PostId(postId: string): PostId {
 	return postId as PostId
 }
