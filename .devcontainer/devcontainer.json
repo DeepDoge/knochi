@@ -14,11 +14,10 @@
 				"heltonricardo.heltonricardo-vscode-organize-and-format",
 				"jock.svg",
 				"yzhang.markdown-all-in-one",
-				"GitHub.copilot",
 				"Gruntfuggly.todo-tree",
-				"NomicFoundation.hardhat-solidity",
 				"GraphQL.vscode-graphql",
-				"RemixProject.ethereum-remix"
+				"RemixProject.ethereum-remix",
+				"JuanBlanco.solidity"
 			]
 		}
 	}
