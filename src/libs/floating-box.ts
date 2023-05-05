@@ -38,10 +38,12 @@ FloatingBoxComponent.$css = css`
 	.box {
 		position: absolute;
 		max-width: 100vw;
+		z-index: 101;
 	}
 
 	.backdrop {
 		position: fixed;
 		inset: 0;
+		z-index: 100;
 	}
 `
