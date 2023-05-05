@@ -3,25 +3,23 @@ import { NetworkConfigs } from "@/api/networks"
 import { CommentSvg } from "@/assets/svgs/comment"
 import { Profile } from "@/libs/profile"
 import { route, routeHref } from "@/router"
+import { Address } from "@/utils/address"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
+import { ProfileName } from "./profile-name"
 
 const PostComponent = defineComponent("x-post")
 export function Post(post: SignalReadable<TheGraphApi.Post>) {
 	const component = new PostComponent()
-	const textContents = $.derive(() => {
-		let text = post.ref.contents
-			.filter((content) => content.type === "text")
-			.map((content) => ethers.toUtf8String(content.value))
-			.join("\n")
-			.trim()
-		if (text.length > 128) text = `${text.substring(0, 128).trimEnd()}...`
-		return text.split("\n")
-	})
+
+	const postContents = $.derive(() => post.ref.contents)
+
+	const postHref = $.derive(() => routeHref({ postId: post.ref.id }))
+	const parentHref = $.derive(() => routeHref({ postId: post.ref.parentId }))
 
 	component.$html = html`
 		<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
@@ -32,23 +30,32 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 					<span class="chain" title=${() => NetworkConfigs.chains[post.ref.chainKey].name}>
 						${() => NetworkConfigs.chains[post.ref.chainKey].name}
 					</span>
-					<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}> ${() => post.ref.id.slice(post.ref.id.length - 5)} </a>
+					<a class="id post-id" href=${postHref}> ${() => post.ref.id.slice(post.ref.id.length - 5)} </a>
 					${$.match($.derive(() => post.ref.parentId))
 						.case(null, () => null)
-						.default(
-							(parentId) =>
-								html`<a class="id parent-id" href=${() => routeHref({ postId: parentId.ref })}>
-									${() => parentId.ref.slice(parentId.ref.length - 5)}
-								</a>`
-						)}
+						.default((parentId) => html`<a class="id parent-id" href=${parentHref}> ${() => parentId.ref.slice(parentId.ref.length - 5)} </a>`)}
 				</div>
 			</div>
-			<a class="content" href=${() => routeHref({ postId: post.ref.id })}>
-				${() => textContents.ref.map((textContent) => html` <div>${textContent}</div> `)}
-			</a>
+			<div class="content">
+				<a href=${postHref} class="backdrop-link"></a>
+				${$.each(postContents)
+					.key((_, index) => index)
+					.as((content) =>
+						$.match($.derive(() => content.ref.type))
+							.case("text", () => html`<a href=${postHref}>${() => ethers.toUtf8String(content.ref.value)}</a>`)
+							.case("mention", () => {
+								try {
+									return ProfileName($.derive(() => Address(ethers.toUtf8String(content.ref.value))))
+								} catch (error) {
+									return null
+								}
+							})
+							.default(() => null)
+					)}
+			</div>
 			<div class="footer">
-				<div class="reply-count">${() => CommentSvg()} ${() => "TODO"}</div>
-				<div class="created-at">${() => relativeTimeSignal(post.ref.createdAt)}</div>
+				<a class="reply-count" href=${postHref}>${() => CommentSvg()} ${() => "TODO"}</a>
+				<a class="created-at" href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
 			</div>
 		</div>
 	`
@@ -125,7 +132,15 @@ PostComponent.$css = css`
 	}
 
 	.content {
+		position: relative;
+		isolation: isolate;
 		font-size: 1.1em;
+
+		& > .backdrop-link {
+			position: absolute;
+			inset: 0;
+			z-index: -1;
+		}
 	}
 
 	.footer {
