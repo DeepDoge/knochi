@@ -7,6 +7,14 @@ import { networkConfigs } from "../networks"
 const ethereum: (ethers.Eip1193Provider & BrowserProvider) | null = (window as any).ethereum
 export namespace walletApi {
 	export type WalletState = "wrong-network" | "not-connected" | "connected"
+	export type Wallet = {
+		signer: ethers.JsonRpcSigner
+		provider: ethers.BrowserProvider
+		address: Address
+		contracts: {
+			EternisPostDB: EternisPostDB_Contract
+		}
+	}
 
 	let browserProvider: ethers.BrowserProvider | null = null
 	if (ethereum) {
@@ -20,19 +28,12 @@ export namespace walletApi {
 	}
 
 	const browserWalletStateWritable = $.writable<WalletState>("not-connected")
-	const browserWalletWritable = $.writable<{
-		signer: ethers.JsonRpcSigner
-		provider: ethers.BrowserProvider
-		address: Address
-		contracts: {
-			EternisPostDB: EternisPostDB_Contract
-		}
-	} | null>(null)
+	const browserWalletWritable = $.writable<Wallet | null>(null)
 	export const browserWallet = $.derive(() => browserWalletWritable.ref)
 	export const browserWalletState = $.derive(() => browserWalletStateWritable.ref)
 
 	export async function connectWallet() {
-		if (ethereum) browserProvider = new ethers.BrowserProvider(ethereum, "any")
+		browserProvider = ethereum && new ethers.BrowserProvider(ethereum, "any")
 		if (!browserProvider) throw new Error("Browser Wallet cannot be found.")
 
 		await browserProvider.send("eth_requestAccounts", [])

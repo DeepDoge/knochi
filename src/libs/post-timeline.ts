@@ -60,4 +60,9 @@ PostTimelineComponent.$css = css`
 		display: grid;
 		gap: var(--span);
 	}
+
+	.replies {
+		display: grid;
+		gap: var(--span);
+	}
 `

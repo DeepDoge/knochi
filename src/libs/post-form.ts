@@ -7,6 +7,7 @@ import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 import { Profile } from "./profile"
+import { requireWallet } from "./wallet"
 
 const PostFormComponent = defineComponent("x-post-form")
 export function PostForm(parentId: SignalReadable<PostId | null>) {
@@ -37,28 +38,30 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	}
 
 	component.$html = html`
-		${$.match(walletApi.browserWallet)
-			.case(null, () => null)
-			.default(
-				(wallet) => html`
-					<form on:submit=${(e) => (e.preventDefault(), sendPost())} class:loading=${loading}>
-						${Profile($.derive(() => wallet.ref.address))}
-						<div class="fields">
-							<textarea bind:value=${text}></textarea>
-						</div>
-						<div class="actions">
-							<button class="btn">Post</button>
-						</div>
-						<div class="byte-size">${() => bytes.ref.byteLength} bytes</div>
-					</form>
-				`
-			)}
+		${requireWallet(
+			(wallet) => html`
+				<form on:submit=${(e) => (e.preventDefault(), sendPost())} class:loading=${loading}>
+					${Profile($.derive(() => wallet.ref.address))}
+					<div class="fields">
+						<textarea bind:value=${text}></textarea>
+					</div>
+					<div class="actions">
+						<button class="btn">Post</button>
+					</div>
+					<div class="byte-size">${() => bytes.ref.byteLength} bytes</div>
+				</form>
+			`
+		)}
 	`
 
 	return component
 }
 
 PostFormComponent.$css = css`
+	:host {
+		display: grid;
+	}
+
 	form {
 		display: grid;
 		grid-template-areas:
