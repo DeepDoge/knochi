@@ -9,7 +9,8 @@ const BIGINT_ONE = BigInt.fromI32(1)
 const BIGINT_14400 = BigInt.fromI32(14400)
 
 export function handlePost(event: EternisPost): void {
-	const postId = event.address.concat(Bytes.fromByteArray(ByteArray.fromBigInt(event.params.postIndex)))
+	const postIndexBytes = Bytes.fromByteArray(ByteArray.fromBigInt(event.params.postIndex))
+	const postId = event.address.concat(new Bytes(32 - postIndexBytes.byteLength).concat(postIndexBytes))
 	savePost(event.transaction.from, event.block.timestamp, postId, event.params.postData)
 }
 

@@ -1,5 +1,5 @@
 import { Address } from "@/utils/address"
-import { PostId, postIdFromHex, postIdToHex } from "@/utils/post-id"
+import { extractContractAddressFromPostId, PostId, postIdFromHex, postIdToHex } from "@/utils/post-id"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
@@ -69,7 +69,7 @@ export namespace TheGraphApi {
 		return replyCounts
 	}
 
-	const postsCache: Record<PostId, Post> = {}
+	const postsCache = new Map<PostId, Post | null>()
 	export async function getPosts(postIds: PostId[]): Promise<Post[]> {
 		const query = (postIds: PostId[]) => gql`
 	{
@@ -94,13 +94,13 @@ export namespace TheGraphApi {
 		const toQuery = new Map<GraphClient, Set<PostId>>()
 		const posts: Record<PostId, Post> = {}
 		for (const postId of postIds) {
-			const cache = postsCache[postId]
-			if (cache) {
-				posts[cache.id] = cache
+			if (postsCache.has(postId)) {
+				const cache = postsCache.get(postId)
+				if (cache) posts[cache.id] = cache
 				continue
 			}
 
-			const contractAddress = Address(ethers.hexlify(ethers.toBeArray(postIdToHex(postId)).subarray(0, 20)))
+			const contractAddress = extractContractAddressFromPostId(postId)
 			const client = contractAddressToClientMap[contractAddress]
 			if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
 
@@ -109,34 +109,49 @@ export namespace TheGraphApi {
 		}
 
 		for (const [client, postIds] of toQuery.entries()) {
-			const responsePosts = (await (
-				await client.urqlClient.query(query(Array.from(postIds)), {})
-			).data.posts.map((responsePost: any) => ({
-				id: postIdFromHex(responsePost.id),
-				parentId: responsePost.parentId === "0x" ? null : postIdFromHex(responsePost.parentId),
-				index: ethers.toBigInt(responsePost.index),
-				author: Address(responsePost.author),
-				contents: responsePost.contents.map((content: any): Post["contents"][number] => ({
-					type: ethers.toUtf8String(ethers.toBeArray(content.type)),
-					value: ethers.toBeArray(content.value),
-				})),
-				createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
-				chainKey: client.key,
-				tip: responsePost.tip
-					? {
-							to: Address(responsePost.tip.to),
-							value: ethers.toBigInt(responsePost.tip.value),
-					  }
-					: null,
-			}))) as Post[]
+			const responsePosts = (
+				await (
+					await client.urqlClient.query(query(Array.from(postIds)), {})
+				).data.posts.map((responsePost: any) => {
+					try {
+						return {
+							id: postIdFromHex(responsePost.id),
+							parentId: responsePost.parentId === "0x" ? null : postIdFromHex(responsePost.parentId),
+							index: ethers.toBigInt(responsePost.index),
+							author: Address(responsePost.author),
+							contents: responsePost.contents.map((content: any): Post["contents"][number] => ({
+								type: ethers.toUtf8String(ethers.toBeArray(content.type)),
+								value: ethers.toBeArray(content.value),
+							})),
+							createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
+							chainKey: client.key,
+							tip: responsePost.tip
+								? {
+										to: Address(responsePost.tip.to),
+										value: ethers.toBigInt(responsePost.tip.value),
+								  }
+								: null,
+						}
+					} catch (error) {
+						console.warn("Invalid post data", responsePost, error)
+						return null
+					}
+				})
+			).filter(Boolean) as Post[]
 
 			for (const post of responsePosts) {
-				postsCache[post.id] = post
+				postsCache.set(post.id, post)
 				if (post) posts[post.id] = post
 			}
 		}
 
-		return postIds.map((postId) => posts[postId]).filter(Boolean)
+		return postIds
+			.map((postId) => {
+				const post = posts[postId]
+				if (!post) postsCache.set(postId, null)
+				return post
+			})
+			.filter(Boolean)
 	}
 
 	export type Timeline = {
@@ -201,13 +216,21 @@ export namespace TheGraphApi {
 						const postQueue = postQueuesOfChains[index]!
 						if (postQueue.length >= count) return
 						if (isChainFinished[index]) return
-
-						const listResponse = await client.urqlClient.query(query(count, lastIndex[index]), {}).toPromise()
-
-						const listOfNewPosts = listResponse.data.posts.map((post: any) => ({
-							id: postIdFromHex(post.id),
-							index: ethers.toBigInt(post.index),
-						})) as { id: PostId; index: bigint }[]
+						const listOfNewPosts = (
+							(await client.urqlClient.query(query(count, lastIndex[index]), {}).toPromise()).data.posts as { id: string; index: string }[]
+						)
+							.map((post) => {
+								try {
+									return {
+										id: postIdFromHex(post.id),
+										index: ethers.toBigInt(post.index),
+									}
+								} catch (error) {
+									console.warn("Invalid post referance", post, error)
+									return null
+								}
+							})
+							.filter(Boolean)
 
 						if (listOfNewPosts.length < count) {
 							isChainFinished[index] = true

@@ -1,4 +1,5 @@
 import { WalletApi } from "@/api/wallet"
+import { PaperPlaneSvg } from "@/assets/svgs/paper-plane"
 import { encodePostContent, PostContent } from "@/utils/post-content"
 import { PostId, postIdToHex } from "@/utils/post-id"
 import { ethers } from "ethers"
@@ -56,7 +57,7 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 							)}></textarea>
 					</div>
 					<div class="actions">
-						<button class="btn">Post</button>
+						<button class="btn">Post${PaperPlaneSvg()}</button>
 					</div>
 					<div class="byte-size">${() => bytes.ref.byteLength} bytes</div>
 				</form>
@@ -134,6 +135,11 @@ PostFormComponent.$css = css`
 			& button {
 				border-radius: var(--radius-rounded);
 				background-color: hsl(var(--master-hsl));
+
+				display: grid;
+				grid-template-columns: auto 1.1em;
+				align-items: center;
+				gap: calc(var(--span) * 0.5);
 			}
 		}
 		& > .byte-size {
