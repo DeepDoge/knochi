@@ -1,4 +1,4 @@
-import { WalletAddress } from "@/libs/wallet-address"
+import { ProfileAddress } from "@/libs/profile-address"
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
@@ -13,7 +13,7 @@ export function Profile(address: SignalReadable<Address>) {
 	component.$html = html`
 		<x ${ProfileAvatar(address)} class="avatar"></x>
 		<x ${ProfileName(address)} class="name"></x>
-		<div class="address">${WalletAddress(address)}</div>
+		<div class="address">${ProfileAddress(address)}</div>
 	`
 
 	return component

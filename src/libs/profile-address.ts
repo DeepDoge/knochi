@@ -4,9 +4,9 @@ import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 
-const WalletAddressComponent = defineComponent("x-wallet-address")
-export function WalletAddress(address: SignalReadable<Address>) {
-	const component = new WalletAddressComponent()
+const ProfileAddressComponent = defineComponent("x-profile-address")
+export function ProfileAddress(address: SignalReadable<Address>) {
+	const component = new ProfileAddressComponent()
 
 	component.$html = html`
 		<button
@@ -23,7 +23,7 @@ export function WalletAddress(address: SignalReadable<Address>) {
 
 	return component
 }
-WalletAddressComponent.$css = css`
+ProfileAddressComponent.$css = css`
 	:host {
 		display: contents;
 	}

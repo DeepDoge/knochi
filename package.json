@@ -13,6 +13,7 @@
 		"postinstall": "yarn --cwd ./graph && typify-contracts --src ./src/contracts && npm run graph:codegen && npm run format"
 	},
 	"devDependencies": {
+		"@metamask/jazzicon": "^2.0.0",
 		"@total-typescript/ts-reset": "latest",
 		"ethers": "latest",
 		"master-ts": "github:DeepDoge/master-ts",

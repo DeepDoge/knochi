@@ -78,7 +78,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 			font-size: 1.1em;
 		}
 	`
-	top.$html = html` <div class="profile">${Profile($.derive(() => params.userAddress.ref))}</div> `
+	top.$html = html` <div class="profile">${Profile(params.userAddress)}</div> `
 
 	return {
 		top,
