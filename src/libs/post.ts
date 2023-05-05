@@ -1,4 +1,4 @@
-import type { PostData } from "@/api/graph"
+import type { TheGraphApi } from "@/api/graph"
 import { networkConfigs } from "@/api/networks"
 import { CommentSvg } from "@/assets/svgs/comment"
 import { Profile } from "@/libs/profile"
@@ -11,7 +11,7 @@ import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 
 const PostComponent = defineComponent("x-post")
-export function Post(post: SignalReadable<PostData>) {
+export function Post(post: SignalReadable<TheGraphApi.Post>) {
 	const component = new PostComponent()
 	const textContents = $.derive(() => {
 		let text = post.ref.contents

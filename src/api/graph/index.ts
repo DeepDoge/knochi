@@ -7,37 +7,38 @@ import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 import { BigMath } from "../../utils/bigmath"
 import { networkConfigs } from "../networks"
 
-export type PostData = {
-	id: PostId
-	parentId: PostId | null
-	index: bigint
-	tip: {
-		to: Address
-		value: bigint
-	} | null
-	author: Address
-	contents: { type: string; value: Uint8Array }[]
-	createdAt: Date
-	chainKey: networkConfigs.ChainKey
-}
-
-const clients = Object.entries(networkConfigs.graphs).map(([key, value]) => ({
-	key: key as networkConfigs.ChainKey,
-	urqlClient: createClient({
-		url: value.api.href,
-		exchanges: [cacheExchange, fetchExchange],
-	}),
-}))
-type GraphClient = (typeof clients)[number]
-const contractAddressToClientMap: Record<Address, GraphClient> = {}
-for (const client of clients) {
-	for (const contract of Object.values(networkConfigs.contracts[client.key])) {
-		contractAddressToClientMap[Address(contract)] = client
+export namespace TheGraphApi {
+	export type Post = {
+		id: PostId
+		parentId: PostId | null
+		index: bigint
+		tip: {
+			to: Address
+			value: bigint
+		} | null
+		author: Address
+		contents: { type: string; value: Uint8Array }[]
+		createdAt: Date
+		chainKey: networkConfigs.ChainKey
 	}
-}
 
-export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, bigint>> {
-	const query = gql`
+	const clients = Object.entries(networkConfigs.graphs).map(([key, value]) => ({
+		key: key as networkConfigs.ChainKey,
+		urqlClient: createClient({
+			url: value.api.href,
+			exchanges: [cacheExchange, fetchExchange],
+		}),
+	}))
+	type GraphClient = (typeof clients)[number]
+	const contractAddressToClientMap: Record<Address, GraphClient> = {}
+	for (const client of clients) {
+		for (const contract of Object.values(networkConfigs.contracts[client.key])) {
+			contractAddressToClientMap[Address(contract)] = client
+		}
+	}
+
+	export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, bigint>> {
+		const query = gql`
 		{
 			postReplyCounters(where: { or: [
 				${postIds.map((postId) => `{ id: "${postIdToHex(postId)}" }`).join("\n")}
@@ -49,26 +50,28 @@ export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, 
 		}
 	`
 
-	const replyCountsByChain = (await Promise.all(clients.map(async ({ urqlClient: client }) => (await client.query(query, {})).data.postReplyCounters))) as {
-		id: string
-		count: string
-	}[][]
+		const replyCountsByChain = (await Promise.all(
+			clients.map(async ({ urqlClient: client }) => (await client.query(query, {})).data.postReplyCounters)
+		)) as {
+			id: string
+			count: string
+		}[][]
 
-	const replyCounts: Record<PostId, bigint> = {}
-	for (const replyCountsOfChain of replyCountsByChain) {
-		for (const replyCount of replyCountsOfChain) {
-			const id = PostId(replyCount.id)
-			const current = replyCounts[id]
-			replyCounts[id] = current ? current + ethers.toBigInt(replyCount.count) : 0n
+		const replyCounts: Record<PostId, bigint> = {}
+		for (const replyCountsOfChain of replyCountsByChain) {
+			for (const replyCount of replyCountsOfChain) {
+				const id = PostId(replyCount.id)
+				const current = replyCounts[id]
+				replyCounts[id] = current ? current + ethers.toBigInt(replyCount.count) : 0n
+			}
 		}
+
+		return replyCounts
 	}
 
-	return replyCounts
-}
-
-const postsCache: Record<PostId, PostData> = {}
-export async function getPosts(postIds: PostId[]): Promise<PostData[]> {
-	const query = (postIds: PostId[]) => gql`
+	const postsCache: Record<PostId, Post> = {}
+	export async function getPosts(postIds: PostId[]): Promise<Post[]> {
+		const query = (postIds: PostId[]) => gql`
 	{
 		posts(where: { or: [ ${postIds.map((postId) => `{ id: "${postIdToHex(postId)}" }`).join("\n")} ] }) {
 			id
@@ -88,72 +91,72 @@ export async function getPosts(postIds: PostId[]): Promise<PostData[]> {
 		}
 	}`
 
-	const toQuery = new Map<GraphClient, Set<PostId>>()
-	const posts: Record<PostId, PostData> = {}
-	for (const postId of postIds) {
-		const cache = postsCache[postId]
-		if (cache) {
-			posts[cache.id] = cache
-			continue
+		const toQuery = new Map<GraphClient, Set<PostId>>()
+		const posts: Record<PostId, Post> = {}
+		for (const postId of postIds) {
+			const cache = postsCache[postId]
+			if (cache) {
+				posts[cache.id] = cache
+				continue
+			}
+
+			const contractAddress = Address(ethers.hexlify(ethers.toBeArray(postIdToHex(postId)).subarray(0, 20)))
+			const client = contractAddressToClientMap[contractAddress]
+			if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
+
+			const postIds = toQuery.get(client) ?? toQuery.set(client, new Set()).get(client)!
+			postIds.add(postId)
 		}
 
-		const contractAddress = Address(ethers.hexlify(ethers.toBeArray(postIdToHex(postId)).subarray(0, 20)))
-		const client = contractAddressToClientMap[contractAddress]
-		if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
+		for (const [client, postIds] of toQuery.entries()) {
+			const responsePosts = (await (
+				await client.urqlClient.query(query(Array.from(postIds)), {})
+			).data.posts.map((responsePost: any) => ({
+				id: postIdFromHex(responsePost.id),
+				parentId: responsePost.parentId === "0x" ? null : postIdFromHex(responsePost.parentId),
+				index: ethers.toBigInt(responsePost.index),
+				author: Address(responsePost.author),
+				contents: responsePost.contents.map((content: any): Post["contents"][number] => ({
+					type: ethers.toUtf8String(ethers.toBeArray(content.type)),
+					value: ethers.toBeArray(content.value),
+				})),
+				createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
+				chainKey: client.key,
+				tip: responsePost.tip
+					? {
+							to: Address(responsePost.tip.to),
+							value: ethers.toBigInt(responsePost.tip.value),
+					  }
+					: null,
+			}))) as Post[]
 
-		const postIds = toQuery.get(client) ?? toQuery.set(client, new Set()).get(client)!
-		postIds.add(postId)
-	}
-
-	for (const [client, postIds] of toQuery.entries()) {
-		const responsePosts = (await (
-			await client.urqlClient.query(query(Array.from(postIds)), {})
-		).data.posts.map((responsePost: any) => ({
-			id: postIdFromHex(responsePost.id),
-			parentId: responsePost.parentId === "0x" ? null : postIdFromHex(responsePost.parentId),
-			index: ethers.toBigInt(responsePost.index),
-			author: Address(responsePost.author),
-			contents: responsePost.contents.map((content: any): PostData["contents"][number] => ({
-				type: ethers.toUtf8String(ethers.toBeArray(content.type)),
-				value: ethers.toBeArray(content.value),
-			})),
-			createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
-			chainKey: client.key,
-			tip: responsePost.tip
-				? {
-						to: Address(responsePost.tip.to),
-						value: ethers.toBigInt(responsePost.tip.value),
-				  }
-				: null,
-		}))) as PostData[]
-
-		for (const post of responsePosts) {
-			postsCache[post.id] = post
-			if (post) posts[post.id] = post
+			for (const post of responsePosts) {
+				postsCache[post.id] = post
+				if (post) posts[post.id] = post
+			}
 		}
+
+		return postIds.map((postId) => posts[postId]).filter(Boolean)
 	}
 
-	return postIds.map((postId) => posts[postId]).filter(Boolean)
-}
+	export type Timeline = {
+		loadBottom(): Promise<void>
+		posts: SignalReadable<Post[]>
+		loading: SignalReadable<boolean>
+		newPostCountAtTop: SignalReadable<number>
+	}
 
-export type Timeline = {
-	loadBottom(): Promise<void>
-	posts: SignalReadable<PostData[]>
-	loading: SignalReadable<boolean>
-	newPostCountAtTop: SignalReadable<number>
-}
+	export type QueryOptions<TParentID extends PostId> = {
+		author?: Address
+		parentId?: TParentID
+		replies?: [TParentID] extends [never] ? "include" | "only" : never
+		mention?: Address
+		search?: string
+		top?: "minute" | "hour" | "day" | "week" | "month" | "year" | "all-time"
+	}
 
-export type PostQueryOptions<TParentID extends PostId> = {
-	author?: Address
-	parentId?: TParentID
-	replies?: [TParentID] extends [never] ? "include" | "only" : never
-	mention?: Address
-	search?: string
-	top?: "minute" | "hour" | "day" | "week" | "month" | "year" | "all-time"
-}
-
-export function getTimeline<TParentID extends PostId = never>(options: PostQueryOptions<TParentID>): Timeline {
-	const query = (count: number, beforeIndex?: bigint) => gql`
+	export function createTimeline<TParentID extends PostId = never>(options: QueryOptions<TParentID>): Timeline {
+		const query = (count: number, beforeIndex?: bigint) => gql`
 	{
 		posts(
 			first: ${count.toString()}
@@ -181,72 +184,72 @@ export function getTimeline<TParentID extends PostId = never>(options: PostQuery
 		}
 	}`
 
-	const posts = $.writable<PostData[]>([])
-	const postQueuesOfChains = clients.map(() => [] as PostData[])
-	const isChainFinished = new Array(clients.length).fill(false)
-	const lastIndex = new Array<bigint>(clients.length)
+		const posts = $.writable<Post[]>([])
+		const postQueuesOfChains = clients.map(() => [] as Post[])
+		const isChainFinished = new Array(clients.length).fill(false)
+		const lastIndex = new Array<bigint>(clients.length)
 
-	const loadedOnce = $.writable(false)
+		const loadedOnce = $.writable(false)
 
-	let loading = $.writable(false)
-	async function loadBottom(count = 128) {
-		if (loading.ref) return
-		loading.ref = true
-		try {
-			await Promise.all(
-				clients.map(async (client, index) => {
-					const postQueue = postQueuesOfChains[index]!
-					if (postQueue.length >= count) return
-					if (isChainFinished[index]) return
+		let loading = $.writable(false)
+		async function loadBottom(count = 128) {
+			if (loading.ref) return
+			loading.ref = true
+			try {
+				await Promise.all(
+					clients.map(async (client, index) => {
+						const postQueue = postQueuesOfChains[index]!
+						if (postQueue.length >= count) return
+						if (isChainFinished[index]) return
 
-					const listResponse = await client.urqlClient.query(query(count, lastIndex[index]), {}).toPromise()
+						const listResponse = await client.urqlClient.query(query(count, lastIndex[index]), {}).toPromise()
 
-					const listOfNewPosts = listResponse.data.posts.map((post: any) => ({
-						id: postIdFromHex(post.id),
-						index: ethers.toBigInt(post.index),
-					})) as { id: PostId; index: bigint }[]
+						const listOfNewPosts = listResponse.data.posts.map((post: any) => ({
+							id: postIdFromHex(post.id),
+							index: ethers.toBigInt(post.index),
+						})) as { id: PostId; index: bigint }[]
 
-					if (listOfNewPosts.length < count) {
-						isChainFinished[index] = true
-						if (listOfNewPosts.length === 0) return
+						if (listOfNewPosts.length < count) {
+							isChainFinished[index] = true
+							if (listOfNewPosts.length === 0) return
+						}
+						lastIndex[index] = listOfNewPosts[listOfNewPosts.length - 1]!.index
+
+						postQueue.push(...(await getPosts(listOfNewPosts.map((post) => post.id))))
+					})
+				)
+
+				const postsLengthCache = posts.ref.length
+				for (let i = 0; i < count; i++) {
+					let newestChainIndex = null as number | null
+					for (let index = 0; index < postQueuesOfChains.length; index++) {
+						const peek = postQueuesOfChains[index]![0]
+						if (!peek) continue
+
+						if (newestChainIndex === null) {
+							newestChainIndex = index
+							continue
+						}
+						const newestPost = postQueuesOfChains[newestChainIndex]![0]!
+						if (newestPost.createdAt < peek.createdAt) newestChainIndex = index
 					}
-					lastIndex[index] = listOfNewPosts[listOfNewPosts.length - 1]!.index
-
-					postQueue.push(...(await getPosts(listOfNewPosts.map((post) => post.id))))
-				})
-			)
-
-			const postsLengthCache = posts.ref.length
-			for (let i = 0; i < count; i++) {
-				let newestChainIndex = null as number | null
-				for (let index = 0; index < postQueuesOfChains.length; index++) {
-					const peek = postQueuesOfChains[index]![0]
-					if (!peek) continue
-
-					if (newestChainIndex === null) {
-						newestChainIndex = index
-						continue
-					}
-					const newestPost = postQueuesOfChains[newestChainIndex]![0]!
-					if (newestPost.createdAt < peek.createdAt) newestChainIndex = index
+					if (newestChainIndex === null) break
+					posts.ref.push(postQueuesOfChains[newestChainIndex]!.shift()!)
 				}
-				if (newestChainIndex === null) break
-				posts.ref.push(postQueuesOfChains[newestChainIndex]!.shift()!)
+
+				if (posts.ref.length !== postsLengthCache) posts.signal()
+			} catch (error) {
+				console.error(error)
+			} finally {
+				loading.ref = false
+				loadedOnce.ref = true
 			}
-
-			if (posts.ref.length !== postsLengthCache) posts.signal()
-		} catch (error) {
-			console.error(error)
-		} finally {
-			loading.ref = false
-			loadedOnce.ref = true
 		}
-	}
 
-	const newPostsAtTop = $.writable(0)
+		const newPostsAtTop = $.writable(0)
 
-	// TODO: do this.
-	/* {
+		// TODO: do this.
+		/* {
 		const unsubscribe = loadedOnce.subscribe(async (loadedOnce) => {
 			if (!loadedOnce) return
 			unsubscribe()
@@ -261,11 +264,12 @@ export function getTimeline<TParentID extends PostId = never>(options: PostQuery
 		}).unsubscribe
 	} */
 
-	return {
-		posts,
-		loading,
-		loadBottom,
-		newPostCountAtTop: newPostsAtTop,
+		return {
+			posts,
+			loading,
+			loadBottom,
+			newPostCountAtTop: newPostsAtTop,
+		}
 	}
 }
 

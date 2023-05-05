@@ -5,7 +5,7 @@ import { $ } from "master-ts/library/$"
 import { networkConfigs } from "../networks"
 
 const ethereum: (ethers.Eip1193Provider & BrowserProvider) | null = (window as any).ethereum
-export namespace walletApi {
+export namespace WalletApi {
 	export type WalletState = "wrong-network" | "not-connected" | "connected"
 	export type Wallet = {
 		signer: ethers.JsonRpcSigner

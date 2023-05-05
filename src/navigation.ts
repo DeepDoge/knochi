@@ -1,4 +1,4 @@
-import { walletApi } from "@/api/wallet"
+import { WalletApi } from "@/api/wallet"
 import { ChartFilledSvg } from "@/assets/svgs/chart-filled"
 import { ChartOutlineSvg } from "@/assets/svgs/chart-outline"
 import { HomeFilledSvg } from "@/assets/svgs/home-filled"
@@ -18,7 +18,7 @@ export function Navigation() {
 
 	component.$html = html`
 		<div class="left">
-			<x ${Wallet()} class="profile" class:active=${() => firstPartOfPath.ref === walletApi.browserWallet.ref?.address}></x>
+			<x ${Wallet()} class="profile" class:active=${() => firstPartOfPath.ref === WalletApi.browserWallet.ref?.address}></x>
 		</div>
 
 		<nav>

@@ -1,4 +1,4 @@
-import type { Timeline } from "@/api/graph"
+import type { TheGraphApi } from "@/api/graph"
 import { Post } from "@/libs/post"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
@@ -6,7 +6,7 @@ import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 
 const TimelineComponent = defineComponent("x-timeline")
-export function Timeline(timeline: SignalReadable<Timeline>) {
+export function Timeline(timeline: SignalReadable<TheGraphApi.Timeline>) {
 	const component = new TimelineComponent()
 
 	const loadBottomButton = $.writable<HTMLButtonElement | null>(null)

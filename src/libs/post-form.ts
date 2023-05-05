@@ -1,4 +1,4 @@
-import { walletApi } from "@/api/wallet"
+import { WalletApi } from "@/api/wallet"
 import { encodePostContent, PostContent } from "@/utils/post-content"
 import { PostId, postIdToHex } from "@/utils/post-id"
 import { ethers } from "ethers"
@@ -26,8 +26,8 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	async function sendPost() {
 		try {
 			state.ref = "loading"
-			if (!walletApi.browserWallet.ref) throw new Error(walletApi.browserWalletState.ref)
-			await walletApi.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
+			if (!WalletApi.browserWallet.ref) throw new Error(WalletApi.browserWalletState.ref)
+			await WalletApi.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)

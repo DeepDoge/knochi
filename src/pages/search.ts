@@ -1,4 +1,4 @@
-import { getTimeline } from "@/api/graph"
+import { TheGraphApi } from "@/api/graph"
 import { SearchSvg } from "@/assets/svgs/search"
 import { Timeline } from "@/libs/timeline"
 import { routeHref } from "@/router"
@@ -44,7 +44,7 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	const searchInputDeferred = $.deferred(searchInput)
 	page.$subscribe(searchInputDeferred, (search) => location.replace(routeHref({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") })))
 
-	const timeline = $.derive(() => (params.search.ref ? getTimeline({ search: params.search.ref, replies: "include" }) : null))
+	const timeline = $.derive(() => (params.search.ref ? TheGraphApi.createTimeline({ search: params.search.ref, replies: "include" }) : null))
 
 	page.$html = html`
 		<div class="search input">
