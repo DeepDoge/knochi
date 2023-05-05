@@ -1,21 +1,23 @@
 import { connect_EternisPostDB, EternisPostDB_Contract } from "@/contracts/artifacts/EternisPostDB"
 import { Address } from "@/utils/address"
-import { ethers } from "ethers"
+import { BrowserProvider, ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { networkConfigs } from "../networks"
 
-const ethereum = (window as any).ethereum
+const ethereum: (ethers.Eip1193Provider & BrowserProvider) | null = (window as any).ethereum
 export namespace walletApi {
 	export type WalletState = "wrong-network" | "not-connected" | "connected"
 
-	const browserProvider = new ethers.BrowserProvider(ethereum, "any")
-	browserProvider.listAccounts().then((accounts) => {
-		const isConnected = accounts.length > 0
-		if (isConnected) connectWallet()
-	})
-
-	ethereum.on("accountsChanged", () => location.reload())
-	ethereum.on("chainChanged", () => location.reload())
+	let browserProvider: ethers.BrowserProvider | null = null
+	if (ethereum) {
+		browserProvider = new ethers.BrowserProvider(ethereum, "any")
+		browserProvider.listAccounts().then((accounts) => {
+			const isConnected = accounts.length > 0
+			if (isConnected) connectWallet()
+		})
+		ethereum.on("accountsChanged", () => connectWallet())
+		ethereum.on("chainChanged", () => connectWallet())
+	}
 
 	const browserWalletStateWritable = $.writable<WalletState>("not-connected")
 	const browserWalletWritable = $.writable<{
@@ -30,14 +32,18 @@ export namespace walletApi {
 	export const browserWalletState = $.derive(() => browserWalletStateWritable.ref)
 
 	export async function connectWallet() {
+		if (ethereum) browserProvider = new ethers.BrowserProvider(ethereum, "any")
+		if (!browserProvider) throw new Error("Browser Wallet cannot be found.")
+
 		await browserProvider.send("eth_requestAccounts", [])
 		const signer = await browserProvider.getSigner()
 
-		const chainKey = networkConfigs.chainIdToKeyMap.get((await browserProvider.getNetwork()).chainId)
+		const chainId = (await browserProvider.getNetwork()).chainId
+		const chainKey = networkConfigs.chainIdToKeyMap.get(chainId)
 		if (!chainKey) {
 			browserWalletStateWritable.ref = "wrong-network"
 			browserWalletWritable.ref = null
-			throw new Error(`Chain key for ${chainKey} cannot be found`)
+			throw new Error(`Chain key for chain id:${chainId} cannot be found`)
 		}
 
 		browserWalletWritable.ref = {
