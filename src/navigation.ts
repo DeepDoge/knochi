@@ -18,10 +18,7 @@ export function Navigation() {
 
 	component.$html = html`
 		<div class="left">
-			<x
-				${Wallet()}
-				class="profile"
-				class:active=${() => typeof walletApi.web3Wallet.ref === "object" && firstPartOfPath.ref === walletApi.web3Wallet.ref.address}></x>
+			<x ${Wallet()} class="profile" class:active=${() => firstPartOfPath.ref === walletApi.browserWallet.ref?.address}></x>
 		</div>
 
 		<nav>

@@ -45,7 +45,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 		}
 	`
 
-	const isMyProfile = $.derive(() => typeof walletApi.web3Wallet.ref === "object" && params.userAddress.ref === walletApi.web3Wallet.ref.address)
+	const isMyProfile = $.derive(() => params.userAddress.ref === walletApi.browserWallet.ref?.address)
 
 	page.$html = html` <nav class="tabs">
 			<ul>

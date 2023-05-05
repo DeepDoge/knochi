@@ -6,6 +6,7 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
+import { Profile } from "./profile"
 
 const PostFormComponent = defineComponent("x-post-form")
 export function PostForm(parentId: SignalReadable<PostId | null>) {
@@ -24,9 +25,8 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	async function sendPost() {
 		try {
 			state.ref = "loading"
-			if (walletApi.web3Wallet.ref === walletApi.NotConnectedSymbol) throw new Error("Wallet not connected.")
-			if (walletApi.web3Wallet.ref === walletApi.WrongNetworkSymbol) throw new Error("Wrong Network.")
-			await walletApi.web3Wallet.ref.contracts.EternisPostDB.post(bytes.ref)
+			if (!walletApi.browserWallet.ref) throw new Error(walletApi.browserWalletState.ref)
+			await walletApi.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)
@@ -37,11 +37,22 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	}
 
 	component.$html = html`
-		<form on:submit=${(e) => (e.preventDefault(), sendPost())} class:loading=${loading}>
-			<textarea bind:value=${text}></textarea>
-			<button>Post</button>
-			<div class="byte-size">${() => bytes.ref.byteLength} bytes</div>
-		</form>
+		${$.match(walletApi.browserWallet)
+			.case(null, () => null)
+			.default(
+				(wallet) => html`
+					<form on:submit=${(e) => (e.preventDefault(), sendPost())} class:loading=${loading}>
+						${Profile($.derive(() => wallet.ref.address))}
+						<div class="fields">
+							<textarea bind:value=${text}></textarea>
+						</div>
+						<div class="actions">
+							<button class="btn">Post</button>
+						</div>
+						<div class="byte-size">${() => bytes.ref.byteLength} bytes</div>
+					</form>
+				`
+			)}
 	`
 
 	return component
@@ -50,6 +61,29 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 PostFormComponent.$css = css`
 	form {
 		display: grid;
+		grid-template-areas:
+			"profile	.		."
+			"fields		fields 	fields"
+			"size 		.		."
+			". 			.		actions";
+		grid-template-columns: auto 1fr auto;
+		align-items: center;
+		gap: calc(var(--span) * 0.5);
+
+		& > * {
+			display: grid;
+		}
+		& > .fields {
+			grid-area: fields;
+		}
+		& > .actions {
+			grid-area: actions;
+		}
+		& > .byte-size {
+			grid-area: size;
+			font-size: 0.65em;
+			opacity: 0.65;
+		}
 	}
 
 	.loading {
@@ -59,5 +93,23 @@ PostFormComponent.$css = css`
 		& > * {
 			cursor: progress;
 		}
+	}
+
+	form {
+		background-color: hsl(var(--base-hsl), 50%);
+		border-radius: var(--radius);
+		padding: var(--span);
+	}
+
+	.fields textarea {
+		font-size: 1.25em;
+		background-color: transparent;
+		border: none;
+
+		background-color: hsl(var(--base-hsl), 75%);
+	}
+
+	.actions button {
+		background-color: hsl(var(--master-hsl), 75%);
 	}
 `

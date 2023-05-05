@@ -12,12 +12,16 @@ export function Wallet() {
 	const component = new WalletComponent()
 
 	component.$html = html`
-		${$.match(walletApi.web3Wallet)
-			.case(
-				walletApi.NotConnectedSymbol,
-				() => html`<button class="btn" on:click=${(e) => (e.preventDefault(), walletApi.connectWallet())}>Connect Wallet</button>`
+		${$.match(walletApi.browserWallet)
+			.case(null, () =>
+				$.match(walletApi.browserWalletState)
+					.case(
+						"not-connected",
+						() => html`<button class="btn" on:click=${(e) => (e.preventDefault(), walletApi.connectWallet())}>Connect Wallet</button>`
+					)
+					.case("wrong-network", () => html` <button class="btn" on:click=${(e) => (e.preventDefault(), e)}>Wrong Network</button> `)
+					.default(() => null)
 			)
-			.case(walletApi.WrongNetworkSymbol, () => html` <button class="btn" on:click=${(e) => (e.preventDefault(), e)}>Wrong Network</button> `)
 			.default((web3Wallet) => html` <x ${Profile($.derive(() => web3Wallet.ref.address))}></x>`)}
 	`
 

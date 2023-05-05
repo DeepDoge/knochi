@@ -74,7 +74,8 @@ img {
 	padding: calc(var(--span) * 2);
 }
 
-input {
+input,
+textarea {
 	font: inherit;
 	max-width: 100%;
 	min-width: 0;
