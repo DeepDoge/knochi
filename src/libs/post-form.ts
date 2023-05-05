@@ -6,7 +6,8 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { Profile } from "./profile"
+import { ProfileAvatar } from "./profile-avatar"
+import { ProfileName } from "./profile-name"
 import { requireWallet } from "./wallet"
 
 const PostFormComponent = defineComponent("x-post-form")
@@ -38,12 +39,17 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	}
 
 	component.$html = html`
-		${requireWallet(
-			(wallet) => html`
+		${requireWallet((wallet) => {
+			const profileAddress = $.derive(() => wallet.ref.address)
+
+			return html`
 				<form on:submit=${(e) => (e.preventDefault(), sendPost())} class:loading=${loading}>
-					<x ${Profile($.derive(() => wallet.ref.address))} class="profile"></x>
+					<x ${ProfileAvatar(profileAddress)} class="profile-avatar"></x>
+					<x ${ProfileName(profileAddress)} class="profile-name"></x>
 					<div class="fields">
 						<textarea
+							required
+							placeholder=${() => (parentId.ref ? "Reply..." : "Say something...")}
 							bind:value=${text}
 							on:input=${(e: InputEvent & { currentTarget: HTMLTextAreaElement }) => (
 								(e.currentTarget.style.height = "0"), (e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`)
@@ -55,7 +61,7 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 					<div class="byte-size">${() => bytes.ref.byteLength} bytes</div>
 				</form>
 			`
-		)}
+		})}
 	`
 
 	return component
@@ -69,30 +75,82 @@ PostFormComponent.$css = css`
 	form {
 		display: grid;
 		grid-template-areas:
-			"profile	.		."
-			"fields		fields 	fields"
-			"size 		.		."
-			". 			.		actions";
-		grid-template-columns: auto 1fr auto;
-		align-items: center;
-		gap: calc(var(--span) * 0.5);
+			"avatar		.		name		name"
+			"avatar		.		.			."
+			"avatar		.		fields 		fields"
+			". 			.		size		size"
+			". 			.		actions		actions";
+		grid-template-columns: 2.25em calc(var(--span) * 0.5) 1fr auto;
+		grid-template-rows: auto calc(var(--span) * 0.25);
+		place-content: start;
+
+		background-color: hsl(var(--base-hsl), 50%);
+		border-radius: var(--radius-rounded);
+		padding: var(--span);
 
 		& > * {
 			display: grid;
 		}
-		& > .profile {
-			grid-area: profile;
+		& > .profile-avatar {
+			grid-area: avatar;
+		}
+		& > .profile-name {
+			grid-area: name;
+			font-size: 0.85em;
 		}
 		& > .fields {
 			grid-area: fields;
+
+			& textarea {
+				font-size: 1.25em;
+				--height: 3em;
+				height: var(--height);
+				min-height: var(--height);
+				resize: none;
+				background-color: transparent;
+				border: none;
+
+				&:focus-visible {
+					outline: none;
+				}
+			}
 		}
 		& > .actions {
 			grid-area: actions;
+			justify-content: end;
+
+			position: relative;
+			padding-top: calc(var(--span) * 0.5);
+
+			&::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				bottom: unset;
+				height: 1px;
+				background-color: currentColor;
+				opacity: 0.05;
+			}
+			& button {
+				border-radius: var(--radius-rounded);
+				background-color: hsl(var(--master-hsl), 75%);
+			}
 		}
 		& > .byte-size {
 			grid-area: size;
 			font-size: 0.65em;
 			opacity: 0.65;
+		}
+
+		&:not(:focus-within):has(textarea:invalid) {
+			& > .actions,
+			& > .byte-size {
+				display: none;
+			}
+			& textarea {
+				height: 3ch !important;
+				min-height: unset !important;
+			}
 		}
 	}
 
@@ -103,30 +161,5 @@ PostFormComponent.$css = css`
 		& > * {
 			cursor: progress;
 		}
-	}
-
-	form {
-		background-color: hsl(var(--base-hsl), 50%);
-		border-radius: var(--radius);
-		padding: var(--span);
-	}
-
-	.profile {
-		font-size: 0.85em;
-	}
-
-	.fields textarea {
-		font-size: 1.25em;
-		min-height: 4em;
-		background-color: transparent;
-		border: none;
-		border-radius: var(--radius);
-		padding: 1ch;
-
-		background-color: hsl(var(--base-hsl), 75%);
-	}
-
-	.actions button {
-		background-color: hsl(var(--master-hsl), 75%);
 	}
 `
