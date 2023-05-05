@@ -24,7 +24,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 	PageComponent.$css = css`
 		:host {
 			display: grid;
-			gap: var(--span);
+			gap: calc(var(--span) * 2);
 		}
 
 		.tabs ul {

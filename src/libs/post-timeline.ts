@@ -19,7 +19,7 @@ export function PostTimeline(postId: SignalReadable<PostId>) {
 	component.$html = html`
 		<div class="top">
 			<a class="btn" href=${routeHref({ postId: null })}>← Close</a>
-			<span class="title">Post</span>
+			<h2 class="title">Post</h2>
 		</div>
 		<div class="content">
 			<div class="family">
@@ -28,8 +28,9 @@ export function PostTimeline(postId: SignalReadable<PostId>) {
 					.default((post) => Post(post))}
 			</div>
 			<div class="replies">
-				<h3>Replies</h3>
-				${PostForm(postId)} ${Timeline(repliesTimeline)}
+				<h3 class="title">Replies</h3>
+				<x ${PostForm(postId)} class="form"></x>
+				<x ${Timeline(repliesTimeline)} class="timeline"></x>
 			</div>
 		</div>
 	`
@@ -50,7 +51,7 @@ PostTimelineComponent.$css = css`
 		align-items: center;
 		gap: calc(var(--span) * 0.5);
 
-		& .title {
+		& > .title {
 			font-weight: bold;
 			font-size: 1.5em;
 		}
@@ -58,11 +59,28 @@ PostTimelineComponent.$css = css`
 
 	.content {
 		display: grid;
-		gap: var(--span);
+		gap: calc(var(--span) * 1);
 	}
 
 	.replies {
 		display: grid;
-		gap: var(--span);
+
+		grid-template-areas:
+			"title"
+			"."
+			"form"
+			"."
+			"timeline";
+		grid-template-rows: auto calc(var(--span) * 0.5) auto calc(var(--span) * 2) auto;
+
+		& > .title {
+			grid-area: title;
+		}
+		& > .form {
+			grid-area: form;
+		}
+		& > .timeline {
+			grid-area: timeline;
+		}
 	}
 `
