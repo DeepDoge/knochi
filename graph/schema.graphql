@@ -1,7 +1,7 @@
 # Off-chain post metadata for the post, per chain
 type Post @entity(immutable: true) {
-	id: Bytes! # contract address + contract post index(u256) // can't be changed later since used as parentId, so we use u256
-	parentId: Bytes! # post id
+	id: Bytes! # contract address + contract post index(dynamic)
+	parentId: Bytes! # post id(dynamic)
 	index: BigInt! # for querying
 	author: Bytes! # address
 	contents: [PostContent!]!
@@ -11,14 +11,14 @@ type Post @entity(immutable: true) {
 
 # Off-chain content metadata for the post, per chain
 type PostContent @entity(immutable: true) {
-	id: Bytes! # post id + content index(u8)
+	id: Bytes! # content index(u8) + chain post index (dynamic)
 	type: Bytes!
 	value: Bytes!
 }
 
 # Tip metadata for the post
 type TipPost @entity(immutable: true) {
-	id: Bytes! # post id
+	id: Bytes! # post id(dynamic)
 	to: Bytes! # address
 	value: BigInt!
 }
@@ -31,12 +31,12 @@ type ChainPostIndexCounter @entity {
 
 # Used counting the replies of a post, per chain
 type PostReplyCounter @entity {
-	id: Bytes! # post id
+	id: Bytes! # post id(dynamic)
 	count: BigInt!
 }
 
 # Used for finding the top posts of last 24+(0 to 4) hour, per chain
 type PostReplyCounter_FourHourTimeframe @entity {
-	id: Bytes! # post id + timeframe(timestamp(second) / (60 * 60 * 4))(u64)
+	id: Bytes! # timeframe(timestamp(second) / (60 * 60 * 4))(u64) + post id(dynamic)
 	count: BigInt!
 }

@@ -9,8 +9,7 @@ const BIGINT_ONE = BigInt.fromI32(1)
 const BIGINT_14400 = BigInt.fromI32(14400)
 
 export function handlePost(event: EternisPost): void {
-	const postIndexBytes = Bytes.fromByteArray(ByteArray.fromBigInt(event.params.postIndex))
-	const postId = event.address.concat(new Bytes(32 - postIndexBytes.byteLength).concat(postIndexBytes))
+	const postId = event.address.concat(Bytes.fromByteArray(ByteArray.fromBigInt(event.params.postIndex)))
 	savePost(event.transaction.from, event.block.timestamp, postId, event.params.postData)
 }
 
@@ -65,7 +64,7 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postI
 
 		const contentIndex = new Uint8Array(1)
 		new DataView(contentIndex.buffer).setUint8(0, u8(i))
-		const content = new PostContent(post.id.concat(Bytes.fromUint8Array(contentIndex)))
+		const content = new PostContent(Bytes.fromUint8Array(contentIndex).concat(Bytes.fromByteArray(ByteArray.fromBigInt(post.index))))
 		content.type = type
 		content.value = Bytes.fromUint8Array(value)
 		content.save()
@@ -89,7 +88,7 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postI
 		}
 		replyCounter.save()
 
-		const fourHourId = post.parentId.concat(Bytes.fromByteArray(ByteArray.fromU64(post.blockTimestamp.div(BIGINT_14400).toU64())))
+		const fourHourId = Bytes.fromByteArray(ByteArray.fromU64(post.blockTimestamp.div(BIGINT_14400).toU64())).concat(post.parentId)
 		let replyCounterFourHour = PostReplyCounter_FourHourTimeframe.load(fourHourId)
 		if (!replyCounterFourHour) {
 			replyCounterFourHour = new PostReplyCounter_FourHourTimeframe(fourHourId)
