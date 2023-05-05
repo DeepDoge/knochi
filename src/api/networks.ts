@@ -4,7 +4,7 @@ import { Address } from "@/utils/address"
 
 // TODO: all of these should be able to be changed by the user, so make something like config page, dont bother with the reactivity just reload on save
 
-export namespace networkConfigs {
+export namespace NetworkConfigs {
 	export type ChainKey = keyof typeof networksJson
 	export type ContractName = keyof (typeof networksJson)[keyof typeof networksJson]
 

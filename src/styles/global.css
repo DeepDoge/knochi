@@ -122,7 +122,7 @@ textarea {
 
 	border-radius: var(--radius);
 	border: 1px solid transparent;
-	padding: calc(var(--span) * 0.6) calc(var(--span) * 1.2);
+	padding: calc(var(--span) * 0.45) calc(var(--span) * 1.2);
 	font-size: 1em;
 	font-weight: 500;
 	font-family: inherit;

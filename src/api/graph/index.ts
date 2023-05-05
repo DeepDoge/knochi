@@ -5,7 +5,7 @@ import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
 import { BigMath } from "../../utils/bigmath"
-import { networkConfigs } from "../networks"
+import { NetworkConfigs } from "../networks"
 
 export namespace TheGraphApi {
 	export type Post = {
@@ -19,11 +19,11 @@ export namespace TheGraphApi {
 		author: Address
 		contents: { type: string; value: Uint8Array }[]
 		createdAt: Date
-		chainKey: networkConfigs.ChainKey
+		chainKey: NetworkConfigs.ChainKey
 	}
 
-	const clients = Object.entries(networkConfigs.graphs).map(([key, value]) => ({
-		key: key as networkConfigs.ChainKey,
+	const clients = Object.entries(NetworkConfigs.graphs).map(([key, value]) => ({
+		key: key as NetworkConfigs.ChainKey,
 		urqlClient: createClient({
 			url: value.api.href,
 			exchanges: [cacheExchange, fetchExchange],
@@ -32,7 +32,7 @@ export namespace TheGraphApi {
 	type GraphClient = (typeof clients)[number]
 	const contractAddressToClientMap: Record<Address, GraphClient> = {}
 	for (const client of clients) {
-		for (const contract of Object.values(networkConfigs.contracts[client.key])) {
+		for (const contract of Object.values(NetworkConfigs.contracts[client.key])) {
 			contractAddressToClientMap[Address(contract)] = client
 		}
 	}

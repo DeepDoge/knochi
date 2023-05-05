@@ -1,5 +1,5 @@
 import type { TheGraphApi } from "@/api/graph"
-import { networkConfigs } from "@/api/networks"
+import { NetworkConfigs } from "@/api/networks"
 import { CommentSvg } from "@/assets/svgs/comment"
 import { Profile } from "@/libs/profile"
 import { route, routeHref } from "@/router"
@@ -29,8 +29,8 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 			<div class="header">
 				<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
 				<div class="chips">
-					<span class="chain" title=${() => networkConfigs.chains[post.ref.chainKey].name}>
-						${() => networkConfigs.chains[post.ref.chainKey].name}
+					<span class="chain" title=${() => NetworkConfigs.chains[post.ref.chainKey].name}>
+						${() => NetworkConfigs.chains[post.ref.chainKey].name}
 					</span>
 					<a class="id post-id" href=${() => routeHref({ postId: post.ref.id })}> ${() => post.ref.id.slice(post.ref.id.length - 5)} </a>
 					${$.match($.derive(() => post.ref.parentId))

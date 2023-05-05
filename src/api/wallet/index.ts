@@ -2,7 +2,7 @@ import { connect_EternisPostDB, EternisPostDB_Contract } from "@/contracts/artif
 import { Address } from "@/utils/address"
 import { BrowserProvider, ethers } from "ethers"
 import { $ } from "master-ts/library/$"
-import { networkConfigs } from "../networks"
+import { NetworkConfigs } from "../networks"
 
 const ethereum: (ethers.Eip1193Provider & BrowserProvider) | null = (window as any).ethereum
 export namespace WalletApi {
@@ -40,7 +40,7 @@ export namespace WalletApi {
 		const signer = await browserProvider.getSigner()
 
 		const chainId = (await browserProvider.getNetwork()).chainId
-		const chainKey = networkConfigs.chainIdToKeyMap.get(chainId)
+		const chainKey = NetworkConfigs.chainIdToKeyMap.get(chainId)
 		if (!chainKey) {
 			browserWalletStateWritable.ref = "wrong-network"
 			browserWalletWritable.ref = null
@@ -52,15 +52,15 @@ export namespace WalletApi {
 			provider: browserProvider,
 			address: Address(await signer.getAddress()),
 			contracts: {
-				EternisPostDB: connect_EternisPostDB(networkConfigs.contracts[chainKey].EternisPostDB, signer),
+				EternisPostDB: connect_EternisPostDB(NetworkConfigs.contracts[chainKey].EternisPostDB, signer),
 			},
 		}
 		browserWalletStateWritable.ref = "connected"
 	}
 
-	export async function changeChain(chainKey: networkConfigs.ChainKey) {
-		const chainConfig = networkConfigs.chains[chainKey]
-		const providerConfig = networkConfigs.rpcProviders[chainKey]
+	export async function changeChain(chainKey: NetworkConfigs.ChainKey) {
+		const chainConfig = NetworkConfigs.chains[chainKey]
+		const providerConfig = NetworkConfigs.rpcProviders[chainKey]
 		if (!browserWallet.ref) return
 		try {
 			await browserWallet.ref.provider.send("wallet_switchEthereumChain", [{ chainId: ethers.toBeHex(chainConfig.id) }])

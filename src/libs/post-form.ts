@@ -41,9 +41,13 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 		${requireWallet(
 			(wallet) => html`
 				<form on:submit=${(e) => (e.preventDefault(), sendPost())} class:loading=${loading}>
-					${Profile($.derive(() => wallet.ref.address))}
+					<x ${Profile($.derive(() => wallet.ref.address))} class="profile"></x>
 					<div class="fields">
-						<textarea bind:value=${text}></textarea>
+						<textarea
+							bind:value=${text}
+							on:input=${(e: InputEvent & { currentTarget: HTMLTextAreaElement }) => (
+								(e.currentTarget.style.height = "0"), (e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`)
+							)}></textarea>
 					</div>
 					<div class="actions">
 						<button class="btn">Post</button>
@@ -76,6 +80,9 @@ PostFormComponent.$css = css`
 		& > * {
 			display: grid;
 		}
+		& > .profile {
+			grid-area: profile;
+		}
 		& > .fields {
 			grid-area: fields;
 		}
@@ -104,10 +111,17 @@ PostFormComponent.$css = css`
 		padding: var(--span);
 	}
 
+	.profile {
+		font-size: 0.85em;
+	}
+
 	.fields textarea {
 		font-size: 1.25em;
+		min-height: 4em;
 		background-color: transparent;
 		border: none;
+		border-radius: var(--radius);
+		padding: 1ch;
 
 		background-color: hsl(var(--base-hsl), 75%);
 	}
