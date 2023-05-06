@@ -17,7 +17,7 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 	box.style.setProperty("--default-top", `${mouseEvent.y - rect.height}px`)
 	box.style.setProperty("--default-left", `${mouseEvent.x - rect.width * 0.5}px`)
 
-	component.$interval(() => {
+	function update() {
 		box.style.top = `var(--default-top)`
 		box.style.left = `var(--default-left)`
 		const rect = box.getBoundingClientRect()
@@ -25,7 +25,9 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 
 		if (rect.left < 0) box.style.left = `calc(var(--default-left) - ${rect.left}px)`
 		else if (rect.right < 0) box.style.left = `calc(var(--default-left) + ${rect.right}px)`
-	}, 100)
+	}
+	component.$interval(update, 100)
+	update()
 
 	return component
 }
