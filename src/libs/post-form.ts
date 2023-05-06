@@ -21,7 +21,7 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 
 	const text = $.writable("")
 	const postContents = $.derive<PostContent[]>(() => [
-		{ type: "text", value: ethers.toUtf8Bytes(text.ref) },
+		{ type: "text", value: ethers.toUtf8Bytes(text.ref.trim()) },
 		...(parentId.ref ? [{ type: "parent", value: ethers.toBeArray(PostId.toHex(parentId.ref)) }] : []),
 	])
 	const bytes = $.derive(() => PostContent.encode(postContents.ref))
@@ -43,8 +43,12 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	function resizeTextArea() {
 		const textarea = component.$root.querySelector<HTMLTextAreaElement>(".fields textarea")
 		if (!textarea) return
+		const placeholder = document.createElement("div")
+		placeholder.style.height = `${textarea.scrollHeight}px`
+		textarea.after(placeholder)
 		textarea.style.height = "0"
 		textarea.style.height = `${textarea.scrollHeight}px`
+		placeholder.remove()
 	}
 	component.$effect(resizeTextArea, [route.postId])
 	component.$onMount(() => {
