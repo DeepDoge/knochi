@@ -1,6 +1,6 @@
+import { Address } from "@/utils/address"
 import type { BrandedType } from "@/utils/branded-type"
 import { ethers } from "ethers"
-import { Address } from "./address"
 
 const minimumPostIdByteLength = 20 + 1 // contract address + contract post index
 const maximumPostIdByteLength = 20 + 32

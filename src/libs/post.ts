@@ -2,6 +2,7 @@ import type { TheGraphApi } from "@/api/graph"
 import { NetworkConfigs } from "@/api/networks"
 import { CommentSvg } from "@/assets/svgs/comment"
 import { Profile } from "@/libs/profile"
+import { ProfileName } from "@/libs/profile-name"
 import { route, routeHref } from "@/router"
 import { Address } from "@/utils/address"
 import { relativeTimeSignal } from "@/utils/time"
@@ -10,7 +11,6 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { ProfileName } from "./profile-name"
 
 const PostComponent = defineComponent("x-post")
 export function Post(post: SignalReadable<TheGraphApi.Post>) {

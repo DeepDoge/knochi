@@ -1,38 +1,38 @@
+import { NetworkConfigs } from "@/api/networks"
 import { connect_EternisPostDB, EternisPostDB_Contract } from "@/contracts/artifacts/EternisPostDB"
 import { Address } from "@/utils/address"
 import { BrowserProvider, ethers } from "ethers"
 import { $ } from "master-ts/library/$"
-import { NetworkConfigs } from "../networks"
 
 const ethereum: (ethers.Eip1193Provider & BrowserProvider) | null = (window as any).ethereum
-export namespace WalletApi {
-	export type WalletState = "wrong-network" | "not-connected" | "connected"
-	export type Wallet = {
-		signer: ethers.JsonRpcSigner
-		provider: ethers.BrowserProvider
-		address: Address
-		contracts: {
-			EternisPostDB: EternisPostDB_Contract
-		}
+export type Wallet = {
+	signer: ethers.JsonRpcSigner
+	provider: ethers.BrowserProvider
+	address: Address
+	contracts: {
+		EternisPostDB: EternisPostDB_Contract
 	}
+}
+export namespace Wallet {
+	export type State = "wrong-network" | "not-connected" | "connected"
 
 	let browserProvider: ethers.BrowserProvider | null = null
 	if (ethereum) {
 		browserProvider = new ethers.BrowserProvider(ethereum, "any")
 		browserProvider.listAccounts().then((accounts) => {
 			const isConnected = accounts.length > 0
-			if (isConnected) connectWallet()
+			if (isConnected) connect()
 		})
-		ethereum.on("accountsChanged", () => connectWallet())
-		ethereum.on("chainChanged", () => connectWallet())
+		ethereum.on("accountsChanged", () => connect())
+		ethereum.on("chainChanged", () => connect())
 	}
 
-	const browserWalletStateWritable = $.writable<WalletState>("not-connected")
+	const browserWalletStateWritable = $.writable<State>("not-connected")
 	const browserWalletWritable = $.writable<Wallet | null>(null)
 	export const browserWallet = $.derive(() => browserWalletWritable.ref)
 	export const browserWalletState = $.derive(() => browserWalletStateWritable.ref)
 
-	export async function connectWallet() {
+	export async function connect() {
 		browserProvider = ethereum && new ethers.BrowserProvider(ethereum, "any")
 		if (!browserProvider) throw new Error("Browser Wallet cannot be found.")
 

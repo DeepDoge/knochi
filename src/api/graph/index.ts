@@ -1,11 +1,11 @@
+import { NetworkConfigs } from "@/api/networks"
 import { Address } from "@/utils/address"
+import { BigMath } from "@/utils/bigmath"
 import { extractContractAddressFromPostId, PostId, postIdFromHex, postIdToHex } from "@/utils/post-id"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
-import { BigMath } from "../../utils/bigmath"
-import { NetworkConfigs } from "../networks"
 
 export namespace TheGraphApi {
 	export type Post = {

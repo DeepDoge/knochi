@@ -1,15 +1,15 @@
-import { WalletApi } from "@/api/wallet"
+import { Wallet } from "@/api/wallet"
 import { PaperPlaneSvg } from "@/assets/svgs/paper-plane"
-import { encodePostContent, PostContent } from "@/utils/post-content"
+import { ProfileAvatar } from "@/libs/profile-avatar"
+import { ProfileName } from "@/libs/profile-name"
+import { requireWallet } from "@/libs/wallet"
+import { PostContent } from "@/utils/post-content"
 import { PostId, postIdToHex } from "@/utils/post-id"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { ProfileAvatar } from "./profile-avatar"
-import { ProfileName } from "./profile-name"
-import { requireWallet } from "./wallet"
 
 const PostFormComponent = defineComponent("x-post-form")
 export function PostForm(parentId: SignalReadable<PostId | null>) {
@@ -23,13 +23,13 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 		{ type: "text", value: ethers.toUtf8Bytes(text.ref) },
 		...(parentId.ref ? [{ type: "parent", value: ethers.toBeArray(postIdToHex(parentId.ref)) }] : []),
 	])
-	const bytes = $.derive(() => encodePostContent(postContents.ref))
+	const bytes = $.derive(() => PostContent.encode(postContents.ref))
 
 	async function sendPost() {
 		try {
 			state.ref = "loading"
-			if (!WalletApi.browserWallet.ref) throw new Error(WalletApi.browserWalletState.ref)
-			await WalletApi.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
+			if (!Wallet.browserWallet.ref) throw new Error(Wallet.browserWalletState.ref)
+			await Wallet.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)

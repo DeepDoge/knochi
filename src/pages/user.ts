@@ -1,5 +1,5 @@
 import { TheGraphApi } from "@/api/graph"
-import { WalletApi } from "@/api/wallet"
+import { Wallet } from "@/api/wallet"
 import { PostForm } from "@/libs/post-form"
 import { Profile } from "@/libs/profile"
 import { Timeline } from "@/libs/timeline"
@@ -45,7 +45,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 		}
 	`
 
-	const isMyProfile = $.derive(() => params.userAddress.ref === WalletApi.browserWallet.ref?.address)
+	const isMyProfile = $.derive(() => params.userAddress.ref === Wallet.browserWallet.ref?.address)
 
 	page.$html = html` <nav class="tabs">
 			<ul>
