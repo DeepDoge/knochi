@@ -33,7 +33,7 @@ export const routerLayout = $.readable<Layout>((set) => {
 				set(homeLayout({}))
 			} else if (path[0] === "search") {
 				set(searchLayout({ search: path[1] ? decodeURIComponent(path[1]) : "" }))
-			} else if (path[0] === "top") {
+			} else if (path[0] === "popular") {
 				set(searchLayout({ search: "" }))
 			} else if (path[0]?.startsWith("0x") && path[0].length === 42) {
 				const [address, tab] = path

@@ -1,7 +1,7 @@
 import { TheGraphApi } from "@/api/graph"
 import { SearchSvg } from "@/assets/svgs/search"
 import { Timeline } from "@/libs/timeline"
-import { routeHref } from "@/router"
+import { route, routeHref } from "@/router"
 import { createLayout } from "@/routes"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
@@ -42,7 +42,11 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	const searchInput = $.writable("")
 	page.$subscribe(params.search, (search) => (searchInput.ref = search), { mode: "immediate" })
 	const searchInputDeferred = $.deferred(searchInput)
-	page.$subscribe(searchInputDeferred, (search) => location.replace(routeHref({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") })))
+	page.$subscribe(searchInputDeferred, (search) => {
+		const href = routeHref({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") })
+		if (route.pathArr.ref[0] === "search") location.replace(href)
+		else location.assign(href)
+	})
 
 	const timeline = $.derive(() => (params.search.ref ? TheGraphApi.createTimeline({ search: params.search.ref, replies: "include" }) : null))
 

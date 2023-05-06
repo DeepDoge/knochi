@@ -40,9 +40,9 @@ export function Navigation() {
 					</a>
 				</li>
 				<li>
-					<a href="#top" class:active=${() => firstPartOfPath.ref === "top"} aria-label="top posts" title="Top Posts">
+					<a href="#popular" class:active=${() => firstPartOfPath.ref === "popular"} aria-label="top posts" title="Popular Posts">
 						${$.match(firstPartOfPath)
-							.case("top", () => html`<x ${ChartFilledSvg()} class="icon"></x>`)
+							.case("popular", () => html`<x ${ChartFilledSvg()} class="icon"></x>`)
 							.default(() => html`<x ${ChartOutlineSvg()} class="icon"></x>`)}
 					</a>
 				</li>
@@ -69,7 +69,7 @@ NavigationComponent.$css = css`
 		display: grid;
 
 		& > ul {
-			background: hsl(var(--background-hsl), 50%);
+			background: hsl(var(--background-hsl), 75%);
 			backdrop-filter: blur(12px);
 			border: solid 1px hsl(var(--base-hsl));
 			border-bottom: none;
