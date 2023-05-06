@@ -4,7 +4,6 @@ import { Address } from "@/utils/address"
 import { BrowserProvider, ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 
-const ethereum: (ethers.Eip1193Provider & BrowserProvider) | null = (window as any).ethereum
 export type Wallet = {
 	signer: ethers.JsonRpcSigner
 	provider: ethers.BrowserProvider
@@ -14,6 +13,7 @@ export type Wallet = {
 	}
 }
 export namespace Wallet {
+	const ethereum: (ethers.Eip1193Provider & BrowserProvider) | null = (window as any).ethereum
 	export type State = "wrong-network" | "not-connected" | "connected"
 
 	let browserProvider: ethers.BrowserProvider | null = null
