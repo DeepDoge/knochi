@@ -7,22 +7,24 @@ const maximumPostIdByteLength = 20 + 32
 
 export type PostId = BrandedType<string, "PostId">
 export function PostId(postId: string): PostId {
-	return postIdFromHex(postIdToHex(postId as PostId))
+	return PostId.fromHex(PostId.toHex(postId as PostId))
 }
-export function postIdFromHex(postIdHex: string): PostId {
-	const bytes = ethers.toBeArray(postIdHex)
-	if (bytes.byteLength < minimumPostIdByteLength || bytes.byteLength > maximumPostIdByteLength)
-		throw new Error(
-			`Size of provided postId ${bytes.length} doesn't match with expected size to be between(inclusive) ${minimumPostIdByteLength} and ${maximumPostIdByteLength}`
-		)
-	const base64 = ethers.encodeBase64(bytes)
-	return base64 as PostId
-}
+export namespace PostId {
+	export function fromHex(postIdHex: string): PostId {
+		const bytes = ethers.toBeArray(postIdHex)
+		if (bytes.byteLength < minimumPostIdByteLength || bytes.byteLength > maximumPostIdByteLength)
+			throw new Error(
+				`Size of provided postId ${bytes.length} doesn't match with expected size to be between(inclusive) ${minimumPostIdByteLength} and ${maximumPostIdByteLength}`
+			)
+		const base64 = ethers.encodeBase64(bytes)
+		return base64 as PostId
+	}
 
-export function postIdToHex(postId: PostId): string {
-	return ethers.hexlify(ethers.decodeBase64(postId))
-}
+	export function toHex(postId: PostId): string {
+		return ethers.hexlify(ethers.decodeBase64(postId))
+	}
 
-export function extractContractAddressFromPostId(postId: PostId) {
-	return Address(ethers.hexlify(ethers.toBeArray(postIdToHex(postId)).subarray(0, 20)))
+	export function extractContractAddressFromPostId(postId: PostId) {
+		return Address(ethers.hexlify(ethers.toBeArray(toHex(postId)).subarray(0, 20)))
+	}
 }

@@ -1,4 +1,4 @@
-import { NetworkConfigs } from "@/api/networks"
+import { NetworkConfigs } from "@/api/network-config"
 import { connect_EternisPostDB, EternisPostDB_Contract } from "@/contracts/artifacts/EternisPostDB"
 import { Address } from "@/utils/address"
 import { BrowserProvider, ethers } from "ethers"

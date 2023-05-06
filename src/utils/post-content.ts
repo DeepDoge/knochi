@@ -4,7 +4,6 @@ export type PostContent = {
 	type: string
 	value: Uint8Array
 }
-
 export namespace PostContent {
 	export function decode(buffer: Uint8Array): PostContent[] {
 		const view = new DataView(buffer.buffer)

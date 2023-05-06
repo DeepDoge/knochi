@@ -8,6 +8,7 @@ import { route } from "@/router"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
+import { MyWallet } from "./libs/wallet"
 
 const NavigationComponent = defineComponent("x-navigation")
 export function Navigation() {
@@ -17,7 +18,7 @@ export function Navigation() {
 
 	component.$html = html`
 		<div class="left">
-			<x ${Wallet()} class="profile" class:active=${() => firstPartOfPath.ref === Wallet.browserWallet.ref?.address}></x>
+			<x ${MyWallet()} class="profile" class:active=${() => firstPartOfPath.ref === Wallet.browserWallet.ref?.address}></x>
 		</div>
 
 		<nav>

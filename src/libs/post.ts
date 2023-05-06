@@ -1,5 +1,5 @@
 import type { TheGraphApi } from "@/api/graph"
-import { NetworkConfigs } from "@/api/networks"
+import { NetworkConfigs } from "@/api/network-config"
 import { CommentSvg } from "@/assets/svgs/comment"
 import { Profile } from "@/libs/profile"
 import { ProfileName } from "@/libs/profile-name"

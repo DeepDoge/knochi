@@ -4,7 +4,7 @@ import { ProfileAvatar } from "@/libs/profile-avatar"
 import { ProfileName } from "@/libs/profile-name"
 import { requireWallet } from "@/libs/wallet"
 import { PostContent } from "@/utils/post-content"
-import { PostId, postIdToHex } from "@/utils/post-id"
+import { PostId } from "@/utils/post-id"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
@@ -21,7 +21,7 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	const text = $.writable("")
 	const postContents = $.derive<PostContent[]>(() => [
 		{ type: "text", value: ethers.toUtf8Bytes(text.ref) },
-		...(parentId.ref ? [{ type: "parent", value: ethers.toBeArray(postIdToHex(parentId.ref)) }] : []),
+		...(parentId.ref ? [{ type: "parent", value: ethers.toBeArray(PostId.toHex(parentId.ref)) }] : []),
 	])
 	const bytes = $.derive(() => PostContent.encode(postContents.ref))
 

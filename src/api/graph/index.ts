@@ -1,7 +1,7 @@
-import { NetworkConfigs } from "@/api/networks"
+import { NetworkConfigs } from "@/api/network-config"
 import { Address } from "@/utils/address"
 import { BigMath } from "@/utils/bigmath"
-import { extractContractAddressFromPostId, PostId, postIdFromHex, postIdToHex } from "@/utils/post-id"
+import { PostId } from "@/utils/post-id"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
@@ -41,7 +41,7 @@ export namespace TheGraphApi {
 		const query = gql`
 		{
 			postReplyCounters(where: { or: [
-				${postIds.map((postId) => `{ id: "${postIdToHex(postId)}" }`).join("\n")}
+				${postIds.map((postId) => `{ id: "${PostId.toHex(postId)}" }`).join("\n")}
 				] 
 			}) {
 				id
@@ -73,7 +73,7 @@ export namespace TheGraphApi {
 	export async function getPosts(postIds: PostId[]): Promise<Post[]> {
 		const query = (postIds: PostId[]) => gql`
 	{
-		posts(where: { or: [ ${postIds.map((postId) => `{ id: "${postIdToHex(postId)}" }`).join("\n")} ] }) {
+		posts(where: { or: [ ${postIds.map((postId) => `{ id: "${PostId.toHex(postId)}" }`).join("\n")} ] }) {
 			id
 			parentId
 			index
@@ -100,7 +100,7 @@ export namespace TheGraphApi {
 				continue
 			}
 
-			const contractAddress = extractContractAddressFromPostId(postId)
+			const contractAddress = PostId.extractContractAddressFromPostId(postId)
 			const client = contractAddressToClientMap[contractAddress]
 			if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
 
@@ -115,8 +115,8 @@ export namespace TheGraphApi {
 				).data.posts.map((responsePost: any) => {
 					try {
 						return {
-							id: postIdFromHex(responsePost.id),
-							parentId: responsePost.parentId === "0x" ? null : postIdFromHex(responsePost.parentId),
+							id: PostId.fromHex(responsePost.id),
+							parentId: responsePost.parentId === "0x" ? null : PostId.fromHex(responsePost.parentId),
 							index: ethers.toBigInt(responsePost.index),
 							author: Address(responsePost.author),
 							contents: responsePost.contents.map((content: any): Post["contents"][number] => ({
@@ -182,7 +182,7 @@ export namespace TheGraphApi {
 				${options.author ? `{ author: "${options.author}" }` : ""}
 				${
 					options.parentId
-						? `{ parentId: "${postIdToHex(options.parentId)}" }`
+						? `{ parentId: "${PostId.toHex(options.parentId)}" }`
 						: options.replies === "include"
 						? ""
 						: options.replies === "only"
@@ -222,7 +222,7 @@ export namespace TheGraphApi {
 							.map((post) => {
 								try {
 									return {
-										id: postIdFromHex(post.id),
+										id: PostId.fromHex(post.id),
 										index: ethers.toBigInt(post.index),
 									}
 								} catch (error) {
