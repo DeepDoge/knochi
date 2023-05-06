@@ -45,7 +45,7 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 							.case("text", () => html`<a href=${postHref}>${() => ethers.toUtf8String(content.ref.value)}</a>`)
 							.case("mention", () => {
 								try {
-									return ProfileName($.derive(() => Address(ethers.toUtf8String(content.ref.value))))
+									return ProfileName($.derive(() => Address.from(ethers.toUtf8String(content.ref.value))))
 								} catch (error) {
 									return null
 								}

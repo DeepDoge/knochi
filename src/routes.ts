@@ -37,7 +37,7 @@ export const routerLayout = $.readable<Layout>((set) => {
 				set(searchLayout({ search: "" }))
 			} else if (path[0]?.startsWith("0x") && path[0].length === 42) {
 				const [address, tab] = path
-				const userAddress = Address(address)
+				const userAddress = Address.from(address)
 				switch (tab) {
 					case "posts":
 					case "replies":

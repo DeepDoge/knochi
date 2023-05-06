@@ -18,7 +18,7 @@ function updateRoute() {
 	const [path, postId] = location.hash.substring(1).split("@")
 
 	routePath.ref = path ?? ""
-	routePostId.ref = postId ? PostId(postId) : null
+	routePostId.ref = postId ? PostId.from(postId) : null
 }
 updateRoute()
 window.addEventListener("hashchange", updateRoute)

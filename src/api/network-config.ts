@@ -81,10 +81,10 @@ export namespace NetworkConfigs {
 
 	export const contracts = {
 		mumbai: {
-			EternisPostDB: Address("0xA4A0Db3C5739C5E8cb63Fe86c6d5103558D8B19d"),
+			EternisPostDB: Address.from("0xA4A0Db3C5739C5E8cb63Fe86c6d5103558D8B19d"),
 		} as const,
 		sepolia: {
-			EternisPostDB: Address("0xcE1EEfdf8A9F638D4134F240ED134ECBedac7730"),
+			EternisPostDB: Address.from("0xcE1EEfdf8A9F638D4134F240ED134ECBedac7730"),
 		} as const,
 	} satisfies Record<ChainKey, ContractsConfig>
 }

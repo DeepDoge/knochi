@@ -33,7 +33,7 @@ export namespace TheGraphApi {
 	const contractAddressToClientMap: Record<Address, GraphClient> = {}
 	for (const client of clients) {
 		for (const contract of Object.values(NetworkConfigs.contracts[client.key])) {
-			contractAddressToClientMap[Address(contract)] = client
+			contractAddressToClientMap[Address.from(contract)] = client
 		}
 	}
 
@@ -60,7 +60,7 @@ export namespace TheGraphApi {
 		const replyCounts: Record<PostId, bigint> = {}
 		for (const replyCountsOfChain of replyCountsByChain) {
 			for (const replyCount of replyCountsOfChain) {
-				const id = PostId(replyCount.id)
+				const id = PostId.fromHex(replyCount.id)
 				const current = replyCounts[id]
 				replyCounts[id] = current ? current + ethers.toBigInt(replyCount.count) : 0n
 			}
@@ -118,7 +118,7 @@ export namespace TheGraphApi {
 							id: PostId.fromHex(responsePost.id),
 							parentId: responsePost.parentId === "0x" ? null : PostId.fromHex(responsePost.parentId),
 							index: ethers.toBigInt(responsePost.index),
-							author: Address(responsePost.author),
+							author: Address.from(responsePost.author),
 							contents: responsePost.contents.map((content: any): Post["contents"][number] => ({
 								type: ethers.toUtf8String(ethers.toBeArray(content.type)),
 								value: ethers.toBeArray(content.value),
@@ -127,7 +127,7 @@ export namespace TheGraphApi {
 							chainKey: client.key,
 							tip: responsePost.tip
 								? {
-										to: Address(responsePost.tip.to),
+										to: Address.from(responsePost.tip.to),
 										value: ethers.toBigInt(responsePost.tip.value),
 								  }
 								: null,

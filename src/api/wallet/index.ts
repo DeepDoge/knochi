@@ -50,7 +50,7 @@ export namespace Wallet {
 		browserWalletWritable.ref = {
 			signer,
 			provider: browserProvider,
-			address: Address(await signer.getAddress()),
+			address: Address.from(await signer.getAddress()),
 			contracts: {
 				EternisPostDB: connect_EternisPostDB(NetworkConfigs.contracts[chainKey].EternisPostDB, signer),
 			},
