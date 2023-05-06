@@ -24,11 +24,7 @@ export function requireWallet(then: (wallet: SignalReadable<Wallet>) => Template
 				.case(
 					"wrong-network",
 					() =>
-						html`
-							<button class="btn" on:click=${(e: MouseEvent) => (e.preventDefault(), spawnFloatingBox(e, "TODO: Change network thingy"))}>
-								Wrong Network
-							</button>
-						`
+						html` <button class="btn" on:click=${(e: MouseEvent) => (e.preventDefault(), spawnFloatingBox(e, MyWallet()))}>Wrong Network</button> `
 				)
 				.default(() => null)
 		)

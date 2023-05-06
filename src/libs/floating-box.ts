@@ -13,21 +13,23 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 
 	const box = component.$root.querySelector(".box") as HTMLDivElement
 
-	const rect = box.getBoundingClientRect()
-	box.style.setProperty("--default-top", `${mouseEvent.y - rect.height}px`)
-	box.style.setProperty("--default-left", `${mouseEvent.x - rect.width * 0.5}px`)
-
 	function update() {
-		box.style.top = `var(--default-top)`
-		box.style.left = `var(--default-left)`
 		const rect = box.getBoundingClientRect()
-		if (rect.top < 0) box.style.top = `calc(var(--default-top) - ${rect.top}px)`
+		if (rect.top < 0) box.style.setProperty("--offset-y", `${-rect.top}px`)
 
-		if (rect.left < 0) box.style.left = `calc(var(--default-left) - ${rect.left}px)`
-		else if (rect.right < 0) box.style.left = `calc(var(--default-left) + ${rect.right}px)`
+		if (rect.left < 0) box.style.setProperty("--offset-x", `${-rect.left}px`)
+		const right = innerWidth - rect.right
+		if (right < 0) box.style.setProperty("--offset-x", `${right}px`)
 	}
 	component.$interval(update, 100)
-	update()
+	component.$onMount(() => {
+		const rect = box.getBoundingClientRect()
+		box.style.transform = `translate(calc(${mouseEvent.x - rect.width * 0.5}px + var(--offset-x, 0px)),calc(${
+			mouseEvent.y - rect.height
+		}px + var(--offset-y, 0px)))`
+
+		update()
+	})
 
 	return component
 }
@@ -39,6 +41,8 @@ FloatingBoxComponent.$css = css`
 
 	.box {
 		position: absolute;
+		top: 0;
+		left: 0;
 		max-width: 100vw;
 		z-index: 101;
 	}
