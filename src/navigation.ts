@@ -70,7 +70,7 @@ NavigationComponent.$css = css`
 
 		& > ul {
 			background: hsl(var(--background-hsl), 50%);
-			backdrop-filter: blur(20px);
+			backdrop-filter: blur(12px);
 			border: solid 1px hsl(var(--base-hsl));
 			border-bottom: none;
 			contain: paint;

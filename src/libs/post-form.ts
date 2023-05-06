@@ -3,6 +3,7 @@ import { PaperPlaneSvg } from "@/assets/svgs/paper-plane"
 import { ProfileAvatar } from "@/libs/profile-avatar"
 import { ProfileName } from "@/libs/profile-name"
 import { requireWallet } from "@/libs/wallet"
+import { route } from "@/router"
 import { PostContent } from "@/utils/post-content"
 import { PostId } from "@/utils/post-id"
 import { ethers } from "ethers"
@@ -45,6 +46,7 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 		textarea.style.height = "0"
 		textarea.style.height = `${textarea.scrollHeight}px`
 	}
+	component.$effect(resizeTextArea, [route.postId])
 	component.$onMount(() => {
 		setTimeout(resizeTextArea)
 		window.addEventListener("resize", resizeTextArea)
