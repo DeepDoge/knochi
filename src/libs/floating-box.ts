@@ -19,14 +19,13 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 
 		if (rect.left < 0) box.style.setProperty("--offset-x", `${-rect.left}px`)
 		const right = innerWidth - rect.right
-		if (right < 0) box.style.setProperty("--offset-x", `${right}px`)
+		if (right < 0) box.style.setProperty("--offset-x", `${right - 16}px`)
 	}
 	component.$interval(update, 100)
 	component.$onMount(() => {
 		const rect = box.getBoundingClientRect()
-		box.style.transform = `translate(calc(${mouseEvent.x - rect.width * 0.5}px + var(--offset-x, 0px)),calc(${
-			mouseEvent.y - rect.height
-		}px + var(--offset-y, 0px)))`
+		box.style.transform =
+			`translate(calc(${mouseEvent.x - rect.width * 0.5}px + var(--offset-x, 0px)),` + `calc(${mouseEvent.y - rect.height}px + var(--offset-y, 0px)))`
 
 		update()
 	})
