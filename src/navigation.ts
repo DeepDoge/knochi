@@ -18,10 +18,14 @@ export function Navigation() {
 
 	component.$html = html`
 		<div class="left">
-			<x ${MyWallet()} class="profile" class:active=${() => firstPartOfPath.ref === Wallet.browserWallet.ref?.address}></x>
+			<ul>
+				<li>
+					<x ${MyWallet()} class="profile" class:active=${() => firstPartOfPath.ref === Wallet.browserWallet.ref?.address}></x>
+				</li>
+			</ul>
 		</div>
 
-		<nav>
+		<nav class="center">
 			<ul>
 				<li>
 					<a href="#" class:active=${() => firstPartOfPath.ref === ""} aria-label="home" title="Home">
@@ -45,7 +49,9 @@ export function Navigation() {
 			</ul>
 		</nav>
 
-		<div class="right"></div>
+		<div class="right">
+			<ul></ul>
+		</div>
 	`
 
 	return component
@@ -56,28 +62,39 @@ NavigationComponent.$css = css`
 		display: grid;
 		justify-content: space-between;
 		grid-template-columns: 1fr auto 1fr;
-		align-items: center;
-		padding-inline: calc(var(--span) * 0.65);
-		padding-bottom: calc(var(--span) * 0.5);
 		gap: var(--span);
-
-		background: linear-gradient(to top, hsl(var(--master-hsl), 15%), transparent);
 	}
 
-	.profile {
-		font-size: 0.85em;
-	}
-
-	.left {
+	:host > * {
 		display: grid;
-		justify-content: start;
-		align-items: center;
-	}
 
-	.right {
-		display: grid;
-		justify-content: end;
-		align-items: center;
+		& > ul {
+			background: hsl(var(--background-hsl), 50%);
+			backdrop-filter: blur(20px);
+			border: solid 1px hsl(var(--base-hsl));
+			border-bottom: none;
+			contain: paint;
+		}
+
+		&.left {
+			justify-content: start;
+			& > ul {
+				border-radius: 0 var(--radius-rounded) 0 0;
+				border-left: none;
+			}
+		}
+		&.center {
+			& > ul {
+				border-radius: var(--radius-rounded) var(--radius-rounded) 0 0;
+			}
+		}
+		&.right {
+			justify-content: end;
+			& > ul {
+				border-radius: var(--radius-rounded) 0 0 0;
+				border-right: none;
+			}
+		}
 	}
 
 	ul {
@@ -85,13 +102,21 @@ NavigationComponent.$css = css`
 
 		display: grid;
 		grid-auto-flow: column;
-		align-items: center;
 		padding: 0;
 
 		& > li {
 			display: grid;
 			grid-auto-flow: column;
-			align-items: center;
+
+			& > * {
+				display: grid;
+				align-items: center;
+				padding: calc(var(--span) * 0.5) calc(var(--span) * 0.95);
+
+				&.active {
+					background-color: hsl(var(--master-text-hsl), 15%);
+				}
+			}
 		}
 
 		& .icon {
@@ -100,13 +125,7 @@ NavigationComponent.$css = css`
 		}
 	}
 
-	ul a,
 	.profile {
-		padding: calc(var(--span) * 0.5) calc(var(--span) * 1);
-		border-radius: var(--radius);
-
-		&.active {
-			background-color: hsl(var(--master-text-hsl), 15%);
-		}
+		font-size: 0.85em;
 	}
 `

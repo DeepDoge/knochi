@@ -18,7 +18,9 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	const state = $.writable<"loading" | "idle" | Error>("idle")
 	const loading = $.derive(() => state.ref === "loading")
 
-	const text = $.writable("")
+	const text = $.writable(
+		"aaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaaaaaqaa"
+	)
 	const postContents = $.derive<PostContent[]>(() => [
 		{ type: "text", value: ethers.toUtf8Bytes(text.ref) },
 		...(parentId.ref ? [{ type: "parent", value: ethers.toBeArray(PostId.toHex(parentId.ref)) }] : []),
@@ -39,6 +41,18 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 		}
 	}
 
+	function resizeTextArea() {
+		const textarea = component.$root.querySelector<HTMLTextAreaElement>(".fields textarea")
+		if (!textarea) return
+		textarea.style.height = "0"
+		textarea.style.height = `${textarea.scrollHeight}px`
+	}
+	component.$onMount(() => {
+		setTimeout(resizeTextArea)
+		window.addEventListener("resize", resizeTextArea)
+		return () => window.removeEventListener("resize", resizeTextArea)
+	})
+
 	component.$html = html`
 		${requireWallet((wallet) => {
 			const profileAddress = $.derive(() => wallet.ref.address)
@@ -52,9 +66,7 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 							required
 							placeholder=${() => (parentId.ref ? "Reply..." : "Say something...")}
 							bind:value=${text}
-							on:input=${(e: InputEvent & { currentTarget: HTMLTextAreaElement }) => (
-								(e.currentTarget.style.height = "0"), (e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`)
-							)}></textarea>
+							on:input=${resizeTextArea}></textarea>
 					</div>
 					<div class="actions">
 						<button class="btn">Post${PaperPlaneSvg()}</button>
