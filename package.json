@@ -6,11 +6,11 @@
 		"build": "vite build",
 		"preview": "vite preview --port 3000",
 		"format": "prettier -w ./",
-		"contracts:compile": "tsx ./src/utils/contracts/generate.ts",
+		"contracts:compile": "typify-contracts --src ./src/contracts",
 		"graph:codegen": "npm run codegen --prefix ./graph",
 		"graph:build": "npm run build --prefix ./graph",
 		"graph:deploy": "npm run deploy --prefix ./graph",
-		"postinstall": "yarn --cwd ./graph && typify-contracts --src ./src/contracts && npm run graph:codegen && npm run format"
+		"postinstall": "yarn --cwd ./graph && npm run contracts:compile && npm run graph:codegen && npm run format"
 	},
 	"devDependencies": {
 		"@metamask/jazzicon": "latest",
@@ -21,6 +21,7 @@
 		"master-ts-vite-plugin": "github:DeepDoge/master-ts-vite-plugin",
 		"prettier": "latest",
 		"prettier-plugin-organize-imports": "latest",
+		"tsx": "^3.12.7",
 		"typescript": "latest",
 		"typify-contracts": "github:DeepDoge/typify-contracts",
 		"urql": "latest",

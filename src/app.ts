@@ -2,14 +2,15 @@ import { PostTimeline } from "@/libs/post-timeline"
 import { Navigation } from "@/navigation"
 import { route } from "@/router"
 import { routerLayout } from "@/routes"
-import globalCss from "@/styles/global.css"
+import globalCss from "@/styles/global.css?inline"
 import { $ } from "master-ts/library/$"
 import { Component, defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 
-const appCssSheet = new CSSStyleSheet()
-appCssSheet.replace(globalCss)
-Component.$globalCSS = [appCssSheet]
+const globalCssSheet = new CSSStyleSheet()
+globalCssSheet.replace(globalCss)
+Component.$globalCSS = [globalCssSheet]
+;(document.adoptedStyleSheets ??= []).push(globalCssSheet)
 
 const AppComponent = defineComponent("x-app")
 function App() {
