@@ -21,7 +21,7 @@
 		"master-ts-vite-plugin": "github:DeepDoge/master-ts-vite-plugin",
 		"prettier": "latest",
 		"prettier-plugin-organize-imports": "latest",
-		"tsx": "^3.12.7",
+		"tsx": "latest",
 		"typescript": "latest",
 		"typify-contracts": "github:DeepDoge/typify-contracts",
 		"urql": "latest",
