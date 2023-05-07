@@ -16,7 +16,8 @@
 				"Gruntfuggly.todo-tree",
 				"GraphQL.vscode-graphql",
 				"RemixProject.ethereum-remix",
-				"JuanBlanco.solidity"
+				"JuanBlanco.solidity",
+				"dbaeumer.vscode-eslint"
 			]
 		}
 	}

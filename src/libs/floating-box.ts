@@ -1,5 +1,5 @@
 import { defineComponent } from "master-ts/library/component"
-import { css, html, TemplateValue } from "master-ts/library/template"
+import { css, html, type TemplateValue } from "master-ts/library/template"
 
 const FloatingBoxComponent = defineComponent("x-floating-box")
 export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: TemplateValue[]) {

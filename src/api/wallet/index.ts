@@ -1,5 +1,5 @@
 import { NetworkConfigs } from "@/api/network-config"
-import { connect_EternisPostDB, EternisPostDB_Contract } from "@/contracts/artifacts/EternisPostDB"
+import { connect_EternisPostDB, type EternisPostDB_Contract } from "@/contracts/artifacts/EternisPostDB"
 import { Address } from "@/utils/address"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
@@ -13,7 +13,7 @@ export type Wallet = {
 	}
 }
 export namespace Wallet {
-	const ethereum: (ethers.Eip1193Provider & ethers.BrowserProvider) | null = (window as any).ethereum
+	const ethereum = "ethereum" in window ? (window.ethereum as ethers.Eip1193Provider & ethers.BrowserProvider) : null
 	export type State = "wrong-network" | "not-connected" | "connected"
 
 	let browserProvider: ethers.BrowserProvider | null = null

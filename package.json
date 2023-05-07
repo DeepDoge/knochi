@@ -15,6 +15,7 @@
 	"devDependencies": {
 		"@metamask/jazzicon": "latest",
 		"@total-typescript/ts-reset": "latest",
+		"@typescript-eslint/eslint-plugin": "latest",
 		"ethers": "latest",
 		"master-ts": "github:DeepDoge/master-ts",
 		"master-ts-vite-plugin": "github:DeepDoge/master-ts-vite-plugin",

@@ -34,7 +34,8 @@ export namespace PostContent {
 			offset += 2
 
 			if (typeIndex >= types.length) return []
-			const type = types[typeIndex]!
+			const type = types[typeIndex]
+			if (!type) return []
 
 			if (offset + valueBufferSize > buffer.length) return []
 			const value = buffer.subarray(offset, offset + valueBufferSize)
