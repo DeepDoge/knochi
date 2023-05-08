@@ -1,5 +1,6 @@
-import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts"
-import { EternisPost } from "../generated/IEternisPostDB/IEternisPostDB"
+import type { Address } from "@graphprotocol/graph-ts"
+import { BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts"
+import type { EternisPost } from "../generated/IEternisPostDB/IEternisPostDB"
 import { ChainPostIndexCounter, Post, PostContent, PostReplyCounter, PostReplyCounter_FourHourTimeframe } from "../generated/schema"
 
 const EMPTY_BYTES = new Bytes(0)

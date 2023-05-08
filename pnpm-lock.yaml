@@ -2,46 +2,46 @@ lockfileVersion: "6.0"
 
 devDependencies:
     "@metamask/jazzicon":
-        specifier: latest
+        specifier: ^2.0.0
         version: 2.0.0
     "@total-typescript/ts-reset":
-        specifier: latest
+        specifier: ^0.4.2
         version: 0.4.2
     "@typescript-eslint/eslint-plugin":
-        specifier: latest
+        specifier: ^5.59.2
         version: 5.59.2(@typescript-eslint/parser@5.59.2)(eslint@8.40.0)(typescript@5.0.4)
     ethers:
-        specifier: latest
+        specifier: ^6.3.0
         version: 6.3.0
     master-ts:
-        specifier: github:DeepDoge/master-ts
-        version: github.com/DeepDoge/master-ts/4f6375f30dd33348d202e382a57c3c09df9d4e40
+        specifier: github:DeepDoge/master-ts#0.0.2
+        version: github.com/DeepDoge/master-ts/b33831a57e1437711240d261791a6574cc3bcde0
     master-ts-vite-plugin:
-        specifier: github:DeepDoge/master-ts-vite-plugin
-        version: github.com/DeepDoge/master-ts-vite-plugin/8b598361e2a8efd1ef6c3d7193c9656ca5668a04
+        specifier: github:DeepDoge/master-ts-vite-plugin#0.0.2
+        version: github.com/DeepDoge/master-ts-vite-plugin/91528a78f7a2c8d3d5081ea0082cc1795ad7b9b7
     prettier:
-        specifier: latest
+        specifier: ^2.8.8
         version: 2.8.8
     prettier-plugin-organize-imports:
-        specifier: latest
+        specifier: ^3.2.2
         version: 3.2.2(prettier@2.8.8)(typescript@5.0.4)
     tsx:
         specifier: ^3.12.7
         version: 3.12.7
     typescript:
-        specifier: latest
+        specifier: ^5.0.4
         version: 5.0.4
     typify-contracts:
-        specifier: github:DeepDoge/typify-contracts
-        version: github.com/DeepDoge/typify-contracts/da6d2e1474b35749840f2389f650afcf09e0d469(solc@0.8.19)(tsx@3.12.7)
+        specifier: github:DeepDoge/typify-contracts#0.0.3
+        version: github.com/DeepDoge/typify-contracts/29620d5d9c8943ba9c1e0043001eebdc9dd78b09(solc@0.8.19)(tsx@3.12.7)
     urql:
-        specifier: latest
+        specifier: ^4.0.2
         version: 4.0.2(react@18.2.0)
     vite:
-        specifier: latest
+        specifier: ^4.3.5
         version: 4.3.5
     vite-plugin-singlefile:
-        specifier: latest
+        specifier: ^0.13.5
         version: 0.13.5(rollup@3.21.5)(vite@4.3.5)
 
 packages:
@@ -2023,8 +2023,8 @@ packages:
         engines: { node: ">=10" }
         dev: true
 
-    github.com/DeepDoge/master-ts-vite-plugin/8b598361e2a8efd1ef6c3d7193c9656ca5668a04:
-        resolution: { tarball: https://codeload.github.com/DeepDoge/master-ts-vite-plugin/tar.gz/8b598361e2a8efd1ef6c3d7193c9656ca5668a04 }
+    github.com/DeepDoge/master-ts-vite-plugin/91528a78f7a2c8d3d5081ea0082cc1795ad7b9b7:
+        resolution: { tarball: https://codeload.github.com/DeepDoge/master-ts-vite-plugin/tar.gz/91528a78f7a2c8d3d5081ea0082cc1795ad7b9b7 }
         name: master-ts-vite-plugin
         version: 0.0.0
         dependencies:
@@ -2032,15 +2032,15 @@ packages:
             typescript: 5.0.4
         dev: true
 
-    github.com/DeepDoge/master-ts/4f6375f30dd33348d202e382a57c3c09df9d4e40:
-        resolution: { tarball: https://codeload.github.com/DeepDoge/master-ts/tar.gz/4f6375f30dd33348d202e382a57c3c09df9d4e40 }
+    github.com/DeepDoge/master-ts/b33831a57e1437711240d261791a6574cc3bcde0:
+        resolution: { tarball: https://codeload.github.com/DeepDoge/master-ts/tar.gz/b33831a57e1437711240d261791a6574cc3bcde0 }
         name: master-ts
         version: 0.0.0
         dev: true
 
-    github.com/DeepDoge/typify-contracts/da6d2e1474b35749840f2389f650afcf09e0d469(solc@0.8.19)(tsx@3.12.7):
-        resolution: { tarball: https://codeload.github.com/DeepDoge/typify-contracts/tar.gz/da6d2e1474b35749840f2389f650afcf09e0d469 }
-        id: github.com/DeepDoge/typify-contracts/da6d2e1474b35749840f2389f650afcf09e0d469
+    github.com/DeepDoge/typify-contracts/29620d5d9c8943ba9c1e0043001eebdc9dd78b09(solc@0.8.19)(tsx@3.12.7):
+        resolution: { tarball: https://codeload.github.com/DeepDoge/typify-contracts/tar.gz/29620d5d9c8943ba9c1e0043001eebdc9dd78b09 }
+        id: github.com/DeepDoge/typify-contracts/29620d5d9c8943ba9c1e0043001eebdc9dd78b09
         name: typify-contracts
         version: 0.0.0
         hasBin: true
@@ -2054,7 +2054,7 @@ packages:
             hotscript: 1.0.12
             tsx: 3.12.7
             typescript: 5.0.4
-            waffle-compiler: github.com/DeepDoge/waffle-compiler/fe0e9a55f95dcd243471790bec134fe708f450c4(ethers@6.3.0)(solc@0.8.19)
+            waffle-compiler: github.com/DeepDoge/waffle-compiler/c66ec750395649c675be94e4e343357b4dd3eb98(ethers@6.3.0)(solc@0.8.19)
         transitivePeerDependencies:
             - bufferutil
             - encoding
@@ -2063,9 +2063,9 @@ packages:
             - utf-8-validate
         dev: true
 
-    github.com/DeepDoge/waffle-compiler/fe0e9a55f95dcd243471790bec134fe708f450c4(ethers@6.3.0)(solc@0.8.19):
-        resolution: { tarball: https://codeload.github.com/DeepDoge/waffle-compiler/tar.gz/fe0e9a55f95dcd243471790bec134fe708f450c4 }
-        id: github.com/DeepDoge/waffle-compiler/fe0e9a55f95dcd243471790bec134fe708f450c4
+    github.com/DeepDoge/waffle-compiler/c66ec750395649c675be94e4e343357b4dd3eb98(ethers@6.3.0)(solc@0.8.19):
+        resolution: { tarball: https://codeload.github.com/DeepDoge/waffle-compiler/tar.gz/c66ec750395649c675be94e4e343357b4dd3eb98 }
+        id: github.com/DeepDoge/waffle-compiler/c66ec750395649c675be94e4e343357b4dd3eb98
         name: waffle-compiler
         version: 0.0.0
         peerDependencies:
