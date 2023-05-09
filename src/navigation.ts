@@ -28,22 +28,22 @@ export function Navigation() {
 		<nav class="center">
 			<ul>
 				<li>
-					<a href="#" class:active=${() => firstPartOfPath.ref === ""} aria-label="home" title="Home">
+					<a href="#" class="icon" class:active=${() => firstPartOfPath.ref === ""} aria-label="home" title="Home">
 						${$.match(firstPartOfPath)
-							.case("", () => html`<x ${HomeFilledSvg()} class="icon"></x>`)
-							.default(() => html`<x ${HomeOutlineSvg()} class="icon"></x>`)}
+							.case("", () => html`<x ${HomeFilledSvg()}></x>`)
+							.default(() => html`<x ${HomeOutlineSvg()}></x>`)}
 					</a>
 				</li>
 				<li>
-					<a href="#search" class:active=${() => firstPartOfPath.ref === "search"} aria-label="search" title="Search">
-						<x ${SearchSvg()} class="icon"></x>
+					<a href="#search" class="icon" class:active=${() => firstPartOfPath.ref === "search"} aria-label="search" title="Search">
+						<x ${SearchSvg()}></x>
 					</a>
 				</li>
 				<li>
-					<a href="#popular" class:active=${() => firstPartOfPath.ref === "popular"} aria-label="top posts" title="Popular Posts">
+					<a href="#popular" class="icon" class:active=${() => firstPartOfPath.ref === "popular"} aria-label="top posts" title="Popular Posts">
 						${$.match(firstPartOfPath)
-							.case("popular", () => html`<x ${ChartFilledSvg()} class="icon"></x>`)
-							.default(() => html`<x ${ChartOutlineSvg()} class="icon"></x>`)}
+							.case("popular", () => html`<x ${ChartFilledSvg()}></x>`)
+							.default(() => html`<x ${ChartOutlineSvg()}></x>`)}
 					</a>
 				</li>
 			</ul>
@@ -67,13 +67,49 @@ NavigationComponent.$css = css`
 
 	:host > * {
 		display: grid;
+		align-content: end;
 
 		& > ul {
-			background: hsl(var(--background-hsl), 75%);
-			backdrop-filter: blur(12px);
+			list-style: none;
+			padding: 0;
+
+			display: grid;
+			grid-auto-flow: column;
+			align-items: center;
+
 			border: solid 1px hsl(var(--base-hsl));
 			border-bottom: none;
+
+			backdrop-filter: blur(12px);
 			contain: paint;
+
+			--current-hsl: var(--background-hsl);
+			--current-text-hsl: var(--background-text-hsl);
+
+			background: hsl(var(--current-hsl), 50%);
+			color: hsl(var(--current-text-hsl));
+
+			& > li {
+				display: grid;
+				grid-auto-flow: column;
+
+				& .icon {
+					aspect-ratio: 1;
+
+					display: grid;
+					grid-template-columns: 1.5em;
+					place-items: center;
+
+					border-radius: var(--radius);
+				}
+
+				& > * {
+					padding: calc(var(--span) * 0.75);
+					&.active {
+						background-color: hsl(var(--current-text-hsl), 15%);
+					}
+				}
+			}
 		}
 
 		&.left {
@@ -86,6 +122,7 @@ NavigationComponent.$css = css`
 		&.center {
 			& > ul {
 				border-radius: var(--radius-rounded) var(--radius-rounded) 0 0;
+				padding: calc(var(--span) * 0.25);
 			}
 		}
 		&.right {
@@ -94,34 +131,6 @@ NavigationComponent.$css = css`
 				border-radius: var(--radius-rounded) 0 0 0;
 				border-right: none;
 			}
-		}
-	}
-
-	ul {
-		list-style: none;
-
-		display: grid;
-		grid-auto-flow: column;
-		padding: 0;
-
-		& > li {
-			display: grid;
-			grid-auto-flow: column;
-
-			& > * {
-				display: grid;
-				align-items: center;
-				padding: calc(var(--span) * 0.5) calc(var(--span) * 0.95);
-
-				&.active {
-					background-color: hsl(var(--master-text-hsl), 15%);
-				}
-			}
-		}
-
-		& .icon {
-			height: min(1.5em, 5vh);
-			color: hsl(var(--base-text-hsl));
 		}
 	}
 

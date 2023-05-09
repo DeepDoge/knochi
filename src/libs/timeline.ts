@@ -60,7 +60,7 @@ TimelineComponent.$css = css`
 
 	.posts {
 		display: grid;
-		gap: calc(var(--span) * 2.2);
+		gap: calc(var(--span) * 1);
 	}
 
 	.no-posts {

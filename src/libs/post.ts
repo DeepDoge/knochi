@@ -23,7 +23,6 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 
 	component.$html = html`
 		<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
-			<div class="glow-effect"></div>
 			<div class="header">
 				<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
 				<div class="chips">
