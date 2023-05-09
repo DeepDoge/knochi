@@ -23,6 +23,7 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 
 	component.$html = html`
 		<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
+			<a href=${postHref} class="backdrop-link"></a>
 			<div class="header">
 				<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
 				<div class="chips">
@@ -36,12 +37,11 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 				</div>
 			</div>
 			<div class="content">
-				<a href=${postHref} class="backdrop-link"></a>
-				${$.each(postContents)
+				${$.each($.derive(() => [...postContents.ref, ...postContents.ref, ...postContents.ref]))
 					.key((_, index) => index)
 					.as((content) =>
 						$.match($.derive(() => content.ref.type))
-							.case("text", () => html`<a href=${postHref}>${() => ethers.toUtf8String(content.ref.value)}</a>`)
+							.case("text", () => html`<span>${() => ethers.toUtf8String(content.ref.value)}</span>`)
 							.case("mention", () => {
 								try {
 									return ProfileName($.derive(() => Address.from(ethers.toUtf8String(content.ref.value))))
@@ -69,6 +69,7 @@ PostComponent.$css = css`
 
 	.post {
 		position: relative;
+
 		display: grid;
 		gap: calc(var(--span) * 0.5);
 		padding: calc(var(--span) * 0.75) calc(var(--span) * 0.75);
@@ -81,6 +82,19 @@ PostComponent.$css = css`
 
 		&.active {
 			border-color: hsl(var(--slave-hsl));
+		}
+
+		isolation: isolate;
+		& > :not(.backdrop-link) {
+			pointer-events: none;
+			& > * {
+				pointer-events: all;
+			}
+		}
+		& > .backdrop-link {
+			position: absolute;
+			inset: 0;
+			z-index: -1;
 		}
 	}
 
@@ -95,6 +109,33 @@ PostComponent.$css = css`
 
 	.author {
 		font-size: 0.95em;
+	}
+
+	.content {
+		font-size: 1.1em;
+
+		display: flex;
+		gap: 0.5ch;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: start;
+	}
+
+	.footer {
+		display: flex;
+		gap: calc(var(--span) * 0.5);
+		font-size: 0.7em;
+
+		align-items: center;
+		justify-content: space-between;
+
+		& .reply-count {
+			display: grid;
+			grid-template-columns: 1.25em auto;
+			gap: calc(var(--span) * 0.25);
+			justify-content: start;
+			align-items: center;
+		}
 	}
 
 	.chips {
@@ -127,35 +168,6 @@ PostComponent.$css = css`
 				color: hsl(var(--master-text-hsl));
 				background-color: hsl(var(--master-hsl), 75%);
 			}
-		}
-	}
-
-	.content {
-		position: relative;
-		isolation: isolate;
-		font-size: 1.1em;
-
-		& > .backdrop-link {
-			position: absolute;
-			inset: 0;
-			z-index: -1;
-		}
-	}
-
-	.footer {
-		display: flex;
-		gap: calc(var(--span) * 0.5);
-		font-size: 0.7em;
-
-		align-items: center;
-		justify-content: space-between;
-
-		& .reply-count {
-			display: grid;
-			grid-template-columns: 1.25em auto;
-			gap: calc(var(--span) * 0.25);
-			justify-content: start;
-			align-items: center;
 		}
 	}
 `
