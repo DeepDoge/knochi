@@ -37,7 +37,7 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 				</div>
 			</div>
 			<div class="content">
-				${$.each($.derive(() => [...postContents.ref, ...postContents.ref, ...postContents.ref]))
+				${$.each(postContents)
 					.key((_, index) => index)
 					.as((content) =>
 						$.match($.derive(() => content.ref.type))
