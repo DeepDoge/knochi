@@ -40,13 +40,12 @@ AppComponent.$css = css`
 	}
 
 	header {
+		display: grid;
+
 		position: fixed;
 		bottom: 0;
 		width: 100%;
 		z-index: 10;
-
-		display: grid;
-		align-items: center;
 
 		pointer-events: none;
 		& > * {
@@ -56,21 +55,21 @@ AppComponent.$css = css`
 
 	main {
 		display: grid;
-		/* Using paddings and not gaps, because of the glow effects */
-		& .top,
-		& .bottom > * {
-			padding-top: var(--span);
-			padding-inline: calc(var(--span));
-		}
+		padding: var(--span);
+		padding-bottom: 0;
 
 		& > .bottom {
-			position: relative;
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 
+			position: relative;
+
+			gap: var(--span);
+
 			& > * {
 				overflow: auto;
-				padding-bottom: 10vh;
+				padding-top: var(--span);
+				padding-bottom: 10em;
 			}
 			& > .post {
 				position: sticky;
