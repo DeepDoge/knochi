@@ -32,7 +32,6 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 		if (boxRect.top < 0) box.style.setProperty("--offset-y", `${-boxRect.top}px`)
 		if (mouseEvent.target instanceof HTMLElement) {
 			const targetRect = mouseEvent.target.getBoundingClientRect()
-			console.log(boxRect.bottom, "<", targetRect.top)
 			if (boxRect.bottom > targetRect.top) {
 				box.style.setProperty("--offset-y", `${-(boxRect.bottom - targetRect.top)}px`)
 			}

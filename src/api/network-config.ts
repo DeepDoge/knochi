@@ -55,7 +55,7 @@ export namespace NetworkConfigs {
 			},
 			iconHref: "",
 		} as const,
-	} satisfies Record<ChainKey, ChainConfig>
+	} as const satisfies Record<ChainKey, ChainConfig>
 
 	export const chainIdToKeyMap = new Map<bigint, ChainKey>(Object.entries(chains).map(([key, chain]) => [chain.id, key as ChainKey]))
 
@@ -68,7 +68,7 @@ export namespace NetworkConfigs {
 			rpc: new URL("https://sepolia.infura.io/v3/"),
 			blockExplorer: new URL("https://sepolia.etherscan.io"),
 		} as const,
-	} satisfies Record<ChainKey, RpcProviderConfig>
+	} as const satisfies Record<ChainKey, RpcProviderConfig>
 
 	export const graphs = {
 		mumbai: {
@@ -77,7 +77,7 @@ export namespace NetworkConfigs {
 		sepolia: {
 			api: new URL(`https://api.studio.thegraph.com/query/45351/dforum-sepolia/${graphVersionLabel.versionLabel}`),
 		} as const,
-	} satisfies Record<ChainKey, GraphConfig>
+	} as const satisfies Record<ChainKey, GraphConfig>
 
 	export const contracts = {
 		mumbai: {
@@ -86,5 +86,5 @@ export namespace NetworkConfigs {
 		sepolia: {
 			EternisPostDB: Address.from("0xcE1EEfdf8A9F638D4134F240ED134ECBedac7730"),
 		} as const,
-	} satisfies Record<ChainKey, ContractsConfig>
+	} as const satisfies Record<ChainKey, ContractsConfig>
 }

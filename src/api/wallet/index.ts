@@ -61,9 +61,9 @@ export namespace Wallet {
 	export async function changeChain(chainKey: NetworkConfigs.ChainKey) {
 		const chainConfig = NetworkConfigs.chains[chainKey]
 		const providerConfig = NetworkConfigs.rpcProviders[chainKey]
-		if (!browserWallet.ref) return
+		if (!browserProvider) return
 		try {
-			await browserWallet.ref.provider.send("wallet_switchEthereumChain", [{ chainId: ethers.toBeHex(chainConfig.id) }])
+			await browserProvider.send("wallet_switchEthereumChain", [{ chainId: `0x${chainConfig.id.toString(16)}` }])
 		} catch (err) {
 			// This error code indicates that the chain has not been added to MetaMask
 			if (err && typeof err === "object" && "code" in err && err.code === 4902) {
@@ -77,13 +77,15 @@ export namespace Wallet {
 
 				const config = {
 					chainName: chainConfig.name,
-					chainId: ethers.toBeHex(chainConfig.id),
+					chainId: `0x${chainConfig.id.toString(16)}`,
 					nativeCurrency: chainConfig.currency,
 					blockExplorerUrls: [providerConfig.blockExplorer.href],
 					rpcUrls: [providerConfig.rpc.href],
 				} satisfies JsonRpcProviderConfig
 
-				await browserWallet.ref.provider.send("wallet_addEthereumChain", [config])
+				console.log(config)
+
+				await browserProvider.send("wallet_addEthereumChain", [config])
 			} else throw err
 		}
 	}
