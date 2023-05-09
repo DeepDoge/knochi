@@ -37,6 +37,7 @@ function App() {
 AppComponent.$css = css`
 	:host {
 		display: grid;
+		--space: var(--span);
 	}
 
 	header {
@@ -54,28 +55,36 @@ AppComponent.$css = css`
 	}
 
 	main {
+		/* 
+			Using paddings here instead of gaps on purpose
+			Why? so outlines or effects like glow doesnt try to overflow, also sticky parts should have padding.
+		*/
 		display: grid;
-		padding: var(--span);
-		padding-bottom: 0;
+		padding-top: var(--space);
+
+		& > .top {
+			padding-inline: var(--space);
+		}
 
 		& > .bottom {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-
-			position: relative;
-
-			gap: var(--span);
-
+			padding-inline: calc(var(--space) * 0.5);
 			& > * {
-				overflow: auto;
-				padding-top: var(--span);
+				padding-top: var(--space);
 				padding-bottom: 10em;
+				padding-inline: calc(var(--space) * 0.5);
 			}
-			& > .post {
-				position: sticky;
-				top: 0;
-				height: calc(100vh);
-			}
+		}
+	}
+
+	main > .bottom {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+		position: relative;
+		& > .post {
+			position: sticky;
+			top: 0;
+			height: 100vh;
+			overflow: auto;
 		}
 	}
 
