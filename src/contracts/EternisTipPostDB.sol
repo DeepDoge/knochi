@@ -2,7 +2,6 @@
 pragma solidity ^0.8.9;
 import "./IEternisTipPostDB.sol";
 
-
 contract EternisTipPostDB is IEternisTipPostDB {
     uint256 public postIndex;
 
