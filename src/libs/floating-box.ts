@@ -16,7 +16,8 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 	component.$onMount(() => {
 		const rect = box.getBoundingClientRect()
 		box.style.transform =
-			`translate(calc(${mouseEvent.x - rect.width * 0.5}px + var(--offset-x, 0px)),` + `calc(${mouseEvent.y - rect.height}px + var(--offset-y, 0px)))`
+			`translate(calc(${mouseEvent.x - rect.width * 0.5}px + var(--offset-x, 0px)),` +
+			`calc(${mouseEvent.y + scrollY - rect.height}px + var(--offset-y, 0px)))`
 		updateOffsets()
 
 		window.addEventListener("resize", close, { once: true })
@@ -29,6 +30,7 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 
 	function updateOffsets() {
 		const boxRect = box.getBoundingClientRect()
+
 		if (boxRect.top < 0) box.style.setProperty("--offset-y", `${-boxRect.top}px`)
 		if (mouseEvent.target instanceof HTMLElement) {
 			const targetRect = mouseEvent.target.getBoundingClientRect()

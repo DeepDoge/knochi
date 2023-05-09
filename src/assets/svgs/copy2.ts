@@ -16,5 +16,5 @@ export function Copy2Svg() {
 				fill-rule="nonzero"
 				fill="currentColor" />
 		</svg>
-	`[0]!
+	`[0] as SVGElement
 }

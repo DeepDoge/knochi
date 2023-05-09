@@ -1,5 +1,7 @@
 import type networksJson from "@/../graph/networks.json"
 import graphVersionLabel from "@/../graph/version-label.json"
+import { EthereumChainSvg } from "@/assets/svgs/chains/ethereum"
+import { PolygonChainSvg } from "@/assets/svgs/chains/polygon"
 import { Address } from "@/utils/address"
 
 // TODO: all of these should be able to be changed by the user, so make something like config page, dont bother with the reactivity just reload on save
@@ -10,11 +12,15 @@ export namespace NetworkConfigs {
 
 	export type ChainCurrencyConfig = { name: string; decimals: number; symbol: string }
 
+	export type ColorHsl = `${number},${number}%,${number}%`
+
 	export type ChainConfig = {
 		id: bigint
 		name: string
 		currency: ChainCurrencyConfig
-		iconHref: string
+		iconSvg: () => SVGElement
+		colorTextHsl: ColorHsl
+		colorBackgroundHsl: ColorHsl
 	}
 
 	export type RpcProviderConfig = {
@@ -43,7 +49,9 @@ export namespace NetworkConfigs {
 				symbol: "MATIC",
 				decimals: 18,
 			},
-			iconHref: "",
+			iconSvg: PolygonChainSvg,
+			colorBackgroundHsl: "257,64%,56%",
+			colorTextHsl: "0,0%,100%",
 		} as const,
 		sepolia: {
 			id: 11155111n,
@@ -53,7 +61,9 @@ export namespace NetworkConfigs {
 				symbol: "SepoliaETH",
 				decimals: 18,
 			},
-			iconHref: "",
+			iconSvg: EthereumChainSvg,
+			colorBackgroundHsl: "199,49%,59%",
+			colorTextHsl: "0,0%,100%",
 		} as const,
 	} as const satisfies Record<ChainKey, ChainConfig>
 
