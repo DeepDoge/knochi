@@ -41,7 +41,7 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	}
 
 	function resizeTextArea() {
-		const textarea = component.$root.querySelector<HTMLTextAreaElement>(".fields textarea")
+		const textarea = component.$shadowRoot.querySelector<HTMLTextAreaElement>(".fields textarea")
 		if (!textarea) return
 		const placeholder = document.createElement("div")
 		placeholder.style.height = `${textarea.scrollHeight}px`

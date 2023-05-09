@@ -11,7 +11,7 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 	`
 	document.body.appendChild(component)
 
-	const box = component.$root.querySelector(".box") as HTMLDivElement
+	const box = component.$shadowRoot.querySelector(".box") as HTMLDivElement
 
 	component.$onMount(() => {
 		const rect = box.getBoundingClientRect()
