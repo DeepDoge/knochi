@@ -23,7 +23,7 @@
 		"prettier-plugin-organize-imports": "^3.2.2",
 		"tsx": "^3.12.7",
 		"typescript": "^5.0.4",
-		"typify-contracts": "github:DeepDoge/typify-contracts#0.0.4",
+		"typify-contracts": "github:DeepDoge/typify-contracts#0.0.7",
 		"urql": "^4.0.2",
 		"vite": "^4.3.5",
 		"vite-plugin-singlefile": "^0.13.5"

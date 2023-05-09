@@ -12,5 +12,6 @@
 				"bracketSpacing": true
 			}
 		}
-	]
+	],
+	"plugins": ["prettier-plugin-organize-imports"]
 }
