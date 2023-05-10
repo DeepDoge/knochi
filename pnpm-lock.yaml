@@ -14,8 +14,8 @@ devDependencies:
     specifier: ^6.3.0
     version: 6.3.0
   master-ts:
-    specifier: github:DeepDoge/master-ts#0.0.11
-    version: github.com/DeepDoge/master-ts/e78bd9a0bf66c996d80292a9891e0fd348d99316
+    specifier: github:DeepDoge/master-ts#0.0.12
+    version: github.com/DeepDoge/master-ts/f069967583e9f96a085aaa9704e67742a64a6246
   master-ts-vite-plugin:
     specifier: github:DeepDoge/master-ts-vite-plugin#0.0.2
     version: github.com/DeepDoge/master-ts-vite-plugin/91528a78f7a2c8d3d5081ea0082cc1795ad7b9b7
@@ -2033,8 +2033,8 @@ packages:
       typescript: 5.0.4
     dev: true
 
-  github.com/DeepDoge/master-ts/e78bd9a0bf66c996d80292a9891e0fd348d99316:
-    resolution: {tarball: https://codeload.github.com/DeepDoge/master-ts/tar.gz/e78bd9a0bf66c996d80292a9891e0fd348d99316}
+  github.com/DeepDoge/master-ts/f069967583e9f96a085aaa9704e67742a64a6246:
+    resolution: {tarball: https://codeload.github.com/DeepDoge/master-ts/tar.gz/f069967583e9f96a085aaa9704e67742a64a6246}
     name: master-ts
     version: 0.0.0
     dev: true
