@@ -166,18 +166,18 @@ export namespace TheGraphApi {
 		parentId?: TParentID
 		replies?: [TParentID] extends [never] ? "include" | "only" : never
 		mention?: Address
-		search?: string
+		search?: string[]
 		top?: "minute" | "hour" | "day" | "week" | "month" | "year" | "all-time"
 	}
 
-	export function createTimeline<TParentID extends PostId = never>(options: QueryOptions<TParentID>): Timeline {
+	export function createTimeline<TParentID extends PostId = never>(options: QueryOptions<TParentID>, rule: "and" | "or" = "and"): Timeline {
 		const query = (count: number, beforeIndex?: bigint) => gql`
 	{
 		posts(
 			first: ${count.toString()}
 			orderBy: index
 			orderDirection: desc 
-			where: { and: [
+			where: { ${rule}: [
 				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] } 
 				${options.author ? `{ author: "${options.author}" }` : ""}
 				${
@@ -190,7 +190,13 @@ export namespace TheGraphApi {
 						: `{ parentId: "0x" }`
 				}
 				${options.mention ? `{ contents_: { type: "${ethers.hexlify(ethers.toUtf8Bytes("mention"))}",  value: "${options.mention}" } }` : ""}
-				${options.search ? `{ contents_: { value_contains: "${ethers.hexlify(ethers.toUtf8Bytes(options.search)).substring(2)}" } }` : ""}
+				${
+					options.search
+						? `{ or: [${options.search
+								.map((term) => `{ contents_: { value_contains: "${ethers.hexlify(ethers.toUtf8Bytes(term)).substring(2)}" } }`)
+								.join("\n")}] }`
+						: ""
+				}
 				${beforeIndex ? (beforeIndex >= 0n ? `{ index_lt: ${beforeIndex.toString()} }` : `{ index_gt: ${BigMath.abs(beforeIndex).toString()} }`) : ""} 
 			] }
 		) {

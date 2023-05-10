@@ -8,4 +8,13 @@ export namespace Address {
 		if (bytes.byteLength !== 20) throw new Error(`Address length of ${value} doesn't match. Got length ${bytes.byteLength}, expected ${20}`)
 		return ethers.hexlify(bytes) as Address
 	}
+
+	export function is(value: string): value is Address {
+		try {
+			Address.from(value)
+			return true
+		} catch (error) {
+			return false
+		}
+	}
 }
