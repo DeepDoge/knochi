@@ -7,10 +7,8 @@ import { $ } from "master-ts/library/$"
 import { Component, defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 
-const globalCssSheet = new CSSStyleSheet()
-globalCssSheet.replace(globalCss)
-Component.$globalCSS = [globalCssSheet]
-;(document.adoptedStyleSheets ??= []).push(globalCssSheet)
+Component.$insertGlobalCSS(globalCss)
+;(document.adoptedStyleSheets ??= []).push(Component.$globalStyleSheet)
 
 const AppComponent = defineComponent("x-app")
 function App() {
