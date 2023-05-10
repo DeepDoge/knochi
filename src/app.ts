@@ -63,6 +63,7 @@ AppComponent.$css = css`
 
 		& > .top,
 		& > .bottom > * {
+			/* sometimes, top might not exists, so this is both padding at the top and also padding between top and bottom */
 			padding-top: var(--space);
 		}
 
