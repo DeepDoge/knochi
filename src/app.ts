@@ -7,7 +7,7 @@ import { $ } from "master-ts/library/$"
 import { Component, defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
 
-Component.$insertGlobalCSS(globalCss)
+Component.$globalCSS = globalCss
 {
 	const sheet = new CSSStyleSheet()
 	sheet.replaceSync(globalCss)
