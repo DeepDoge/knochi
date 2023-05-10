@@ -67,16 +67,31 @@ NavigationComponent.$css = css`
 
 	:host > * {
 		display: grid;
-		align-content: end;
+		align-content: center;
+		padding-bottom: calc(var(--span) * 0.25);
+
+		&.left {
+			justify-content: start;
+			& > ul {
+				border-radius: 0 var(--radius-rounded) var(--radius-rounded) 0;
+				border-left: none;
+			}
+		}
+		&.center {
+			& > ul {
+				border-radius: var(--radius-rounded);
+				padding: calc(var(--span) * 0.5);
+			}
+		}
+		&.right {
+			justify-content: end;
+			& > ul {
+				border-radius: var(--radius-rounded) 0 0 var(--radius-rounded);
+				border-right: none;
+			}
+		}
 
 		& > ul {
-			list-style: none;
-			padding: 0;
-
-			display: grid;
-			grid-auto-flow: column;
-			align-items: center;
-
 			border: solid 1px hsl(var(--base-hsl));
 			border-bottom: none;
 
@@ -86,8 +101,17 @@ NavigationComponent.$css = css`
 			--current-hsl: var(--background-hsl);
 			--current-text-hsl: var(--background-text-hsl);
 
-			background: hsl(var(--current-hsl), 50%);
+			background: hsl(var(--current-hsl), 60%);
 			color: hsl(var(--current-text-hsl));
+		}
+
+		& > ul {
+			list-style: none;
+			padding: 0;
+
+			display: grid;
+			grid-auto-flow: column;
+			align-items: center;
 
 			& > li {
 				display: grid;
@@ -106,30 +130,9 @@ NavigationComponent.$css = css`
 				& > * {
 					padding: calc(var(--span) * 0.75);
 					&.active {
-						background-color: hsl(var(--current-text-hsl), 15%);
+						background-color: hsl(var(--current-text-hsl), 10%);
 					}
 				}
-			}
-		}
-
-		&.left {
-			justify-content: start;
-			& > ul {
-				border-radius: 0 var(--radius-rounded) 0 0;
-				border-left: none;
-			}
-		}
-		&.center {
-			& > ul {
-				border-radius: var(--radius-rounded) var(--radius-rounded) 0 0;
-				padding: calc(var(--span) * 0.25);
-			}
-		}
-		&.right {
-			justify-content: end;
-			& > ul {
-				border-radius: var(--radius-rounded) 0 0 0;
-				border-right: none;
 			}
 		}
 	}
