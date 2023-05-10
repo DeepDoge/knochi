@@ -60,7 +60,11 @@ AppComponent.$css = css`
 			Why? so outlines or effects like glow doesnt try to overflow, also sticky parts should have padding.
 		*/
 		display: grid;
-		padding-top: var(--space);
+
+		& > .top,
+		& > .bottom > * {
+			padding-top: var(--space);
+		}
 
 		& > .top {
 			padding-inline: var(--space);
@@ -69,7 +73,6 @@ AppComponent.$css = css`
 		& > .bottom {
 			padding-inline: calc(var(--space) * 0.5);
 			& > * {
-				padding-top: var(--space);
 				padding-bottom: 10em;
 				padding-inline: calc(var(--space) * 0.5);
 			}
