@@ -1,5 +1,6 @@
 import { TheGraphApi } from "@/api/graph"
 import { SearchSvg } from "@/assets/svgs/search"
+import { Profile } from "@/libs/profile"
 import { Timeline } from "@/libs/timeline"
 import { route, routeHref } from "@/router"
 import { createLayout } from "@/routes"
@@ -41,19 +42,20 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	`
 
 	const searchInput = $.writable("")
-	page.$subscribe(params.search, (search) => (searchInput.ref = search.trim()), { mode: "immediate" })
+	page.$subscribe(params.search, (search) => (searchInput.ref = search), { mode: "immediate" })
 	const searchInputDeferred = $.deferred(searchInput)
 	page.$subscribe(searchInputDeferred, (search) => {
-		const href = routeHref({ path: ["search", encodeURIComponent(search.trim())].filter(Boolean).join("/") })
+		const href = routeHref({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") })
 		if (route.pathArr.ref[0] === "search") location.replace(href)
 		else location.assign(href)
 	})
+	const searchInputDeferredAndTrimmed = $.derive(() => searchInputDeferred.ref.trim())
 
-	const timeline = $.derive(() => {
-		const search = params.search.ref
+	const searchResults = $.derive<{ timeline: TheGraphApi.Timeline; address: Address | null } | null>(() => {
+		const search = searchInputDeferredAndTrimmed.ref
 		if (!search) return null
-		if (Address.is(search)) return TheGraphApi.createTimeline({ mention: search, author: search, replies: "include" }, "or")
-		return TheGraphApi.createTimeline({ search: search.split(/\s+/), replies: "include" })
+		if (Address.is(search)) return { timeline: TheGraphApi.createTimeline({ mention: search, author: search, replies: "include" }, "or"), address: search }
+		return { timeline: TheGraphApi.createTimeline({ search: search.split(/\s+/), replies: "include" }), address: null }
 	})
 
 	page.$html = html`
@@ -61,17 +63,22 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 			<x ${SearchSvg()} class="icon"></x>
 			<input type="text" class="transparent-input" bind:value=${searchInput} placeholder="Search anything" />
 		</div>
-		${$.match(timeline)
+		${$.match(searchResults)
 			.case(null, () => html`<p class="none">...</p>`)
-			.default(
-				(timeline) => html`
+			.default((results) => {
+				const address = $.derive(() => results.ref.address)
+				const timeline = $.derive(() => results.ref.timeline)
+				return html`
 					<p>
 						<span class="result-title">Search results for:</span>
-						<span class="result-text">${searchInputDeferred}</span>
+						<span class="result-text">${searchInputDeferredAndTrimmed}</span>
 					</p>
+					${$.match(address)
+						.case(null, () => null)
+						.default((address) => Profile(address))}
 					<x ${Timeline(timeline)} class="timeline"></x>
 				`
-			)}
+			})}
 	`
 
 	return {
