@@ -4,49 +4,6 @@
 		margin: 0;
 	}
 
-	:root {
-		font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-		line-height: 1.5;
-		font-weight: 400;
-
-		--master-hue: 251;
-		--master-hsl: var(--master-hue), 54%, 45%;
-		--master-text-hsl: 0, 0%, 100%;
-
-		--slave-hue: 156;
-		--slave-hsl: var(--slave-hue), 86%, 36%;
-		--slave-text-hsl: 0, 0%, 100%;
-
-		--base-hue: 246;
-		--base-hsl: var(--base-hue), 49%, 14%;
-		--base-text-hsl: 0, 0%, 100%;
-
-		--background-hue: 246;
-		--background-hsl: var(--background-hue), 49%, 10%;
-		--background-text-hsl: 0, 0%, 100%;
-
-		--radius: 0.5em;
-		--radius-rounded: 1em;
-		--radius-fab: 100000vw;
-
-		--span: 1em;
-
-		--transition: 0.175s ease-in;
-
-		color-scheme: dark;
-		color: hsl(var(--background-text-hsl));
-
-		font-synthesis: none;
-		text-rendering: optimizeLegibility;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-		-webkit-text-size-adjust: 100%;
-	}
-
-	body {
-		background-color: hsl(var(--background-hsl));
-	}
-
 	a {
 		text-decoration: inherit;
 		color: inherit;
@@ -57,10 +14,6 @@
 	}
 	.link:hover {
 		color: hsl(var(--slave-hsl));
-	}
-
-	body {
-		margin: 0;
 	}
 
 	h1 {
