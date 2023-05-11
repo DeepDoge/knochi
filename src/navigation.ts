@@ -124,6 +124,8 @@ NavigationComponent.$css = css`
 					grid-template-columns: 1.5em;
 					place-items: center;
 
+					color: hsl(var(--master-hue), 40%, 75%);
+
 					border-radius: var(--radius);
 				}
 
