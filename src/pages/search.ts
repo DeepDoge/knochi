@@ -11,8 +11,6 @@ import { css, html } from "master-ts/library/template"
 
 export const searchLayout = createLayout<{ search: string }>((params) => {
 	const PageComponent = defineComponent("x-search-layout-page")
-	const page = new PageComponent()
-
 	PageComponent.$css = css`
 		:host {
 			display: grid;
@@ -40,6 +38,8 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 			font-style: italic;
 		}
 	`
+
+	const page = new PageComponent()
 
 	const searchInput = $.writable("")
 	page.$subscribe(params.search, (search) => (searchInput.ref = search), { mode: "immediate" })

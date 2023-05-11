@@ -12,15 +12,6 @@ import { css, html } from "master-ts/library/template"
 
 export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "replies" | "mentions" }>((params) => {
 	const PageComponent = defineComponent("x-user-layout-page")
-	const page = new PageComponent()
-	const timeline = $.flatten(
-		$.match(params.tab)
-			.case("posts", () => $.derive(() => TheGraphApi.createTimeline({ author: params.userAddress.ref })))
-			.case("replies", () => $.derive(() => TheGraphApi.createTimeline({ author: params.userAddress.ref, replies: "only" })))
-			.case("mentions", () => $.derive(() => TheGraphApi.createTimeline({ mention: params.userAddress.ref, replies: "include" })))
-			.default()
-	)
-
 	PageComponent.$css = css`
 		:host {
 			display: grid;
@@ -44,6 +35,15 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 			background-color: hsl(var(--master-hsl), 75%);
 		}
 	`
+
+	const page = new PageComponent()
+	const timeline = $.flatten(
+		$.match(params.tab)
+			.case("posts", () => $.derive(() => TheGraphApi.createTimeline({ author: params.userAddress.ref })))
+			.case("replies", () => $.derive(() => TheGraphApi.createTimeline({ author: params.userAddress.ref, replies: "only" })))
+			.case("mentions", () => $.derive(() => TheGraphApi.createTimeline({ mention: params.userAddress.ref, replies: "include" })))
+			.default()
+	)
 
 	const isMyProfile = $.derive(() => params.userAddress.ref === Wallet.browserWallet.ref?.address)
 

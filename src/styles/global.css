@@ -1,169 +1,171 @@
-* {
-	box-sizing: border-box;
-	margin: 0;
-}
+@layer global {
+	* {
+		box-sizing: border-box;
+		margin: 0;
+	}
 
-:root {
-	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-	line-height: 1.5;
-	font-weight: 400;
+	:root {
+		font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+		line-height: 1.5;
+		font-weight: 400;
 
-	--master-hue: 251;
-	--master-hsl: var(--master-hue), 54%, 45%;
-	--master-text-hsl: 0, 0%, 100%;
+		--master-hue: 251;
+		--master-hsl: var(--master-hue), 54%, 45%;
+		--master-text-hsl: 0, 0%, 100%;
 
-	--slave-hue: 156;
-	--slave-hsl: var(--slave-hue), 86%, 36%;
-	--slave-text-hsl: 0, 0%, 100%;
+		--slave-hue: 156;
+		--slave-hsl: var(--slave-hue), 86%, 36%;
+		--slave-text-hsl: 0, 0%, 100%;
 
-	--base-hue: 246;
-	--base-hsl: var(--base-hue), 49%, 14%;
-	--base-text-hsl: 0, 0%, 100%;
+		--base-hue: 246;
+		--base-hsl: var(--base-hue), 49%, 14%;
+		--base-text-hsl: 0, 0%, 100%;
 
-	--background-hue: 246;
-	--background-hsl: var(--background-hue), 49%, 10%;
-	--background-text-hsl: 0, 0%, 100%;
+		--background-hue: 246;
+		--background-hsl: var(--background-hue), 49%, 10%;
+		--background-text-hsl: 0, 0%, 100%;
 
-	--radius: 0.5em;
-	--radius-rounded: 1em;
-	--radius-fab: 100000vw;
+		--radius: 0.5em;
+		--radius-rounded: 1em;
+		--radius-fab: 100000vw;
 
-	--span: 1em;
+		--span: 1em;
 
-	--transition: 0.175s ease-in;
+		--transition: 0.175s ease-in;
 
-	color-scheme: dark;
-	color: hsl(var(--background-text-hsl));
+		color-scheme: dark;
+		color: hsl(var(--background-text-hsl));
 
-	font-synthesis: none;
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	-webkit-text-size-adjust: 100%;
-}
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		-webkit-text-size-adjust: 100%;
+	}
 
-body {
-	background-color: hsl(var(--background-hsl));
-}
+	body {
+		background-color: hsl(var(--background-hsl));
+	}
 
-a {
-	text-decoration: inherit;
-	color: inherit;
-}
+	a {
+		text-decoration: inherit;
+		color: inherit;
+	}
 
-.link {
-	color: hsl(var(--slave-hsl));
-}
-.link:hover {
-	color: hsl(var(--slave-hsl));
-}
+	.link {
+		color: hsl(var(--slave-hsl));
+	}
+	.link:hover {
+		color: hsl(var(--slave-hsl));
+	}
 
-body {
-	margin: 0;
-}
+	body {
+		margin: 0;
+	}
 
-h1 {
-	font-size: 3.2em;
-	line-height: 1.1;
-}
+	h1 {
+		font-size: 3.2em;
+		line-height: 1.1;
+	}
 
-img {
-	max-width: 100%;
-}
+	img {
+		max-width: 100%;
+	}
 
-.card {
-	padding: calc(var(--span) * 2);
-}
+	.card {
+		padding: calc(var(--span) * 2);
+	}
 
-input,
-textarea {
-	font: inherit;
-	max-width: 100%;
-	min-width: 0;
-}
+	input,
+	textarea {
+		font: inherit;
+		max-width: 100%;
+		min-width: 0;
+	}
 
-.input {
-	display: block;
-	appearance: none;
-	border-radius: var(--radius);
-	border: 1px solid transparent;
-	padding: calc(var(--span) * 0.6) calc(var(--span) * 1.2);
+	.input {
+		display: block;
+		appearance: none;
+		border-radius: var(--radius);
+		border: 1px solid transparent;
+		padding: calc(var(--span) * 0.6) calc(var(--span) * 1.2);
 
-	font-size: 1em;
-	font-family: inherit;
+		font-size: 1em;
+		font-family: inherit;
 
-	background-color: hsl(var(--base-hsl));
-	color: hsl(var(--base-text-hsl));
-}
+		background-color: hsl(var(--base-hsl));
+		color: hsl(var(--base-text-hsl));
+	}
 
-.input:focus-within,
-.input:focus {
-	outline: solid currentColor 0.1em;
-}
+	.input:focus-within,
+	.input:focus {
+		outline: solid currentColor 0.1em;
+	}
 
-.transparent-input {
-	display: block;
-	appearance: none;
-	border: none;
-	padding: 0;
+	.transparent-input {
+		display: block;
+		appearance: none;
+		border: none;
+		padding: 0;
 
-	font: inherit;
+		font: inherit;
 
-	background-color: transparent;
-	color: inherit;
-}
-.transparent-input:focus-visible {
-	outline: none;
-}
+		background-color: transparent;
+		color: inherit;
+	}
+	.transparent-input:focus-visible {
+		outline: none;
+	}
 
-.btn {
-	position: relative;
-	display: inline-block;
-	text-align: center;
+	.btn {
+		position: relative;
+		display: inline-block;
+		text-align: center;
 
-	border-radius: var(--radius);
-	border: 1px solid transparent;
-	padding: calc(var(--span) * 0.45) calc(var(--span) * 1.2);
-	font-size: 1em;
-	font-weight: 500;
-	font-family: inherit;
-	background-color: hsl(var(--base-hsl));
-	color: hsl(var(--base-text-hsl));
-	cursor: pointer;
-	transition: var(--transition);
-	transition-property: border;
-}
-.btn::before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	background-color: currentColor;
-	opacity: 0;
-	transition: var(--transition);
-	transition-property: opacity;
-}
-.btn:hover::before {
-	opacity: 0.1;
-}
-.btn:active::before {
-	opacity: 0.2;
-}
+		border-radius: var(--radius);
+		border: 1px solid transparent;
+		padding: calc(var(--span) * 0.45) calc(var(--span) * 1.2);
+		font-size: 1em;
+		font-weight: 500;
+		font-family: inherit;
+		background-color: hsl(var(--base-hsl));
+		color: hsl(var(--base-text-hsl));
+		cursor: pointer;
+		transition: var(--transition);
+		transition-property: border;
+	}
+	.btn::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background-color: currentColor;
+		opacity: 0;
+		transition: var(--transition);
+		transition-property: opacity;
+	}
+	.btn:hover::before {
+		opacity: 0.1;
+	}
+	.btn:active::before {
+		opacity: 0.2;
+	}
 
-.btn:focus-visible {
-	outline: var(--span) auto currentColor;
-}
-.btn:disabled {
-	opacity: 0.5;
-	cursor: not-allowed;
-}
+	.btn:focus-visible {
+		outline: var(--span) auto currentColor;
+	}
+	.btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
 
-.glow-effect {
-	position: absolute;
-	inset: 0;
-	z-index: -1;
+	.glow-effect {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
 
-	border-radius: inherit;
-	background-color: hsl(var(--master-hsl), 50%);
-	filter: blur(0.5rem);
+		border-radius: inherit;
+		background-color: hsl(var(--master-hsl), 50%);
+		filter: blur(0.5rem);
+	}
 }
