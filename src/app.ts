@@ -1,20 +1,11 @@
+import "@/import-styles"
 import { PostTimeline } from "@/libs/post-timeline"
 import { Navigation } from "@/navigation"
 import { route } from "@/router"
 import { routerLayout } from "@/routes"
-import globalCss from "@/styles/global.css?inline"
-import rootCss from "@/styles/root.css?inline"
 import { $ } from "master-ts/library/$"
-import { Component, defineComponent } from "master-ts/library/component"
+import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
-
-const globalSheet = new CSSStyleSheet()
-const rootSheet = new CSSStyleSheet()
-
-await Promise.all([globalSheet.replace(globalCss), rootSheet.replace(rootCss)])
-
-Component.$globalStyleSheets.push(globalSheet)
-document.adoptedStyleSheets.push(rootSheet, globalSheet)
 
 const AppComponent = defineComponent("x-app")
 function App() {
