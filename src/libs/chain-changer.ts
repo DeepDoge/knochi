@@ -46,7 +46,7 @@ ChainChangerComponent.$css = css`
 
 		background-color: hsl(var(--base-hsl));
 		color: hsl(var(--base-text-hsl));
-		border: solid 1px hsl(var(--master-hsl));
+		border: solid 1px hsl(var(--primary-hsl));
 		border-radius: var(--radius);
 	}
 

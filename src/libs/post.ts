@@ -78,10 +78,10 @@ PostComponent.$css = css`
 		color: hsl(var(--base-text-hsl));
 
 		border-radius: var(--radius);
-		border: calc(var(--span) * 0.1) solid hsl(var(--master-hsl), 25%);
+		border: calc(var(--span) * 0.1) solid hsl(var(--primary-hsl), 25%);
 
 		&.active {
-			border-color: hsl(var(--slave-hsl));
+			border-color: hsl(var(--second-hsl));
 		}
 
 		isolation: isolate;
@@ -161,12 +161,12 @@ PostComponent.$css = css`
 				white-space: nowrap;
 			}
 			&.post-id {
-				color: hsl(var(--slave-text-hsl));
-				background-color: hsl(var(--slave-hsl), 75%);
+				color: hsl(var(--second-text-hsl));
+				background-color: hsl(var(--second-hsl), 75%);
 			}
 			&.parent-id {
-				color: hsl(var(--master-text-hsl));
-				background-color: hsl(var(--master-hsl), 75%);
+				color: hsl(var(--accent-text-hsl));
+				background-color: hsl(var(--accent-hsl), 75%);
 			}
 		}
 	}

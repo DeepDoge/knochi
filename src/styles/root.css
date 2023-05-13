@@ -6,21 +6,96 @@
 		line-height: 1.5;
 		font-weight: 400;
 
-		--master-hue: 251;
-		--master-hsl: var(--master-hue), 54%, 45%;
-		--master-text-hsl: 0, 0%, 100%;
+		--text-flip-after: 65;
 
-		--slave-hue: 156;
-		--slave-hsl: var(--slave-hue), 86%, 36%;
-		--slave-text-hsl: 0, 0%, 100%;
+		--primary-hue: 251;
+		--primary-saturation: 54;
+		--primary-lightness: 51;
 
-		--base-hue: 246;
-		--base-hsl: var(--base-hue), 49%, 14%;
-		--base-text-hsl: 0, 0%, 100%;
+		--primary-hsl: var(--primary-hue), calc(var(--primary-saturation) * 1%), calc(var(--primary-lightness) * 1%);
+		--primary-text-hsl: 0, 0%, calc(calc(calc(var(--primary-lightness) - var(--text-flip-after)) * -10000) * 1%);
 
-		--background-hue: 246;
-		--background-hsl: var(--background-hue), 49%, 10%;
-		--background-text-hsl: 0, 0%, 100%;
+		--complementary-hue: calc(var(--primary-hue) + 180);
+		--complementary-saturation: var(--primary-saturation);
+		--complementary-lightness: var(--primary-lightness);
+
+		--complementary-hsl: var(--complementary-hue), calc(var(--complementary-saturation) * 1%), calc(var(--complementary-lightness) * 1%);
+		--complementary-text-hsl: 0, 0%, calc(calc(calc(var(--complementary-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--monochromatic-10-hue: var(--primary-hue);
+		--monochromatic-10-saturation: var(--primary-saturation);
+		--monochromatic-10-lightness: calc(var(--primary-lightness) + calc(10 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-10-hsl: var(--monochromatic-10-hue), calc(var(--monochromatic-10-saturation) * 1%), calc(var(--monochromatic-10-lightness) * 1%);
+		--monochromatic-10-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-10-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--monochromatic-20-hue: var(--primary-hue);
+		--monochromatic-20-saturation: var(--primary-saturation);
+		--monochromatic-20-lightness: calc(var(--primary-lightness) + calc(20 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-20-hsl: var(--monochromatic-20-hue), calc(var(--monochromatic-20-saturation) * 1%), calc(var(--monochromatic-20-lightness) * 1%);
+		--monochromatic-20-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-20-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--monochromatic-30-hue: var(--primary-hue);
+		--monochromatic-30-saturation: var(--primary-saturation);
+		--monochromatic-30-lightness: calc(var(--primary-lightness) + calc(30 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-30-hsl: var(--monochromatic-30-hue), calc(var(--monochromatic-30-saturation) * 1%), calc(var(--monochromatic-30-lightness) * 1%);
+		--monochromatic-30-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-30-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--monochromatic-40-hue: var(--primary-hue);
+		--monochromatic-40-saturation: var(--primary-saturation);
+		--monochromatic-40-lightness: calc(var(--primary-lightness) + calc(40 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-40-hsl: var(--monochromatic-40-hue), calc(var(--monochromatic-40-saturation) * 1%), calc(var(--monochromatic-40-lightness) * 1%);
+		--monochromatic-40-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-40-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--monochromatic-50-hue: var(--primary-hue);
+		--monochromatic-50-saturation: var(--primary-saturation);
+		--monochromatic-50-lightness: calc(var(--primary-lightness) + calc(50 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-50-hsl: var(--monochromatic-50-hue), calc(var(--monochromatic-50-saturation) * 1%), calc(var(--monochromatic-50-lightness) * 1%);
+		--monochromatic-50-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-50-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--analogous-left-hue: calc(var(--primary-hue) - 22.5);
+		--analogous-left-saturation: var(--primary-saturation);
+		--analogous-left-lightness: var(--primary-lightness);
+
+		--analogous-left-hsl: var(--analogous-left-hue), calc(var(--analogous-left-saturation) * 1%), calc(var(--analogous-left-lightness) * 1%);
+		--analogous-left-text-hsl: 0, 0%, calc(calc(calc(var(--analogous-left-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--analogous-right-hue: calc(var(--primary-hue) + 22.5);
+		--analogous-right-saturation: var(--primary-saturation);
+		--analogous-right-lightness: var(--primary-lightness);
+
+		--analogous-right-hsl: var(--analogous-right-hue), calc(var(--analogous-right-saturation) * 1%), calc(var(--analogous-right-lightness) * 1%);
+		--analogous-right-text-hsl: 0, 0%, calc(calc(calc(var(--analogous-right-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--triadic-left-hue: calc(var(--primary-hue) - 120);
+		--triadic-left-saturation: var(--primary-saturation);
+		--triadic-left-lightness: var(--primary-lightness);
+
+		--triadic-left-hsl: var(--triadic-left-hue), calc(var(--triadic-left-saturation) * 1%), calc(var(--triadic-left-lightness) * 1%);
+		--triadic-left-text-hsl: 0, 0%, calc(calc(calc(var(--triadic-left-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--triadic-right-hue: calc(var(--primary-hue) + 120);
+		--triadic-right-saturation: var(--primary-saturation);
+		--triadic-right-lightness: var(--primary-lightness);
+
+		--triadic-right-hsl: var(--triadic-right-hue), calc(var(--triadic-right-saturation) * 1%), calc(var(--triadic-right-lightness) * 1%);
+		--triadic-right-text-hsl: 0, 0%, calc(calc(calc(var(--triadic-right-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--second-hsl: var(--triadic-left-hsl);
+		--second-text-hsl: var(--triadic-left-text-hsl);
+
+		--accent-hsl: var(--triadic-right-hsl);
+		--accent-text-hsl: var(--triadic-right-text-hsl);
+
+		--base-hsl: var(--monochromatic-30-hsl);
+		--base-text-hsl: var(--monochromatic-30-text-hsl);
+
+		--background-hsl: var(--monochromatic-40-hsl);
+		--background-text-hsl: var(--monochromatic-40-text-hsl);
 
 		--radius: 0.5em;
 		--radius-rounded: 1em;

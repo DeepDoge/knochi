@@ -10,10 +10,10 @@
 	}
 
 	.link {
-		color: hsl(var(--slave-hsl));
+		color: hsl(var(--second-hsl));
 	}
 	.link:hover {
-		color: hsl(var(--slave-hsl));
+		color: hsl(var(--second-hsl));
 	}
 
 	h1 {
@@ -118,7 +118,7 @@
 		z-index: -1;
 
 		border-radius: inherit;
-		background-color: hsl(var(--master-hsl), 50%);
+		background-color: hsl(var(--primary-hsl), 50%);
 		filter: blur(0.5rem);
 	}
 }
