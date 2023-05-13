@@ -177,27 +177,29 @@ export namespace TheGraphApi {
 			first: ${count.toString()}
 			orderBy: index
 			orderDirection: desc 
-			where: { ${rule}: [
+			where: { and: [
 				{ or: [{ contents_: { value_not: "" } }, { contents_: { type_not: "" } }] } 
-				${options.author ? `{ author: "${options.author}" }` : ""}
-				${
-					options.parentId
-						? `{ parentId: "${PostId.toHex(options.parentId)}" }`
-						: options.replies === "include"
-						? ""
-						: options.replies === "only"
-						? `{ parentId_not: "0x" }`
-						: `{ parentId: "0x" }`
-				}
-				${options.mention ? `{ contents_: { type: "${ethers.hexlify(ethers.toUtf8Bytes("mention"))}",  value: "${options.mention}" } }` : ""}
-				${
-					options.search
-						? `{ or: [${options.search
-								.map((term) => `{ contents_: { value_contains: "${ethers.hexlify(ethers.toUtf8Bytes(term)).substring(2)}" } }`)
-								.join("\n")}] }`
-						: ""
-				}
-				${beforeIndex ? (beforeIndex >= 0n ? `{ index_lt: ${beforeIndex.toString()} }` : `{ index_gt: ${BigMath.abs(beforeIndex).toString()} }`) : ""} 
+				{ ${rule}: [
+					${options.author ? `{ author: "${options.author}" }` : ""}
+					${
+						options.parentId
+							? `{ parentId: "${PostId.toHex(options.parentId)}" }`
+							: options.replies === "include"
+							? ""
+							: options.replies === "only"
+							? `{ parentId_not: "0x" }`
+							: `{ parentId: "0x" }`
+					}
+					${options.mention ? `{ contents_: { type: "${ethers.hexlify(ethers.toUtf8Bytes("mention"))}",  value: "${options.mention}" } }` : ""}
+					${
+						options.search
+							? `{ or: [${options.search
+									.map((term) => `{ contents_: { value_contains: "${ethers.hexlify(ethers.toUtf8Bytes(term)).substring(2)}" } }`)
+									.join("\n")}] }`
+							: ""
+					}
+					${beforeIndex ? (beforeIndex >= 0n ? `{ index_lt: ${beforeIndex.toString()} }` : `{ index_gt: ${BigMath.abs(beforeIndex).toString()} }`) : ""} 
+				]}
 			] }
 		) {
 			id
