@@ -3,32 +3,18 @@ import { Wallet } from "@/api/wallet"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
+import { ChainButton } from "./chain-button"
 
 const ChainChangerComponent = defineComponent("x-chain-changer")
 export function ChainChanger() {
 	const component = new ChainChangerComponent()
 
-	const chainEntries = Object.entries(NetworkConfigs.chains) as [
-		keyof typeof NetworkConfigs.chains,
-		(typeof NetworkConfigs.chains)[keyof typeof NetworkConfigs.chains]
-	][]
+	const chainKeys = Object.keys(NetworkConfigs.chains) as (keyof typeof NetworkConfigs.chains)[]
 
 	component.$html = html`
-		<div class="title">Pick a chain</div>
+		<div class="title">Change Network</div>
 		<div class="chains">
-			${$.each(chainEntries).as(
-				([key, chain]) =>
-					html`
-						<button
-							class="btn"
-							title=${chain.name}
-							style:--current--background-hsl=${chain.colorBackgroundHsl}
-							style:--current--text-hsl=${chain.colorTextHsl}
-							on:click=${(e) => (e.preventDefault(), Wallet.changeChain(key))}>
-							${chain.iconSvg()}
-						</button>
-					`
-			)}
+			${$.each(chainKeys).as((key) => html`<x ${ChainButton(key)} on:click=${(e) => (e.preventDefault(), Wallet.changeChain(key))}></x>`)}
 		</div>
 	`
 
@@ -60,16 +46,5 @@ ChainChangerComponent.$css = css`
 		width: min(100vw, 15em);
 		grid-template-columns: repeat(auto-fit, 2.5em);
 		place-content: center;
-
-		& > * {
-			display: grid;
-			grid-template-columns: 50%;
-			place-content: center;
-			aspect-ratio: 1;
-			padding: 0;
-
-			color: hsl(var(--current--text-hsl));
-			background-color: hsl(var(--current--background-hsl));
-		}
 	}
 `

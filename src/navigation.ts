@@ -8,6 +8,7 @@ import { route } from "@/router"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
+import { ChainChangerButton } from "./libs/chain-changer-button"
 import { MyWallet } from "./libs/wallet"
 
 const NavigationComponent = defineComponent("x-navigation")
@@ -50,7 +51,9 @@ export function Navigation() {
 		</nav>
 
 		<div class="right">
-			<ul></ul>
+			<ul>
+				<li>${ChainChangerButton()}</li>
+			</ul>
 		</div>
 	`
 
@@ -62,7 +65,7 @@ NavigationComponent.$css = css`
 		display: grid;
 		justify-content: space-between;
 		grid-template-columns: 1fr auto 1fr;
-		gap: var(--span);
+		gap: calc(var(--span) * 0.25);
 	}
 
 	:host > * {
@@ -83,6 +86,7 @@ NavigationComponent.$css = css`
 		}
 		&.center {
 			& > ul {
+				padding: calc(var(--span) * 0.5);
 				border-radius: var(--radius-rounded);
 			}
 		}

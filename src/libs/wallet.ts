@@ -7,7 +7,6 @@ import type { SignalReadable } from "master-ts/library/signal"
 import { html, type TemplateValue } from "master-ts/library/template"
 import { ChainChanger } from "./chain-changer"
 
-// TODO: on wrong network, when clicked show a drop down of chains and select to chain to switch to
 const MyWalletComponent = defineComponent("x-my-wallet")
 export function MyWallet() {
 	const component = new MyWalletComponent()

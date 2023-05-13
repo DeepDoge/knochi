@@ -5,6 +5,7 @@ import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 
 export type Wallet = {
+	chainKey: NetworkConfigs.ChainKey
 	signer: ethers.JsonRpcSigner
 	provider: ethers.BrowserProvider
 	address: Address
@@ -48,6 +49,7 @@ export namespace Wallet {
 		}
 
 		browserWalletWritable.ref = {
+			chainKey,
 			signer,
 			provider: browserProvider,
 			address: Address.from(await signer.getAddress()),
