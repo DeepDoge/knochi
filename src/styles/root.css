@@ -23,6 +23,32 @@
 	}
 
 	:root {
+		--text-flip-after: 65%;
+
+		--primary-hue: 251;
+		--primary-saturation: 70%;
+		--primary-lightness: 55%;
+
+		--second-hue: var(--triadic-left-hue);
+		--second-saturation: var(--triadic-left-saturation);
+		--second-lightness: var(--triadic-left-lightness);
+
+		--accent-hue: var(--analogous-right-hue);
+		--accent-saturation: var(--analogous-right-saturation);
+		--accent-lightness: var(--analogous-right-lightness);
+
+		--monochromatic-a-change: 40;
+		--base-hue: var(--monochromatic-a-hue);
+		--base-saturation: var(--monochromatic-a-saturation);
+		--base-lightness: var(--monochromatic-a-lightness);
+
+		--monochromatic-b-change: 44;
+		--background-hue: var(--monochromatic-b-hue);
+		--background-saturation: var(--monochromatic-b-saturation);
+		--background-lightness: var(--monochromatic-b-lightness);
+	}
+
+	:root {
 		--radius: 0.5em;
 		--radius-rounded: 1em;
 		--radius-fab: 100000vw;
@@ -30,74 +56,6 @@
 		--span: 1em;
 
 		--transition: 0.175s ease-in;
-	}
-
-	:root {
-		--text-flip-after: 65%;
-
-		--primary-hue: 251;
-		--primary-saturation: 70%;
-		--primary-lightness: 55%;
-		--primary-hsl: var(--primary-hue), var(--primary-saturation), var(--primary-lightness);
-		--primary-text-hsl: 0, 0%,
-			calc(
-				100 *
-					max(
-						0%,
-						min(1%, calc(calc(calc(var(--text-flip-after) - var(--primary-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
-					)
-			);
-
-		--second-hue: var(--triadic-left-hue);
-		--second-saturation: var(--triadic-left-saturation);
-		--second-lightness: var(--triadic-left-lightness);
-		--second-hsl: var(--second-hue), var(--second-saturation), var(--second-lightness);
-		--second-text-hsl: 0, 0%,
-			calc(
-				100 *
-					max(
-						0%,
-						min(1%, calc(calc(calc(var(--text-flip-after) - var(--second-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
-					)
-			);
-
-		--accent-hue: var(--analogous-right-hue);
-		--accent-saturation: var(--analogous-right-saturation);
-		--accent-lightness: var(--analogous-right-lightness);
-		--accent-hsl: var(--accent-hue), var(--accent-saturation), var(--accent-lightness);
-		--accent-text-hsl: 0, 0%,
-			calc(
-				100 *
-					max(
-						0%,
-						min(1%, calc(calc(calc(var(--text-flip-after) - var(--accent-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
-					)
-			);
-
-		--monochromatic-a-change: 40;
-		--base-hue: var(--monochromatic-a-hue);
-		--base-saturation: var(--monochromatic-a-saturation);
-		--base-lightness: var(--monochromatic-a-lightness);
-		--base-hsl: var(--base-hue), var(--base-saturation), var(--base-lightness);
-		--base-text-hsl: 0, 0%,
-			calc(
-				100 *
-					max(0%, min(1%, calc(calc(calc(var(--text-flip-after) - var(--base-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max))))
-			);
-
-		--monochromatic-b-change: 44;
-		--background-hue: var(--monochromatic-b-hue);
-		--background-saturation: var(--monochromatic-b-saturation);
-		--background-lightness: var(--monochromatic-b-lightness);
-		--background-hsl: var(--background-hue), var(--background-saturation), var(--background-lightness);
-		--background-text-hsl: 0, 0%,
-			calc(
-				100 *
-					max(
-						0%,
-						min(1%, calc(calc(calc(var(--text-flip-after) - var(--background-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
-					)
-			);
 	}
 
 	:root {
@@ -140,5 +98,54 @@
 		--triadic-right-hue: calc(var(--primary-hue) + 120);
 		--triadic-right-saturation: var(--primary-saturation);
 		--triadic-right-lightness: var(--primary-lightness);
+	}
+
+	:root {
+		--primary-hsl: var(--primary-hue), var(--primary-saturation), var(--primary-lightness);
+		--primary-text-hsl: 0, 0%,
+			calc(
+				100 *
+					max(
+						0%,
+						min(1%, calc(calc(calc(var(--text-flip-after) - var(--primary-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
+					)
+			);
+
+		--second-hsl: var(--second-hue), var(--second-saturation), var(--second-lightness);
+		--second-text-hsl: 0, 0%,
+			calc(
+				100 *
+					max(
+						0%,
+						min(1%, calc(calc(calc(var(--text-flip-after) - var(--second-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
+					)
+			);
+
+		--accent-hsl: var(--accent-hue), var(--accent-saturation), var(--accent-lightness);
+		--accent-text-hsl: 0, 0%,
+			calc(
+				100 *
+					max(
+						0%,
+						min(1%, calc(calc(calc(var(--text-flip-after) - var(--accent-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
+					)
+			);
+
+		--base-hsl: var(--base-hue), var(--base-saturation), var(--base-lightness);
+		--base-text-hsl: 0, 0%,
+			calc(
+				100 *
+					max(0%, min(1%, calc(calc(calc(var(--text-flip-after) - var(--base-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max))))
+			);
+
+		--background-hsl: var(--background-hue), var(--background-saturation), var(--background-lightness);
+		--background-text-hsl: 0, 0%,
+			calc(
+				100 *
+					max(
+						0%,
+						min(1%, calc(calc(calc(var(--text-flip-after) - var(--background-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
+					)
+			);
 	}
 }
