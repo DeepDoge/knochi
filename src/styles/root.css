@@ -1,4 +1,4 @@
-@layer root, global;
+@layer root-calculated, root, global;
 
 @layer root {
 	:root {
@@ -60,8 +60,9 @@
 
 		--transition: 0.175s ease-in;
 	}
+}
 
-	/* Calculated START */
+@layer root-calculated {
 	:root {
 		--complementary--hue-: calc(var(--primary--hue-) + 180);
 		--complementary--saturation-: var(--primary--saturation-);
@@ -218,5 +219,4 @@
 					)
 			);
 	}
-	/* Calculated END */
 }
