@@ -22,8 +22,8 @@ export function ChainChanger() {
 						<button
 							class="btn"
 							title=${chain.name}
-							style:--current-background-hsl=${chain.colorBackgroundHsl}
-							style:--current-text-hsl=${chain.colorTextHsl}
+							style:--current--background-hsl=${chain.colorBackgroundHsl}
+							style:--current--text-hsl=${chain.colorTextHsl}
 							on:click=${(e) => (e.preventDefault(), Wallet.changeChain(key))}>
 							${chain.iconSvg()}
 						</button>
@@ -44,9 +44,9 @@ ChainChangerComponent.$css = css`
 		padding: calc(var(--span) * 0.5);
 		padding-bottom: calc(var(--span) * 1.5);
 
-		background-color: hsl(var(--base-hsl));
-		color: hsl(var(--base-text-hsl));
-		border: solid 1px hsl(var(--primary-hsl));
+		background-color: hsl(var(--base--hsl));
+		color: hsl(var(--base--text-hsl));
+		border: solid 1px hsl(var(--primary--hsl));
 		border-radius: var(--radius);
 	}
 
@@ -68,8 +68,8 @@ ChainChangerComponent.$css = css`
 			aspect-ratio: 1;
 			padding: 0;
 
-			color: hsl(var(--current-text-hsl));
-			background-color: hsl(var(--current-background-hsl));
+			color: hsl(var(--current--text-hsl));
+			background-color: hsl(var(--current--background-hsl));
 		}
 	}
 `

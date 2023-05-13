@@ -10,10 +10,10 @@
 	}
 
 	.link {
-		color: hsl(var(--second-hsl));
+		color: hsl(var(--second--hsl));
 	}
 	.link:hover {
-		color: hsl(var(--second-hsl));
+		color: hsl(var(--second--hsl));
 	}
 
 	h1 {
@@ -42,8 +42,8 @@
 		font-size: 1em;
 		font-family: inherit;
 
-		background-color: hsl(var(--base-hsl));
-		color: hsl(var(--base-text-hsl));
+		background-color: hsl(var(--base--hsl));
+		color: hsl(var(--base--text-hsl));
 	}
 
 	.input:focus-within,
@@ -77,8 +77,8 @@
 		font-size: 1em;
 		font-weight: 500;
 		font-family: inherit;
-		background-color: hsl(var(--base-hsl));
-		color: hsl(var(--base-text-hsl));
+		background-color: hsl(var(--base--hsl));
+		color: hsl(var(--base--text-hsl));
 		cursor: pointer;
 		transition: var(--transition);
 		transition-property: border;

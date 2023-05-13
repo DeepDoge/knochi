@@ -39,11 +39,11 @@ ProfileAddressComponent.$css = css`
 		transition-property: background-color;
 
 		&:hover {
-			background-color: hsl(var(--base-text-hsl), 10%);
+			background-color: hsl(var(--base--text-hsl), 10%);
 		}
 
 		&:active {
-			background-color: hsl(var(--base-text-hsl), 20%);
+			background-color: hsl(var(--base--text-hsl), 20%);
 		}
 	}
 

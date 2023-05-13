@@ -70,12 +70,12 @@ NavigationComponent.$css = css`
 		align-content: center;
 		padding-bottom: calc(var(--span) * 0.25);
 
-		--current-hsl: var(--background-hsl);
-		--current-text-hsl: var(--primary-hsl);
-		--current-backdrop-hsl: var(--primary-hsl);
+		--current--hsl: var(--background--hsl);
+		--current--text-hsl: var(--primary--hsl);
+		--current--backdrop-hsl: var(--primary--hsl);
 
 		&.left {
-			--current-text-hsl: var(--background-text-hsl);
+			--current--text-hsl: var(--background--text-hsl);
 			justify-content: start;
 			& > ul {
 				border-radius: 0 var(--radius-rounded) var(--radius-rounded) 0;
@@ -97,8 +97,8 @@ NavigationComponent.$css = css`
 			backdrop-filter: blur(12px);
 			contain: paint;
 
-			background: hsl(var(--current-hsl), 60%);
-			color: hsl(var(--current-text-hsl));
+			background: hsl(var(--current--hsl), 60%);
+			color: hsl(var(--current--text-hsl));
 		}
 
 		& > ul {
@@ -120,7 +120,7 @@ NavigationComponent.$css = css`
 					grid-template-columns: 1.5em;
 					place-items: center;
 
-					color: hsl(var(--current-text-hsl), 75%);
+					color: hsl(var(--current--text-hsl), 75%);
 
 					border-radius: var(--radius);
 				}
@@ -129,11 +129,11 @@ NavigationComponent.$css = css`
 					padding: calc(var(--span) * 0.75);
 
 					&:hover {
-						background-color: hsl(var(--current-backdrop-hsl), 7.5%);
+						background-color: hsl(var(--current--backdrop-hsl), 7.5%);
 					}
 
 					&.active {
-						background-color: hsl(var(--current-backdrop-hsl), 15%);
+						background-color: hsl(var(--current--backdrop-hsl), 15%);
 					}
 				}
 			}

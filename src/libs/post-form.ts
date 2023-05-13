@@ -101,8 +101,8 @@ PostFormComponent.$css = css`
 		grid-template-rows: auto calc(var(--span) * 0.25);
 		place-content: start;
 
-		background-color: hsl(var(--base-hsl));
-		color: hsl(var(--base-text-hsl));
+		background-color: hsl(var(--base--hsl));
+		color: hsl(var(--base--text-hsl));
 		border-radius: var(--radius-rounded);
 		padding: var(--span);
 
@@ -157,8 +157,8 @@ PostFormComponent.$css = css`
 			}
 			& button {
 				border-radius: var(--radius-rounded);
-				background-color: hsl(var(--primary-hsl));
-				color: hsl(var(--primary-text-hsl));
+				background-color: hsl(var(--primary--hsl));
+				color: hsl(var(--primary--text-hsl));
 
 				display: grid;
 				grid-template-columns: auto 1.1em;
