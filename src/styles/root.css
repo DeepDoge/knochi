@@ -24,10 +24,9 @@
 
 	:root {
 		--text-flip-after: 65%;
-
-		--primary-hue: 251;
-		--primary-saturation: 70%;
-		--primary-lightness: 55%;
+		--primary-hue: 250;
+		--primary-saturation: 50%;
+		--primary-lightness: 51%;
 
 		--second-hue: var(--triadic-left-hue);
 		--second-saturation: var(--triadic-left-saturation);
@@ -37,12 +36,12 @@
 		--accent-saturation: var(--analogous-right-saturation);
 		--accent-lightness: var(--analogous-right-lightness);
 
-		--monochromatic-a-change: 40;
+		--monochromatic-a-change: 35;
 		--base-hue: var(--monochromatic-a-hue);
 		--base-saturation: var(--monochromatic-a-saturation);
 		--base-lightness: var(--monochromatic-a-lightness);
 
-		--monochromatic-b-change: 44;
+		--monochromatic-b-change: 40;
 		--background-hue: var(--monochromatic-b-hue);
 		--background-saturation: var(--monochromatic-b-saturation);
 		--background-lightness: var(--monochromatic-b-lightness);

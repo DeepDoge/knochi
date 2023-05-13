@@ -78,7 +78,7 @@ PostComponent.$css = css`
 		color: hsl(var(--base-text-hsl));
 
 		border-radius: var(--radius);
-		border: calc(var(--span) * 0.1) solid hsl(var(--primary-hsl), 25%);
+		border: calc(var(--span) * 0.1) solid hsl(transparent, 25%);
 
 		&.active {
 			border-color: hsl(var(--second-hsl));
