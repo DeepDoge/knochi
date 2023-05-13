@@ -25,10 +25,6 @@
 		max-width: 100%;
 	}
 
-	.card {
-		padding: calc(var(--span) * 2);
-	}
-
 	input,
 	textarea {
 		font: inherit;
@@ -110,15 +106,5 @@
 	.btn:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
-	}
-
-	.glow-effect {
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-
-		border-radius: inherit;
-		background-color: hsl(var(--primary-hsl), 50%);
-		filter: blur(0.5rem);
 	}
 }
