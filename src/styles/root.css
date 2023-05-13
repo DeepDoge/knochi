@@ -194,7 +194,7 @@
 			calc(
 				100% *
 					max(
-						var(--text-min),
+						var(--text--lightness-min),
 						min(
 							var(--text--lightness-max),
 							calc(calc(calc(var(--text--flip-after) - var(--base--lightness-)) + var(--number--epsilon)) * var(--number--max))
