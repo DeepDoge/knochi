@@ -120,7 +120,7 @@ NavigationComponent.$css = css`
 					grid-template-columns: 1.5em;
 					place-items: center;
 
-					color: hsl(var(--current--text-hsl), 75%);
+					color: hsl(var(--current--text-hsl));
 
 					border-radius: var(--radius);
 				}
