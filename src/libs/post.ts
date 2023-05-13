@@ -42,7 +42,7 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 					.as((content) =>
 						$.match($.derive(() => content.ref.type))
 							.case("text", () => html`<span>${() => ethers.toUtf8String(content.ref.value)}</span>`)
-							.case("mention", () => {
+							.case("@", () => {
 								try {
 									return ProfileName($.derive(() => Address.from(ethers.toUtf8String(content.ref.value))))
 								} catch (error) {

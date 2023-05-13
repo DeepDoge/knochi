@@ -13,12 +13,13 @@ export function ChainChangerButton() {
 	component.$html = html`
 		${$.match(Wallet.browserWallet)
 			.case(null, () => null)
-			.default((wallet) =>
-				$.derive(
-					() => html`
-						<x ${ChainButton(wallet.ref.chainKey)} on:click=${(e: MouseEvent) => (e.preventDefault(), spawnFloatingBox(e, ChainChanger()))}></x>
+			.default(
+				(wallet) =>
+					html`
+						<x
+							${ChainButton($.derive(() => wallet.ref.chainKey))}
+							on:click=${(e: MouseEvent) => (e.preventDefault(), spawnFloatingBox(e, ChainChanger()))}></x>
 					`
-				)
 			)}
 	`
 

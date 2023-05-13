@@ -1,16 +1,22 @@
 import { NetworkConfigs } from "@/api/network-config"
+import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
+import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 
 const ChainButtonComponent = defineComponent("x-chain-button")
-export function ChainButton(key: NetworkConfigs.ChainKey) {
+export function ChainButton(key: SignalReadable<NetworkConfigs.ChainKey>) {
 	const component = new ChainButtonComponent()
 
-	const chain = NetworkConfigs.chains[key]
+	const chain = $.derive(() => NetworkConfigs.chains[key.ref])
 
 	component.$html = html`
-		<button class="btn" title=${chain.name} style:--current--background-hsl=${chain.colorBackgroundHsl} style:--current--text-hsl=${chain.colorTextHsl}>
-			${chain.iconSvg()}
+		<button
+			class="btn"
+			title=${() => chain.ref.name}
+			style:--current--background-hsl=${() => chain.ref.colorBackgroundHsl}
+			style:--current--text-hsl=${() => chain.ref.colorTextHsl}>
+			${() => chain.ref.iconSvg()}
 		</button>
 	`
 

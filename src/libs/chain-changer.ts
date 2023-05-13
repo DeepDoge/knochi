@@ -14,7 +14,7 @@ export function ChainChanger() {
 	component.$html = html`
 		<div class="title">Change Network</div>
 		<div class="chains">
-			${$.each(chainKeys).as((key) => html`<x ${ChainButton(key)} on:click=${(e) => (e.preventDefault(), Wallet.changeChain(key))}></x>`)}
+			${$.each(chainKeys).as((key) => html`<x ${ChainButton($.derive(() => key))} on:click=${(e) => (e.preventDefault(), Wallet.changeChain(key))}></x>`)}
 		</div>
 	`
 
