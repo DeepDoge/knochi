@@ -22,12 +22,26 @@
 		--complementary-hsl: var(--complementary-hue), calc(var(--complementary-saturation) * 1%), calc(var(--complementary-lightness) * 1%);
 		--complementary-text-hsl: 0, 0%, calc(calc(calc(var(--complementary-lightness) - var(--text-flip-after)) * -10000) * 1%);
 
+		--monochromatic-5-hue: var(--primary-hue);
+		--monochromatic-5-saturation: var(--primary-saturation);
+		--monochromatic-5-lightness: calc(var(--primary-lightness) + calc(5 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-5-hsl: var(--monochromatic-5-hue), calc(var(--monochromatic-5-saturation) * 1%), calc(var(--monochromatic-5-lightness) * 1%);
+		--monochromatic-5-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-5-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
 		--monochromatic-10-hue: var(--primary-hue);
 		--monochromatic-10-saturation: var(--primary-saturation);
 		--monochromatic-10-lightness: calc(var(--primary-lightness) + calc(10 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
 
 		--monochromatic-10-hsl: var(--monochromatic-10-hue), calc(var(--monochromatic-10-saturation) * 1%), calc(var(--monochromatic-10-lightness) * 1%);
 		--monochromatic-10-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-10-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--monochromatic-15-hue: var(--primary-hue);
+		--monochromatic-15-saturation: var(--primary-saturation);
+		--monochromatic-15-lightness: calc(var(--primary-lightness) + calc(15 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-15-hsl: var(--monochromatic-15-hue), calc(var(--monochromatic-15-saturation) * 1%), calc(var(--monochromatic-15-lightness) * 1%);
+		--monochromatic-15-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-15-lightness) - var(--text-flip-after)) * -10000) * 1%);
 
 		--monochromatic-20-hue: var(--primary-hue);
 		--monochromatic-20-saturation: var(--primary-saturation);
@@ -36,6 +50,13 @@
 		--monochromatic-20-hsl: var(--monochromatic-20-hue), calc(var(--monochromatic-20-saturation) * 1%), calc(var(--monochromatic-20-lightness) * 1%);
 		--monochromatic-20-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-20-lightness) - var(--text-flip-after)) * -10000) * 1%);
 
+		--monochromatic-25-hue: var(--primary-hue);
+		--monochromatic-25-saturation: var(--primary-saturation);
+		--monochromatic-25-lightness: calc(var(--primary-lightness) + calc(25 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-25-hsl: var(--monochromatic-25-hue), calc(var(--monochromatic-25-saturation) * 1%), calc(var(--monochromatic-25-lightness) * 1%);
+		--monochromatic-25-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-25-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
 		--monochromatic-30-hue: var(--primary-hue);
 		--monochromatic-30-saturation: var(--primary-saturation);
 		--monochromatic-30-lightness: calc(var(--primary-lightness) + calc(30 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
@@ -43,12 +64,26 @@
 		--monochromatic-30-hsl: var(--monochromatic-30-hue), calc(var(--monochromatic-30-saturation) * 1%), calc(var(--monochromatic-30-lightness) * 1%);
 		--monochromatic-30-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-30-lightness) - var(--text-flip-after)) * -10000) * 1%);
 
+		--monochromatic-35-hue: var(--primary-hue);
+		--monochromatic-35-saturation: var(--primary-saturation);
+		--monochromatic-35-lightness: calc(var(--primary-lightness) + calc(35 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-35-hsl: var(--monochromatic-35-hue), calc(var(--monochromatic-35-saturation) * 1%), calc(var(--monochromatic-35-lightness) * 1%);
+		--monochromatic-35-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-35-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
 		--monochromatic-40-hue: var(--primary-hue);
 		--monochromatic-40-saturation: var(--primary-saturation);
 		--monochromatic-40-lightness: calc(var(--primary-lightness) + calc(40 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
 
 		--monochromatic-40-hsl: var(--monochromatic-40-hue), calc(var(--monochromatic-40-saturation) * 1%), calc(var(--monochromatic-40-lightness) * 1%);
 		--monochromatic-40-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-40-lightness) - var(--text-flip-after)) * -10000) * 1%);
+
+		--monochromatic-45-hue: var(--primary-hue);
+		--monochromatic-45-saturation: var(--primary-saturation);
+		--monochromatic-45-lightness: calc(var(--primary-lightness) + calc(45 * max(-1, min(1, calc(calc(calc(50 - var(--primary-lightness)) + 0.1) * 100)))));
+
+		--monochromatic-45-hsl: var(--monochromatic-45-hue), calc(var(--monochromatic-45-saturation) * 1%), calc(var(--monochromatic-45-lightness) * 1%);
+		--monochromatic-45-text-hsl: 0, 0%, calc(calc(calc(var(--monochromatic-45-lightness) - var(--text-flip-after)) * -10000) * 1%);
 
 		--monochromatic-50-hue: var(--primary-hue);
 		--monochromatic-50-saturation: var(--primary-saturation);
@@ -91,8 +126,8 @@
 		--accent-hsl: var(--triadic-right-hsl);
 		--accent-text-hsl: var(--triadic-right-text-hsl);
 
-		--base-hsl: var(--monochromatic-30-hsl);
-		--base-text-hsl: var(--monochromatic-30-text-hsl);
+		--base-hsl: var(--monochromatic-35-hsl);
+		--base-text-hsl: var(--monochromatic-35-text-hsl);
 
 		--background-hsl: var(--monochromatic-40-hsl);
 		--background-text-hsl: var(--monochromatic-40-text-hsl);

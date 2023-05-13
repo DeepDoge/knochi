@@ -132,7 +132,7 @@ NavigationComponent.$css = css`
 				& > * {
 					padding: calc(var(--span) * 0.75);
 					&.active {
-						background-color: hsl(var(--current-text-hsl), 10%);
+						background-color: hsl(var(--current-text-hsl), 7.5%);
 					}
 				}
 			}
