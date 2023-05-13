@@ -71,7 +71,7 @@ NavigationComponent.$css = css`
 		padding-bottom: calc(var(--span) * 0.25);
 
 		--current--hsl: var(--background--hsl);
-		--current--text-hsl: var(--primary--hsl);
+		--current--text-hsl: var(--background--text-hsl);
 		--current--backdrop-hsl: var(--primary--hsl);
 
 		&.left {
