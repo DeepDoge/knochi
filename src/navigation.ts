@@ -70,36 +70,32 @@ NavigationComponent.$css = css`
 		align-content: center;
 		padding-bottom: calc(var(--span) * 0.25);
 
+		--current-hsl: var(--background-hsl);
+		--current-text-hsl: var(--primary-hsl);
+		--current-backdrop-hsl: var(--primary-hsl);
+
 		&.left {
+			--current-text-hsl: var(--background-text-hsl);
 			justify-content: start;
 			& > ul {
 				border-radius: 0 var(--radius-rounded) var(--radius-rounded) 0;
-				border-left: none;
 			}
 		}
 		&.center {
 			& > ul {
 				border-radius: var(--radius-rounded);
-				padding: calc(var(--span) * 0.5);
 			}
 		}
 		&.right {
 			justify-content: end;
 			& > ul {
 				border-radius: var(--radius-rounded) 0 0 var(--radius-rounded);
-				border-right: none;
 			}
 		}
 
 		& > ul {
-			border: solid 1px hsl(var(--base-hsl));
-			border-bottom: none;
-
 			backdrop-filter: blur(12px);
 			contain: paint;
-
-			--current-hsl: var(--background-hsl);
-			--current-text-hsl: var(--background-text-hsl);
 
 			background: hsl(var(--current-hsl), 60%);
 			color: hsl(var(--current-text-hsl));
@@ -124,15 +120,20 @@ NavigationComponent.$css = css`
 					grid-template-columns: 1.5em;
 					place-items: center;
 
-					color: hsl(var(--current-text-hsl));
+					color: hsl(var(--current-text-hsl), 75%);
 
 					border-radius: var(--radius);
 				}
 
 				& > * {
 					padding: calc(var(--span) * 0.75);
+
+					&:hover {
+						background-color: hsl(var(--current-backdrop-hsl), 7.5%);
+					}
+
 					&.active {
-						background-color: hsl(var(--current-text-hsl), 7.5%);
+						background-color: hsl(var(--current-backdrop-hsl), 15%);
 					}
 				}
 			}

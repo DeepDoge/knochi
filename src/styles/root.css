@@ -23,7 +23,11 @@
 	}
 
 	:root {
-		--text-flip-after: 65%;
+		--text--flip-after: 65%;
+		--text--min: 0.08%;
+		--text--max: 1%;
+		--text--saturation: 22%;
+
 		--primary-hue: 250;
 		--primary-saturation: 50%;
 		--primary-lightness: 51%;
@@ -101,49 +105,67 @@
 
 	:root {
 		--primary-hsl: var(--primary-hue), var(--primary-saturation), var(--primary-lightness);
-		--primary-text-hsl: 0, 0%,
+		--primary-text-hsl: 0, var(--text--saturation),
 			calc(
 				100 *
 					max(
-						0%,
-						min(1%, calc(calc(calc(var(--text-flip-after) - var(--primary-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
+						var(--text--min),
+						min(
+							var(--text--max),
+							calc(calc(calc(var(--text--flip-after) - var(--primary-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max))
+						)
 					)
 			);
 
 		--second-hsl: var(--second-hue), var(--second-saturation), var(--second-lightness);
-		--second-text-hsl: 0, 0%,
+		--second-text-hsl: 0, var(--text--saturation),
 			calc(
 				100 *
 					max(
-						0%,
-						min(1%, calc(calc(calc(var(--text-flip-after) - var(--second-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
+						var(--text--min),
+						min(
+							var(--text--max),
+							calc(calc(calc(var(--text--flip-after) - var(--second-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max))
+						)
 					)
 			);
 
 		--accent-hsl: var(--accent-hue), var(--accent-saturation), var(--accent-lightness);
-		--accent-text-hsl: 0, 0%,
+		--accent-text-hsl: 0, var(--text--saturation),
 			calc(
 				100 *
 					max(
-						0%,
-						min(1%, calc(calc(calc(var(--text-flip-after) - var(--accent-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
+						var(--text--min),
+						min(
+							var(--text--max),
+							calc(calc(calc(var(--text--flip-after) - var(--accent-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max))
+						)
 					)
 			);
 
 		--base-hsl: var(--base-hue), var(--base-saturation), var(--base-lightness);
-		--base-text-hsl: 0, 0%,
-			calc(
-				100 *
-					max(0%, min(1%, calc(calc(calc(var(--text-flip-after) - var(--base-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max))))
-			);
-
-		--background-hsl: var(--background-hue), var(--background-saturation), var(--background-lightness);
-		--background-text-hsl: 0, 0%,
+		--base-text-hsl: 0, var(--text--saturation),
 			calc(
 				100 *
 					max(
 						0%,
-						min(1%, calc(calc(calc(var(--text-flip-after) - var(--background-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max)))
+						min(
+							var(--text--max),
+							calc(calc(calc(var(--text--flip-after) - var(--base-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max))
+						)
+					)
+			);
+
+		--background-hsl: var(--background-hue), var(--background-saturation), var(--background-lightness);
+		--background-text-hsl: 0, var(--text--saturation),
+			calc(
+				100 *
+					max(
+						var(--text--min),
+						min(
+							var(--text--max),
+							calc(calc(calc(var(--text--flip-after) - var(--background-lightness)) + calc(1% * var(--number--epsilon))) * var(--number--max))
+						)
 					)
 			);
 	}

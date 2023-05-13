@@ -158,6 +158,7 @@ PostFormComponent.$css = css`
 			& button {
 				border-radius: var(--radius-rounded);
 				background-color: hsl(var(--primary-hsl));
+				color: hsl(var(--primary-text-hsl));
 
 				display: grid;
 				grid-template-columns: auto 1.1em;
