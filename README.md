@@ -4,7 +4,7 @@ Inspired by https://github.com/DeepDoge/dweb-forum
 
 # Eternis
 
-Eternis is a multichain social media-ish platform that provides an alternative to traditional and other "decenterlized" social media platforms. Eternis allows users to post content and interact with each other in an unstoppable, ownerless and decentralized environment.
+Eternis is a multichain social media-ish ownerless platform that provides an alternative to traditional and other "decenterlized" social media platforms. Eternis allows users to post content and interact with each other in an unstoppable, ownerless and decentralized environment.
 
 ## How Eternis Works
 
