@@ -38,7 +38,7 @@ contract EternisSponsorPostDB is IEternisPostDB {
         // 
         // Yeah something like that, I sleep now, gonna do that tommorow or later
         bytes memory bytesData = abi.encodePacked(bytes20(offer.contractAddress), offer.postIndex);
-        emit EternisPost(offerIndex, abi.encodePacked(hex"73706f6e736f720a0000", bytes2(uint16(bytesData.length)), bytesData));
+        emit EternisPost(offerIndex, abi.encodePacked(hex"6563686f0a0000", bytes2(uint16(bytesData.length)), bytesData));
     }
     
 }
