@@ -6,7 +6,8 @@ type Post @entity(immutable: true) {
 	author: Bytes! # address
 	contents: [PostContent!]!
 	blockTimestamp: BigInt!
-	tip: TipPost
+	tip: Tip
+	offer: Offer
 }
 
 # Off-chain content metadata for the post, per chain
@@ -14,13 +15,6 @@ type PostContent @entity(immutable: true) {
 	id: Bytes! # content index(u8) + chain post index (dynamic)
 	type: Bytes!
 	value: Bytes!
-}
-
-# Tip metadata for the post
-type TipPost @entity(immutable: true) {
-	id: Bytes! # post id(dynamic)
-	to: Bytes! # address
-	value: BigInt!
 }
 
 # For counting post index per chain, used for ordering the query
@@ -39,4 +33,18 @@ type PostReplyCounter @entity {
 type PostReplyCounter_FourHourTimeframe @entity {
 	id: Bytes! # timeframe(timestamp(second) / (60 * 60 * 4))(u64) + post id(dynamic)
 	count: BigInt!
+}
+
+# Tip metadata for the post
+type Tip @entity(immutable: true) {
+	id: Bytes! # post id(dynamic)
+	to: Bytes! # address
+	value: BigInt!
+}
+
+# Offer metadata for the post
+type Offer @entity(immutable: true) {
+	id: Bytes! # post id(dynamic)
+	from: Bytes! # address
+	value: BigInt!
 }
