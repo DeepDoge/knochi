@@ -39,24 +39,22 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 				</div>
 			</div>
 			<div class="content">
-				${$.each(postContents)
-					.key((_, index) => index)
-					.as((content) =>
-						$.match($.derive(() => content.ref.type))
-							// Using async to catch errors
-							.case("text", () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
-							.case("@", () =>
-								$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) => ProfileName(address))
+				${$.each(postContents).as((content) =>
+					$.match($.derive(() => content.ref.type))
+						// Using async to catch errors
+						.case("text", () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
+						.case("@", () =>
+							$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) => ProfileName(address))
+						)
+						.case("echo", () =>
+							$.await($.derive(async () => PostId.fromHex(ethers.hexlify(content.ref.value)))).then((postId) =>
+								$.match(postId)
+									.case(post.ref.id, () => null)
+									.default((postId) => PostFromId(postId))
 							)
-							.case("echo", () =>
-								$.await($.derive(async () => PostId.fromHex(ethers.hexlify(content.ref.value)))).then((postId) =>
-									$.match(postId)
-										.case(post.ref.id, () => null)
-										.default((postId) => PostFromId(postId))
-								)
-							)
-							.default(() => null)
-					)}
+						)
+						.default(() => null)
+				)}
 			</div>
 			<div class="footer">
 				<a class="reply-count" href=${postHref}>${() => CommentSvg()} ${() => "TODO"}</a>
