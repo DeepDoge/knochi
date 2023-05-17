@@ -5,12 +5,14 @@ import { Profile } from "@/libs/profile"
 import { ProfileName } from "@/libs/profile-name"
 import { route, routeHref } from "@/router"
 import { Address } from "@/utils/address"
+import { PostId } from "@/utils/post-id"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
+import { PostFromId } from "./post-from-id"
 
 const PostComponent = defineComponent("x-post")
 export function Post(post: SignalReadable<TheGraphApi.Post>) {
@@ -41,14 +43,14 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 					.key((_, index) => index)
 					.as((content) =>
 						$.match($.derive(() => content.ref.type))
-							.case("text", () => html`<span>${() => ethers.toUtf8String(content.ref.value)}</span>`)
-							.case("@", () => {
-								try {
-									return ProfileName($.derive(() => Address.from(ethers.toUtf8String(content.ref.value))))
-								} catch (error) {
-									return null
-								}
-							})
+							// Using async to catch errors
+							.case("text", () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
+							.case("@", () =>
+								$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) => ProfileName(address))
+							)
+							.case("echo", () =>
+								$.await($.derive(async () => PostId.fromHex(ethers.hexlify(content.ref.value)))).then((postId) => PostFromId(postId))
+							)
 							.default(() => null)
 					)}
 			</div>
