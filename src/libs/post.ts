@@ -49,7 +49,11 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 								$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) => ProfileName(address))
 							)
 							.case("echo", () =>
-								$.await($.derive(async () => PostId.fromHex(ethers.hexlify(content.ref.value)))).then((postId) => PostFromId(postId))
+								$.await($.derive(async () => PostId.fromHex(ethers.hexlify(content.ref.value)))).then((postId) =>
+									$.match(postId)
+										.case(post.ref.id, () => null)
+										.default((postId) => PostFromId(postId))
+								)
 							)
 							.default(() => null)
 					)}
