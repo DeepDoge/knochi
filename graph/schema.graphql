@@ -1,8 +1,7 @@
 # Off-chain post metadata for the post, per chain
 type Post @entity(immutable: true) {
-	id: Bytes! # contract address + contract post index(dynamic)
+	id: Bytes! # chainIdSize(u8) + chainId(dynamic) + contract post index(dynamic)
 	parentId: Bytes! # post id(dynamic)
-	index: BigInt! # for querying
 	author: Bytes! # address
 	contents: [PostContent!]!
 	blockTimestamp: BigInt!
@@ -17,7 +16,7 @@ type PostContent @entity(immutable: true) {
 	value: Bytes!
 }
 
-# For counting post index per chain, used for ordering the query
+# For counting post index per chain, used for postId
 type ChainPostIndexCounter @entity {
 	id: Bytes! # empty bytes
 	count: BigInt!
@@ -35,14 +34,20 @@ type PostReplyCounter_FourHourTimeframe @entity {
 	count: BigInt!
 }
 
-# Tip metadata for the post
+# Used for finding which postId the contract meant
+type PostContractIdToChainIdMap @entity {
+	id: Bytes! # contract address + contract post index(dynamic)
+	postId: Bytes! # postId(dynamic)
+}
+
+# Tip data for the post
 type Tip @entity(immutable: true) {
 	id: Bytes! # post id(dynamic)
 	to: Bytes! # address
 	value: BigInt!
 }
 
-# Offer metadata for the post
+# Offer data for the post
 type Offer @entity(immutable: true) {
 	id: Bytes! # post id(dynamic)
 	from: Bytes! # address
