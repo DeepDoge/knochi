@@ -31,3 +31,21 @@ In summary, while both LBRY/Odysee and Eternis are decentralized content sharing
 ## MasterTS
 
 Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library.
+
+
+## TODO Front-end
+
+- [x] Post
+- [ ] Echo (Reposts)
+- [ ] Image
+- [ ] Video
+- [ ] Pictures
+- [ ] Audio
+- [ ] Tips
+- [ ] Offers
+- [ ] Live Streaming
+- [ ] Direct Message
+- [ ] Voice chat
+- [ ] Voice chat groups
+- [ ] Boosting? maybe
+- [ ] Like/Dislike with posts, (i wrote about this before [[Long Term Plans]])
