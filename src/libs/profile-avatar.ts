@@ -21,7 +21,7 @@ export function ProfileAvatar(address: SignalReadable<Address>) {
 	)
 
 	component.$html = html`
-		<a class="avatar" class: href=${() => routeHref({ path: address.ref, postId: null })}>
+		<a class="avatar" href=${() => routeHref({ path: address.ref, postId: null })}>
 			<img src=${avatarUrl} alt="Avatar of ${address}" />
 		</a>
 	`
