@@ -4,29 +4,25 @@ Inspired by https://github.com/DeepDoge/dweb-forum
 
 # Eternis
 
-Eternis is a multichain social media-ish platform that provides an alternative to traditional and other "decenterlized" social media platforms. Eternis allows users to post content and interact with each other in an unstoppable, ownerless and decentralized environment.
+Eternis is an ownerless social media platform that provides a decentralized environment for users to post content and interact with each other. It offers an alternative to traditional social media platforms by leveraging blockchain technology and decentralized protocols.
 
 ## How Eternis Works
 
-Eternis uses a combination of existing solutions to achieve its functionality. The platform uses IPFS to host front-end and content media, The Graph to index chains, and smart contracts to enable on-chain logic. This architecture allows for a flexible and adaptable platform that can be customized to meet the needs of content creators and users.
+Eternis uses a combination of existing technologies to achieve its functionality. The platform utilizes IPFS (InterPlanetary File System) to host front-end and content media. It also utilizes The Graph to index chains and smart contracts to enable on-chain logic. This architecture allows for a flexible and customizable platform that meets the needs of content creators and users.
 
-## How Eternis Compares to Mastodon
+## Key Features
 
-Mastodon is a decentralized social media platform that enables users to communicate with each other through different instances, with each instance being owned and operated by an entity. While Mastodon is decentralized in sense each instance can operate independently, it is not necessarily ownerless, as the instances still have control over the content and data hosted on their platforms.
+- **Ownerless Platform:** Eternis is designed to be ownerless from the ground up. This means that no single entity or platform has control over the content posted by users. Your content always remains under your control on the blockchain and can be accessed by any platform.
 
-While biggest difference between Mastadon and Eternis is that Mastadon is not based on blockchain technology. They have few more differences. Mastadon just uses a protocol that let's centerlized different platforms to talk with each-other and call it decenterlized. Eternis is designed to be ownerless from the ground up. This means no platform owns your content. They might make their own indexers, their own front-end and censor you that way, but your content always lives on the chain, and any other platform can index it.
+- **Multichain Support with Combined Timeline:** Eternis supports multiple blockchains, allowing users to post their content on different chains. However, all the posts from all chains are combined under one unified timeline. This means that you have the freedom to choose any blockchain without being restricted to a single network.
 
-In summary, while both Mastodon and Eternis are decentralized social media platforms, they have different architectures and priorities. Mastodon focuses on decentralized communication between different instances, while Eternis prioritizes an ownerless, decentralized environment for content creation and interaction, with greater flexibility and customization through smart contracts.
+- **Customization and Flexibility:** Eternis utilizes smart contracts, which enable the creation and deployment of custom on-chain logic. This allows for the implementation of various features such as tipping, sponsored posts, and more. Platform developers have the freedom to customize and enhance the functionality of Eternis.
 
-## How Eternis Compares to LBRY/Odysee
+## How Eternis Differs from Other Platforms
 
-LBRY/Odysee is a decentralized content sharing and streaming platform that utilizes blockchain technology to enable content creators to monetize their work directly from their audience. Like Eternis, LBRY/Odysee is decentralized, but there are some key differences between the two platforms.
+- **Mastodon:** While both Eternis and Mastodon are social media platforms, they differ in their architectures and priorities. Mastodon operates through instances that host and own your content. It uses a protocol to enable communication between Mastodon instances and other fediverse platforms. In contrast, Eternis stores your content on the blockchain, ensuring that no single platform owns or controls it. If one platform censors your content, other platforms can still display it, providing a more resilient and censorship-resistant environment.
 
-One of the major differences is that LBRY/Odysee is limited to the LBRY blockchain, while Eternis is multichain and can operate on multiple blockchains. This provides Eternis with greater scalability and flexibility, as it users choose to post their content on anychain without being stuck on one.
-
-Finally, Eternis provides greater customization and flexibility than LBRY/Odysee thanks to its smart contract based architecture. Platforms can create and deploy custom smart contracts with additional on-chain logic to enable a wide range of functionality, such as tipping, sponsored posts and many more.
-
-In summary, while both LBRY/Odysee and Eternis are decentralized content sharing platforms with very similar design, they have different architectures which allows more flexablity for Eternis platform developers and users.
+- **LBRY/Odysee:** LBRY/Odysee and Eternis are both decentralized content sharing platforms with very similar designs. However, there are some distinct differences between the two. LBRY/Odysee is primarily based on the LBRY blockchain, while Eternis is a multichain platform that can operate on multiple blockchains. Eternis provides greater customization and flexibility through its smart contract-based architecture, allowing for the implementation of additional features and functionalities. Moreover, Eternis utilizes a combination of existing solutions, such as IPFS and The Graph, to achieve its functionality and has the flexibility to adapt and change them in the future. This ensures the platform's adaptability and future-proofing.
 
 ## MasterTS
 
