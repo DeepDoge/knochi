@@ -29,7 +29,9 @@ Eternis uses a combination of existing technologies to achieve its functionality
 Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library.
 
 
-## TODO Front-end
+## TODO
+
+All of these are front-end/app related
 
 - [x] Post
 - [ ] Echo (Reposts)
