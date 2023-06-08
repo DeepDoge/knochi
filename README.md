@@ -4,7 +4,7 @@ Inspired by https://github.com/DeepDoge/dweb-forum
 
 # Eternis
 
-Eternis is an ownerless social media platform that provides a decentralized environment for users to post content and interact with each other. It offers an alternative to traditional social media platforms by leveraging blockchain technology and decentralized protocols.
+Eternis is an ownerless multi-chain platform that provides an environment for users to post content and interact with each other. It offers an alternative to traditional social media platforms by leveraging blockchain technology and decentralized protocols.
 
 ## How Eternis Works
 
@@ -29,9 +29,7 @@ Eternis uses a combination of existing technologies to achieve its functionality
 Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library.
 
 
-## TODO
-
-All of these are front-end/app related
+## Implemented Front-end Features
 
 - [x] Post
 - [ ] Echo (Reposts)
@@ -47,3 +45,14 @@ All of these are front-end/app related
 - [ ] Voice chat groups
 - [ ] Boosting? maybe
 - [ ] Like/Dislike with posts, (i wrote about this before [[Long Term Plans]])
+
+## Front-end Chain Support
+
+- [x] Testnets
+- [ ] Polygon
+- [ ] zkSync ERA
+- [ ] Optimism
+- [ ] Binance Smart Chain
+- [ ] Rootstock (Bitcoin)
+- [ ] Ethereum
+- [ ] Avalanche
