@@ -32,20 +32,21 @@ Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library
 ## Implemented Front-end Features
 
 - [x] Post
-- [ ] Echo (Reposts)
-- [ ] Image
-- [ ] Video
-- [ ] Pictures
-- [ ] Audio
-- [ ] Tips
-- [ ] Offers
-- [ ] Live Streaming
-- [ ] Private Chat
-- [ ] Public Group Chats
-- [ ] Private Voice Chat
-- [ ] Public Group Voice Chat
-- [ ] Boosting? maybe
-- [ ] Like/Dislike with posts, (i wrote about this before [[Long Term Plans]])
+- [ ] Echo (Embed, Reposts)
+- [ ] Documents (Embed IPFS/LBRY/DataUri)
+- [ ] Image (Embed, IPFS/LBRY/DataUri)
+- [ ] Video (Embed, IPFS/LBRY/DataUri)
+- [ ] Pictures (Embed, IPFS/LBRY/DataUri)
+- [ ] Audio (Embed, IPFS/LBRY/DataUri)
+- [ ] Other files (IPFS/LBRY/DataUri)
+- [ ] Tips (Send money while posting)
+- [ ] Sponsored Posts (Repost to earn money)
+- [ ] Live Streaming (IPFS)
+- [ ] Private Chat (IPFS)
+- [ ] Public Group Chats (IPFS)
+- [ ] Private Voice Chat (IPFS)
+- [ ] Public Group Voice Chat (IPFS)
+- [ ] Like/Dislike with posts, makes replies more like reviews, you can rate a post while you are replying, (i wrote about this before [[Long Term Plans]])
 
 ## Front-end Chain Support
 
