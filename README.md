@@ -40,9 +40,10 @@ Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library
 - [ ] Tips
 - [ ] Offers
 - [ ] Live Streaming
-- [ ] Direct Message
-- [ ] Voice chat
-- [ ] Voice chat groups
+- [ ] Private Chat
+- [ ] Public Group Chats
+- [ ] Private Voice Chat
+- [ ] Public Group Voice Chat
 - [ ] Boosting? maybe
 - [ ] Like/Dislike with posts, (i wrote about this before [[Long Term Plans]])
 
