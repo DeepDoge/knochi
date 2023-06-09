@@ -5,11 +5,13 @@ import "./IEternisPostDB.sol";
 contract EternisTipPostDB is IEternisPostDB {
     uint256 public postIndex;
 
-    event EternisTip(uint256 postIndex, address tipTo);
+    mappings(uint256 => address) postIndexToTipAddress;
+    mappings(uint256 => uint256) postIndexToTipValue;
 
     function post(bytes calldata postData, address payable tipTo) external payable {
         emit EternisPost(postIndex, postData);
-        emit EternisTip(postIndex, tipTo);
+        postIndexToTipAddress[postIndex] = tipTo;
+        postIndexToTipValue[postIndex] = msg.value;
         postIndex++;
         tipTo.transfer(msg.value);
     }
