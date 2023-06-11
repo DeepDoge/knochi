@@ -12,49 +12,48 @@ Eternis uses a combination of existing technologies to achieve its functionality
 
 ## Key Features
 
-- **Ownerless Platform:** Eternis is designed to be ownerless from the ground up. This means that no single entity or platform has control over the content posted by users. Your content always remains under your control on the blockchain and can be accessed by any platform.
+-   **Ownerless Platform:** Eternis is designed to be ownerless from the ground up. This means that no single entity or platform has control over the content posted by users. Your content always remains under your control on the blockchain and can be accessed by any platform.
 
-- **Multichain Support with Combined Timeline:** Eternis supports multiple blockchains, allowing users to post their content on different chains. However, all the posts from all chains are combined under one unified timeline. This means that you have the freedom to choose any blockchain without being restricted to a single network.
+-   **Multichain Support with Combined Timeline:** Eternis supports multiple blockchains, allowing users to post their content on different chains. However, all the posts from all chains are combined under one unified timeline. This means that you have the freedom to choose any blockchain without being restricted to a single network.
 
-- **Customization and Flexibility:** Eternis utilizes smart contracts, which enable the creation and deployment of custom on-chain logic. This allows for the implementation of various features such as tipping, sponsored posts, and more. Platform developers have the freedom to customize and enhance the functionality of Eternis.
+-   **Customization and Flexibility:** Eternis utilizes smart contracts, which enable the creation and deployment of custom on-chain logic. This allows for the implementation of various features such as tipping, sponsored posts, and more. Platform developers have the freedom to customize and enhance the functionality of Eternis.
 
 ## How Eternis Differs from Other Platforms
 
-- **Mastodon:** While both Eternis and Mastodon are social media platforms, they differ in their architectures and priorities. Mastodon operates through instances that host and own your content. It uses a protocol to enable communication between Mastodon instances and other fediverse platforms. In contrast, Eternis stores your content on the blockchain, ensuring that no single platform owns or controls it. If one platform censors your content, other platforms can still display it, providing a more resilient and censorship-resistant environment.
+-   **Mastodon:** While both Eternis and Mastodon are social media platforms, they differ in their architectures and priorities. Mastodon operates through instances that host and own your content. It uses a protocol to enable communication between Mastodon instances and other fediverse platforms. In contrast, Eternis stores your content on the blockchain, ensuring that no single platform owns or controls it. If one platform censors your content, other platforms can still display it, providing a more resilient and censorship-resistant environment.
 
-- **LBRY/Odysee:** LBRY/Odysee and Eternis are both decentralized content sharing platforms with very similar designs. However, there are some distinct differences between the two. LBRY/Odysee is primarily based on the LBRY blockchain, while Eternis is a multichain platform that can operate on multiple blockchains. Eternis provides greater customization and flexibility through its smart contract-based architecture, allowing for the implementation of additional features and functionalities. Moreover, Eternis utilizes a combination of existing solutions, such as IPFS and The Graph, to achieve its functionality and has the flexibility to adapt and change them in the future. This ensures the platform's adaptability and future-proofing.
+-   **LBRY/Odysee:** LBRY/Odysee and Eternis are both decentralized content sharing platforms with very similar designs. However, there are some distinct differences between the two. LBRY/Odysee is primarily based on the LBRY blockchain, while Eternis is a multichain platform that can operate on multiple blockchains. Eternis provides greater customization and flexibility through its smart contract-based architecture, allowing for the implementation of additional features and functionalities. Moreover, Eternis utilizes a combination of existing solutions, such as IPFS and The Graph, to achieve its functionality and has the flexibility to adapt and change them in the future. This ensures the platform's adaptability and future-proofing.
 
 ## MasterTS
 
 Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library.
 
-
 ## Implemented Front-end Features
 
-- [x] Post
-- [ ] Echo (Embed, Reposts)
-- [ ] Documents (Embed IPFS/LBRY/DataUri)
-- [ ] Image (Embed, IPFS/LBRY/DataUri)
-- [ ] Video (Embed, IPFS/LBRY/DataUri)
-- [ ] Pictures (Embed, IPFS/LBRY/DataUri)
-- [ ] Audio (Embed, IPFS/LBRY/DataUri)
-- [ ] Other files (IPFS/LBRY/DataUri)
-- [ ] Tips (Send money while posting)
-- [ ] Sponsored Posts (Repost to earn money)
-- [ ] Live Streaming (IPFS)
-- [ ] Private Chat (IPFS)
-- [ ] Public Group Chats (IPFS)
-- [ ] Private Voice Chat (IPFS)
-- [ ] Public Group Voice Chat (IPFS)
-- [ ] Like/Dislike with posts, makes replies more like reviews, you can rate a post while you are replying, (i wrote about this before [[Long Term Plans]])
+-   [x] Post
+-   [ ] Echo (Embed, Reposts)
+-   [ ] Documents (Embed IPFS/LBRY/DataUri)
+-   [ ] Image (Embed, IPFS/LBRY/DataUri)
+-   [ ] Video (Embed, IPFS/LBRY/DataUri)
+-   [ ] Pictures (Embed, IPFS/LBRY/DataUri)
+-   [ ] Audio (Embed, IPFS/LBRY/DataUri)
+-   [ ] Other files (IPFS/LBRY/DataUri)
+-   [ ] Tips (Send money while posting)
+-   [ ] Sponsored Posts (Repost to earn money)
+-   [ ] Live Streaming (IPFS)
+-   [ ] Private Chat (IPFS)
+-   [ ] Public Group Chats (IPFS)
+-   [ ] Private Voice Chat (IPFS)
+-   [ ] Public Group Voice Chat (IPFS)
+-   [ ] Like/Dislike with posts, makes replies more like reviews, you can rate a post while you are replying, (i wrote about this before [[Long Term Plans]])
 
 ## Front-end Chain Support
 
-- [x] Testnets
-- [ ] Polygon
-- [ ] zkSync ERA
-- [ ] Optimism
-- [ ] Binance Smart Chain
-- [ ] Rootstock (Bitcoin)
-- [ ] Ethereum
-- [ ] Avalanche
+-   [x] Testnets
+-   [ ] Polygon
+-   [ ] zkSync ERA
+-   [ ] Optimism
+-   [ ] Binance Smart Chain
+-   [ ] Rootstock (Bitcoin)
+-   [ ] Ethereum
+-   [ ] Avalanche
