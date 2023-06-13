@@ -50,8 +50,8 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 		textarea.style.height = `${textarea.scrollHeight}px`
 		placeholder.remove()
 	}
-	component.$effect(resizeTextArea, [route.postId])
-	component.$onMount(() => {
+	$.effect$(component, resizeTextArea, [route.postId])
+	$.onMount(component, () => {
 		setTimeout(resizeTextArea)
 		window.addEventListener("resize", resizeTextArea)
 		return () => window.removeEventListener("resize", resizeTextArea)

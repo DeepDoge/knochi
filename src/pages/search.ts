@@ -42,9 +42,9 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	const page = new PageComponent()
 
 	const searchInput = $.writable("")
-	page.$subscribe(params.search, (search) => (searchInput.ref = search), { mode: "immediate" })
+	params.search.subscribe$(page, (search) => (searchInput.ref = search), { mode: "immediate" })
 	const searchInputDeferred = $.deferred(searchInput)
-	page.$subscribe(searchInputDeferred, (search) => {
+	searchInputDeferred.subscribe$(page, (search) => {
 		const href = routeHref({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") })
 		if (route.pathArr.ref[0] === "search") location.replace(href)
 		else location.assign(href)
