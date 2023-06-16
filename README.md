@@ -47,7 +47,7 @@ Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library
 -   [ ] Private Voice Chat (IPFS)
 -   [ ] Public Group Voice Chat (IPFS)
 -   [ ] Like/Dislike with posts, makes replies more like reviews, you can rate a post while you are replying, (i wrote about this before [[Long Term Plans]])
--   [ ] Filters, client side user setting for filtering posts using regex, it can be based on post content or bio or name of the person's profile, for example you can filter people who has pronouns in their bio, tho wouldn't i would just bully them instead
+-   [ ] Filters, client side user setting for filtering posts using regex, it can be based on post content or bio or name of the person's profile, for example you can filter out people who has pronouns in their bio, tho wouldn't i would just bully them instead
 
 ## Front-end Chain Support
 
