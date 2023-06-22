@@ -1,12 +1,10 @@
 # Off-chain post metadata for the post, per chain
 type Post @entity(immutable: true) {
-	id: Bytes! # chainIdSize(u8) + chainId(dynamic) + contract post index(dynamic)
+	id: Bytes! # chainIdSize(u8) + chainId(dynamic) + chain post index(dynamic)
 	parentId: Bytes! # post id(dynamic)
 	author: Bytes! # address
 	contents: [PostContent!]!
 	blockTimestamp: BigInt!
-	tip: Tip
-	offer: Offer
 }
 
 # Off-chain content metadata for the post, per chain
@@ -32,24 +30,4 @@ type PostReplyCounter @entity {
 type PostReplyCounter_FourHourTimeframe @entity {
 	id: Bytes! # timeframe(timestamp(second) / (60 * 60 * 4))(u64) + post id(dynamic)
 	count: BigInt!
-}
-
-# Used for finding which postId the contract meant
-type PostContractIdToChainIdMap @entity {
-	id: Bytes! # contract address + contract post index(dynamic)
-	postId: Bytes! # postId(dynamic)
-}
-
-# Tip data for the post
-type Tip @entity(immutable: true) {
-	id: Bytes! # post id(dynamic)
-	to: Bytes! # address
-	value: BigInt!
-}
-
-# Offer data for the post
-type Offer @entity(immutable: true) {
-	id: Bytes! # post id(dynamic)
-	from: Bytes! # address
-	value: BigInt!
 }

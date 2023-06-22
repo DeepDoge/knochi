@@ -4,7 +4,7 @@ schema:
 dataSources:
     - kind: ethereum
       name: IEternisPostDB
-      network: sepolia
+      network: mumbai
       source:
           abi: IEternisPostDB
           startBlock: 3325895
@@ -19,5 +19,5 @@ dataSources:
                 file: ../src/contracts/artifacts/IEternisPostDB.json
           eventHandlers:
               - event: EternisPost(uint256,bytes)
-                handler: handlePost
-          file: ./src/post-db.ts
+                handler: map
+          file: ./src/mapping---.ts

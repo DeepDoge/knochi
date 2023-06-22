@@ -9,21 +9,28 @@ const BIGINT_ZERO = BigInt.fromI32(0)
 const BIGINT_ONE = BigInt.fromI32(1)
 const BIGINT_14400 = BigInt.fromI32(14400)
 
-export function handlePost(event: EternisPost): void {
-	const postId = event.address.concat(Bytes.fromByteArray(ByteArray.fromBigInt(event.params.postIndex)))
-	savePost(event.transaction.from, event.block.timestamp, postId, event.params.postData)
-}
-
-export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postId: Bytes, postData: Bytes): Bytes {
+export function handlePost(chainId: Bytes, event: EternisPost): void {
 	let chainPostCounter = ChainPostIndexCounter.load(EMPTY_BYTES)
 	if (!chainPostCounter) {
 		chainPostCounter = new ChainPostIndexCounter(EMPTY_BYTES)
 		chainPostCounter.count = BIGINT_ZERO
 	}
 
+	const postIndex = chainPostCounter.count
+
+	const postId = new Bytes(1).concat(chainId).concat(Bytes.fromByteArray(ByteArray.fromBigInt(postIndex)))
+	const postIdView = new DataView(postId)
+	postIdView.setUint8(0, u8(chainId.byteLength))
+
+	savePost(postIndex, event.transaction.from, event.block.timestamp, postId, event.params.postData)
+
+	chainPostCounter.count = chainPostCounter.count.plus(BIGINT_ONE)
+	chainPostCounter.save()
+}
+
+export function savePost(postIndex: BigInt, transactionFrom: Address, blockTimestamp: BigInt, postId: Bytes, postData: Bytes): Bytes {
 	let post = new Post(postId)
 
-	post.index = chainPostCounter.count
 	post.parentId = EMPTY_BYTES
 	post.author = transactionFrom
 	post.blockTimestamp = blockTimestamp
@@ -63,9 +70,10 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postI
 		const value = postData.subarray(offset, offset + valueBufferSize)
 		offset += valueBufferSize
 
-		const contentIndex = new Uint8Array(1)
-		new DataView(contentIndex.buffer).setUint8(0, u8(i))
-		const content = new PostContent(Bytes.fromUint8Array(contentIndex).concat(Bytes.fromByteArray(ByteArray.fromBigInt(post.index))))
+		const contentId = new Bytes(1).concat(Bytes.fromByteArray(ByteArray.fromBigInt(postIndex)))
+		contentId[0] = i
+
+		const content = new PostContent(contentId)
 		content.type = type
 		content.value = Bytes.fromUint8Array(value)
 		content.save()
@@ -99,9 +107,6 @@ export function savePost(transactionFrom: Address, blockTimestamp: BigInt, postI
 		}
 		replyCounterFourHour.save()
 	}
-
-	chainPostCounter.count = chainPostCounter.count.plus(BIGINT_ONE)
-	chainPostCounter.save()
 
 	return post.id
 }
