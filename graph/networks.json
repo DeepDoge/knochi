@@ -1,0 +1,12 @@
+{
+	"mumbai": {
+		"IEternisPostDB": {
+			"startBlock": 34604962
+		}
+	},
+	"sepolia": {
+		"IEternisPostDB": {
+			"startBlock": 3325895
+		}
+	}
+}

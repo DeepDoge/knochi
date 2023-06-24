@@ -2,7 +2,9 @@
 type Post @entity(immutable: true) {
 	id: Bytes! # chainIdSize(u8) + chainId(dynamic) + chain post index(dynamic)
 	parentId: Bytes! # post id(dynamic)
+	index: BigInt!
 	author: Bytes! # address
+	contract: Bytes! # address
 	contents: [PostContent!]!
 	blockTimestamp: BigInt!
 }
@@ -14,13 +16,7 @@ type PostContent @entity(immutable: true) {
 	value: Bytes!
 }
 
-# For counting post index per chain, used for postId
-type ChainPostIndexCounter @entity {
-	id: Bytes! # empty bytes
-	count: BigInt!
-}
-
-# Used counting the replies of a post, per chain
+# Used for counting the replies of a post, per chain
 type PostReplyCounter @entity {
 	id: Bytes! # post id(dynamic)
 	count: BigInt!
@@ -29,5 +25,11 @@ type PostReplyCounter @entity {
 # Used for finding the top posts of last 24+(0 to 4) hour, per chain
 type PostReplyCounter_FourHourTimeframe @entity {
 	id: Bytes! # timeframe(timestamp(second) / (60 * 60 * 4))(u64) + post id(dynamic)
+	count: BigInt!
+}
+
+# Used for counting posts, per chain
+type PostChainCounter @entity {
+	id: Bytes! # post id(dynamic)
 	count: BigInt!
 }

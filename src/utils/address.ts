@@ -9,7 +9,7 @@ export namespace Address {
 		return ethers.hexlify(bytes) as Address
 	}
 
-	export function is(value: string): value is Address {
+	export function isAddress(value: string): value is Address {
 		try {
 			Address.from(value)
 			return true

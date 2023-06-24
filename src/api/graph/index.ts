@@ -30,12 +30,8 @@ export namespace TheGraphApi {
 		}),
 	}))
 	type GraphClient = (typeof clients)[number]
-	const contractAddressToClientMap: Record<Address, GraphClient> = {}
-	for (const client of clients) {
-		for (const contract of Object.values(NetworkConfigs.contracts[client.key])) {
-			contractAddressToClientMap[Address.from(contract)] = client
-		}
-	}
+	const chainKeyToClient: Record<string, GraphClient> = {}
+	for (const client of clients) chainKeyToClient[client.key] = client
 
 	export async function getReplyCounts(postIds: PostId[]): Promise<Record<PostId, bigint>> {
 		const query = gql`
@@ -77,14 +73,11 @@ export namespace TheGraphApi {
 			id
 			parentId
 			index
+			contract
 
 			author
 			contents {
 				type
-				value
-			}
-			tip {
-				to
 				value
 			}
 			blockTimestamp
@@ -99,20 +92,21 @@ export namespace TheGraphApi {
 				if (cache) posts[cache.id] = cache
 				continue
 			}
+			const postIdBytes = ethers.toBeArray(PostId.toHex(postId))
+			const chainId = ethers.toBigInt(postIdBytes.slice(1, postIdBytes[0]! + 1))
+			const chainKey = NetworkConfigs.chainIdToKeyMap.get(chainId)
+			if (!chainKey) throw new Error(`Chain key for chain id ${chainId} can't be found.`)
 
-			const contractAddress = PostId.extractContractAddressFromPostId(postId)
-			const client = contractAddressToClientMap[contractAddress]
-			if (!client) throw new Error(`Client for contract "${contractAddress}" can't be found.`)
+			const client = chainKeyToClient[chainKey]
+			if (!client) throw new Error(`Client for chain key "${chainKey}" can't be found.`)
 
 			const postIds = toQuery.get(client) ?? toQuery.set(client, new Set()).get(client)!
 			postIds.add(postId)
 		}
 
 		for (const [client, postIds] of toQuery.entries()) {
-			const responsePosts = (
-				await (
-					await client.urqlClient.query(query(Array.from(postIds)), {})
-				).data.posts.map((responsePost: any) => {
+			const responsePosts = ((await (await client.urqlClient.query(query(Array.from(postIds)), {})).data?.posts) ?? [])
+				.map((responsePost: any) => {
 					try {
 						return {
 							id: PostId.fromHex(responsePost.id),
@@ -125,19 +119,13 @@ export namespace TheGraphApi {
 							})),
 							createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
 							chainKey: client.key,
-							tip: responsePost.tip
-								? {
-										to: Address.from(responsePost.tip.to),
-										value: ethers.toBigInt(responsePost.tip.value),
-								  }
-								: null,
 						}
 					} catch (error) {
 						console.warn("Invalid post data", responsePost, error)
 						return null
 					}
 				})
-			).filter(Boolean) as Post[]
+				.filter(Boolean) as Post[]
 
 			for (const post of responsePosts) {
 				postsCache.set(post.id, post)
@@ -204,6 +192,7 @@ export namespace TheGraphApi {
 		) {
 			id
 			index
+			contract
 		}
 	}`
 
@@ -225,13 +214,18 @@ export namespace TheGraphApi {
 						if (postQueue.length >= count) return
 						if (isChainFinished[index]) return
 						const listOfNewPosts = (
-							(await client.urqlClient.query(query(count, lastIndex[index]), {}).toPromise()).data.posts as { id: string; index: string }[]
+							((await client.urqlClient.query(query(count, lastIndex[index]), {}).toPromise()).data?.posts ?? []) as {
+								id: string
+								index: string
+								contract: string
+							}[]
 						)
 							.map((post) => {
 								try {
 									return {
 										id: PostId.fromHex(post.id),
 										index: ethers.toBigInt(post.index),
+										contract: Address.from(post.contract),
 									}
 								} catch (error) {
 									console.warn("Invalid post referance", post, error)

@@ -54,7 +54,8 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	const searchResults = $.derive<{ timeline: TheGraphApi.Timeline; address: Address | null } | null>(() => {
 		const search = searchInputDeferredAndTrimmed.ref
 		if (!search) return null
-		if (Address.is(search)) return { timeline: TheGraphApi.createTimeline({ mention: search, author: search, replies: "include" }, "or"), address: search }
+		if (Address.isAddress(search))
+			return { timeline: TheGraphApi.createTimeline({ mention: search, author: search, replies: "include" }, "or"), address: search }
 		return { timeline: TheGraphApi.createTimeline({ search: search.split(/\s+/), replies: "include" }), address: null }
 	})
 
