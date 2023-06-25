@@ -1,5 +1,5 @@
 import { Wallet } from "@/api/wallet"
-import { spawnFloatingBox } from "@/libs/floating-box"
+import { spawnFloatingBox } from "@/components/floating-box"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"

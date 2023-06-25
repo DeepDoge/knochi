@@ -1,5 +1,5 @@
 import type { TheGraphApi } from "@/api/graph"
-import { Post } from "@/libs/post"
+import { Post } from "@/components/post"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"

@@ -1,6 +1,6 @@
 import { Wallet } from "@/api/wallet"
-import { spawnFloatingBox } from "@/libs/floating-box"
-import { Profile } from "@/libs/profile"
+import { spawnFloatingBox } from "@/components/floating-box"
+import { Profile } from "@/components/profile"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"

@@ -1,7 +1,7 @@
 import { TheGraphApi } from "@/api/graph"
-import { Post } from "@/libs/post"
-import { PostForm } from "@/libs/post-form"
-import { Timeline } from "@/libs/timeline"
+import { Post } from "@/components/post"
+import { PostForm } from "@/components/post-form"
+import { Timeline } from "@/components/timeline"
 import { routeHref } from "@/router"
 import type { PostId } from "@/utils/post-id"
 import { $ } from "master-ts/library/$"
@@ -13,7 +13,9 @@ const PostTimelineComponent = defineComponent("x-post-timeline")
 export function PostTimeline(postId: SignalReadable<PostId>) {
 	const component = new PostTimelineComponent()
 
-	const post = $.await($.derive(() => TheGraphApi.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId])).then()
+	const post = $.await($.derive(() => TheGraphApi.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId]))
+		.error(() => "error" as const)
+		.then()
 	const repliesTimeline = $.derive(() => TheGraphApi.createTimeline({ parentId: postId.ref }))
 
 	component.$html = html`
@@ -25,6 +27,7 @@ export function PostTimeline(postId: SignalReadable<PostId>) {
 			<div class="family">
 				${$.match(post)
 					.case(null, () => null)
+					.case("error", () => `Can't load post ${postId.ref}`)
 					.default((post) => Post(post))}
 			</div>
 			<div class="replies">

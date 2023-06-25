@@ -8,8 +8,8 @@ import { route } from "@/router"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
-import { ChainChangerButton } from "./libs/chain-changer-button"
-import { MyWallet } from "./libs/wallet"
+import { ChainChangerButton } from "./components/chain-changer-button"
+import { MyWallet } from "./components/wallet"
 
 const NavigationComponent = defineComponent("x-navigation")
 export function Navigation() {

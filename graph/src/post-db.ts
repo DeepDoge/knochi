@@ -1,6 +1,6 @@
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts"
 import { EternisPost } from "../generated/IEternisPostDB/IEternisPostDB"
-import { Post, PostChainCounter, PostContent, PostReplyCounter } from "../generated/schema"
+import { Post, PostChainCounter, PostContent, PostReplyCounter, PostReplyCounter_FourHourTimeframe } from "../generated/schema"
 
 const EMPTY_BYTES = new Bytes(0)
 const PARENT_TYPE = Bytes.fromUint8Array(Uint8Array.wrap(String.UTF8.encode("parent")))
@@ -86,7 +86,7 @@ export function savePost(postIndex: BigInt, contractAddress: Address, transactio
 	post.contents = contentsIds
 	post.save()
 
-	if (post.parentId.length > 0) {
+	if (post.parentId.byteLength > 0) {
 		let replyCounter = PostReplyCounter.load(post.parentId)
 		if (!replyCounter) {
 			replyCounter = new PostReplyCounter(post.parentId)
@@ -95,6 +95,16 @@ export function savePost(postIndex: BigInt, contractAddress: Address, transactio
 			replyCounter.count = replyCounter.count.plus(BIGINT_ONE)
 		}
 		replyCounter.save()
+
+		const fourHourId = Bytes.fromByteArray(ByteArray.fromU64(post.blockTimestamp.div(BIGINT_14400).toU64())).concat(post.parentId)
+		let replyCounterFourHour = PostReplyCounter_FourHourTimeframe.load(fourHourId)
+		if (!replyCounterFourHour) {
+			replyCounterFourHour = new PostReplyCounter_FourHourTimeframe(fourHourId)
+			replyCounterFourHour.count = BIGINT_ONE
+		} else {
+			replyCounterFourHour.count = replyCounterFourHour.count.plus(BIGINT_ONE)
+		}
+		replyCounterFourHour.save()
 	}
 
 	return post.id
