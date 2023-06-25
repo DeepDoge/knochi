@@ -2,7 +2,7 @@ import { TheGraphApi } from "@/api/graph"
 import { Post } from "@/components/post"
 import { PostForm } from "@/components/post-form"
 import { Timeline } from "@/components/timeline"
-import { routeHref } from "@/router"
+import { route, routeHref } from "@/router"
 import type { PostId } from "@/utils/post-id"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
@@ -20,7 +20,7 @@ export function PostTimeline(postId: SignalReadable<PostId>) {
 
 	component.$html = html`
 		<div class="top">
-			<a class="btn" href=${routeHref({ postId: null })}>← Close</a>
+			<a class="btn" href=${$.derive(() => routeHref({ postId: null }), [route.path])}>← Close</a>
 			<h2 class="title">Post</h2>
 		</div>
 		<div class="content">
