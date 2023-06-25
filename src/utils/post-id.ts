@@ -16,4 +16,8 @@ export namespace PostId {
 	export function toHex(postId: PostId): string {
 		return ethers.hexlify(ethers.decodeBase64(postId))
 	}
+
+	export function toUint8Array(postId: PostId): Uint8Array {
+		return ethers.decodeBase64(postId)
+	}
 }

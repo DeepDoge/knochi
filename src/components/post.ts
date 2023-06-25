@@ -12,6 +12,7 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
+import { PostEchoButton } from "./post-echo-button"
 import { PostFromId } from "./post-from-id"
 
 const PostComponent = defineComponent("x-post")
@@ -58,6 +59,7 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 			</div>
 			<div class="footer">
 				<a class="reply-count" href=${postHref}>${() => CommentSvg()} ${() => post.ref.replyCount}</a>
+				<x ${PostEchoButton(post)} class="echo-button"></x>
 				<a class="created-at" href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
 			</div>
 		</div>
@@ -73,12 +75,13 @@ PostComponent.$css = css`
 
 	.post {
 		position: relative;
+		width: 100%;
 
 		display: grid;
 		gap: calc(var(--span) * 0.5);
 		padding: calc(var(--span) * 0.75) calc(var(--span) * 0.75);
 
-		background-color: hsl(var(--base--hsl));
+		background-color: hsl(var(--base--hsl), 0.5);
 		color: hsl(var(--base--text-hsl));
 
 		border-radius: var(--radius);

@@ -31,7 +31,7 @@ Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library
 ## Implemented Features
 
 -   [x] Post
--   [ ] Echo (Embed, Reposts)
+-   [x] Echo (Embed, Reposts)
 -   [ ] Documents (Embed IPFS/LBRY/DataUri)
 -   [ ] Image (Embed, IPFS/LBRY/DataUri)
 -   [ ] Video (Embed, IPFS/LBRY/DataUri)
