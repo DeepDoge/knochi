@@ -20,6 +20,7 @@ export namespace TheGraphApi {
 		contents: { type: string; value: Uint8Array }[]
 		createdAt: Date
 		chainKey: NetworkConfigs.ChainKey
+		replyCount: bigint
 	}
 
 	const clients = Object.entries(NetworkConfigs.graphs).map(([key, value]) => ({
@@ -47,7 +48,7 @@ export namespace TheGraphApi {
 	`
 
 		const replyCountsByChain = (await Promise.all(
-			clients.map(async ({ urqlClient: client }) => (await client.query(query, {})).data.postReplyCounters)
+			clients.map(async ({ urqlClient: client }) => (await client.query(query, {})).data?.postReplyCounters ?? [])
 		)) as {
 			id: string
 			count: string
@@ -58,7 +59,7 @@ export namespace TheGraphApi {
 			for (const replyCount of replyCountsOfChain) {
 				const id = PostId.fromHex(replyCount.id)
 				const current = replyCounts[id]
-				replyCounts[id] = current ? current + ethers.toBigInt(replyCount.count) : 0n
+				replyCounts[id] = current ? current + ethers.toBigInt(replyCount.count) : ethers.toBigInt(replyCount.count)
 			}
 		}
 
@@ -126,6 +127,10 @@ export namespace TheGraphApi {
 					}
 				})
 				.filter(Boolean) as Post[]
+
+			const responsePostIds = responsePosts.map((post) => post.id)
+			const postReplyCounts = await getReplyCounts(responsePostIds)
+			for (const post of responsePosts) post.replyCount = postReplyCounts[post.id] ?? 0n
 
 			for (const post of responsePosts) {
 				postsCache.set(post.id, post)

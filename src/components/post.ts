@@ -57,7 +57,7 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 				)}
 			</div>
 			<div class="footer">
-				<a class="reply-count" href=${postHref}>${() => CommentSvg()} ${() => "TODO"}</a>
+				<a class="reply-count" href=${postHref}>${() => CommentSvg()} ${() => post.ref.replyCount}</a>
 				<a class="created-at" href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
 			</div>
 		</div>
