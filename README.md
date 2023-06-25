@@ -49,6 +49,8 @@ Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library
 -   [ ] Public Group Voice Chat (IPFS)
 -   [ ] Like/Dislike with posts, makes replies more like reviews, you can rate a post while you are replying, (i wrote about this before [[Long Term Plans]])
 -   [ ] Filters, client side user setting for filtering posts using regex, it can be based on post content or bio or name of the person's profile, for example you can filter out things that has pronouns in their bio, tho wouldn't i would just bully them instead
+-   [ ] Different timelines per account, so you dont have to create new accounts, you can group your tweets under different timelines.
+-   [ ] Follow/Unfollow (client-side for now or forever), maybe ability to create feeds.
 
 ## Chain Support
 
@@ -60,3 +62,13 @@ Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library
 -   [ ] Rootstock (Bitcoin)
 -   [ ] Ethereum
 -   [ ] Avalanche
+
+## Other Front-End Platforms
+
+Other front-end apps to build on top of eternis.
+Or, I can just built them inside this app.
+
+-   [ ] Music Platform
+-   [ ] Shopping, Online Orders with repritation based system.
+-   [ ] Video/Movie/Series/Documentary etc. platform.
+-   [ ] Forum
