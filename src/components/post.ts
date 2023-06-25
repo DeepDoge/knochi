@@ -71,6 +71,7 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 PostComponent.$css = css`
 	:host {
 		display: contents;
+		font-size: 1rem;
 	}
 
 	.post {
