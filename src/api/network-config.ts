@@ -52,7 +52,7 @@ export namespace networkConfigs {
 		sepolia: {
 			EternisPostDB: Address.from("0xcE1EEfdf8A9F638D4134F240ED134ECBedac7730"),
 		} as const,
-	} as const satisfies Record<ChainKey, ContractsConfig>
+	} as const satisfies Record<ChainKey, Record<string, Address>>
 
 	export const graphs = {
 		mumbai: {
@@ -92,9 +92,5 @@ export namespace networkConfigs {
 
 	export type GraphConfig = {
 		api: URL
-	}
-
-	export type ContractsConfig = {
-		EternisPostDB: Address
 	}
 }
