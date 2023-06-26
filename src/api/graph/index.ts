@@ -1,30 +1,30 @@
-import { NetworkConfigs } from "@/api/network-config"
+import { networkConfigs } from "@/api/network-config"
 import { Address } from "@/utils/address"
 import { BigMath } from "@/utils/bigmath"
+import type { Post } from "@/utils/post"
 import { PostId } from "@/utils/post-id"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
 import { cacheExchange, createClient, fetchExchange, gql } from "urql"
+import { wallet } from "../wallet"
 
-export namespace TheGraphApi {
-	export type Post = {
-		id: PostId
-		parentId: PostId | null
-		index: bigint
-		tip: {
-			to: Address
-			value: bigint
-		} | null
-		author: Address
-		contents: { type: string; value: Uint8Array }[]
-		createdAt: Date
-		chainKey: NetworkConfigs.ChainKey
-		replyCount: bigint
-	}
+// This is kinda ugly but its fine, not gonna look at this so often
+// Can make it cleaner later if i need to
+// Just not a priority atm
 
-	const clients = Object.entries(NetworkConfigs.graphs).map(([key, value]) => ({
-		key: key as NetworkConfigs.ChainKey,
+/* 
+	TODO: api folder should be removed and these stuff should be inside utils
+	network-configs should be in src
+	there should be no such thing as theGraphApi, this should be inside post namespace
+	and we should have the timeline namespace seperatylu
+	clients here should be inisde network-configs
+	network-configs should be renamed to network etc. idk
+*/
+
+export namespace theGraphApi {
+	const clients = Object.entries(networkConfigs.graphs).map(([key, value]) => ({
+		key: key as networkConfigs.ChainKey,
 		urqlClient: createClient({
 			url: value.api.href,
 			exchanges: [cacheExchange, fetchExchange],
@@ -93,9 +93,8 @@ export namespace TheGraphApi {
 				if (cache) posts[cache.id] = cache
 				continue
 			}
-			const postIdBytes = ethers.toBeArray(PostId.toHex(postId))
-			const chainId = ethers.toBigInt(postIdBytes.slice(1, postIdBytes[0]! + 1))
-			const chainKey = NetworkConfigs.chainIdToKeyMap.get(chainId)
+			const { chainId } = PostId.toDescription(postId)
+			const chainKey = networkConfigs.chainIdToKeyMap.get(chainId)
 			if (!chainKey) throw new Error(`Chain key for chain id ${chainId} can't be found.`)
 
 			const client = chainKeyToClient[chainKey]
@@ -106,8 +105,8 @@ export namespace TheGraphApi {
 		}
 
 		for (const [client, postIds] of toQuery.entries()) {
-			const responsePosts = ((await (await client.urqlClient.query(query(Array.from(postIds)), {})).data?.posts) ?? [])
-				.map((responsePost: any) => {
+			const responsePosts = ((await client.urqlClient.query<{ posts: any[] }>(query(Array.from(postIds)), {})).data?.posts ?? [])
+				.map((responsePost): Post | null => {
 					try {
 						return {
 							id: PostId.fromHex(responsePost.id),
@@ -120,17 +119,32 @@ export namespace TheGraphApi {
 							})),
 							createdAt: new Date(parseInt(responsePost.blockTimestamp) * 1000),
 							chainKey: client.key,
+							contractAddress: responsePost.contract,
+							replyCount: 0n,
+							tip: null,
 						}
 					} catch (error) {
 						console.warn("Invalid post data", responsePost, error)
 						return null
 					}
 				})
-				.filter(Boolean) as Post[]
+				.filter(Boolean)
 
 			const responsePostIds = responsePosts.map((post) => post.id)
 			const postReplyCounts = await getReplyCounts(responsePostIds)
 			for (const post of responsePosts) post.replyCount = postReplyCounts[post.id] ?? 0n
+
+			// TODO: finish this
+			for (const post of responsePosts) {
+				const contractsOfChain = networkConfigs.contracts[post.chainKey]
+				for (const name of Object.keys(contractsOfChain) as (keyof typeof contractsOfChain)[]) {
+					const address = contractsOfChain[name]
+					if (name === "EternisTipPostDB") {
+						wallet.browserWallet.ref?.contracts[name]
+						// post.tip =
+					}
+				}
+			}
 
 			for (const post of responsePosts) {
 				postsCache.set(post.id, post)

@@ -1,5 +1,5 @@
-import { TheGraphApi } from "@/api/graph"
-import { Wallet } from "@/api/wallet"
+import { theGraphApi } from "@/api/graph"
+import { wallet } from "@/api/wallet"
 import { PostForm } from "@/components/post-form"
 import { Profile } from "@/components/profile"
 import { Timeline } from "@/components/timeline"
@@ -40,13 +40,13 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 	const page = new PageComponent()
 	const timeline = $.flatten(
 		$.match(params.tab)
-			.case("posts", () => $.derive(() => TheGraphApi.createTimeline({ author: params.userAddress.ref })))
-			.case("replies", () => $.derive(() => TheGraphApi.createTimeline({ author: params.userAddress.ref, replies: "only" })))
-			.case("mentions", () => $.derive(() => TheGraphApi.createTimeline({ mention: params.userAddress.ref, replies: "include" })))
+			.case("posts", () => $.derive(() => theGraphApi.createTimeline({ author: params.userAddress.ref })))
+			.case("replies", () => $.derive(() => theGraphApi.createTimeline({ author: params.userAddress.ref, replies: "only" })))
+			.case("mentions", () => $.derive(() => theGraphApi.createTimeline({ mention: params.userAddress.ref, replies: "include" })))
 			.default()
 	)
 
-	const isMyProfile = $.derive(() => params.userAddress.ref === Wallet.browserWallet.ref?.address)
+	const isMyProfile = $.derive(() => params.userAddress.ref === wallet.browserWallet.ref?.address)
 
 	page.$html = html` <nav class="tabs">
 			<ul>

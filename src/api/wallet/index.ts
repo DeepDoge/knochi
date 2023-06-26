@@ -1,11 +1,11 @@
-import { NetworkConfigs } from "@/api/network-config"
+import { networkConfigs } from "@/api/network-config"
 import { connect_EternisPostDB, type EternisPostDB_Contract } from "@/contracts/artifacts/EternisPostDB"
 import { Address } from "@/utils/address"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 
 export type Wallet = {
-	chainKey: NetworkConfigs.ChainKey
+	chainKey: networkConfigs.ChainKey
 	signer: ethers.JsonRpcSigner
 	provider: ethers.BrowserProvider
 	address: Address
@@ -13,7 +13,7 @@ export type Wallet = {
 		EternisPostDB: EternisPostDB_Contract
 	}
 }
-export namespace Wallet {
+export namespace wallet {
 	const ethereum = "ethereum" in window ? (window.ethereum as ethers.Eip1193Provider & ethers.BrowserProvider) : null
 	export type State = "wrong-network" | "not-connected" | "connected"
 
@@ -41,7 +41,7 @@ export namespace Wallet {
 		const signer = await browserProvider.getSigner()
 
 		const chainId = (await browserProvider.getNetwork()).chainId
-		const chainKey = NetworkConfigs.chainIdToKeyMap.get(chainId)
+		const chainKey = networkConfigs.chainIdToKeyMap.get(chainId)
 		if (!chainKey) {
 			browserWalletStateWritable.ref = "wrong-network"
 			browserWalletWritable.ref = null
@@ -54,15 +54,15 @@ export namespace Wallet {
 			provider: browserProvider,
 			address: Address.from(await signer.getAddress()),
 			contracts: {
-				EternisPostDB: connect_EternisPostDB(NetworkConfigs.contracts[chainKey].EternisPostDB, signer),
+				EternisPostDB: connect_EternisPostDB(networkConfigs.contracts[chainKey].EternisPostDB, signer),
 			},
 		}
 		browserWalletStateWritable.ref = "connected"
 	}
 
-	export async function changeChain(chainKey: NetworkConfigs.ChainKey) {
-		const chainConfig = NetworkConfigs.chains[chainKey]
-		const providerConfig = NetworkConfigs.rpcProviders[chainKey]
+	export async function changeChain(chainKey: networkConfigs.ChainKey) {
+		const chainConfig = networkConfigs.chains[chainKey]
+		const providerConfig = networkConfigs.rpcProviders[chainKey]
 		if (!browserProvider) return
 		try {
 			await browserProvider.send("wallet_switchEthereumChain", [{ chainId: `0x${chainConfig.id.toString(16)}` }])

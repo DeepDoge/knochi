@@ -1,4 +1,4 @@
-import { TheGraphApi } from "@/api/graph"
+import { theGraphApi } from "@/api/graph"
 import { Post } from "@/components/post"
 import type { PostId } from "@/utils/post-id"
 import { $ } from "master-ts/library/$"
@@ -10,7 +10,7 @@ const PostFromIdComponent = defineComponent("x-post-from-id")
 export function PostFromId(postId: SignalReadable<PostId>) {
 	const component = new PostFromIdComponent()
 
-	const post = $.await($.derive(() => TheGraphApi.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId])).then()
+	const post = $.await($.derive(() => theGraphApi.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId])).then()
 
 	component.$html = html`
 		${$.match(post)

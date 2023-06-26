@@ -1,5 +1,5 @@
-import { NetworkConfigs } from "@/api/network-config"
-import { Wallet } from "@/api/wallet"
+import { networkConfigs } from "@/api/network-config"
+import { wallet } from "@/api/wallet"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
@@ -9,12 +9,12 @@ const ChainChangerComponent = defineComponent("x-chain-changer")
 export function ChainChanger() {
 	const component = new ChainChangerComponent()
 
-	const chainKeys = Object.keys(NetworkConfigs.chains) as (keyof typeof NetworkConfigs.chains)[]
+	const chainKeys = Object.keys(networkConfigs.chains) as (keyof typeof networkConfigs.chains)[]
 
 	component.$html = html`
 		<div class="title">Change Network</div>
 		<div class="chains">
-			${$.each(chainKeys).as((key) => html`<x ${ChainButton($.derive(() => key))} on:click=${(e) => (e.preventDefault(), Wallet.changeChain(key))}></x>`)}
+			${$.each(chainKeys).as((key) => html`<x ${ChainButton($.derive(() => key))} on:click=${(e) => (e.preventDefault(), wallet.changeChain(key))}></x>`)}
 		</div>
 	`
 

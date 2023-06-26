@@ -1,4 +1,4 @@
-import { TheGraphApi } from "@/api/graph"
+import { theGraphApi } from "@/api/graph"
 import { Post } from "@/components/post"
 import { PostForm } from "@/components/post-form"
 import { Timeline } from "@/components/timeline"
@@ -13,10 +13,10 @@ const PostTimelineComponent = defineComponent("x-post-timeline")
 export function PostTimeline(postId: SignalReadable<PostId>) {
 	const component = new PostTimelineComponent()
 
-	const post = $.await($.derive(() => TheGraphApi.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId]))
+	const post = $.await($.derive(() => theGraphApi.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId]))
 		.error(() => "error" as const)
 		.then()
-	const repliesTimeline = $.derive(() => TheGraphApi.createTimeline({ parentId: postId.ref }))
+	const repliesTimeline = $.derive(() => theGraphApi.createTimeline({ parentId: postId.ref }))
 
 	component.$html = html`
 		<div class="top">

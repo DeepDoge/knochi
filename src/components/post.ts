@@ -1,10 +1,10 @@
-import type { TheGraphApi } from "@/api/graph"
-import { NetworkConfigs } from "@/api/network-config"
+import { networkConfigs } from "@/api/network-config"
 import { CommentSvg } from "@/assets/svgs/comment"
 import { Profile } from "@/components/profile"
 import { ProfileName } from "@/components/profile-name"
 import { route, routeHref } from "@/router"
 import { Address } from "@/utils/address"
+import type { Post } from "@/utils/post"
 import { PostId } from "@/utils/post-id"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
@@ -16,7 +16,7 @@ import { PostEchoButton } from "./post-echo-button"
 import { PostFromId } from "./post-from-id"
 
 const PostComponent = defineComponent("x-post")
-export function Post(post: SignalReadable<TheGraphApi.Post>) {
+export function Post(post: SignalReadable<Post>) {
 	const component = new PostComponent()
 
 	const postContents = $.derive(() => post.ref.contents)
@@ -30,8 +30,8 @@ export function Post(post: SignalReadable<TheGraphApi.Post>) {
 			<div class="header">
 				<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
 				<div class="chips">
-					<span class="chain" title=${() => NetworkConfigs.chains[post.ref.chainKey].name}>
-						${() => NetworkConfigs.chains[post.ref.chainKey].name}
+					<span class="chain" title=${() => networkConfigs.chains[post.ref.chainKey].name}>
+						${() => networkConfigs.chains[post.ref.chainKey].name}
 					</span>
 					<a class="id post-id" href=${postHref}> ${() => post.ref.id.slice(post.ref.id.length - 5)} </a>
 					${$.match($.derive(() => post.ref.parentId))

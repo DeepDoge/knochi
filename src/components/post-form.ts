@@ -1,4 +1,4 @@
-import { Wallet } from "@/api/wallet"
+import { wallet } from "@/api/wallet"
 import { PaperPlaneSvg } from "@/assets/svgs/paper-plane"
 import { ProfileAvatar } from "@/components/profile-avatar"
 import { ProfileName } from "@/components/profile-name"
@@ -29,8 +29,8 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	async function sendPost() {
 		try {
 			state.ref = "loading"
-			if (!Wallet.browserWallet.ref) throw new Error(Wallet.browserWalletState.ref)
-			await Wallet.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
+			if (!wallet.browserWallet.ref) throw new Error(wallet.browserWalletState.ref)
+			await wallet.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)

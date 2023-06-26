@@ -1,4 +1,4 @@
-import { Wallet } from "@/api/wallet"
+import { wallet } from "@/api/wallet"
 import { spawnFloatingBox } from "@/components/floating-box"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
@@ -11,7 +11,7 @@ export function ChainChangerButton() {
 	const component = new ChainChangerButtonComponent()
 
 	component.$html = html`
-		${$.match(Wallet.browserWallet)
+		${$.match(wallet.browserWallet)
 			.case(null, () => null)
 			.default(
 				(wallet) =>

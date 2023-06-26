@@ -1,4 +1,4 @@
-import { TheGraphApi } from "@/api/graph"
+import { theGraphApi } from "@/api/graph"
 import { SearchSvg } from "@/assets/svgs/search"
 import { Profile } from "@/components/profile"
 import { Timeline } from "@/components/timeline"
@@ -51,12 +51,12 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	})
 	const searchInputDeferredAndTrimmed = $.derive(() => searchInputDeferred.ref.trim())
 
-	const searchResults = $.derive<{ timeline: TheGraphApi.Timeline; address: Address | null } | null>(() => {
+	const searchResults = $.derive<{ timeline: theGraphApi.Timeline; address: Address | null } | null>(() => {
 		const search = searchInputDeferredAndTrimmed.ref
 		if (!search) return null
 		if (Address.isAddress(search))
-			return { timeline: TheGraphApi.createTimeline({ mention: search, author: search, replies: "include" }, "or"), address: search }
-		return { timeline: TheGraphApi.createTimeline({ search: search.split(/\s+/), replies: "include" }), address: null }
+			return { timeline: theGraphApi.createTimeline({ mention: search, author: search, replies: "include" }, "or"), address: search }
+		return { timeline: theGraphApi.createTimeline({ search: search.split(/\s+/), replies: "include" }), address: null }
 	})
 
 	page.$html = html`

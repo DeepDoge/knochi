@@ -20,4 +20,22 @@ export namespace PostId {
 	export function toUint8Array(postId: PostId): Uint8Array {
 		return ethers.decodeBase64(postId)
 	}
+
+	export type Description = {
+		chainId: bigint
+		postIndex: bigint
+	}
+
+	export function toDescription(postId: PostId): Description
+	{
+		const postIdBytes = toUint8Array(postId)
+		const chainIdSize = postIdBytes[0]!
+		const chainId =  ethers.toBigInt(postIdBytes.slice(1, chainIdSize + 1))
+		const postIndex = ethers.toBigInt(postIdBytes.slice(1 + chainIdSize))
+
+		return {
+			chainId,
+			postIndex
+		}
+	}
 }

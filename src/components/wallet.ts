@@ -1,4 +1,4 @@
-import { Wallet } from "@/api/wallet"
+import { wallet, type Wallet } from "@/api/wallet"
 import { spawnFloatingBox } from "@/components/floating-box"
 import { Profile } from "@/components/profile"
 import { $ } from "master-ts/library/$"
@@ -17,10 +17,10 @@ export function MyWallet() {
 }
 
 export function requireWallet(then: (wallet: SignalReadable<Wallet>) => TemplateValue) {
-	return $.match(Wallet.browserWallet)
+	return $.match(wallet.browserWallet)
 		.case(null, () =>
-			$.match(Wallet.browserWalletState)
-				.case("not-connected", () => html`<button class="btn" on:click=${(e) => (e.preventDefault(), Wallet.connect())}>Connect Wallet</button>`)
+			$.match(wallet.browserWalletState)
+				.case("not-connected", () => html`<button class="btn" on:click=${(e) => (e.preventDefault(), wallet.connect())}>Connect Wallet</button>`)
 				.case(
 					"wrong-network",
 					() =>

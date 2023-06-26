@@ -14,8 +14,8 @@ contract EternisTipPostDB is IEternisPostDB {
     mapping(uint256 => Tip) public postIndexToTip;
 
     function post(bytes calldata postData, address payable tipTo) external payable {
-        emit EternisPost(postIndex, postData);
         postIndexToTip[postIndex] = Tip(tipTo, msg.value);
+        emit EternisPost(postIndex, postData);
         postIndex++;
         tipTo.transfer(msg.value);
     }
