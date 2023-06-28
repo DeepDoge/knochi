@@ -14,7 +14,7 @@ export function PostTimeline(postId: SignalReadable<PostId>) {
 	const component = new PostTimelineComponent()
 
 	const post = $.await($.derive(() => theGraphApi.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId]))
-		.error(() => "error" as const)
+		.error((error) => error)
 		.then()
 	const repliesTimeline = $.derive(() => theGraphApi.createTimeline({ parentId: postId.ref }))
 
@@ -27,7 +27,15 @@ export function PostTimeline(postId: SignalReadable<PostId>) {
 			<div class="family">
 				${$.match(post)
 					.case(null, () => null)
-					.case("error", () => `Can't load post ${postId.ref}`)
+					.caseInstanceOf(
+						Error,
+						(error) => html`
+							<div class="error">
+								Can't load post ${postId}
+								<code><pre>${error.message}</pre></code>
+							</div>
+						`
+					)
 					.default((post) => Post(post))}
 			</div>
 			<div class="replies">
