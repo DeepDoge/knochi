@@ -94,7 +94,7 @@ export namespace Post {
 			const postReplyCounts = await getReplyCounts(responsePostIds)
 			for (const post of responsePosts) post.replyCount = postReplyCounts[post.id] ?? 0n
 
-			// TODO: finish this
+			// TODO: Implement this.
 			for (const post of responsePosts) {
 				const contractsOfChain = Networks.contracts[post.chainKey]
 				for (const name of Object.keys(contractsOfChain) as (keyof typeof contractsOfChain)[]) {
