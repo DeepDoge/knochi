@@ -87,6 +87,7 @@ PostActionsComponent.$css = css`
 
 		& > svg {
 			border-radius: var(--radius-fab);
+			padding: calc(var(--span) * 0.5);
 		}
 	}
 `

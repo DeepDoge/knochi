@@ -10,7 +10,7 @@ export function ProfileAddressUI(address: SignalReadable<Address>) {
 
 	component.$html = html`
 		<button
-			class="btn-glass-text"
+			class="btn-glass"
 			on:click=${(e) => (
 				e.preventDefault(),
 				navigator.clipboard.writeText(address.ref).then(() => alert(`Address copied to clipboard\nTODO: Add toast notifactions etc..`))
@@ -36,7 +36,6 @@ ProfileAddressComponent.$css = css`
 		align-items: center;
 		max-width: 20ch;
 		min-width: 9ch;
-		color: inherit;
 
 		& > svg {
 			grid-area: svg;

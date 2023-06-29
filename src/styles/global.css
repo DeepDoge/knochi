@@ -68,6 +68,7 @@
 
 	.btn-glass,
 	.btn-glass-text {
+		display: inline-block;
 		appearance: none;
 		border: none;
 		outline: none;
@@ -82,19 +83,14 @@
 		transition-property: background-color;
 
 		&:hover {
-			background-color: hsl(var(--glass-color--hsl, currentColor), 10%);
-			color: hsl(var(--glass-color--hsl, currentColor));
+			background-color: hsl(var(--glass-color--hsl, var(--base--text-hsl)), 10%);
+			color: hsl(var(--glass-color--hsl, var(--base--text-hsl)));
 		}
 
 		&:active {
-			background-color: hsl(var(--glass-color--hsl, currentColor), 20%);
-			color: hsl(var(--glass-color--hsl, currentColor));
+			background-color: hsl(var(--glass-color--hsl, var(--base--text-hsl)), 20%);
+			color: hsl(var(--glass-color--hsl, var(--base--text-hsl)));
 		}
-	}
-
-	.btn-glass {
-		display: inline-block;
-		padding: calc(var(--span) * 0.5);
 	}
 
 	.btn {

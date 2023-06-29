@@ -1,5 +1,6 @@
-import { PostTimelineUI } from "@/components/post-timeline"
 import "@/import-styles"
+
+import { PostTimelineUI } from "@/components/post-timeline"
 import { Navigation } from "@/navigation"
 import { route } from "@/router"
 import { routerLayout } from "@/routes"
