@@ -1,9 +1,9 @@
 import type { theGraphApi } from "@/api/graph"
-import { Post } from "@/components/post"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
+import { Post } from "./post"
 
 const TimelineComponent = defineComponent("x-timeline")
 export function Timeline(timeline: SignalReadable<theGraphApi.Timeline>) {
@@ -60,7 +60,7 @@ TimelineComponent.$css = css`
 
 	.posts {
 		display: grid;
-		gap: calc(var(--span) * 1);
+		gap: calc(var(--span) * 1.5);
 	}
 
 	.no-posts {

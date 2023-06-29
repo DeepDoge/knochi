@@ -1,13 +1,13 @@
 import { theGraphApi } from "@/api/graph"
-import { Post } from "@/components/post"
 import { PostForm } from "@/components/post-form"
 import { Timeline } from "@/components/timeline"
-import { route, routeHref } from "@/router"
+import { route, routeHash } from "@/router"
 import type { PostId } from "@/utils/post-id"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
+import { Post } from "./post"
 
 const PostTimelineComponent = defineComponent("x-post-timeline")
 export function PostTimeline(postId: SignalReadable<PostId>) {
@@ -20,7 +20,7 @@ export function PostTimeline(postId: SignalReadable<PostId>) {
 
 	component.$html = html`
 		<div class="top">
-			<a class="btn" href=${$.derive(() => routeHref({ postId: null }), [route.path])}>← Close</a>
+			<a class="btn" href=${$.derive(() => routeHash({ postId: null }), [route.path])}>← Close</a>
 			<h2 class="title">Post</h2>
 		</div>
 		<div class="content">

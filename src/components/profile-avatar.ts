@@ -1,4 +1,4 @@
-import { routeHref } from "@/router"
+import { routeHash } from "@/router"
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
@@ -21,7 +21,7 @@ export function ProfileAvatar(address: SignalReadable<Address>) {
 	)
 
 	component.$html = html`
-		<a class="avatar" href=${() => routeHref({ path: address.ref, postId: null })}>
+		<a class="avatar" href=${() => routeHash({ path: address.ref, postId: null })}>
 			<img src=${avatarUrl} alt="Avatar of ${address}" />
 		</a>
 	`

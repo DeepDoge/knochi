@@ -2,7 +2,7 @@ import { theGraphApi } from "@/api/graph"
 import { SearchSvg } from "@/assets/svgs/search"
 import { Profile } from "@/components/profile"
 import { Timeline } from "@/components/timeline"
-import { route, routeHref } from "@/router"
+import { route, routeHash } from "@/router"
 import { createLayout } from "@/routes"
 import { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
@@ -45,7 +45,7 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	params.search.subscribe$(page, (search) => (searchInput.ref = search), { mode: "immediate" })
 	const searchInputDeferred = $.deferred(searchInput)
 	searchInputDeferred.subscribe$(page, (search) => {
-		const href = routeHref({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") })
+		const href = routeHash({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") })
 		if (route.pathArr.ref[0] === "search") location.replace(href)
 		else location.assign(href)
 	})
@@ -62,7 +62,7 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	page.$html = html`
 		<div class="search input">
 			<x ${SearchSvg()} class="icon"></x>
-			<input type="text" class="transparent-input" bind:value=${searchInput} placeholder="Search anything" />
+			<input type="text" class="ghost" bind:value=${searchInput} placeholder="Search anything" />
 		</div>
 		${$.match(searchResults)
 			.case(null, () => html`<p class="none">...</p>`)

@@ -2,7 +2,7 @@ import { homeLayout } from "@/pages/home"
 import { searchLayout } from "@/pages/search"
 import { unknownLayout } from "@/pages/unknown"
 import { userLayout } from "@/pages/user"
-import { route, routeHref } from "@/router"
+import { route } from "@/router"
 import { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
 import type { Component } from "master-ts/library/component"
@@ -50,11 +50,9 @@ export const routerLayout = $.readable<Layout>((set) => {
 					case "replies":
 					case "mentions":
 						set(userLayout({ userAddress, tab }))
-						location.replace(routeHref({ path: `${userAddress}/${tab}` }))
 						break
 					default:
 						set(userLayout({ userAddress, tab: "posts" }))
-						location.replace(routeHref({ path: `${userAddress}/posts` }))
 						break
 				}
 			} else {

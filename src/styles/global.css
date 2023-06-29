@@ -51,7 +51,7 @@
 		outline: solid currentColor 0.1em;
 	}
 
-	.transparent-input {
+	.ghost {
 		display: block;
 		appearance: none;
 		border: none;
@@ -62,8 +62,39 @@
 		background-color: transparent;
 		color: inherit;
 	}
-	.transparent-input:focus-visible {
+	.ghost:focus-visible {
 		outline: none;
+	}
+
+	.btn-glass,
+	.btn-glass-text {
+		appearance: none;
+		border: none;
+		outline: none;
+		padding: 0;
+		margin: 0;
+		font: inherit;
+		cursor: pointer;
+
+		background-color: transparent;
+
+		transition: var(--transition);
+		transition-property: background-color;
+
+		&:hover {
+			background-color: hsl(var(--glass-color--hsl, currentColor), 10%);
+			color: hsl(var(--glass-color--hsl, currentColor));
+		}
+
+		&:active {
+			background-color: hsl(var(--glass-color--hsl, currentColor), 20%);
+			color: hsl(var(--glass-color--hsl, currentColor));
+		}
+	}
+
+	.btn-glass {
+		display: inline-block;
+		padding: calc(var(--span) * 0.5);
 	}
 
 	.btn {

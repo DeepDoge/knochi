@@ -1,10 +1,9 @@
 import { networkConfigs } from "@/api/network-config"
-import { CommentSvg } from "@/assets/svgs/comment"
 import { Profile } from "@/components/profile"
 import { ProfileName } from "@/components/profile-name"
-import { route, routeHref } from "@/router"
+import { route, routeHash } from "@/router"
 import { Address } from "@/utils/address"
-import type { Post } from "@/utils/post"
+import type { PostData } from "@/utils/post"
 import { PostId } from "@/utils/post-id"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
@@ -12,57 +11,71 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { PostEchoButton } from "./post-echo-button"
 import { PostFromId } from "./post-from-id"
+import { PostActions } from "./post.actions"
+import { Repost } from "./repost"
 
 const PostComponent = defineComponent("x-post")
-export function Post(post: SignalReadable<Post>) {
+export function Post(post: SignalReadable<PostData>) {
 	const component = new PostComponent()
 
 	const postContents = $.derive(() => post.ref.contents)
 
-	const postHref = $.derive(() => routeHref({ postId: post.ref.id }))
-	const parentHref = $.derive(() => routeHref({ postId: post.ref.parentId }))
+	const echoOnly = $.derive(() => (postContents.ref.length === 1 && postContents.ref[0]!.type === "echo" ? postContents.ref[0]!.value : null))
+
+	const postHref = $.derive(() => routeHash({ postId: post.ref.id }))
+	const parentHref = $.derive(() => routeHash({ postId: post.ref.parentId }))
 
 	component.$html = html`
-		<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
-			<a href=${postHref} aria-label="Go to the ${() => post.ref.id}" class="backdrop-link"></a>
-			<div class="header">
-				<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
-				<div class="chips">
-					<span class="chain" title=${() => networkConfigs.chains[post.ref.chainKey].name}>
-						${() => networkConfigs.chains[post.ref.chainKey].name}
-					</span>
-					<a class="id post-id" href=${postHref}> ${() => post.ref.id.slice(post.ref.id.length - 5)} </a>
-					${$.match($.derive(() => post.ref.parentId))
-						.case(null, () => null)
-						.default((parentId) => html`<a class="id parent-id" href=${parentHref}> ${() => parentId.ref.slice(parentId.ref.length - 5)} </a>`)}
-				</div>
-			</div>
-			<div class="content">
-				${$.each(postContents).as((content) =>
-					$.match($.derive(() => content.ref.type))
-						// Using async to catch errors
-						.case("text", () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
-						.case("@", () =>
-							$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) => ProfileName(address))
-						)
-						.case("echo", () =>
-							$.await($.derive(async () => PostId.fromHex(ethers.hexlify(content.ref.value)))).then((postId) =>
-								$.match(postId)
-									.case(post.ref.id, () => null)
-									.default((postId) => PostFromId(postId))
-							)
-						)
-						.default(() => null)
-				)}
-			</div>
-			<div class="footer">
-				<a class="reply-count" href=${postHref}>${() => CommentSvg()} ${() => post.ref.replyCount}</a>
-				<x ${PostEchoButton(post)} class="echo-button"></x>
-				<a class="created-at" href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
-			</div>
-		</div>
+		${$.match(echoOnly)
+			.case(
+				null,
+				() => html`
+					<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
+						<a href=${postHref} aria-label="Go to the ${() => post.ref.id}" class="backdrop-link"></a>
+						<div class="header">
+							<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
+							<div class="chips">
+								<span class="chain" title=${() => networkConfigs.chains[post.ref.chainKey].name}>
+									${() => networkConfigs.chains[post.ref.chainKey].name}
+								</span>
+								<a class="id post-id" href=${postHref}> ${() => post.ref.id.slice(post.ref.id.length - 5)} </a>
+								${$.match($.derive(() => post.ref.parentId))
+									.case(null, () => null)
+									.default(
+										(parentId) =>
+											html`<a class="id parent-id" href=${parentHref}> ${() => parentId.ref.slice(parentId.ref.length - 5)} </a>`
+									)}
+							</div>
+						</div>
+						<div class="content">
+							${$.each(postContents).as((content) =>
+								$.match($.derive(() => content.ref.type))
+									// Using async to catch errors
+									.case("text", () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
+									.case("@", () =>
+										$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) =>
+											ProfileName(address)
+										)
+									)
+									.case("echo", () =>
+										$.await($.derive(async () => PostId.fromUint8Array(content.ref.value))).then((postId) =>
+											$.match(postId)
+												.case(post.ref.id, () => null)
+												.default((postId) => PostFromId(postId))
+										)
+									)
+									.default(() => null)
+							)}
+						</div>
+						<div class="footer">
+							${() => PostActions(post.ref)}
+							<a class="created-at" href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
+						</div>
+					</div>
+				`
+			)
+			.default((echo) => Repost($.derive(() => ({ postId: PostId.fromUint8Array(echo.ref), authorAddress: post.ref.author }))))}
 	`
 
 	return component
@@ -131,19 +144,12 @@ PostComponent.$css = css`
 
 	.footer {
 		display: flex;
+		flex-wrap: wrap;
 		gap: calc(var(--span) * 0.5);
-		font-size: 0.7em;
+		font-size: 0.75em;
 
 		align-items: center;
 		justify-content: space-between;
-
-		& .reply-count {
-			display: grid;
-			grid-template-columns: 1.25em auto;
-			gap: calc(var(--span) * 0.25);
-			justify-content: start;
-			align-items: center;
-		}
 	}
 
 	.chips {

@@ -3,7 +3,7 @@ import { wallet } from "@/api/wallet"
 import { PostForm } from "@/components/post-form"
 import { Profile } from "@/components/profile"
 import { Timeline } from "@/components/timeline"
-import { routeHref } from "@/router"
+import { routeHash } from "@/router"
 import { createLayout } from "@/routes"
 import type { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
@@ -51,17 +51,17 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 	page.$html = html` <nav class="tabs">
 			<ul>
 				<li>
-					<a class="btn" class:active=${() => params.tab.ref === "posts"} href=${() => routeHref({ path: `${params.userAddress.ref}/posts` })}>
+					<a class="btn" class:active=${() => params.tab.ref === "posts"} href=${() => routeHash({ path: `${params.userAddress.ref}/posts` })}>
 						Posts
 					</a>
 				</li>
 				<li>
-					<a class="btn" class:active=${() => params.tab.ref === "replies"} href=${() => routeHref({ path: `${params.userAddress.ref}/replies` })}>
+					<a class="btn" class:active=${() => params.tab.ref === "replies"} href=${() => routeHash({ path: `${params.userAddress.ref}/replies` })}>
 						Replies
 					</a>
 				</li>
 				<li>
-					<a class="btn" class:active=${() => params.tab.ref === "mentions"} href=${() => routeHref({ path: `${params.userAddress.ref}/mentions` })}>
+					<a class="btn" class:active=${() => params.tab.ref === "mentions"} href=${() => routeHash({ path: `${params.userAddress.ref}/mentions` })}>
 						Mentions
 					</a>
 				</li>

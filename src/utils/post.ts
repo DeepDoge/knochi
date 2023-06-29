@@ -2,7 +2,7 @@ import type { networkConfigs } from "@/api/network-config"
 import type { Address } from "./address"
 import type { PostId } from "./post-id"
 
-export type Post = {
+export type PostData = {
 	id: PostId
 	parentId: PostId | null
 	index: bigint

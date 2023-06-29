@@ -24,7 +24,7 @@ updateRoute()
 window.addEventListener("hashchange", updateRoute)
 setInterval(updateRoute, 100)
 
-export function routeHref({ path, postId }: { path?: string; postId?: PostId | null }): string {
+export function routeHash({ path, postId }: { path?: string; postId?: PostId | null }): string {
 	if (path === undefined) path = routePath.ref
 	if (postId === undefined) postId = routePostId.ref
 

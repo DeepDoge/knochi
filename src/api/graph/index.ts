@@ -1,7 +1,7 @@
 import { networkConfigs } from "@/api/network-config"
 import { Address } from "@/utils/address"
 import { BigMath } from "@/utils/bigmath"
-import type { Post } from "@/utils/post"
+import type { PostData } from "@/utils/post"
 import { PostId } from "@/utils/post-id"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
@@ -66,8 +66,8 @@ export namespace theGraphApi {
 		return replyCounts
 	}
 
-	const postsCache = new Map<PostId, Post | null>()
-	export async function getPosts(postIds: PostId[]): Promise<Post[]> {
+	const postsCache = new Map<PostId, PostData | null>()
+	export async function getPosts(postIds: PostId[]): Promise<PostData[]> {
 		const query = (postIds: PostId[]) => gql`
 	{
 		posts(where: { or: [ ${postIds.map((postId) => `{ id: "${PostId.toHex(postId)}" }`).join("\n")} ] }) {
@@ -86,7 +86,7 @@ export namespace theGraphApi {
 	}`
 
 		const toQuery = new Map<GraphClient, Set<PostId>>()
-		const posts: Record<PostId, Post> = {}
+		const posts: Record<PostId, PostData> = {}
 		for (const postId of postIds) {
 			if (postsCache.has(postId)) {
 				const cache = postsCache.get(postId)
@@ -106,14 +106,14 @@ export namespace theGraphApi {
 
 		for (const [client, postIds] of toQuery.entries()) {
 			const responsePosts = ((await client.urqlClient.query<{ posts: any[] }>(query(Array.from(postIds)), {})).data?.posts ?? [])
-				.map((responsePost): Post | null => {
+				.map((responsePost): PostData | null => {
 					try {
 						return {
 							id: PostId.fromHex(responsePost.id),
 							parentId: responsePost.parentId === "0x" ? null : PostId.fromHex(responsePost.parentId),
 							index: ethers.toBigInt(responsePost.index),
 							author: Address.from(responsePost.author),
-							contents: responsePost.contents.map((content: any): Post["contents"][number] => ({
+							contents: responsePost.contents.map((content: any): PostData["contents"][number] => ({
 								type: ethers.toUtf8String(ethers.toBeArray(content.type)),
 								value: ethers.toBeArray(content.value),
 							})),
@@ -163,7 +163,7 @@ export namespace theGraphApi {
 
 	export type Timeline = {
 		loadBottom(): Promise<void>
-		posts: SignalReadable<Post[]>
+		posts: SignalReadable<PostData[]>
 		loading: SignalReadable<boolean>
 		newPostCountAtTop: SignalReadable<number>
 	}
@@ -215,8 +215,8 @@ export namespace theGraphApi {
 		}
 	}`
 
-		const posts = $.writable<Post[]>([])
-		const postQueuesOfChains = clients.map(() => [] as Post[])
+		const posts = $.writable<PostData[]>([])
+		const postQueuesOfChains = clients.map(() => [] as PostData[])
 		const isChainFinished = new Array(clients.length).fill(false)
 		const lastIndex = new Array<bigint>(clients.length)
 
