@@ -1,21 +1,21 @@
-import { theGraphApi } from "@/api/graph"
+import { Post } from "@/utils/post"
 import type { PostId } from "@/utils/post-id"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { Post } from "./post"
+import { PostUI } from "./post"
 
 const PostFromIdComponent = defineComponent("x-post-from-id")
-export function PostFromId(postId: SignalReadable<PostId>) {
+export function PostFromIdUI(postId: SignalReadable<PostId>) {
 	const component = new PostFromIdComponent()
 
-	const post = $.await($.derive(() => theGraphApi.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId])).then()
+	const post = $.await($.derive(() => Post.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId])).then()
 
 	component.$html = html`
 		${$.match(post)
 			.case(null, () => null)
-			.default((post) => Post(post))}
+			.default((post) => PostUI(post))}
 	`
 
 	return component

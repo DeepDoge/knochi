@@ -5,7 +5,7 @@ import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 
 const ProfileNameComponent = defineComponent("x-profile-name")
-export function ProfileName(address: SignalReadable<Address>) {
+export function ProfileNameUI(address: SignalReadable<Address>) {
 	const component = new ProfileNameComponent()
 
 	component.$html = html` <a class="name" href=${() => routeHash({ path: address.ref, postId: null })}>Nameless</a> `

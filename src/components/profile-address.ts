@@ -5,7 +5,7 @@ import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 
 const ProfileAddressComponent = defineComponent("x-profile-address")
-export function ProfileAddress(address: SignalReadable<Address>) {
+export function ProfileAddressUI(address: SignalReadable<Address>) {
 	const component = new ProfileAddressComponent()
 
 	component.$html = html`

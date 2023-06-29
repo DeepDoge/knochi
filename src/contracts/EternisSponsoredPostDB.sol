@@ -7,7 +7,7 @@ import "./IEternisPostDB.sol";
     - If you offer payment for a post that you didnt post, its being ignored and not showed. Even if the offer accepted on chain. So you would waste money.
 */
 
-contract EternisSponsoredPostDB is IEternisPostDB {
+contract EternisSponsoredPostDB2 is IEternisPostDB {
     uint256 public index; // offer and post index counter
 
     struct Offer

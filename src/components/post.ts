@@ -1,9 +1,9 @@
-import { networkConfigs } from "@/api/network-config"
-import { Profile } from "@/components/profile"
-import { ProfileName } from "@/components/profile-name"
+import { ProfileUI } from "@/components/profile"
+import { ProfileNameUI } from "@/components/profile-name"
+import { Networks } from "@/networks"
 import { route, routeHash } from "@/router"
 import { Address } from "@/utils/address"
-import type { PostData } from "@/utils/post"
+import type { Post } from "@/utils/post"
 import { PostId } from "@/utils/post-id"
 import { relativeTimeSignal } from "@/utils/time"
 import { ethers } from "ethers"
@@ -11,12 +11,12 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { PostFromId } from "./post-from-id"
-import { PostActions } from "./post.actions"
-import { Repost } from "./repost"
+import { PostFromIdUI } from "./post-from-id"
+import { PostActionsUI } from "./post.actions"
+import { RepostUI } from "./repost"
 
 const PostComponent = defineComponent("x-post")
-export function Post(post: SignalReadable<PostData>) {
+export function PostUI(post: SignalReadable<Post>) {
 	const component = new PostComponent()
 
 	const postContents = $.derive(() => post.ref.contents)
@@ -34,10 +34,10 @@ export function Post(post: SignalReadable<PostData>) {
 					<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
 						<a href=${postHref} aria-label="Go to the ${() => post.ref.id}" class="backdrop-link"></a>
 						<div class="header">
-							<x ${Profile($.derive(() => post.ref.author))} class="author"></x>
+							<x ${ProfileUI($.derive(() => post.ref.author))} class="author"></x>
 							<div class="chips">
-								<span class="chain" title=${() => networkConfigs.chains[post.ref.chainKey].name}>
-									${() => networkConfigs.chains[post.ref.chainKey].name}
+								<span class="chain" title=${() => Networks.chains[post.ref.chainKey].name}>
+									${() => Networks.chains[post.ref.chainKey].name}
 								</span>
 								<a class="id post-id" href=${postHref}> ${() => post.ref.id.slice(post.ref.id.length - 5)} </a>
 								${$.match($.derive(() => post.ref.parentId))
@@ -55,27 +55,27 @@ export function Post(post: SignalReadable<PostData>) {
 									.case("text", () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
 									.case("@", () =>
 										$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) =>
-											ProfileName(address)
+											ProfileNameUI(address)
 										)
 									)
 									.case("echo", () =>
 										$.await($.derive(async () => PostId.fromUint8Array(content.ref.value))).then((postId) =>
 											$.match(postId)
 												.case(post.ref.id, () => null)
-												.default((postId) => PostFromId(postId))
+												.default((postId) => PostFromIdUI(postId))
 										)
 									)
 									.default(() => null)
 							)}
 						</div>
 						<div class="footer">
-							${() => PostActions(post.ref)}
+							${() => PostActionsUI(post.ref)}
 							<a class="created-at" href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
 						</div>
 					</div>
 				`
 			)
-			.default((echo) => Repost($.derive(() => ({ postId: PostId.fromUint8Array(echo.ref), authorAddress: post.ref.author }))))}
+			.default((echo) => RepostUI($.derive(() => ({ postId: PostId.fromUint8Array(echo.ref), authorAddress: post.ref.author }))))}
 	`
 
 	return component

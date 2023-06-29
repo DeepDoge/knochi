@@ -1,11 +1,11 @@
-import { theGraphApi } from "@/api/graph"
-import { wallet } from "@/api/wallet"
-import { PostForm } from "@/components/post-form"
-import { Profile } from "@/components/profile"
-import { Timeline } from "@/components/timeline"
+import { PostFormUI } from "@/components/post-form"
+import { ProfileUI } from "@/components/profile"
+import { TimelineUI } from "@/components/timeline"
 import { routeHash } from "@/router"
 import { createLayout } from "@/routes"
 import type { Address } from "@/utils/address"
+import { Timeline } from "@/utils/timeline"
+import { Wallet } from "@/utils/wallet"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
@@ -40,13 +40,13 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 	const page = new PageComponent()
 	const timeline = $.flatten(
 		$.match(params.tab)
-			.case("posts", () => $.derive(() => theGraphApi.createTimeline({ author: params.userAddress.ref })))
-			.case("replies", () => $.derive(() => theGraphApi.createTimeline({ author: params.userAddress.ref, replies: "only" })))
-			.case("mentions", () => $.derive(() => theGraphApi.createTimeline({ mention: params.userAddress.ref, replies: "include" })))
+			.case("posts", () => $.derive(() => Timeline.create({ author: params.userAddress.ref })))
+			.case("replies", () => $.derive(() => Timeline.create({ author: params.userAddress.ref, replies: "only" })))
+			.case("mentions", () => $.derive(() => Timeline.create({ mention: params.userAddress.ref, replies: "include" })))
 			.default()
 	)
 
-	const isMyProfile = $.derive(() => params.userAddress.ref === wallet.browserWallet.ref?.address)
+	const isMyProfile = $.derive(() => params.userAddress.ref === Wallet.browserWallet.ref?.address)
 
 	page.$html = html` <nav class="tabs">
 			<ul>
@@ -68,9 +68,9 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 			</ul>
 		</nav>
 		${$.match(isMyProfile)
-			.case(true, () => html`${PostForm($.writable(null))}`)
+			.case(true, () => html`${PostFormUI($.writable(null))}`)
 			.default(() => null)}
-		${Timeline(timeline)}`
+		${TimelineUI(timeline)}`
 
 	const TopComponent = defineComponent("x-user-layout-top")
 	const top = new TopComponent()
@@ -79,7 +79,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 			font-size: 1.1em;
 		}
 	`
-	top.$html = html` <div class="profile">${Profile(params.userAddress)}</div> `
+	top.$html = html` <div class="profile">${ProfileUI(params.userAddress)}</div> `
 
 	return {
 		top,

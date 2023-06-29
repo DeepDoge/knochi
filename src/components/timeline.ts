@@ -1,12 +1,12 @@
-import type { theGraphApi } from "@/api/graph"
+import type { Timeline } from "@/utils/timeline"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { Post } from "./post"
+import { PostUI } from "./post"
 
 const TimelineComponent = defineComponent("x-timeline")
-export function Timeline(timeline: SignalReadable<theGraphApi.Timeline>) {
+export function TimelineUI(timeline: SignalReadable<Timeline>) {
 	const component = new TimelineComponent()
 
 	const loadBottomButton = $.writable<HTMLButtonElement | null>(null)
@@ -27,7 +27,7 @@ export function Timeline(timeline: SignalReadable<theGraphApi.Timeline>) {
 				return $.await(timeline.ref.loadBottom()).then(() =>
 					$.each(posts)
 						.key((post) => `${post.chainKey}-${post.id}`)
-						.as((post) => Post(post))
+						.as((post) => PostUI(post))
 				)
 			}, [timeline])}
 		</div>

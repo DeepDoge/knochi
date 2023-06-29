@@ -1,15 +1,15 @@
-import { wallet } from "@/api/wallet"
 import { ChartFilledSvg } from "@/assets/svgs/chart-filled"
 import { ChartOutlineSvg } from "@/assets/svgs/chart-outline"
 import { HomeFilledSvg } from "@/assets/svgs/home-filled"
 import { HomeOutlineSvg } from "@/assets/svgs/home-outline"
 import { SearchSvg } from "@/assets/svgs/search"
 import { route } from "@/router"
+import { Wallet } from "@/utils/wallet"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
-import { ChainChangerButton } from "./components/chain-changer-button"
-import { MyWallet } from "./components/wallet"
+import { ChainChangerButtonUI } from "./components/chain-changer-button"
+import { MyWalletUI } from "./components/wallet"
 
 const NavigationComponent = defineComponent("x-navigation")
 export function Navigation() {
@@ -21,7 +21,7 @@ export function Navigation() {
 		<div class="left">
 			<ul>
 				<li>
-					<x ${MyWallet()} class="profile" class:active=${() => firstPartOfPath.ref === wallet.browserWallet.ref?.address}></x>
+					<x ${MyWalletUI()} class="profile" class:active=${() => firstPartOfPath.ref === Wallet.browserWallet.ref?.address}></x>
 				</li>
 			</ul>
 		</div>
@@ -52,7 +52,7 @@ export function Navigation() {
 
 		<div class="right">
 			<ul>
-				<li>${ChainChangerButton()}</li>
+				<li>${ChainChangerButtonUI()}</li>
 			</ul>
 		</div>
 	`

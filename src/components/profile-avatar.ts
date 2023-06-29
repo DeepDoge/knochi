@@ -10,7 +10,7 @@ import { $ } from "master-ts/library/$"
 const jazzicon = jazzicon_ as { (diameter: number, seed: number): HTMLElement }
 
 const ProfileAvatarComponent = defineComponent("x-profile-avatar")
-export function ProfileAvatar(address: SignalReadable<Address>) {
+export function ProfileAvatarUI(address: SignalReadable<Address>) {
 	const component = new ProfileAvatarComponent()
 
 	const avatarUrl = $.derive(

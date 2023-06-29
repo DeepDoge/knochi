@@ -1,19 +1,19 @@
-import { ProfileAddress } from "@/components/profile-address"
-import { ProfileAvatar } from "@/components/profile-avatar"
-import { ProfileName } from "@/components/profile-name"
+import { ProfileAddressUI } from "@/components/profile-address"
+import { ProfileAvatarUI } from "@/components/profile-avatar"
+import { ProfileNameUI } from "@/components/profile-name"
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 
 const ProfileComponent = defineComponent("x-profile")
-export function Profile(address: SignalReadable<Address>) {
+export function ProfileUI(address: SignalReadable<Address>) {
 	const component = new ProfileComponent()
 
 	component.$html = html`
-		<x ${ProfileAvatar(address)} class="avatar"></x>
-		<x ${ProfileName(address)} class="name"></x>
-		<div class="address">${ProfileAddress(address)}</div>
+		<x ${ProfileAvatarUI(address)} class="avatar"></x>
+		<x ${ProfileNameUI(address)} class="name"></x>
+		<div class="address">${ProfileAddressUI(address)}</div>
 	`
 
 	return component

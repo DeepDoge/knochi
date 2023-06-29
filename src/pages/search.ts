@@ -1,10 +1,10 @@
-import { theGraphApi } from "@/api/graph"
 import { SearchSvg } from "@/assets/svgs/search"
-import { Profile } from "@/components/profile"
-import { Timeline } from "@/components/timeline"
+import { ProfileUI } from "@/components/profile"
+import { TimelineUI } from "@/components/timeline"
 import { route, routeHash } from "@/router"
 import { createLayout } from "@/routes"
 import { Address } from "@/utils/address"
+import { Timeline } from "@/utils/timeline"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
@@ -51,12 +51,11 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 	})
 	const searchInputDeferredAndTrimmed = $.derive(() => searchInputDeferred.ref.trim())
 
-	const searchResults = $.derive<{ timeline: theGraphApi.Timeline; address: Address | null } | null>(() => {
+	const searchResults = $.derive<{ timeline: Timeline; address: Address | null } | null>(() => {
 		const search = searchInputDeferredAndTrimmed.ref
 		if (!search) return null
-		if (Address.isAddress(search))
-			return { timeline: theGraphApi.createTimeline({ mention: search, author: search, replies: "include" }, "or"), address: search }
-		return { timeline: theGraphApi.createTimeline({ search: search.split(/\s+/), replies: "include" }), address: null }
+		if (Address.isAddress(search)) return { timeline: Timeline.create({ mention: search, author: search, replies: "include" }, "or"), address: search }
+		return { timeline: Timeline.create({ search: search.split(/\s+/), replies: "include" }), address: null }
 	})
 
 	page.$html = html`
@@ -76,8 +75,8 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 					</p>
 					${$.match(address)
 						.case(null, () => null)
-						.default((address) => Profile(address))}
-					<x ${Timeline(timeline)} class="timeline"></x>
+						.default((address) => ProfileUI(address))}
+					<x ${TimelineUI(timeline)} class="timeline"></x>
 				`
 			})}
 	`

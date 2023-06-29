@@ -1,10 +1,10 @@
-import { wallet } from "@/api/wallet"
 import { CommentSvg } from "@/assets/svgs/comment"
 import { RepostSvg } from "@/assets/svgs/repost"
 import { routeHash } from "@/router"
-import type { PostData } from "@/utils/post"
+import type { Post } from "@/utils/post"
 import { PostContent } from "@/utils/post-content"
 import { PostId } from "@/utils/post-id"
+import { Wallet } from "@/utils/wallet"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
@@ -19,7 +19,7 @@ export type PostAction = {
 	action: Function | string
 }
 
-export function PostActions(post: PostData) {
+export function PostActionsUI(post: Post) {
 	const component = new PostActionsComponent()
 
 	async function repost() {
@@ -29,7 +29,7 @@ export function PostActions(post: PostData) {
 				value: PostId.toUint8Array(post.id),
 			},
 		])
-		await wallet.browserWallet.ref?.contracts.EternisPostDB.post(bytes)
+		await Wallet.browserWallet.ref?.contracts.EternisPostDB.post(bytes)
 	}
 
 	const postActions = [
@@ -37,7 +37,7 @@ export function PostActions(post: PostData) {
 			svg: CommentSvg(),
 			label: "Reply",
 			text: post.replyCount ? post.replyCount.toString() : null,
-			colorHsl: "var(--primary--hsl)",
+			colorHsl: "var(--accent--hsl)",
 			action: routeHash({ postId: post.id }),
 		},
 		{

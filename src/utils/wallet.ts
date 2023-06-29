@@ -1,19 +1,27 @@
-import { networkConfigs } from "@/api/network-config"
 import { connect_EternisPostDB, type EternisPostDB_Contract } from "@/contracts/artifacts/EternisPostDB"
+import { connect_EternisTipPostDB, type EternisTipPostDB_Contract } from "@/contracts/artifacts/EternisTipPostDB"
+import { Networks } from "@/networks"
 import { Address } from "@/utils/address"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 
 export type Wallet = {
-	chainKey: networkConfigs.ChainKey
+	chainKey: Networks.ChainKey
 	signer: ethers.JsonRpcSigner
 	provider: ethers.BrowserProvider
 	address: Address
 	contracts: {
 		EternisPostDB: EternisPostDB_Contract
+		EternisTipPostDB: EternisTipPostDB_Contract
 	}
 }
-export namespace wallet {
+
+const _check: keyof (typeof Networks.contracts)[Networks.ChainKey] extends keyof Wallet["contracts"]
+	? null
+	: "You forgot to add a contract to the Wallet type." = null
+_check
+
+export namespace Wallet {
 	const ethereum = "ethereum" in window ? (window.ethereum as ethers.Eip1193Provider & ethers.BrowserProvider) : null
 	export type State = "wrong-network" | "not-connected" | "connected"
 
@@ -41,7 +49,7 @@ export namespace wallet {
 		const signer = await browserProvider.getSigner()
 
 		const chainId = (await browserProvider.getNetwork()).chainId
-		const chainKey = networkConfigs.chainIdToKeyMap.get(chainId)
+		const chainKey = Networks.chainIdToKeyMap.get(chainId)
 		if (!chainKey) {
 			browserWalletStateWritable.ref = "wrong-network"
 			browserWalletWritable.ref = null
@@ -54,18 +62,19 @@ export namespace wallet {
 			provider: browserProvider,
 			address: Address.from(await signer.getAddress()),
 			contracts: {
-				EternisPostDB: connect_EternisPostDB(networkConfigs.contracts[chainKey].EternisPostDB, signer),
+				EternisPostDB: connect_EternisPostDB(Networks.contracts[chainKey].EternisPostDB, signer),
+				EternisTipPostDB: connect_EternisTipPostDB(Networks.contracts[chainKey].EternisTipPostDB, signer),
 			},
 		}
 		browserWalletStateWritable.ref = "connected"
 	}
 
-	export async function changeChain(chainKey: networkConfigs.ChainKey) {
-		const chainConfig = networkConfigs.chains[chainKey]
-		const providerConfig = networkConfigs.rpcProviders[chainKey]
+	export async function changeChain(chainKey: Networks.ChainKey) {
+		const chainConfig = Networks.chains[chainKey]
+		const providerConfig = Networks.rpcProviders[chainKey]
 		if (!browserProvider) return
 		try {
-			await browserProvider.send("wallet_switchEthereumChain", [{ chainId: `0x${chainConfig.id.toString(16)}` }])
+			await browserProvider.send("wallet_switchEthereumChain", [{ chainId: ethers.toBeHex(chainConfig.id) }])
 		} catch (err) {
 			// This error code indicates that the chain has not been added to MetaMask
 			if (err && typeof err === "object" && "code" in err && err.code === 4902) {
@@ -79,7 +88,7 @@ export namespace wallet {
 
 				const config = {
 					chainName: chainConfig.name,
-					chainId: `0x${chainConfig.id.toString(16)}`,
+					chainId: ethers.toBeHex(chainConfig.id),
 					nativeCurrency: chainConfig.currency,
 					blockExplorerUrls: [providerConfig.blockExplorer.href],
 					rpcUrls: [providerConfig.rpc.href],

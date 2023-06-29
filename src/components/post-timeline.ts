@@ -1,22 +1,23 @@
-import { theGraphApi } from "@/api/graph"
-import { PostForm } from "@/components/post-form"
-import { Timeline } from "@/components/timeline"
+import { PostFormUI } from "@/components/post-form"
+import { TimelineUI } from "@/components/timeline"
 import { route, routeHash } from "@/router"
+import { Post } from "@/utils/post"
 import type { PostId } from "@/utils/post-id"
+import { Timeline } from "@/utils/timeline"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { Post } from "./post"
+import { PostUI } from "./post"
 
 const PostTimelineComponent = defineComponent("x-post-timeline")
-export function PostTimeline(postId: SignalReadable<PostId>) {
+export function PostTimelineUI(postId: SignalReadable<PostId>) {
 	const component = new PostTimelineComponent()
 
-	const post = $.await($.derive(() => theGraphApi.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId]))
+	const post = $.await($.derive(() => Post.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId]))
 		.error((error) => error)
 		.then()
-	const repliesTimeline = $.derive(() => theGraphApi.createTimeline({ parentId: postId.ref }))
+	const repliesTimeline = $.derive(() => Timeline.create({ parentId: postId.ref }))
 
 	component.$html = html`
 		<div class="top">
@@ -36,12 +37,12 @@ export function PostTimeline(postId: SignalReadable<PostId>) {
 							</div>
 						`
 					)
-					.default((post) => Post(post))}
+					.default((post) => PostUI(post))}
 			</div>
 			<div class="replies">
 				<h3 class="title">Replies</h3>
-				<x ${PostForm(postId)} class="form"></x>
-				<x ${Timeline(repliesTimeline)} class="timeline"></x>
+				<x ${PostFormUI(postId)} class="form"></x>
+				<x ${TimelineUI(repliesTimeline)} class="timeline"></x>
 			</div>
 		</div>
 	`

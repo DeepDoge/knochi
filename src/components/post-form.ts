@@ -1,11 +1,11 @@
-import { wallet } from "@/api/wallet"
 import { PaperPlaneSvg } from "@/assets/svgs/paper-plane"
-import { ProfileAvatar } from "@/components/profile-avatar"
-import { ProfileName } from "@/components/profile-name"
+import { ProfileAvatarUI } from "@/components/profile-avatar"
+import { ProfileNameUI } from "@/components/profile-name"
 import { requireWallet } from "@/components/wallet"
 import { route } from "@/router"
 import { PostContent } from "@/utils/post-content"
 import { PostId } from "@/utils/post-id"
+import { Wallet } from "@/utils/wallet"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
@@ -13,7 +13,7 @@ import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 
 const PostFormComponent = defineComponent("x-post-form")
-export function PostForm(parentId: SignalReadable<PostId | null>) {
+export function PostFormUI(parentId: SignalReadable<PostId | null>) {
 	const component = new PostFormComponent()
 
 	const state = $.writable<"loading" | "idle" | Error>("idle")
@@ -29,8 +29,8 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 	async function sendPost() {
 		try {
 			state.ref = "loading"
-			if (!wallet.browserWallet.ref) throw new Error(wallet.browserWalletState.ref)
-			await wallet.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
+			if (!Wallet.browserWallet.ref) throw new Error(Wallet.browserWalletState.ref)
+			await Wallet.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)
@@ -63,8 +63,8 @@ export function PostForm(parentId: SignalReadable<PostId | null>) {
 
 			return html`
 				<form on:submit=${(e) => (e.preventDefault(), sendPost())} class:loading=${loading}>
-					<x ${ProfileAvatar(profileAddress)} class="profile-avatar"></x>
-					<x ${ProfileName(profileAddress)} class="profile-name"></x>
+					<x ${ProfileAvatarUI(profileAddress)} class="profile-avatar"></x>
+					<x ${ProfileNameUI(profileAddress)} class="profile-name"></x>
 					<div class="fields">
 						<textarea
 							required

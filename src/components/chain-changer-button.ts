@@ -1,24 +1,24 @@
-import { wallet } from "@/api/wallet"
 import { spawnFloatingBox } from "@/components/floating-box"
+import { Wallet } from "@/utils/wallet"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import { css, html } from "master-ts/library/template"
-import { ChainButton } from "./chain-button"
-import { ChainChanger } from "./chain-changer"
+import { ChainButtonUI } from "./chain-button"
+import { ChainChangerUI } from "./chain-changer"
 
 const ChainChangerButtonComponent = defineComponent("x-chain-changer-button")
-export function ChainChangerButton() {
+export function ChainChangerButtonUI() {
 	const component = new ChainChangerButtonComponent()
 
 	component.$html = html`
-		${$.match(wallet.browserWallet)
+		${$.match(Wallet.browserWallet)
 			.case(null, () => null)
 			.default(
 				(wallet) =>
 					html`
 						<x
-							${ChainButton($.derive(() => wallet.ref.chainKey))}
-							on:click=${(e: MouseEvent) => (e.preventDefault(), spawnFloatingBox(e, ChainChanger()))}></x>
+							${ChainButtonUI($.derive(() => wallet.ref.chainKey))}
+							on:click=${(e: MouseEvent) => (e.preventDefault(), spawnFloatingBox(e, ChainChangerUI()))}></x>
 					`
 			)}
 	`

@@ -1,4 +1,4 @@
-import { PostTimeline } from "@/components/post-timeline"
+import { PostTimelineUI } from "@/components/post-timeline"
 import "@/import-styles"
 import { Navigation } from "@/navigation"
 import { route } from "@/router"
@@ -21,7 +21,7 @@ function App() {
 				<div class="page">${() => routerLayout.ref.page}</div>
 				${$.match(route.postId)
 					.case(null, () => null)
-					.default((postId) => html` <div class="post">${PostTimeline(postId)}</div>`)}
+					.default((postId) => html` <div class="post">${PostTimelineUI(postId)}</div>`)}
 			</div>
 		</main>
 	`

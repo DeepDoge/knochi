@@ -3,10 +3,11 @@ import graphVersionLabel from "@/../graph/version-label.json"
 import { EthereumChainSvg } from "@/assets/svgs/chains/ethereum"
 import { PolygonChainSvg } from "@/assets/svgs/chains/polygon"
 import { Address } from "@/utils/address"
+import { cacheExchange, createClient, fetchExchange } from "urql"
 
 // TODO: all of these should be able to be changed by the user, so make something like config page, dont bother with the reactivity just reload on save
 
-export namespace networkConfigs {
+export namespace Networks {
 	export const chains = {
 		mumbai: {
 			id: 80001n,
@@ -48,9 +49,11 @@ export namespace networkConfigs {
 	export const contracts = {
 		mumbai: {
 			EternisPostDB: Address.from("0xA4A0Db3C5739C5E8cb63Fe86c6d5103558D8B19d"),
+			EternisTipPostDB: Address.from("0x0a0b0c0d0e0f0102030405060708090a0b0c0d0e"),
 		} as const,
 		sepolia: {
 			EternisPostDB: Address.from("0xcE1EEfdf8A9F638D4134F240ED134ECBedac7730"),
+			EternisTipPostDB: Address.from("0x0a0b0c0d0e0f0102030405060708090a0b0c0d0e"),
 		} as const,
 	} as const satisfies Record<ChainKey, Record<string, Address>>
 
@@ -63,10 +66,21 @@ export namespace networkConfigs {
 		} as const,
 	} as const satisfies Record<ChainKey, GraphConfig>
 
+	export const graphClients = Object.entries(Networks.graphs).map(([key, value]) => ({
+		key: key as ChainKey,
+		urqlClient: createClient({
+			url: value.api.href,
+			exchanges: [cacheExchange, fetchExchange],
+		}),
+	}))
+	export type GraphClient = (typeof graphClients)[number]
+
+	export const chainKeyToGraphClient: Record<string, GraphClient> = {}
+	for (const graphClient of graphClients) chainKeyToGraphClient[graphClient.key] = graphClient
+
 	export const chainIdToKeyMap = new Map<bigint, ChainKey>(Object.entries(chains).map(([key, chain]) => [chain.id, key as ChainKey]))
 
 	export type ChainKey = keyof typeof networksJson
-	export type ContractName = keyof (typeof networksJson)[keyof typeof networksJson]
 
 	export type ChainCurrencyConfig = { name: string; decimals: number; symbol: string }
 

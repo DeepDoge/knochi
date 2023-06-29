@@ -6,10 +6,10 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
-import { PostFromId } from "./post-from-id"
+import { PostFromIdUI } from "./post-from-id"
 
 const RepostComponent = defineComponent("x-repost")
-export function Repost(echo: SignalReadable<{ postId: PostId; authorAddress: Address }>) {
+export function RepostUI(echo: SignalReadable<{ postId: PostId; authorAddress: Address }>) {
 	const component = new RepostComponent()
 
 	const postId = $.derive(() => echo.ref.postId)
@@ -19,7 +19,7 @@ export function Repost(echo: SignalReadable<{ postId: PostId; authorAddress: Add
 		<div class="author">
 			${RepostSvg()} <span class="text"><a href=${() => routeHash({ path: authorAddress.ref })}>${authorAddress}</a> reposted</span>
 		</div>
-		${PostFromId(postId)}
+		${PostFromIdUI(postId)}
 	`
 
 	return component
