@@ -16,9 +16,8 @@ export type Wallet = {
 	}
 }
 
-const _check: keyof (typeof Networks.contracts)[Networks.ChainKey] extends keyof Wallet["contracts"]
-	? null
-	: "You forgot to add a contract to the Wallet type." = null
+const _check: keyof (typeof Networks.contracts)[Networks.ChainKey] extends keyof Wallet["contracts"] ? string : "" =
+	"You didn't update the Wallet type to include the new contract."
 _check
 
 export namespace Wallet {
