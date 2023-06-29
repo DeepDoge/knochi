@@ -32,7 +32,7 @@ export function PostUI(post: SignalReadable<Post>) {
 				null,
 				() => html`
 					<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
-						<a href=${postHref} aria-label="Go to the ${() => post.ref.id}" class="backdrop-link"></a>
+						<a href=${postHref} aria-label="Go to the ${() => post.ref.id}" class="btn-glass backdrop-link"></a>
 						<div class="header">
 							<x ${ProfileUI($.derive(() => post.ref.author))} class="author"></x>
 							<div class="chips">
@@ -85,6 +85,8 @@ PostComponent.$css = css`
 	:host {
 		display: contents;
 		font-size: 1rem;
+
+		--glass-color--alpha: 1%;
 	}
 
 	.post {
@@ -106,9 +108,10 @@ PostComponent.$css = css`
 		}
 
 		isolation: isolate;
+		contain: paint;
 		& > :not(.backdrop-link) {
 			pointer-events: none;
-			& > * {
+			&:not(.content) > * {
 				pointer-events: all;
 			}
 		}

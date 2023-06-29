@@ -66,8 +66,8 @@
 		outline: none;
 	}
 
-	.btn-glass,
-	.btn-glass-text {
+	/* TODO: remove this class later, just inline stuff into component per component, special for the component */
+	.btn-glass {
 		display: inline-block;
 		appearance: none;
 		border: none;
@@ -81,16 +81,17 @@
 		transition-property: background-color;
 
 		--default-color-hsl: var(--base--text-hsl);
+		--active-alpha: calc(var(--glass-color--alpha, 10%) + 10%);
 		background-color: transparent;
 		color: hsl(var(--default-color-hsl));
 
 		&:hover {
-			background-color: hsl(var(--glass-color--hsl, var(--default-color-hsl)), 10%);
+			background-color: hsl(var(--glass-color--hsl, var(--default-color-hsl)), var(--glass-color--alpha, 10%));
 			color: hsl(var(--glass-color--hsl, var(--default-color-hsl)));
 		}
 
 		&:active {
-			background-color: hsl(var(--glass-color--hsl, var(--base--text-hsl)), 20%);
+			background-color: hsl(var(--glass-color--hsl, var(--base--text-hsl)), var(--active-alpha));
 			color: hsl(var(--glass-color--hsl, var(--default-color-hsl)));
 		}
 	}
