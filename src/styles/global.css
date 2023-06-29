@@ -77,19 +77,21 @@
 		font: inherit;
 		cursor: pointer;
 
-		background-color: transparent;
-
 		transition: var(--transition);
 		transition-property: background-color;
 
+		--default-color-hsl: var(--base--text-hsl);
+		background-color: transparent;
+		color: hsl(var(--default-color-hsl));
+
 		&:hover {
-			background-color: hsl(var(--glass-color--hsl, var(--base--text-hsl)), 10%);
-			color: hsl(var(--glass-color--hsl, var(--base--text-hsl)));
+			background-color: hsl(var(--glass-color--hsl, var(--default-color-hsl)), 10%);
+			color: hsl(var(--glass-color--hsl, var(--default-color-hsl)));
 		}
 
 		&:active {
 			background-color: hsl(var(--glass-color--hsl, var(--base--text-hsl)), 20%);
-			color: hsl(var(--glass-color--hsl, var(--base--text-hsl)));
+			color: hsl(var(--glass-color--hsl, var(--default-color-hsl)));
 		}
 	}
 
