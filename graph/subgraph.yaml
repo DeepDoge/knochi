@@ -1,23 +1,23 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+    file: ./schema.graphql
 dataSources:
-  - kind: ethereum
-    name: IEternisPostDB
-    network: sepolia
-    source:
-      abi: IEternisPostDB
-      startBlock: 3325895
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - EternisPost
-      abis:
-        - name: IEternisPostDB
-          file: ../src/contracts/artifacts/IEternisPostDB.json
-      eventHandlers:
-        - event: EternisPost(uint256,bytes)
-          handler: map
-      file: ./src/mapping-mumbai.ts
+    - kind: ethereum
+      name: IEternisPostDB
+      network: sepolia
+      source:
+          abi: IEternisPostDB
+          startBlock: 3325895
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          entities:
+              - EternisPost
+          abis:
+              - name: IEternisPostDB
+                file: ../src/contracts/artifacts/IEternisPostDB.json
+          eventHandlers:
+              - event: EternisPost(uint256,bytes)
+                handler: map
+          file: ./src/mapping-mumbai.ts
