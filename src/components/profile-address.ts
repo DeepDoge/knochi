@@ -10,7 +10,6 @@ export function ProfileAddressUI(address: SignalReadable<Address>) {
 
 	component.$html = html`
 		<button
-			class="btn-glass"
 			on:click=${(e) => (
 				e.preventDefault(),
 				navigator.clipboard.writeText(address.ref).then(() => alert(`Address copied to clipboard\nTODO: Add toast notifactions etc..`))
@@ -27,6 +26,14 @@ export function ProfileAddressUI(address: SignalReadable<Address>) {
 ProfileAddressComponent.$css = css`
 	:host {
 		display: contents;
+	}
+
+	button {
+		border: none;
+		padding: 0;
+		appearance: none;
+		cursor: pointer;
+		font: inherit;
 	}
 
 	button {
@@ -50,6 +57,21 @@ ProfileAddressComponent.$css = css`
 
 		& > span:nth-child(2 of span) {
 			grid-area: address-end;
+		}
+	}
+
+	/* glass effect */
+	button {
+		background-color: transparent;
+
+		transition: var(--transition);
+		transition-property: background-color;
+
+		&:hover {
+			background-color: hsl(var(--base--text-hsl), 0.1);
+		}
+		&:active {
+			background-color: hsl(var(--base--text-hsl), 0.2);
 		}
 	}
 `

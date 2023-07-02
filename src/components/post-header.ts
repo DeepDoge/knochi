@@ -48,7 +48,6 @@ PostHeaderComponent.$css = css`
 
 	.author {
 		grid-area: author;
-		font-size: 0.95em;
 	}
 
 	.chain {
@@ -62,13 +61,13 @@ PostHeaderComponent.$css = css`
 		grid-area: ids;
 		display: grid;
 		grid-auto-flow: column;
-		gap: calc(var(--span) * 0.25);
+		gap: calc(var(--span) * 0.5);
+		font-size: 0.8em;
 		align-items: center;
 
 		.id {
 			padding: 0.25em 0.5em;
 			border-radius: var(--radius);
-			font-size: 0.75em;
 
 			&::before {
 				content: "@";

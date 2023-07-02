@@ -53,15 +53,15 @@ export function PostActionsUI(post: Post) {
 		${$.each(postActions).as((postAction) => {
 			if (typeof postAction.action === "string")
 				return html`
-					<a class="ghost" href=${postAction.action} title=${postAction.label} style:--glass-color--hsl=${postAction.colorHsl}>
-						<x ${postAction.svg} class="btn-glass" aria-label=${postAction.label}></x>
+					<a class="ghost" href=${postAction.action} title=${postAction.label} style:--color--hsl=${postAction.colorHsl}>
+						<x ${postAction.svg} aria-label=${postAction.label}></x>
 						${postAction.text}
 					</a>
 				`
 			else
 				return html`
-					<button class="ghost" on:click=${postAction.action} title=${postAction.label} style:--glass-color--hsl=${postAction.colorHsl}>
-						<x ${postAction.svg} class="btn-glass" aria-label=${postAction.label}></x>
+					<button class="ghost" on:click=${postAction.action} title=${postAction.label} style:--color--hsl=${postAction.colorHsl}>
+						<x ${postAction.svg} aria-label=${postAction.label}></x>
 						${postAction.text}
 					</button>
 				`
@@ -84,10 +84,25 @@ PostActionsComponent.$css = css`
 		grid-template-columns: 2.25em auto;
 		gap: calc(var(--span) * 0.5);
 		align-items: center;
+		text-decoration: none;
+		color: inherit;
+		font: inherit;
+		cursor: pointer;
 
 		& > svg {
 			border-radius: var(--radius-fab);
 			padding: calc(var(--span) * 0.5);
+		}
+	}
+
+	:host > * {
+		&:hover,
+		&:focus-visible {
+			color: hsl(var(--color--hsl));
+
+			& > svg {
+				background-color: hsl(var(--color--hsl), 0.1);
+			}
 		}
 	}
 `

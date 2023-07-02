@@ -8,6 +8,9 @@
 		text-decoration: inherit;
 		color: inherit;
 	}
+	a:hover {
+		text-decoration: underline;
+	}
 
 	.link {
 		color: hsl(var(--second--hsl));
@@ -66,40 +69,11 @@
 		outline: none;
 	}
 
-	/* TODO: remove this class later, just inline stuff into component per component, special for the component */
-	.btn-glass {
-		display: inline-block;
-		appearance: none;
-		border: none;
-		outline: none;
-		padding: 0;
-		margin: 0;
-		font: inherit;
-		cursor: pointer;
-
-		transition: var(--transition);
-		transition-property: background-color;
-
-		--default-color-hsl: var(--base--text-hsl);
-		--active-alpha: calc(var(--glass-color--alpha, 10%) + 10%);
-		background-color: transparent;
-		color: hsl(var(--default-color-hsl));
-
-		&:hover {
-			background-color: hsl(var(--glass-color--hsl, var(--default-color-hsl)), var(--glass-color--alpha, 10%));
-			color: hsl(var(--glass-color--hsl, var(--default-color-hsl)));
-		}
-
-		&:active {
-			background-color: hsl(var(--glass-color--hsl, var(--base--text-hsl)), var(--active-alpha));
-			color: hsl(var(--glass-color--hsl, var(--default-color-hsl)));
-		}
-	}
-
 	.btn {
 		position: relative;
 		display: inline-block;
 		text-align: center;
+		text-decoration: none;
 
 		border-radius: var(--radius);
 		border: 1px solid transparent;

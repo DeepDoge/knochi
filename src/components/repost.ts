@@ -46,8 +46,4 @@ RepostComponent.$css = css`
 	.text {
 		font-size: 0.8em;
 	}
-
-	a:hover {
-		text-decoration: underline;
-	}
 `

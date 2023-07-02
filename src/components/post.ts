@@ -29,8 +29,11 @@ export function PostUI(post: SignalReadable<Post>) {
 			.case(
 				null,
 				() => html`
-					<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
-						<a href=${postHref} aria-label="Go to the ${() => post.ref.id}" class="btn-glass backdrop-link"></a>
+					<div
+						class="post"
+						class:active=${() => route.postId.ref === post.ref.id}
+						on:click=${() => (location.hash = postHref.ref)}
+						style:cursor=${() => (route.postId.ref === post.ref.id ? "default" : "pointer")}>
 						${PostHeaderUI(post)}
 						<div class="content">
 							${$.each(postContents).as((content) =>
@@ -69,8 +72,6 @@ PostComponent.$css = css`
 	:host {
 		display: contents;
 		font-size: 1rem;
-
-		--glass-color--alpha: 1%;
 	}
 
 	.post {
@@ -79,7 +80,7 @@ PostComponent.$css = css`
 
 		display: grid;
 		gap: calc(var(--span) * 0.5);
-		padding: calc(var(--span) * 0.75) calc(var(--span) * 0.75);
+		padding: calc(var(--span) * 0.75);
 
 		background-color: hsl(var(--base--hsl), 0.5);
 		color: hsl(var(--base--text-hsl));
@@ -91,18 +92,28 @@ PostComponent.$css = css`
 			border-color: hsl(var(--second--hsl));
 		}
 
-		isolation: isolate;
 		contain: paint;
-		& > :not(.backdrop-link) {
-			pointer-events: none;
-			&:not(.content) > * {
-				pointer-events: all;
-			}
-		}
-		& > .backdrop-link {
+	}
+
+	/* glass effect */
+	.post {
+		&::before {
+			content: "";
 			position: absolute;
 			inset: 0;
-			z-index: -1;
+
+			background-color: transparent;
+
+			transition: var(--transition);
+			transition-property: background-color;
+
+			pointer-events: none;
+		}
+		&:hover::before {
+			background-color: hsl(var(--base--text-hsl), 0.025);
+		}
+		&:active::before {
+			background-color: hsl(var(--base--text-hsl), 0.05);
 		}
 	}
 
