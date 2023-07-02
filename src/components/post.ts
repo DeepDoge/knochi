@@ -1,6 +1,4 @@
-import { ProfileUI } from "@/components/profile"
 import { ProfileNameUI } from "@/components/profile-name"
-import { Networks } from "@/networks"
 import { route, routeHash } from "@/router"
 import { Address } from "@/utils/address"
 import type { Post } from "@/utils/post"
@@ -12,6 +10,7 @@ import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 import { PostFromIdUI } from "./post-from-id"
+import { PostHeaderUI } from "./post-header"
 import { PostActionsUI } from "./post.actions"
 import { RepostUI } from "./repost"
 
@@ -24,7 +23,6 @@ export function PostUI(post: SignalReadable<Post>) {
 	const echoOnly = $.derive(() => (postContents.ref.length === 1 && postContents.ref[0]!.type === "echo" ? postContents.ref[0]!.value : null))
 
 	const postHref = $.derive(() => routeHash({ postId: post.ref.id }))
-	const parentHref = $.derive(() => routeHash({ postId: post.ref.parentId }))
 
 	component.$html = html`
 		${$.match(echoOnly)
@@ -33,21 +31,7 @@ export function PostUI(post: SignalReadable<Post>) {
 				() => html`
 					<div class="post" class:active=${() => route.postId.ref === post.ref.id}>
 						<a href=${postHref} aria-label="Go to the ${() => post.ref.id}" class="btn-glass backdrop-link"></a>
-						<div class="header">
-							<x ${ProfileUI($.derive(() => post.ref.author))} class="author"></x>
-							<div class="chips">
-								<span class="chain" title=${() => Networks.chains[post.ref.chainKey].name}>
-									${() => Networks.chains[post.ref.chainKey].name}
-								</span>
-								<a class="id post-id" href=${postHref}> ${() => post.ref.id.slice(post.ref.id.length - 5)} </a>
-								${$.match($.derive(() => post.ref.parentId))
-									.case(null, () => null)
-									.default(
-										(parentId) =>
-											html`<a class="id parent-id" href=${parentHref}> ${() => parentId.ref.slice(parentId.ref.length - 5)} </a>`
-									)}
-							</div>
-						</div>
+						${PostHeaderUI(post)}
 						<div class="content">
 							${$.each(postContents).as((content) =>
 								$.match($.derive(() => content.ref.type))
@@ -122,19 +106,6 @@ PostComponent.$css = css`
 		}
 	}
 
-	.header {
-		display: grid;
-		grid-auto-flow: column;
-		gap: calc(var(--span) * 0.5);
-		align-items: center;
-		justify-content: space-between;
-		font-size: 0.75em;
-	}
-
-	.author {
-		font-size: 0.95em;
-	}
-
 	.content {
 		font-size: 1.1em;
 
@@ -153,38 +124,5 @@ PostComponent.$css = css`
 
 		align-items: center;
 		justify-content: space-between;
-	}
-
-	.chips {
-		display: grid;
-		grid-auto-flow: column;
-		align-items: center;
-		gap: 0.5em;
-
-		& > a {
-			padding: calc(var(--span) * 0) calc(var(--span) * 0.5);
-
-			&::before {
-				content: "@";
-			}
-		}
-		& > * {
-			display: block;
-			border-radius: var(--radius);
-
-			&.chain {
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
-			&.post-id {
-				color: hsl(var(--second--text-hsl));
-				background-color: hsl(var(--second--hsl), 75%);
-			}
-			&.parent-id {
-				color: hsl(var(--accent--text-hsl));
-				background-color: hsl(var(--accent--hsl), 75%);
-			}
-		}
 	}
 `
