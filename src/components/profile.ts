@@ -39,5 +39,7 @@ ProfileComponent.$css = css`
 	}
 	.address {
 		grid-area: address;
+		color: hsl(var(--base-text--hsl), 0.65);
+		font-size: 0.9em;
 	}
 `

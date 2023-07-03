@@ -77,6 +77,7 @@ PostActionsComponent.$css = css`
 		grid-auto-flow: column;
 		gap: calc(var(--span) * 1);
 		align-items: center;
+		color: hsl(var(--base-text--hsl), 0.65);
 	}
 
 	:host > * {
@@ -84,10 +85,13 @@ PostActionsComponent.$css = css`
 		grid-template-columns: 2.25em auto;
 		gap: calc(var(--span) * 0.5);
 		align-items: center;
-		text-decoration: none;
 		color: inherit;
 		font: inherit;
 		cursor: pointer;
+
+		&:hover {
+			text-decoration: none;
+		}
 
 		& > svg {
 			border-radius: var(--radius-fab);

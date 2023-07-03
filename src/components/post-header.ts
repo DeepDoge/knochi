@@ -48,6 +48,7 @@ PostHeaderComponent.$css = css`
 
 	.author {
 		grid-area: author;
+		font-size: 0.95em;
 	}
 
 	.chain {
@@ -55,6 +56,7 @@ PostHeaderComponent.$css = css`
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		color: hsl(var(--base-text--hsl), 0.65);
 	}
 
 	.ids {
@@ -74,12 +76,12 @@ PostHeaderComponent.$css = css`
 			}
 		}
 		.post-id {
-			color: hsl(var(--second--text-hsl));
-			background-color: hsl(var(--second--hsl), 75%);
+			color: hsl(var(--second-text--hsl), 0.65);
+			background-color: hsl(var(--second--hsl), 0.65);
 		}
 		.parent-id {
-			color: hsl(var(--accent--text-hsl));
-			background-color: hsl(var(--accent--hsl), 75%);
+			color: hsl(var(--accent-text--hsl), 0.65);
+			background-color: hsl(var(--accent--hsl), 0.65);
 		}
 	}
 `

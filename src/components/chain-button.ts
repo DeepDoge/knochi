@@ -15,7 +15,7 @@ export function ChainButtonUI(key: SignalReadable<Networks.ChainKey>) {
 			class="btn"
 			title=${() => chain.ref.name}
 			style:--current--background-hsl=${() => chain.ref.colorBackgroundHsl}
-			style:--current--text-hsl=${() => chain.ref.colorTextHsl}>
+			style:--current-text--hsl=${() => chain.ref.colorTextHsl}>
 			${() => chain.ref.iconSvg()}
 		</button>
 	`
@@ -35,7 +35,7 @@ ChainButtonComponent.$css = css`
 		aspect-ratio: 1;
 		padding: 0;
 
-		color: hsl(var(--current--text-hsl));
+		color: hsl(var(--current-text--hsl));
 		background-color: hsl(var(--current--background-hsl));
 	}
 `

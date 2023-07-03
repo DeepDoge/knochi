@@ -74,11 +74,11 @@ NavigationComponent.$css = css`
 		padding-bottom: calc(var(--span) * 0.25);
 
 		--current--hsl: var(--background--hsl);
-		--current--text-hsl: var(--background--text-hsl);
+		--current-text--hsl: var(--background-text--hsl), 0.85;
 		--current--backdrop-hsl: var(--primary--hsl);
 
 		&.left {
-			--current--text-hsl: var(--background--text-hsl);
+			--current-text--hsl: var(--background-text--hsl);
 			justify-content: start;
 			& > ul {
 				border-radius: 0 var(--radius-rounded) var(--radius-rounded) 0;
@@ -102,7 +102,7 @@ NavigationComponent.$css = css`
 			contain: paint;
 
 			background: hsl(var(--current--hsl), 60%);
-			color: hsl(var(--current--text-hsl));
+			color: hsl(var(--current-text--hsl));
 		}
 
 		& > ul {
@@ -124,7 +124,7 @@ NavigationComponent.$css = css`
 					grid-template-columns: 1.5em;
 					place-items: center;
 
-					color: hsl(var(--current--text-hsl));
+					color: hsl(var(--current-text--hsl));
 
 					border-radius: var(--radius);
 				}

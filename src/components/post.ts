@@ -9,9 +9,9 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
+import { PostActionsUI } from "./post-actions"
 import { PostFromIdUI } from "./post-from-id"
 import { PostHeaderUI } from "./post-header"
-import { PostActionsUI } from "./post.actions"
 import { RepostUI } from "./repost"
 
 const PostComponent = defineComponent("x-post")
@@ -83,7 +83,7 @@ PostComponent.$css = css`
 		padding: calc(var(--span) * 0.75);
 
 		background-color: hsl(var(--base--hsl), 0.5);
-		color: hsl(var(--base--text-hsl));
+		color: hsl(var(--base-text--hsl));
 
 		border-radius: var(--radius);
 		border: calc(var(--span) * 0.1) solid transparent;
@@ -110,10 +110,10 @@ PostComponent.$css = css`
 			pointer-events: none;
 		}
 		&:hover::before {
-			background-color: hsl(var(--base--text-hsl), 0.025);
+			background-color: hsl(var(--base-text--hsl), 0.025);
 		}
 		&:active::before {
-			background-color: hsl(var(--base--text-hsl), 0.05);
+			background-color: hsl(var(--base-text--hsl), 0.05);
 		}
 	}
 
@@ -135,5 +135,9 @@ PostComponent.$css = css`
 
 		align-items: center;
 		justify-content: space-between;
+	}
+
+	.created-at {
+		color: hsl(var(--base-text--hsl), 0.65);
 	}
 `

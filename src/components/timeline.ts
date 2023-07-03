@@ -52,6 +52,8 @@ TimelineComponent.$css = css`
 
 	button.load-more {
 		justify-self: center;
+		color: hsl(var(--base-text--hsl));
+		background: hsl(var(--base--hsl));
 
 		&:not(:disabled) {
 			display: none;

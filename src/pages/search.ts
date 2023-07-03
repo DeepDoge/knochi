@@ -31,10 +31,10 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 		}
 
 		.result-title {
-			opacity: 0.8;
+			color: hsl(var(--base-text--hsl), 0.65);
 		}
 		.result-text {
-			opacity: 0.6;
+			color: hsl(var(--base-text--hsl), 0.65);
 			font-style: italic;
 		}
 	`

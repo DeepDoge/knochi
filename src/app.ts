@@ -33,7 +33,7 @@ function App() {
 AppComponent.$css = css`
 	:host {
 		display: grid;
-		--space: var(--span);
+		--space: calc(var(--span) * 0.75);
 	}
 
 	header {

@@ -31,9 +31,14 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 			display: grid;
 		}
 
+		.tabs ul li a {
+			color: hsl(var(--base-text--hsl), 0.65);
+			background-color: hsl(var(--base--hsl));
+		}
+
 		.tabs ul li a.active {
-			background-color: hsl(var(--primary--hsl), 75%);
-			color: hsl(var(--primary--text-hsl));
+			background-color: hsl(var(--primary--hsl), 0.75);
+			color: hsl(var(--primary-text--hsl));
 		}
 	`
 

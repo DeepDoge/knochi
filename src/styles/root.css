@@ -5,9 +5,10 @@
 		font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 		line-height: 1.5;
 		font-weight: 400;
+		font-size: clamp(0.85rem, 1.2vw, 1rem);
 
 		color-scheme: dark;
-		color: hsl(var(--background--text-hsl));
+		color: hsl(var(--background-text--hsl));
 		background-color: hsl(var(--background--hsl));
 
 		font-synthesis: none;
@@ -25,7 +26,7 @@
 	:root {
 		--text--flip-after: 0.65;
 		--text--lightness-min: 0.08;
-		--text--lightness-max: 0.93;
+		--text--lightness-max: 0.95;
 		--text--saturation-value: 0.22;
 
 		--primary--hue: 250;
@@ -132,7 +133,7 @@
 		--primary--lightness: calc(100% * var(--primary--lightness-value));
 
 		--primary--hsl: var(--primary--hue), var(--primary--saturation), var(--primary--lightness);
-		--primary--text-hsl: var(--primary--hue), calc(100% * var(--text--saturation-value)),
+		--primary-text--hsl: var(--primary--hue), calc(100% * var(--text--saturation-value)),
 			calc(
 				100% *
 					max(
@@ -149,7 +150,7 @@
 		--second--lightness: calc(100% * var(--second--lightness-value));
 
 		--second--hsl: var(--second--hue), var(--second--saturation), var(--second--lightness);
-		--second--text-hsl: var(--second--hue), calc(100% * var(--text--saturation-value)),
+		--second-text--hsl: var(--second--hue), calc(100% * var(--text--saturation-value)),
 			calc(
 				100% *
 					max(
@@ -166,7 +167,7 @@
 		--accent--lightness: calc(100% * var(--accent--lightness-value));
 
 		--accent--hsl: var(--accent--hue), var(--accent--saturation), var(--accent--lightness);
-		--accent--text-hsl: var(--accent--hue), calc(100% * var(--text--saturation-value)),
+		--accent-text--hsl: var(--accent--hue), calc(100% * var(--text--saturation-value)),
 			calc(
 				100% *
 					max(
@@ -183,7 +184,7 @@
 		--base--lightness: calc(100% * var(--base--lightness-value));
 
 		--base--hsl: var(--base--hue), var(--base--saturation), var(--base--lightness);
-		--base--text-hsl: var(--base--hue), calc(100% * var(--text--saturation-value)),
+		--base-text--hsl: var(--base--hue), calc(100% * var(--text--saturation-value)),
 			calc(
 				100% *
 					max(
@@ -200,7 +201,7 @@
 		--background--lightness: calc(100% * var(--background--lightness-value));
 
 		--background--hsl: var(--background--hue), var(--background--saturation), var(--background--lightness);
-		--background--text-hsl: var(--background--hue), calc(100% * var(--text--saturation-value)),
+		--background-text--hsl: var(--background--hue), calc(100% * var(--text--saturation-value)),
 			calc(
 				100% *
 					max(

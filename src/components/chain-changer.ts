@@ -33,7 +33,7 @@ ChainChangerComponent.$css = css`
 		padding-bottom: calc(var(--span) * 1.5);
 
 		background-color: hsl(var(--base--hsl));
-		color: hsl(var(--base--text-hsl));
+		color: hsl(var(--base-text--hsl));
 		border: solid 1px hsl(var(--primary--hsl));
 		border-radius: var(--radius);
 	}

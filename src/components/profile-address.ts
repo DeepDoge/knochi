@@ -68,10 +68,10 @@ ProfileAddressComponent.$css = css`
 		transition-property: background-color;
 
 		&:hover {
-			background-color: hsl(var(--base--text-hsl), 0.1);
+			background-color: hsl(var(--base-text--hsl), 0.1);
 		}
 		&:active {
-			background-color: hsl(var(--base--text-hsl), 0.2);
+			background-color: hsl(var(--base-text--hsl), 0.2);
 		}
 	}
 `

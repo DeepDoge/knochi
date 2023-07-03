@@ -32,8 +32,8 @@ RepostComponent.$css = css`
 	}
 
 	.author {
-		font-size: 1em;
-		opacity: 0.8;
+		font-size: 0.9em;
+		color: hsl(var(--base-text--hsl), 0.65);
 	}
 
 	.author {

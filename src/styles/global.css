@@ -12,11 +12,8 @@
 		text-decoration: underline;
 	}
 
-	.link {
-		color: hsl(var(--second--hsl));
-	}
-	.link:hover {
-		color: hsl(var(--second--hsl));
+	button {
+		color: inherit;
 	}
 
 	h1 {
@@ -46,7 +43,7 @@
 		font-family: inherit;
 
 		background-color: hsl(var(--base--hsl));
-		color: hsl(var(--base--text-hsl));
+		color: hsl(var(--base-text--hsl));
 	}
 
 	.input:focus-within,
@@ -73,7 +70,6 @@
 		position: relative;
 		display: inline-block;
 		text-align: center;
-		text-decoration: none;
 
 		border-radius: var(--radius);
 		border: 1px solid transparent;
@@ -81,11 +77,12 @@
 		font-size: 1em;
 		font-weight: 500;
 		font-family: inherit;
-		background-color: hsl(var(--base--hsl));
-		color: hsl(var(--base--text-hsl));
 		cursor: pointer;
 		transition: var(--transition);
 		transition-property: border;
+	}
+	.btn:hover {
+		text-decoration: none;
 	}
 	.btn::before {
 		content: "";
