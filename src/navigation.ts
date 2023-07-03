@@ -50,7 +50,7 @@ export function Navigation() {
 			</ul>
 		</nav>
 
-		<div class="right">
+		<div class="right" class:hide=${() => !Wallet.browserWallet.ref}>
 			<ul>
 				<li>${ChainChangerButtonUI()}</li>
 			</ul>
@@ -94,6 +94,9 @@ NavigationComponent.$css = css`
 			justify-content: end;
 			& > ul {
 				border-radius: var(--radius-rounded) 0 0 var(--radius-rounded);
+			}
+			&.hide {
+				display: none;
 			}
 		}
 

@@ -96,7 +96,8 @@ AppComponent.$css = css`
 		main > .bottom:has(.post) {
 			& > .page {
 				position: fixed;
-				left: -200%;
+				visibility: hidden;
+				pointer-events: none;
 			}
 
 			& > .post {

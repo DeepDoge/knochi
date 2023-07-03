@@ -5,7 +5,7 @@
 		font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 		line-height: 1.5;
 		font-weight: 400;
-		font-size: clamp(0.85rem, 1.2vw, 1rem);
+		font-size: clamp(0.85rem, max(2dvw, 2dvh), 1rem);
 
 		color-scheme: dark;
 		color: hsl(var(--background-text--hsl));
