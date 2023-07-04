@@ -81,26 +81,24 @@ PostComponent.$css = css`
 	.post {
 		display: grid;
 		grid-template-areas:
-			"repost-icon 	. repost-text 	repost-text 	chain"
-			". 				. . 			. 				chain"
-			"avatar 		. name 			name 			chain"
-			"avatar 		. . 			.				chain"
-			"avatar 		. address		. 				chain"
-			"avatar 		. . 			.				."
-			"avatar 		. content		content			content"
-			"avatar 		. . 			. 				."
-			"avatar			. actions		.				date";
+			"repost-icon 	. repost-text 	repost-text		repost-text 	.				chain"
+			". 				. . 			.				. 				.				chain"
+			"avatar 		. name 			name			name			.				chain"
+			"avatar 		. . 			.				.				.				chain"
+			"avatar 		. address		.				date			date			date"
+			"avatar 		. . 			.				.				.				."
+			"avatar 		. content		content			content			content			content"
+			"avatar 		. . 			. 				.				.				."
+			"avatar			. actions		actions			actions			actions			actions";
 
-		& > .ids,
-		& > .chain,
-		& > .date {
+		& > .chain {
 			justify-self: end;
 		}
 		& > .actions {
 			justify-self: start;
 		}
 
-		grid-template-columns: 1.75em calc(var(--span) * 0.5) 1fr calc(var(--span) * 0.5) auto;
+		grid-template-columns: 1.75em calc(var(--span) * 0.5) auto calc(var(--span) * 0.5) 1fr calc(var(--span) * 0.5) auto;
 		grid-template-rows: auto calc(var(--span) * 0.25) auto 0 auto calc(var(--span) * 0.5) auto calc(var(--span) * 0.5) auto;
 	}
 
@@ -125,7 +123,15 @@ PostComponent.$css = css`
 		font-size: 0.7em;
 	}
 
-	.chain {
+	.repost-text {
+		display: flex;
+		gap: 0.5ch;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.chain,
+	.repost-text > * {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
