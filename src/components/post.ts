@@ -68,8 +68,11 @@ export function PostUI(post: SignalReadable<Post>, reposterAddress: SignalReadab
 
 PostComponent.$css = css`
 	:host {
-		display: grid;
+		display: contents;
 		font-size: 1rem;
+	}
+
+	.post {
 		background-color: hsl(var(--base--hsl), 0.75);
 		padding: calc(var(--span) * 0.5);
 		border-radius: var(--radius);
