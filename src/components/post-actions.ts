@@ -77,7 +77,7 @@ PostActionsComponent.$css = css`
 		grid-auto-flow: column;
 		gap: calc(var(--span) * 1);
 		align-items: center;
-		color: hsl(var(--base-text--hsl), 0.65);
+		color: ;
 	}
 
 	:host > * {

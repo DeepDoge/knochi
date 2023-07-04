@@ -37,7 +37,7 @@ export function PostTimelineUI(postId: SignalReadable<PostId>) {
 							</div>
 						`
 					)
-					.default((post) => PostUI(post))}
+					.default((post) => PostUI(post, null))}
 			</div>
 			<div class="replies">
 				<h3 class="title">Replies</h3>

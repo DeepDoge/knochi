@@ -68,10 +68,10 @@ AppComponent.$css = css`
 		}
 
 		& > .bottom {
-			padding-inline: calc(var(--space) * 0.5);
+			padding-inline: calc(var(--space) * 0.25);
 			& > * {
 				padding-bottom: 10em;
-				padding-inline: calc(var(--space) * 0.5);
+				padding-inline: calc(var(--space) * 0.25);
 			}
 		}
 	}

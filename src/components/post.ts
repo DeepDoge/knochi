@@ -1,68 +1,66 @@
+import { RepostSvg } from "@/assets/svgs/repost"
 import { ProfileNameUI } from "@/components/profile-name"
+import { Networks } from "@/networks"
 import { route, routeHash } from "@/router"
-import { Address } from "@/utils/address"
+import type { Address } from "@/utils/address"
 import type { Post } from "@/utils/post"
 import { PostId } from "@/utils/post-id"
 import { relativeTimeSignal } from "@/utils/time"
-import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css, html } from "master-ts/library/template"
 import { PostActionsUI } from "./post-actions"
+import { PostContentUI } from "./post-content"
 import { PostFromIdUI } from "./post-from-id"
-import { PostHeaderUI } from "./post-header"
-import { RepostUI } from "./repost"
+import { ProfileAddressUI } from "./profile-address"
+import { ProfileAvatarUI } from "./profile-avatar"
 
 const PostComponent = defineComponent("x-post")
-export function PostUI(post: SignalReadable<Post>) {
+export function PostUI(post: SignalReadable<Post>, reposterAddress: SignalReadable<Address | null> | null) {
 	const component = new PostComponent()
 
+	const postId = $.derive(() => post.ref.id)
 	const postContents = $.derive(() => post.ref.contents)
+	const postAuthor = $.derive(() => post.ref.author)
+	const postHref = $.derive(() => routeHash({ postId: postId.ref }))
 
-	const echoOnly = $.derive(() => (postContents.ref.length === 1 && postContents.ref[0]!.type === "echo" ? postContents.ref[0]!.value : null))
-
-	const postHref = $.derive(() => routeHash({ postId: post.ref.id }))
+	const repostedPostId = $.derive(() =>
+		postContents.ref.length === 1 && postContents.ref[0]!.type === "echo" ? PostId.fromUint8Array(postContents.ref[0]!.value) : null
+	)
 
 	component.$html = html`
-		${$.match(echoOnly)
+		${$.match(repostedPostId)
 			.case(
 				null,
 				() => html`
 					<div
 						class="post"
-						class:active=${() => route.postId.ref === post.ref.id}
+						class:is-repost=${() => !!(reposterAddress && reposterAddress.ref)}
+						class:active=${() => route.postId.ref === postId.ref}
 						on:click=${() => (location.hash = postHref.ref)}
-						style:cursor=${() => (route.postId.ref === post.ref.id ? "default" : "pointer")}>
-						${PostHeaderUI(post)}
-						<div class="content">
-							${$.each(postContents).as((content) =>
-								$.match($.derive(() => content.ref.type))
-									// Using async to catch errors
-									.case("text", () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
-									.case("@", () =>
-										$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) =>
-											ProfileNameUI(address)
-										)
-									)
-									.case("echo", () =>
-										$.await($.derive(async () => PostId.fromUint8Array(content.ref.value))).then((postId) =>
-											$.match(postId)
-												.case(post.ref.id, () => null)
-												.default((postId) => PostFromIdUI(postId))
-										)
-									)
-									.default(() => null)
-							)}
-						</div>
-						<div class="footer">
-							${() => PostActionsUI(post.ref)}
-							<a class="created-at" href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
-						</div>
+						style:cursor=${() => (route.postId.ref === postId.ref ? "default" : "pointer")}>
+						<x ${RepostSvg()} class="repost-icon" style:grid-area=${"repost-icon"}></x>
+						<span class="repost-text" style:grid-area=${"repost-text"}>
+							<a href=${() => reposterAddress?.ref && routeHash({ path: reposterAddress.ref })}>${reposterAddress}</a> reposted
+						</span>
+
+						<x ${ProfileAvatarUI(postAuthor)} class="avatar" style:grid-area=${"avatar"}></x>
+						<x ${ProfileNameUI(postAuthor)} class="name" style:grid-area=${"name"}></x>
+						<x ${ProfileAddressUI(postAuthor)} class="address" style:grid-area=${"address"}></x>
+
+						<span class="chain" style:grid-area=${"chain"} title=${() => Networks.chains[post.ref.chainKey].name}>
+							${() => Networks.chains[post.ref.chainKey].name}
+						</span>
+
+						<x ${PostContentUI(post)} class="content" style:grid-area=${"content"}></x>
+
+						${() => html`<x ${PostActionsUI(post.ref)} class="actions" style:grid-area=${"actions"}></x>`}
+						<a class="date" style:grid-area=${"date"} href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
 					</div>
 				`
 			)
-			.default((echo) => RepostUI($.derive(() => ({ postId: PostId.fromUint8Array(echo.ref), authorAddress: post.ref.author }))))}
+			.default((repostedPostId) => PostFromIdUI(repostedPostId, postAuthor))}
 	`
 
 	return component
@@ -70,74 +68,75 @@ export function PostUI(post: SignalReadable<Post>) {
 
 PostComponent.$css = css`
 	:host {
-		display: contents;
-		font-size: 1rem;
-	}
-
-	.post {
-		position: relative;
-		width: 100%;
-
 		display: grid;
-		gap: calc(var(--span) * 0.5);
-		padding: calc(var(--span) * 0.75);
-
-		background-color: hsl(var(--base--hsl), 0.5);
-		color: hsl(var(--base-text--hsl));
-
+		font-size: 1rem;
+		background-color: hsl(var(--base--hsl), 0.75);
+		padding: calc(var(--span) * 0.5);
 		border-radius: var(--radius);
-		border: calc(var(--span) * 0.1) solid transparent;
-
-		&.active {
-			border-color: hsl(var(--second--hsl));
-		}
-
-		contain: paint;
 	}
 
-	/* glass effect */
 	.post {
-		&::before {
-			content: "";
-			position: absolute;
-			inset: 0;
+		display: grid;
+		grid-template-areas:
+			"repost-icon 	. repost-text 	repost-text 	chain"
+			". 				. . 			. 				chain"
+			"avatar 		. name 			name 			chain"
+			"avatar 		. . 			.				chain"
+			"avatar 		. address		. 				chain"
+			"avatar 		. . 			.				."
+			"avatar 		. content		content			content"
+			"avatar 		. . 			. 				."
+			"avatar			. actions		.				date";
 
-			background-color: transparent;
+		& > .ids,
+		& > .chain,
+		& > .date {
+			justify-self: end;
+		}
+		& > .actions {
+			justify-self: start;
+		}
 
-			transition: var(--transition);
-			transition-property: background-color;
-
-			pointer-events: none;
-		}
-		&:hover::before {
-			background-color: hsl(var(--base-text--hsl), 0.025);
-		}
-		&:active::before {
-			background-color: hsl(var(--base-text--hsl), 0.05);
-		}
+		grid-template-columns: 1.75em calc(var(--span) * 0.5) 1fr calc(var(--span) * 0.5) auto;
+		grid-template-rows: auto calc(var(--span) * 0.25) auto 0 auto calc(var(--span) * 0.5) auto calc(var(--span) * 0.5) auto;
 	}
 
-	.content {
-		font-size: 1.1em;
-
-		display: flex;
-		gap: 0.5ch;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: start;
-	}
-
-	.footer {
-		display: flex;
-		flex-wrap: wrap;
-		gap: calc(var(--span) * 0.5);
-		font-size: 0.75em;
-
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.created-at {
+	.date,
+	.address,
+	.chain,
+	.actions,
+	.repost-text,
+	.repost-icon {
 		color: hsl(var(--base-text--hsl), 0.65);
+	}
+
+	.name {
+		font-size: 0.8em;
+	}
+
+	.date,
+	.address,
+	.chain,
+	.actions,
+	.repost-text {
+		font-size: 0.7em;
+	}
+
+	.chain {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.repost-icon {
+		width: 0.75em;
+		justify-self: end;
+	}
+
+	.post:not(.is-repost) {
+		.repost-icon,
+		.repost-text {
+			display: none;
+		}
 	}
 `

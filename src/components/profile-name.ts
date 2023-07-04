@@ -17,4 +17,10 @@ ProfileNameComponent.$css = css`
 	:host {
 		display: grid;
 	}
+
+	.name {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 `

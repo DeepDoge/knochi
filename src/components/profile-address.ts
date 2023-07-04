@@ -25,7 +25,7 @@ export function ProfileAddressUI(address: SignalReadable<Address>) {
 }
 ProfileAddressComponent.$css = css`
 	:host {
-		display: contents;
+		display: inline-grid;
 	}
 
 	button {
