@@ -34,12 +34,8 @@ export function PostUI(post: SignalReadable<Post>, reposterAddress: SignalReadab
 			.case(
 				null,
 				() => html`
-					<div
-						class="post"
-						class:is-repost=${() => !!(reposterAddress && reposterAddress.ref)}
-						class:active=${() => route.postId.ref === postId.ref}
-						on:click=${() => (location.hash = postHref.ref)}
-						style:cursor=${() => (route.postId.ref === postId.ref ? "default" : "pointer")}>
+					<div class="post" class:is-repost=${() => !!(reposterAddress && reposterAddress.ref)} class:active=${() => route.postId.ref === postId.ref}>
+						<a href=${postHref} class="backdrop-link"></a>
 						<x ${RepostSvg()} class="repost-icon" style:grid-area=${"repost-icon"}></x>
 						<span class="repost-text" style:grid-area=${"repost-text"}>
 							<a href=${() => reposterAddress?.ref && routeHash({ path: reposterAddress.ref })}>${reposterAddress}</a> reposted
@@ -53,7 +49,13 @@ export function PostUI(post: SignalReadable<Post>, reposterAddress: SignalReadab
 							${() => Networks.chains[post.ref.chainKey].name}
 						</span>
 
-						<x ${PostContentUI(post)} class="content" style:grid-area=${"content"}></x>
+						<x
+							${PostContentUI(post)}
+							class="content"
+							style:grid-area=${"content"}
+							on:click=${() => (location.hash = postHref.ref)}
+							style:cursor=${"pointer"}>
+						</x>
 
 						${() => html`<x ${PostActionsUI(post.ref)} class="actions" style:grid-area=${"actions"}></x>`}
 						<a class="date" style:grid-area=${"date"} href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
@@ -76,6 +78,30 @@ PostComponent.$css = css`
 		background-color: hsl(var(--base--hsl), 0.75);
 		padding: calc(var(--span) * 0.5);
 		border-radius: var(--radius);
+		border: solid 1px hsl(var(--second--hsl));
+
+		&:not(.active) {
+			border-color: transparent;
+		}
+	}
+
+	.post:not(.is-repost) {
+		.repost-icon,
+		.repost-text {
+			display: none;
+		}
+	}
+
+	.post {
+		position: relative;
+		isolation: isolate;
+		contain: paint;
+	}
+
+	.backdrop-link {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
 	}
 
 	.post {
@@ -91,61 +117,61 @@ PostComponent.$css = css`
 			"avatar 		. . 			. 				.				.				."
 			"avatar			. actions		actions			actions			actions			actions";
 
-		& > .chain {
-			justify-self: end;
-		}
-		& > .actions {
-			justify-self: start;
-		}
-
 		grid-template-columns: 1.75em calc(var(--span) * 0.5) auto calc(var(--span) * 0.5) 1fr calc(var(--span) * 0.5) auto;
 		grid-template-rows: auto calc(var(--span) * 0.25) auto 0 auto calc(var(--span) * 0.5) auto calc(var(--span) * 0.5) auto;
-	}
 
-	.date,
-	.address,
-	.chain,
-	.actions,
-	.repost-text,
-	.repost-icon {
-		color: hsl(var(--base-text--hsl), 0.65);
-	}
-
-	.name {
-		font-size: 0.8em;
-	}
-
-	.date,
-	.address,
-	.chain,
-	.actions,
-	.repost-text {
-		font-size: 0.7em;
-	}
-
-	.repost-text {
-		display: flex;
-		gap: 0.5ch;
-		align-items: center;
-		flex-wrap: wrap;
-	}
-
-	.chain,
-	.repost-text > * {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.repost-icon {
-		width: 0.75em;
-		justify-self: end;
-	}
-
-	.post:not(.is-repost) {
-		.repost-icon,
+		.chain,
+		.repost-icon {
+			justify-self: end;
+		}
+		.actions,
+		.date,
+		.address,
+		.name,
 		.repost-text {
-			display: none;
+			justify-self: start;
+		}
+		.avatar {
+			align-self: start;
+		}
+
+		.date,
+		.address,
+		.chain,
+		.actions,
+		.repost-text,
+		.repost-icon {
+			color: hsl(var(--base-text--hsl), 0.65);
+		}
+
+		.name {
+			font-size: 0.8em;
+		}
+
+		.date,
+		.address,
+		.chain,
+		.actions,
+		.repost-text {
+			font-size: 0.7em;
+		}
+
+		.repost-text {
+			display: flex;
+			gap: 0.5ch;
+			align-items: center;
+			flex-wrap: wrap;
+		}
+
+		.chain,
+		.repost-text > * {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.repost-icon {
+			width: 0.75em;
 		}
 	}
 `
