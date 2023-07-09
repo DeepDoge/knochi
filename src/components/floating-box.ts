@@ -14,7 +14,7 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 
 	const box = component.$shadowRoot.querySelector(".box") as HTMLDivElement
 
-	$.onMount(component, () => {
+	$.onMount$(component, () => {
 		const rect = box.getBoundingClientRect()
 		box.style.transform =
 			`translate(calc(${mouseEvent.x - rect.width * 0.5}px + var(--offset-x, 0px)),` +

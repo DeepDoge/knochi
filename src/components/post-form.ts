@@ -51,7 +51,7 @@ export function PostFormUI(parentId: SignalReadable<PostId | null>) {
 		placeholder.remove()
 	}
 	$.effect$(component, resizeTextArea, [route.postId])
-	$.onMount(component, () => {
+	$.onMount$(component, () => {
 		setTimeout(resizeTextArea)
 		window.addEventListener("resize", resizeTextArea)
 		return () => window.removeEventListener("resize", resizeTextArea)
