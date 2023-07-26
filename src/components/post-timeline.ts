@@ -15,7 +15,7 @@ export function PostTimelineUI(postId: SignalReadable<PostId>) {
 	const component = new PostTimelineComponent()
 
 	const post = $.await($.derive(() => Post.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId]))
-		.error((error) => error)
+		.catch((error) => error)
 		.then()
 	const repliesTimeline = $.derive(() => Timeline.create({ parentId: postId.ref }))
 

@@ -43,7 +43,7 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 
 	const searchInput = $.writable("")
 	params.search.subscribe$(page, (search) => (searchInput.ref = search), { mode: "immediate" })
-	const searchInputDeferred = $.deferred(searchInput)
+	const searchInputDeferred = $.defer(searchInput)
 	searchInputDeferred.subscribe$(page, (search) => {
 		const href = routeHash({ path: ["search", encodeURIComponent(search)].filter(Boolean).join("/") })
 		if (route.pathArr.ref[0] === "search") location.replace(href)

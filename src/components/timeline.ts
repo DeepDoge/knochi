@@ -26,7 +26,7 @@ export function TimelineUI(timeline: SignalReadable<Timeline>) {
 
 				return $.await(timeline.ref.loadBottom()).then(() =>
 					$.each(posts)
-						.key((post) => `${post.chainKey}-${post.id}`)
+						.key((post) => post.id)
 						.as((post) => PostUI(post, null))
 				)
 			}, [timeline])}
