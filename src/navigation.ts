@@ -68,7 +68,7 @@ NavigationComponent.$css = css`
 		gap: calc(var(--span) * 0.25);
 	}
 
-	:host > * {
+	:host > :is(div, nav) {
 		display: grid;
 		align-content: center;
 		padding-bottom: calc(var(--span) * 0.25);
