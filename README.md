@@ -1,4 +1,4 @@
-**UPDATE:** I don't have free time anymore for this(gotta make money), but I will continue working on this as soon as I'm free to work on hobby stuff again.
+**UPDATE:** I don't have free time for this anymore (gotta make money), but I will continue working on this as soon as I'm free to work on hobby stuff again.
 
 Not finished yet...
 
