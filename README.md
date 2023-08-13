@@ -1,3 +1,5 @@
+**UPDATE:** I don't have free time anymore for this, but I will continue working on this as soon as I'm free to work on hobby stuff again.
+
 Not finished yet...
 
 Inspired by https://github.com/DeepDoge/dweb-forum
