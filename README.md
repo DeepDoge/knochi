@@ -74,3 +74,10 @@ Or, I can just built them inside this app.
 -   [ ] Shopping, Online Orders with repritation based system.
 -   [ ] Video/Movie/Series/Documentary etc. platform.
 -   [ ] Forum
+
+
+## Maybe
+
+-  [ ] Encryption? Second public key to encrypt messages or something?
+-  [ ] IDFKDkefkk kon wo
+-  [ ] Something bigger more usefull, more everything, and still simple to use, all you need is a web3 wallet on the browser thats all idk, it shold be more
