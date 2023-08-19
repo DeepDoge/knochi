@@ -30,8 +30,8 @@ export function Navigation() {
 			<ul>
 				<li>
 					<a href="#" class="icon" class:active=${() => firstPartOfPath.ref === ""} aria-label="home" title="Home">
-						${$.match(firstPartOfPath)
-							.case("", () => html`<x ${HomeFilledSvg()}></x>`)
+						${$.switch(firstPartOfPath)
+							.match("", () => html`<x ${HomeFilledSvg()}></x>`)
 							.default(() => html`<x ${HomeOutlineSvg()}></x>`)}
 					</a>
 				</li>
@@ -42,8 +42,8 @@ export function Navigation() {
 				</li>
 				<li>
 					<a href="#popular" class="icon" class:active=${() => firstPartOfPath.ref === "popular"} aria-label="top posts" title="Popular Posts">
-						${$.match(firstPartOfPath)
-							.case("popular", () => html`<x ${ChartFilledSvg()}></x>`)
+						${$.switch(firstPartOfPath)
+							.match("popular", () => html`<x ${ChartFilledSvg()}></x>`)
 							.default(() => html`<x ${ChartOutlineSvg()}></x>`)}
 					</a>
 				</li>

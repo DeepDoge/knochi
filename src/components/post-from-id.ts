@@ -14,8 +14,8 @@ export function PostFromIdUI(postId: SignalReadable<PostId>, ...args: Call<Tuple
 	const post = $.await($.derive(() => Post.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId])).then()
 
 	component.$html = html`
-		${$.match(post)
-			.case(null, () => null)
+		${$.switch(post)
+			.match(null, () => null)
 			.default((post) => PostUI(post, ...args))}
 	`
 

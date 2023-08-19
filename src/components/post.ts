@@ -30,8 +30,8 @@ export function PostUI(post: SignalReadable<Post>, reposterAddress: SignalReadab
 	)
 
 	component.$html = html`
-		${$.match(repostedPostId)
-			.case(
+		${$.switch(repostedPostId)
+			.match(
 				null,
 				() => html`
 					<div class="post" class:is-repost=${() => !!(reposterAddress && reposterAddress.ref)} class:active=${() => route.postId.ref === postId.ref}>

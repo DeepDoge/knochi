@@ -17,11 +17,11 @@ export function MyWalletUI() {
 }
 
 export function requireWallet(then: (wallet: SignalReadable<Wallet>) => TemplateValue) {
-	return $.match(Wallet.browserWallet)
-		.case(null, () =>
-			$.match(Wallet.browserWalletState)
-				.case("not-connected", () => html`<button class="btn" on:click=${(e) => (e.preventDefault(), Wallet.connect())}>Connect Wallet</button>`)
-				.case(
+	return $.switch(Wallet.browserWallet)
+		.match(null, () =>
+			$.switch(Wallet.browserWalletState)
+				.match("not-connected", () => html`<button class="btn" on:click=${(e) => (e.preventDefault(), Wallet.connect())}>Connect Wallet</button>`)
+				.match(
 					"wrong-network",
 					() =>
 						html`

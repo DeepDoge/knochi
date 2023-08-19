@@ -7,6 +7,7 @@ import { Timeline } from "@/utils/timeline"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
+import { INSTANCEOF } from "master-ts/library/signal/switch"
 import { css, html } from "master-ts/library/template"
 import { PostUI } from "./post"
 
@@ -15,7 +16,7 @@ export function PostTimelineUI(postId: SignalReadable<PostId>) {
 	const component = new PostTimelineComponent()
 
 	const post = $.await($.derive(() => Post.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId]))
-		.catch((error) => error)
+		.catch((error) => (error instanceof Error ? error : new Error(`${error}`)))
 		.then()
 	const repliesTimeline = $.derive(() => Timeline.create({ parentId: postId.ref }))
 
@@ -26,14 +27,14 @@ export function PostTimelineUI(postId: SignalReadable<PostId>) {
 		</div>
 		<div class="content">
 			<div class="family">
-				${$.match(post)
-					.case(null, () => null)
-					.caseInstanceOf(
-						Error,
+				${$.switch(post)
+					.match(null, () => null)
+					.match(
+						{ [INSTANCEOF]: Error },
 						(error) => html`
 							<div class="error">
 								Can't load post ${postId}
-								<code><pre>${error.message}</pre></code>
+								<code><pre>${error.ref.message}</pre></code>
 							</div>
 						`
 					)

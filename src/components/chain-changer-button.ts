@@ -11,8 +11,8 @@ export function ChainChangerButtonUI() {
 	const component = new ChainChangerButtonComponent()
 
 	component.$html = html`
-		${$.match(Wallet.browserWallet)
-			.case(null, () => null)
+		${$.switch(Wallet.browserWallet)
+			.match(null, () => null)
 			.default(
 				(wallet) =>
 					html`

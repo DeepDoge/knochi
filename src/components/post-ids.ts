@@ -17,8 +17,8 @@ export function PostIdsUI(post: SignalReadable<Post>) {
 
 	component.$html = html`
 		<a class="id post-id" href=${postHref}> ${() => postId.ref.slice(postId.ref.length - 5)} </a>
-		${$.match($.derive(() => post.ref.parentId))
-			.case(null, () => null)
+		${$.switch($.derive(() => post.ref.parentId))
+			.match(null, () => null)
 			.default((parentId) => html`<a class="id parent-id" href=${parentHref}> ${() => parentId.ref.slice(parentId.ref.length - 5)} </a>`)}
 	`
 

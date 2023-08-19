@@ -44,10 +44,10 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 
 	const page = new PageComponent()
 	const timeline = $.flatten(
-		$.match(params.tab)
-			.case("posts", () => $.derive(() => Timeline.create({ author: params.userAddress.ref })))
-			.case("replies", () => $.derive(() => Timeline.create({ author: params.userAddress.ref, replies: "only" })))
-			.case("mentions", () => $.derive(() => Timeline.create({ mention: params.userAddress.ref, replies: "include" })))
+		$.switch(params.tab)
+			.match("posts", () => $.derive(() => Timeline.create({ author: params.userAddress.ref })))
+			.match("replies", () => $.derive(() => Timeline.create({ author: params.userAddress.ref, replies: "only" })))
+			.match("mentions", () => $.derive(() => Timeline.create({ mention: params.userAddress.ref, replies: "include" })))
 			.default()
 	)
 
@@ -72,8 +72,8 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 				</li>
 			</ul>
 		</nav>
-		${$.match(isMyProfile)
-			.case(true, () => html`${PostFormUI($.writable(null))}`)
+		${$.switch(isMyProfile)
+			.match(true, () => html`${PostFormUI($.writable(null))}`)
 			.default(() => null)}
 		${TimelineUI(timeline)}`
 

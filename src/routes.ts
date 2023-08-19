@@ -5,12 +5,12 @@ import { userLayout } from "@/pages/user"
 import { route } from "@/router"
 import { Address } from "@/utils/address"
 import { $ } from "master-ts/library/$"
-import type { Component } from "master-ts/library/component"
+import type { ComponentBase } from "master-ts/library/component"
 import type { SignalReadable, SignalWritable } from "master-ts/library/signal"
 
 export type Layout = {
-	top: Component | null
-	page: Component
+	top: ComponentBase | null
+	page: ComponentBase
 }
 
 export function createLayout<T extends Record<PropertyKey, unknown> = Record<PropertyKey, never>>(

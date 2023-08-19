@@ -24,10 +24,12 @@ export function TimelineUI(timeline: SignalReadable<Timeline>) {
 			${$.derive(() => {
 				const posts = timeline.ref.posts
 
-				return $.await(timeline.ref.loadBottom()).then(() =>
-					$.each(posts)
-						.key((post) => post.id)
-						.as((post) => PostUI(post, null))
+				return $.await(timeline.ref.loadBottom()).then(
+					() => html`
+						${$.each(posts)
+							.key((post) => post.id)
+							.as((post) => PostUI(post, null))}
+					`
 				)
 			}, [timeline])}
 		</div>
@@ -62,7 +64,7 @@ TimelineComponent.$css = css`
 
 	.posts {
 		display: grid;
-		gap: calc(var(--span) * 0.15);
+		gap: calc(var(--span) * 0.25);
 	}
 
 	.no-posts {

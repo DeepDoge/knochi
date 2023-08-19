@@ -15,13 +15,13 @@ function App() {
 	component.$html = html`
 		<header>${Navigation()}</header>
 		<main>
-			${$.match($.derive(() => routerLayout.ref.top))
-				.case(null, () => null)
+			${$.switch($.derive(() => routerLayout.ref.top))
+				.match(null, () => null)
 				.default((layoutTop) => html`<div class="top">${layoutTop}</div>`)}
 			<div class="bottom">
 				<div class="page">${() => routerLayout.ref.page}</div>
-				${$.match(route.postId)
-					.case(null, () => null)
+				${$.switch(route.postId)
+					.match(null, () => null)
 					.default((postId) => html` <div class="post">${PostTimelineUI(postId)}</div>`)}
 			</div>
 		</main>

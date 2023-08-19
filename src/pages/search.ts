@@ -63,8 +63,8 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 			<x ${SearchSvg()} class="icon"></x>
 			<input type="text" class="ghost" bind:value=${searchInput} placeholder="Search anything" />
 		</div>
-		${$.match(searchResults)
-			.case(null, () => html`<p class="none">...</p>`)
+		${$.switch(searchResults)
+			.match(null, () => html`<p class="none">...</p>`)
 			.default((results) => {
 				const address = $.derive(() => results.ref.address)
 				const timeline = $.derive(() => results.ref.timeline)
@@ -73,8 +73,8 @@ export const searchLayout = createLayout<{ search: string }>((params) => {
 						<span class="result-title">Search results for:</span>
 						<span class="result-text">${searchInputDeferredAndTrimmed}</span>
 					</p>
-					${$.match(address)
-						.case(null, () => null)
+					${$.switch(address)
+						.match(null, () => null)
 						.default((address) => ProfileUI(address))}
 					<x ${TimelineUI(timeline)} class="timeline"></x>
 				`

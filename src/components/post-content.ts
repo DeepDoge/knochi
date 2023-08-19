@@ -17,14 +17,16 @@ export function PostContentUI(post: SignalReadable<Post>) {
 
 	component.$html = html`
 		${$.each(postContents).as((content) =>
-			$.match($.derive(() => content.ref.type))
+			$.switch(content)
 				// Using async to catch errors
-				.case("text", () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
-				.case("@", () => $.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) => ProfileNameUI(address)))
-				.case("echo", () =>
+				.match({ type: "text" }, () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
+				.match({ type: "@" }, () =>
+					$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) => ProfileNameUI(address))
+				)
+				.match({ type: "echo" }, () =>
 					$.await($.derive(async () => PostId.fromUint8Array(content.ref.value))).then((postId) =>
-						$.match(postId)
-							.case(postId.ref, () => null)
+						$.switch(postId)
+							.match(post.ref.id, () => null)
 							.default((postId) => PostFromIdUI(postId, null))
 					)
 				)
