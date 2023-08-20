@@ -27,9 +27,6 @@
 		"noImplicitAny": true,
 		"noImplicitOverride": true,
 		"noImplicitThis": true,
-		/* NO UNUSED */
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
 		/* NO UNCHECKED */
 		"useUnknownInCatchVariables": true,
 		"noUncheckedIndexedAccess": true,
