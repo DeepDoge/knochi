@@ -29,7 +29,7 @@ export function PostActionsUI(post: Post) {
 				value: PostId.toUint8Array(post.id),
 			},
 		])
-		await Wallet.browserWallet.ref?.contracts.EternisPostDB.post(bytes)
+		await Wallet.browserWallet.ref?.contracts.EternisPost.post(bytes)
 	}
 
 	const postActions = [

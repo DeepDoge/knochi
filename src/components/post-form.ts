@@ -30,7 +30,7 @@ export function PostFormUI(parentId: SignalReadable<PostId | null>) {
 		try {
 			state.ref = "loading"
 			if (!Wallet.browserWallet.ref) throw new Error(Wallet.browserWalletState.ref)
-			await Wallet.browserWallet.ref.contracts.EternisPostDB.post(bytes.ref)
+			await Wallet.browserWallet.ref.contracts.EternisPost.post(bytes.ref)
 		} catch (error) {
 			if (error instanceof Error) state.ref = error
 			else state.ref = new Error(`${error}`)

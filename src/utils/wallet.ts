@@ -1,5 +1,5 @@
-import { connect_EternisPostDB, type EternisPostDB_Contract } from "@/contracts/artifacts/EternisPostDB"
-import { connect_EternisTipPostDB, type EternisTipPostDB_Contract } from "@/contracts/artifacts/EternisTipPostDB"
+import { connect_EternisPost, type EternisPost_Contract } from "@/contracts/artifacts/EternisPost"
+import { connect_EternisTipPost, type EternisTipPost_Contract } from "@/contracts/artifacts/EternisTipPost"
 import { Networks } from "@/networks"
 import { Address } from "@/utils/address"
 import { ethers } from "ethers"
@@ -11,8 +11,8 @@ export type Wallet = {
 	provider: ethers.BrowserProvider
 	address: Address
 	contracts: {
-		EternisPostDB: EternisPostDB_Contract
-		EternisTipPostDB: EternisTipPostDB_Contract
+		EternisPost: EternisPost_Contract
+		EternisTipPost: EternisTipPost_Contract
 	}
 }
 
@@ -61,8 +61,8 @@ export namespace Wallet {
 			provider: browserProvider,
 			address: Address.from(await signer.getAddress()),
 			contracts: {
-				EternisPostDB: connect_EternisPostDB(Networks.contracts[chainKey].EternisPostDB, signer),
-				EternisTipPostDB: connect_EternisTipPostDB(Networks.contracts[chainKey].EternisTipPostDB, signer),
+				EternisPost: connect_EternisPost(Networks.contracts[chainKey].EternisPost, signer),
+				EternisTipPost: connect_EternisTipPost(Networks.contracts[chainKey].EternisTipPost, signer),
 			},
 		}
 		browserWalletStateWritable.ref = "connected"

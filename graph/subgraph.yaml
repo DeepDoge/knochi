@@ -3,21 +3,21 @@ schema:
     file: ./schema.graphql
 dataSources:
     - kind: ethereum
-      name: IEternisPostDB
+      name: IEternisTransactionEmitter
       network: sepolia
       source:
-          abi: IEternisPostDB
+          abi: IEternisTransactionEmitter
           startBlock: 3325895
       mapping:
           kind: ethereum/events
           apiVersion: 0.0.7
           language: wasm/assemblyscript
           entities:
-              - EternisPost
+              - EternisTransaction
           abis:
-              - name: IEternisPostDB
-                file: ../src/contracts/artifacts/IEternisPostDB.json
+              - name: IEternisTransactionEmitter
+                file: ../src/contracts/artifacts/IEternisTransactionEmitter.json
           eventHandlers:
-              - event: EternisPost(uint256,bytes)
+              - event: EternisTransaction(uint256,bytes)
                 handler: map
           file: ./src/mapping-mumbai.ts

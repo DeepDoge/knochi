@@ -98,7 +98,7 @@ export namespace Post {
 			for (const post of responsePosts) {
 				const contractsOfChain = Networks.contracts[post.chainKey]
 				for (const name of Object.keys(contractsOfChain) as (keyof typeof contractsOfChain)[]) {
-					if (name === "EternisTipPostDB") {
+					if (name === "EternisTipPost") {
 						// To implement this, I need a read-only JSON-RPC wallet to call the contract on any chain.
 						// At the moment, I only have a read-write browser wallet.
 					}

@@ -1,9 +1,9 @@
 import { Bytes } from "@graphprotocol/graph-ts"
-import { EternisPost } from "../generated/IEternisPostDB/IEternisPostDB"
+import { EternisTransaction } from "../generated/IEternisTransactionEmitter/IEternisTransactionEmitter"
 import { handlePost } from "./post-db"
 
 const chainId = Bytes.fromHexString("0xAA36A7")
 
-export function map(event: EternisPost): void {
+export function map(event: EternisTransaction): void {
 	handlePost(chainId, event)
 }

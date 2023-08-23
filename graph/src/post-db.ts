@@ -1,5 +1,5 @@
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts"
-import { EternisPost } from "../generated/IEternisPostDB/IEternisPostDB"
+import { EternisTransaction } from "../generated/IEternisTransactionEmitter/IEternisTransactionEmitter"
 import { Post, PostChainCounter, PostContent, PostReplyCounter, PostReplyCounter_FourHourTimeframe } from "../generated/schema"
 
 const EMPTY_BYTES = new Bytes(0)
@@ -7,7 +7,7 @@ const PARENT_TYPE = Bytes.fromUint8Array(Uint8Array.wrap(String.UTF8.encode("par
 const BIGINT_ONE = BigInt.fromI32(1)
 const BIGINT_14400 = BigInt.fromI32(14400)
 
-export function handlePost(chainId: Bytes, event: EternisPost): void {
+export function handlePost(chainId: Bytes, event: EternisTransaction): void {
 	let postCounter = PostChainCounter.load(EMPTY_BYTES)
 	if (!postCounter) {
 		postCounter = new PostChainCounter(EMPTY_BYTES)

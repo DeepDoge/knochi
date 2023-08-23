@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "./IEternisPostDB.sol";
+import "./IEternisTransactionEmitter.sol";
 
-contract EternisTipPostDB is IEternisPostDB {
+contract EternisTipPost is IEternisTransactionEmitter {
     uint256 public postIndex;
 
     struct Tip
@@ -15,7 +15,7 @@ contract EternisTipPostDB is IEternisPostDB {
 
     function post(bytes calldata postData, address payable tipTo) external payable {
         postIndexToTip[postIndex] = Tip(tipTo, msg.value);
-        emit EternisPost(postIndex, postData);
+        emit EternisTransaction(postIndex, postData);
         postIndex++;
         tipTo.transfer(msg.value);
     }

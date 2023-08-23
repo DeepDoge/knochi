@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "./IEternisPostDB.sol";
+import "./IEternisTransactionEmitter.sol";
 
 /* 
     Off-chain rules:
     - If you offer payment for a post that you didnt post, its being ignored and not showed. Even if the offer accepted on chain. So you would waste money.
 */
 
-contract EternisSponsoredPostDB2 is IEternisPostDB {
+contract EternisSponsoredPost is IEternisTransactionEmitter {
     uint256 public index; // offer and post index counter
 
     struct Offer
@@ -47,7 +47,7 @@ contract EternisSponsoredPostDB2 is IEternisPostDB {
         // Because offer contract is platform specific
         // if a platform doesn't index for sponsorships of this contract, they will see the post as a normal repost. 
         bytes memory bytesData = abi.encodePacked(bytes20(offer.contractAddress), offer.contractPostIndex);
-        emit EternisPost(offerIndex, abi.encodePacked(hex"6563686f0a0000", bytes2(uint16(bytesData.length)), bytesData));
+        emit EternisTransaction(offerIndex, abi.encodePacked(hex"6563686f0a0000", bytes2(uint16(bytesData.length)), bytesData));
         payable(msg.sender).transfer(offer.value);
     }
     

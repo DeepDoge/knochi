@@ -48,12 +48,12 @@ export namespace Networks {
 
 	export const contracts = {
 		mumbai: {
-			EternisPostDB: Address.from("0xA4A0Db3C5739C5E8cb63Fe86c6d5103558D8B19d"),
-			EternisTipPostDB: Address.from("0x0a0b0c0d0e0f0102030405060708090a0b0c0d0e"),
+			EternisPost: Address.from("0xA4A0Db3C5739C5E8cb63Fe86c6d5103558D8B19d"),
+			EternisTipPost: Address.from("0x0a0b0c0d0e0f0102030405060708090a0b0c0d0e"),
 		} as const,
 		sepolia: {
-			EternisPostDB: Address.from("0xcE1EEfdf8A9F638D4134F240ED134ECBedac7730"),
-			EternisTipPostDB: Address.from("0x0a0b0c0d0e0f0102030405060708090a0b0c0d0e"),
+			EternisPost: Address.from("0xcE1EEfdf8A9F638D4134F240ED134ECBedac7730"),
+			EternisTipPost: Address.from("0x0a0b0c0d0e0f0102030405060708090a0b0c0d0e"),
 		} as const,
 	} as const satisfies Record<ChainKey, Record<string, Address>>
 
