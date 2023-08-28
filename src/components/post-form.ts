@@ -9,6 +9,8 @@ import { Wallet } from "@/utils/wallet"
 import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
+import { onMount$ } from "master-ts/library/lifecycle"
+import { onEvent$ } from "master-ts/library/lifecycle/events"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css } from "master-ts/library/template/tags/css"
 import { html } from "master-ts/library/template/tags/html"
@@ -52,11 +54,8 @@ export function PostFormUI(parentId: SignalReadable<PostId | null>) {
 		placeholder.remove()
 	}
 	$.effect$(component, resizeTextArea, [route.postId])
-	$.onMount$(component, () => {
-		setTimeout(resizeTextArea)
-		window.addEventListener("resize", resizeTextArea)
-		return () => window.removeEventListener("resize", resizeTextArea)
-	})
+	onMount$(component, resizeTextArea)
+	onEvent$(component, "resize", resizeTextArea)
 
 	component.$html = html`
 		${requireWallet((wallet) => {

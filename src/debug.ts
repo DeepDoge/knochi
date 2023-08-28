@@ -2,6 +2,7 @@ import { $ } from "master-ts/library/$"
 import type { SignalReadable } from "master-ts/library/signal"
 import { css } from "master-ts/library/template/tags/css"
 import { html } from "master-ts/library/template/tags/html"
+import { tenSecondsTick } from "./utils/ticks"
 
 const Component = $.component()
 function AppComponent() {
@@ -26,7 +27,7 @@ function AppComponent() {
 	}
 
 	function Item(color: string | SignalReadable<string>) {
-		return html` <div class="item" style:background-color=${color}>${color}</div> `
+		return html` <div class="item" style:background-color=${color}>${color} ${tenSecondsTick}</div> `
 	}
 
 	component.$html = html`
