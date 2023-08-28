@@ -4,7 +4,8 @@ import { Wallet } from "@/utils/wallet"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
-import { html, type TemplateValue } from "master-ts/library/template"
+import { html } from "master-ts/library/template/tags/html"
+import type { TemplateValue } from "master-ts/library/template/types"
 import { ChainChangerUI } from "./chain-changer"
 
 const MyWalletComponent = defineComponent("x-my-wallet")

@@ -2,7 +2,8 @@ import { Networks } from "@/networks"
 import { Wallet } from "@/utils/wallet"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
-import { css, html } from "master-ts/library/template"
+import { css } from "master-ts/library/template/tags/css"
+import { html } from "master-ts/library/template/tags/html"
 import { ChainButtonUI } from "./chain-button"
 
 const ChainChangerComponent = defineComponent("x-chain-changer")
@@ -14,9 +15,7 @@ export function ChainChangerUI() {
 	component.$html = html`
 		<div class="title">Change Network</div>
 		<div class="chains">
-			${$.each(chainKeys).as(
-				(key) => html`<x ${ChainButtonUI($.derive(() => key))} on:click=${(e) => (e.preventDefault(), Wallet.changeChain(key))}></x>`
-			)}
+			${chainKeys.map((key) => html`<x ${ChainButtonUI($.derive(() => key))} on:click=${(e) => (e.preventDefault(), Wallet.changeChain(key))}></x>`)}
 		</div>
 	`
 

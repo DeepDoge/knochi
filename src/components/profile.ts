@@ -4,7 +4,8 @@ import { ProfileNameUI } from "@/components/profile-name"
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
-import { css, html } from "master-ts/library/template"
+import { css } from "master-ts/library/template/tags/css"
+import { html } from "master-ts/library/template/tags/html"
 
 const ProfileComponent = defineComponent("x-profile")
 export function ProfileUI(address: SignalReadable<Address>) {

@@ -6,7 +6,8 @@ import { route } from "@/router"
 import { routerLayout } from "@/routes"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
-import { css, html } from "master-ts/library/template"
+import { css } from "master-ts/library/template/tags/css"
+import { html } from "master-ts/library/template/tags/html"
 
 const AppComponent = defineComponent("x-app")
 function App() {

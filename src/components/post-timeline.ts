@@ -8,7 +8,8 @@ import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
 import { INSTANCEOF } from "master-ts/library/signal/switch"
-import { css, html } from "master-ts/library/template"
+import { css } from "master-ts/library/template/tags/css"
+import { html } from "master-ts/library/template/tags/html"
 import { PostUI } from "./post"
 
 const PostTimelineComponent = defineComponent("x-post-timeline")

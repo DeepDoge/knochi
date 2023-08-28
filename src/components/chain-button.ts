@@ -2,7 +2,8 @@ import { Networks } from "@/networks"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
-import { css, html } from "master-ts/library/template"
+import { css } from "master-ts/library/template/tags/css"
+import { html } from "master-ts/library/template/tags/html"
 
 const ChainButtonComponent = defineComponent("x-chain-button")
 export function ChainButtonUI(key: SignalReadable<Networks.ChainKey>) {

@@ -6,7 +6,8 @@ import { ethers } from "ethers"
 import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
-import { css, html } from "master-ts/library/template"
+import { css } from "master-ts/library/template/tags/css"
+import { html } from "master-ts/library/template/tags/html"
 import { PostFromIdUI } from "./post-from-id"
 
 const PostContentComponent = defineComponent("x-post-content")
@@ -19,7 +20,7 @@ export function PostContentUI(post: SignalReadable<Post>) {
 		${$.each(postContents).as((content) =>
 			$.switch(content)
 				// Using async to catch errors
-				.match({ type: "text" }, () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value)))}</span>`)
+				.match({ type: "text" }, () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value))).then()}</span>`)
 				.match({ type: "@" }, () =>
 					$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) => ProfileNameUI(address))
 				)

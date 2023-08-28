@@ -1,4 +1,4 @@
-import { html } from "master-ts/library/template"
+import { html } from "master-ts/library/template/tags/html"
 
 export function ChartOutlineSvg() {
 	return html`

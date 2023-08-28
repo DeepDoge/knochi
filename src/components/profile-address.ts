@@ -2,7 +2,8 @@ import { Copy2Svg } from "@/assets/svgs/copy2"
 import type { Address } from "@/utils/address"
 import { defineComponent } from "master-ts/library/component"
 import type { SignalReadable } from "master-ts/library/signal"
-import { css, html } from "master-ts/library/template"
+import { css } from "master-ts/library/template/tags/css"
+import { html } from "master-ts/library/template/tags/html"
 
 const ProfileAddressComponent = defineComponent("x-profile-address")
 export function ProfileAddressUI(address: SignalReadable<Address>) {

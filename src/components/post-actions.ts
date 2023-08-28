@@ -5,9 +5,9 @@ import type { Post } from "@/utils/post"
 import { PostContent } from "@/utils/post-content"
 import { PostId } from "@/utils/post-id"
 import { Wallet } from "@/utils/wallet"
-import { $ } from "master-ts/library/$"
 import { defineComponent } from "master-ts/library/component"
-import { css, html } from "master-ts/library/template"
+import { css } from "master-ts/library/template/tags/css"
+import { html } from "master-ts/library/template/tags/html"
 
 const PostActionsComponent = defineComponent("x-post-actions")
 
@@ -50,7 +50,7 @@ export function PostActionsUI(post: Post) {
 	]
 
 	component.$html = html`
-		${$.each(postActions).as((postAction) => {
+		${postActions.map((postAction) => {
 			if (typeof postAction.action === "string")
 				return html`
 					<a class="ghost" href=${postAction.action} title=${postAction.label} style:--color--hsl=${postAction.colorHsl}>
