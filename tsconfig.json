@@ -1,42 +1,24 @@
 {
 	"compilerOptions": {
+		"paths": {
+			"@/*": ["./src/*"]
+		},
 		"target": "ESNext",
 		"module": "ESNext",
-		"lib": ["ESNext", "DOM"],
+		"lib": ["DOM"],
 		"moduleResolution": "Node",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"esModuleInterop": true,
-		"noEmit": true,
-		"skipLibCheck": true,
-		"removeComments": false,
+		"removeComments": true,
 		"sourceMap": true,
-		"baseUrl": "src",
-		"paths": {
-			"@/*": ["*"]
-		},
-		/* STRICT */
-		"strict": true,
-		/* not needed but putting these here, so they dont show up in autocomplate */
-		"strictBindCallApply": true,
-		"strictFunctionTypes": true,
-		"strictNullChecks": true,
-		"strictPropertyInitialization": true,
-		/* NO IMPLICIT */
-		"noImplicitReturns": true,
-		"noImplicitAny": true,
-		"noImplicitOverride": true,
-		"noImplicitThis": true,
-		/* NO UNCHECKED */
-		"useUnknownInCatchVariables": true,
-		"noUncheckedIndexedAccess": true,
-		/* OTHER */
-		"preserveConstEnums": true,
-		"forceConsistentCasingInFileNames": true,
-		"useDefineForClassFields": true,
-		/* ALLOW */
-		"noFallthroughCasesInSwitch": false,
-		"noPropertyAccessFromIndexSignature": false
+
+		"forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+		"strict": true /* Enable all strict type-checking options. */,
+		"useUnknownInCatchVariables": true /* Require type checking of catch clause variables */,
+		"noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
+		"noPropertyAccessFromIndexSignature": true,
+		"strictNullChecks": true /* Enable strict null checks. */
 	},
 	"include": ["src"]
 }
