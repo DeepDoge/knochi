@@ -9,9 +9,9 @@ import { PostId } from "./post-id"
 
 export type Timeline = {
 	loadBottom(): Promise<void>
-	posts: Readonly<Signal<Post[]>>
-	loading: Readonly<Signal<boolean>>
-	newPostCountAtTop: Readonly<Signal<number>>
+	posts: Signal<Post[]>
+	loading: Signal<boolean>
+	newPostCountAtTop: Signal<number>
 }
 
 export namespace Timeline {

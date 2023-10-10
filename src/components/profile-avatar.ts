@@ -11,7 +11,7 @@ import { defineCustomTag } from "master-ts/extra/custom-tags"
 const jazzicon = jazzicon_ as { (diameter: number, seed: number): HTMLElement }
 
 const profileAvatarTag = defineCustomTag("x-profile-avatar")
-export function ProfileAvatarUI(address: Readonly<Signal<Address>>) {
+export function ProfileAvatarUI(address: Signal<Address>) {
 	const root = profileAvatarTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

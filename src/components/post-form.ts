@@ -14,7 +14,7 @@ import { defineCustomTag } from "master-ts/extra/custom-tags"
 import { html } from "master-ts/extra/html"
 
 const postFormTag = defineCustomTag("x-post-form")
-export function PostFormUI(parentId: Readonly<Signal<PostId | null>>) {
+export function PostFormUI(parentId: Signal<PostId | null>) {
 	const root = postFormTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

@@ -10,7 +10,7 @@ const route = {
 	postId: routePostId,
 }
 const routeReadable = route as {
-	[K in keyof typeof route]: (typeof route)[K] extends Signal<infer U> ? Readonly<Signal<U>> : (typeof route)[K]
+	[K in keyof typeof route]: (typeof route)[K] extends Signal<infer U> ? Signal<U> : (typeof route)[K]
 }
 export { routeReadable as route }
 function updateRoute() {

@@ -7,9 +7,10 @@ import { createLayout } from "@/routes"
 import type { Address } from "@/utils/address"
 import { Timeline } from "@/utils/timeline"
 import { Wallet } from "@/utils/wallet"
-import { derive, fragment, isSignal, signal, type Signal } from "master-ts/core"
+import { derive, fragment, signal } from "master-ts/core"
 import { css } from "master-ts/extra/css"
 import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { flatten } from "master-ts/extra/flatten"
 import { html } from "master-ts/extra/html"
 import { match } from "master-ts/extra/match"
 
@@ -20,17 +21,13 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 	const bottomDom = bottomRoot.attachShadow({ mode: "open" })
 	bottomDom.adoptedStyleSheets.push(commonStyle, bottomStyle)
 
-	const timeline = match(params.tab)
-		.case("posts", () => derive(() => Timeline.create({ author: params.userAddress.ref })))
-		.case("replies", () => derive(() => Timeline.create({ author: params.userAddress.ref, replies: "only" })))
-		.case("mentions", () => derive(() => Timeline.create({ mention: params.userAddress.ref, replies: "include" })))
-		.default()
-	// TODO: in master-ts find an elegant solution to this, so we don't have to flatten the signal
-	const timelineFlat = derive(() => {
-		let signal: Readonly<Signal<unknown>> = timeline
-		while (isSignal(signal.ref)) signal = signal.ref
-		return signal.ref
-	}) as Readonly<Signal<Timeline>>
+	const timeline = flatten(
+		match(params.tab)
+			.case("posts", () => derive(() => Timeline.create({ author: params.userAddress.ref })))
+			.case("replies", () => derive(() => Timeline.create({ author: params.userAddress.ref, replies: "only" })))
+			.case("mentions", () => derive(() => Timeline.create({ mention: params.userAddress.ref, replies: "include" })))
+			.default()
+	)
 
 	const isMyProfile = derive(() => params.userAddress.ref === Wallet.browserWallet.ref?.address)
 
@@ -63,7 +60,7 @@ export const userLayout = createLayout<{ userAddress: Address; tab: "posts" | "r
 			${match(isMyProfile)
 				.case(true, () => html`${PostFormUI(signal(null))}`)
 				.default(() => null)}
-			${TimelineUI(timelineFlat)}`)
+			${TimelineUI(timeline)}`)
 	)
 
 	const topRoot = userPageTopTag()

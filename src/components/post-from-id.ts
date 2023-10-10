@@ -11,7 +11,7 @@ import { match } from "master-ts/extra/match"
 import { PostUI } from "./post"
 
 const postFromIdTag = defineCustomTag("x-post-from-id")
-export function PostFromIdUI(postId: Readonly<Signal<PostId>>, ...args: Call<Tuples.Drop<1>, Parameters<typeof PostUI>>) {
+export function PostFromIdUI(postId: Signal<PostId>, ...args: Call<Tuples.Drop<1>, Parameters<typeof PostUI>>) {
 	const root = postFromIdTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

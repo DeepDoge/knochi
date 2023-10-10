@@ -9,7 +9,7 @@ import { html } from "master-ts/extra/html"
 import { PostUI } from "./post"
 
 const timelineTag = defineCustomTag("x-timeline")
-export function TimelineUI(timeline: Readonly<Signal<Timeline>>) {
+export function TimelineUI(timeline: Signal<Timeline>) {
 	const root = timelineTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

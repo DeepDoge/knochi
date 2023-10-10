@@ -8,7 +8,7 @@ import { html } from "master-ts/extra/html"
 import { match } from "master-ts/extra/match"
 
 const postIdsTag = defineCustomTag("x-post-ids")
-export function PostIdsUI(post: Readonly<Signal<Post>>) {
+export function PostIdsUI(post: Signal<Post>) {
 	const root = postIdsTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

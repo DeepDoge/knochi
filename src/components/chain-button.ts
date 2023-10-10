@@ -6,7 +6,7 @@ import { defineCustomTag } from "master-ts/extra/custom-tags"
 import { html } from "master-ts/extra/html"
 
 const chainButtonTag = defineCustomTag("x-chain-button")
-export function ChainButtonUI(key: Readonly<Signal<Networks.ChainKey>>) {
+export function ChainButtonUI(key: Signal<Networks.ChainKey>) {
 	const root = chainButtonTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

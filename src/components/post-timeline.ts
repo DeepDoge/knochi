@@ -14,7 +14,7 @@ import { INSTANCEOF, match } from "master-ts/extra/match"
 import { PostUI } from "./post"
 
 const postTimelineTag = defineCustomTag("x-post-timeline")
-export function PostTimelineUI(postId: Readonly<Signal<PostId>>) {
+export function PostTimelineUI(postId: Signal<PostId>) {
 	const root = postTimelineTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

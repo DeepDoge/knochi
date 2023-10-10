@@ -12,10 +12,10 @@ export type Layout = {
 }
 
 export function createLayout<T extends Record<PropertyKey, unknown> = Record<PropertyKey, never>>(
-	factory: (params: { [K in keyof T]: Readonly<Signal<T[K]>> }) => Layout
+	factory: (params: { [K in keyof T]: Signal<T[K]> }) => Layout
 ) {
 	let cache: Layout | null = null
-	let paramSignals: { [K in keyof T]: Signal<T[K]> }
+	let paramSignals: { [K in keyof T]: Signal.Mut<T[K]> }
 	return (params: T) => {
 		if (cache) {
 			const entries = Object.entries(paramSignals) as [keyof typeof paramSignals, (typeof paramSignals)[keyof typeof paramSignals]][]
@@ -23,7 +23,7 @@ export function createLayout<T extends Record<PropertyKey, unknown> = Record<Pro
 		} else {
 			cache = factory(
 				(paramSignals = Object.fromEntries(Object.entries(params).map(([key, value]) => [key, signal(value)])) as {
-					[K in keyof T]: Readonly<Signal<T[K]>>
+					[K in keyof T]: Signal.Mut<T[K]>
 				})
 			)
 		}

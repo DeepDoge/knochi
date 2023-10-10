@@ -19,7 +19,7 @@ import { ProfileAddressUI } from "./profile-address"
 import { ProfileAvatarUI } from "./profile-avatar"
 
 const postTag = defineCustomTag("x-post")
-export function PostUI(post: Readonly<Signal<Post>>, reposterAddress: Readonly<Signal<Address | null>> | null) {
+export function PostUI(post: Signal<Post>, reposterAddress: Signal<Address | null> | null) {
 	const root = postTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

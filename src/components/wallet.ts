@@ -19,7 +19,7 @@ export function MyWalletUI() {
 	return root
 }
 
-export function requireWallet(then: (wallet: Readonly<Signal<Wallet>>) => TagsNS.AcceptedChild) {
+export function requireWallet(then: (wallet: Signal<Wallet>) => TagsNS.AcceptedChild) {
 	// TODO: this and many other `match` signals can be simplified with the new feature of `match`
 	// `Wallet` itself can be simplified.
 	return match(Wallet.browserWallet)

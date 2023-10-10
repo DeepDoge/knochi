@@ -13,7 +13,7 @@ import { match } from "master-ts/extra/match"
 import { PostFromIdUI } from "./post-from-id"
 
 const postContentTag = defineCustomTag("x-post-content")
-export function PostContentUI(post: Readonly<Signal<Post>>) {
+export function PostContentUI(post: Signal<Post>) {
 	const root = postContentTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

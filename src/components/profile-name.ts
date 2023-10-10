@@ -7,7 +7,7 @@ import { defineCustomTag } from "master-ts/extra/custom-tags"
 import { html } from "master-ts/extra/html"
 
 const profileNameTag = defineCustomTag("x-profile-name")
-export function ProfileNameUI(address: Readonly<Signal<Address>>) {
+export function ProfileNameUI(address: Signal<Address>) {
 	const root = profileNameTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)

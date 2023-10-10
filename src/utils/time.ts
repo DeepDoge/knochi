@@ -26,7 +26,7 @@ export function relativeTime(date: Date): string {
 	return relativeTimeFormat.format(0, "second")
 }
 
-export function relativeTimeSignal(date: Date): Readonly<Signal<string>> {
+export function relativeTimeSignal(date: Date): Signal<string> {
 	return derive(() => {
 		const diff = Math.floor((new Date().getTime() - date.getTime()) / 1000)
 
