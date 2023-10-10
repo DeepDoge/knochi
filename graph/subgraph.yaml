@@ -3,10 +3,10 @@ schema:
     file: ./schema.graphql
 dataSources:
     - kind: ethereum
-      name: IEternisTransactionEmitter
+      name: IEternis
       network: sepolia
       source:
-          abi: IEternisTransactionEmitter
+          abi: IEternis
           startBlock: 3325895
       mapping:
           kind: ethereum/events
@@ -15,8 +15,8 @@ dataSources:
           entities:
               - EternisTransaction
           abis:
-              - name: IEternisTransactionEmitter
-                file: ../src/contracts/artifacts/IEternisTransactionEmitter.json
+              - name: IEternis
+                file: ../src/contracts/artifacts/IEternis.json
           eventHandlers:
               - event: EternisTransaction(uint256,bytes)
                 handler: map

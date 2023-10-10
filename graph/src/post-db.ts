@@ -1,5 +1,5 @@
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts"
-import { EternisTransaction } from "../generated/IEternisTransactionEmitter/IEternisTransactionEmitter"
+import { EternisTransaction } from "../generated/IEternis/IEternis"
 import { Post, PostChainCounter, PostContent, PostReplyCounter, PostReplyCounter_FourHourTimeframe } from "../generated/schema"
 
 const EMPTY_BYTES = new Bytes(0)

@@ -1,32 +1,37 @@
+import { commonStyle } from "@/import-styles"
 import { routeHash } from "@/router"
 import type { Post } from "@/utils/post"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment, type Signal } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
+import { match } from "master-ts/extra/match"
 
-const PostIdsComponent = defineComponent("x-post-ids")
-export function PostIdsUI(post: SignalReadable<Post>) {
-	const component = new PostIdsComponent()
+const postIdsTag = defineCustomTag("x-post-ids")
+export function PostIdsUI(post: Readonly<Signal<Post>>) {
+	const root = postIdsTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	const postId = $.derive(() => post.ref.id)
-	const postHref = $.derive(() => routeHash({ postId: postId.ref }))
+	const postId = derive(() => post.ref.id)
+	const postHref = derive(() => routeHash({ postId: postId.ref }))
 
-	const parentId = $.derive(() => post.ref.parentId)
-	const parentHref = $.derive(() => routeHash({ postId: parentId.ref }))
+	const parentId = derive(() => post.ref.parentId)
+	const parentHref = derive(() => routeHash({ postId: parentId.ref }))
 
-	component.$html = html`
-		<a class="id post-id" href=${postHref}> ${() => postId.ref.slice(postId.ref.length - 5)} </a>
-		${$.switch($.derive(() => post.ref.parentId))
-			.match(null, () => null)
-			.default((parentId) => html`<a class="id parent-id" href=${parentHref}> ${() => parentId.ref.slice(parentId.ref.length - 5)} </a>`)}
-	`
+	dom.append(
+		fragment(html`
+			<a class="id post-id" href=${postHref}> ${() => postId.ref.slice(postId.ref.length - 5)} </a>
+			${match(derive(() => post.ref.parentId))
+				.case(null, () => null)
+				.default((parentId) => html`<a class="id parent-id" href=${parentHref}> ${() => parentId.ref.slice(parentId.ref.length - 5)} </a>`)}
+		`)
+	)
 
-	return component
+	return root
 }
 
-PostIdsComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 		grid-auto-flow: column;

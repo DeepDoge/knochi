@@ -1,29 +1,35 @@
+import { commonStyle } from "@/import-styles"
 import { Post } from "@/utils/post"
 import type { PostId } from "@/utils/post-id"
 import type { Call, Tuples } from "hotscript"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment, type Signal } from "master-ts/core"
+import { awaited } from "master-ts/extra/awaited"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
+import { match } from "master-ts/extra/match"
 import { PostUI } from "./post"
 
-const PostFromIdComponent = defineComponent("x-post-from-id")
-export function PostFromIdUI(postId: SignalReadable<PostId>, ...args: Call<Tuples.Drop<1>, Parameters<typeof PostUI>>) {
-	const component = new PostFromIdComponent()
+const postFromIdTag = defineCustomTag("x-post-from-id")
+export function PostFromIdUI(postId: Readonly<Signal<PostId>>, ...args: Call<Tuples.Drop<1>, Parameters<typeof PostUI>>) {
+	const root = postFromIdTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	const post = $.await($.derive(() => Post.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId])).then()
+	const post = derive(() => awaited(Post.getPosts([postId.ref]).then((posts) => posts[0] ?? null)).ref, [postId])
 
-	component.$html = html`
-		${$.switch(post)
-			.match(null, () => null)
-			.default((post) => PostUI(post, ...args))}
-	`
+	dom.append(
+		fragment(html`
+			${match(post)
+				.case(null, () => null)
+				.default((post) => PostUI(post, ...args))}
+		`)
+	)
 
-	return component
+	return root
 }
 
-PostFromIdComponent.$css = css`
+const style = css`
 	:host {
 		display: contents;
 	}

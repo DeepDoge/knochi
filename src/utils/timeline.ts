@@ -1,7 +1,6 @@
 import { Networks } from "@/networks"
 import { ethers } from "ethers"
-import { $ } from "master-ts/library/$"
-import type { SignalReadable } from "master-ts/library/signal"
+import { signal, type Signal } from "master-ts/core"
 import { gql } from "urql"
 import { Address } from "./address"
 import { BigMath } from "./bigmath"
@@ -10,9 +9,9 @@ import { PostId } from "./post-id"
 
 export type Timeline = {
 	loadBottom(): Promise<void>
-	posts: SignalReadable<Post[]>
-	loading: SignalReadable<boolean>
-	newPostCountAtTop: SignalReadable<number>
+	posts: Readonly<Signal<Post[]>>
+	loading: Readonly<Signal<boolean>>
+	newPostCountAtTop: Readonly<Signal<number>>
 }
 
 export namespace Timeline {
@@ -69,14 +68,14 @@ export namespace Timeline {
         }
     }`
 
-		const posts = $.writable<Post[]>([])
+		const posts = signal<Post[]>([])
 		const postQueuesOfChains = Networks.graphClients.map(() => [] as Post[])
 		const isChainFinished = new Array(Networks.graphClients.length).fill(false)
 		const lastIndex = new Array<bigint>(Networks.graphClients.length)
 
-		const loadedOnce = $.writable(false)
+		const loadedOnce = signal(false)
 
-		let loading = $.writable(false)
+		let loading = signal(false)
 		async function loadBottom(count = 128) {
 			if (loading.ref) return
 			loading.ref = true
@@ -135,7 +134,7 @@ export namespace Timeline {
 					posts.ref.push(postQueuesOfChains[newestChainIndex]!.shift()!)
 				}
 
-				if (posts.ref.length !== postsLengthCache) posts.signal()
+				if (posts.ref.length !== postsLengthCache) posts.ping()
 			} catch (error) {
 				console.error(error)
 			} finally {
@@ -144,7 +143,7 @@ export namespace Timeline {
 			}
 		}
 
-		const newPostsAtTop = $.writable(0)
+		const newPostsAtTop = signal(0)
 
 		// TODO: do this.
 		/* {

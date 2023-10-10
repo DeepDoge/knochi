@@ -1,17 +1,16 @@
 import { PostId } from "@/utils/post-id"
-import { $ } from "master-ts/library/$"
-import type { SignalReadable, SignalWritable } from "master-ts/library/signal"
+import { derive, signal, type Signal } from "master-ts/core"
 
-const routePath = $.writable("")
-const routePathArr = $.derive(() => routePath.ref.split("/"))
-const routePostId = $.writable<PostId | null>(null)
+const routePath = signal("")
+const routePathArr = derive(() => routePath.ref.split("/"))
+const routePostId = signal<PostId | null>(null)
 const route = {
 	path: routePath,
 	pathArr: routePathArr,
 	postId: routePostId,
 }
 const routeReadable = route as {
-	[K in keyof typeof route]: (typeof route)[K] extends SignalWritable<infer U> ? SignalReadable<U> : (typeof route)[K]
+	[K in keyof typeof route]: (typeof route)[K] extends Signal<infer U> ? Readonly<Signal<U>> : (typeof route)[K]
 }
 export { routeReadable as route }
 function updateRoute() {

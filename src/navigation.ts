@@ -5,63 +5,70 @@ import { HomeOutlineSvg } from "@/assets/svgs/home-outline"
 import { SearchSvg } from "@/assets/svgs/search"
 import { route } from "@/router"
 import { Wallet } from "@/utils/wallet"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+
+import { derive, fragment } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
+import { match } from "master-ts/extra/match"
 import { ChainChangerButtonUI } from "./components/chain-changer-button"
 import { MyWalletUI } from "./components/wallet"
+import { commonStyle } from "./import-styles"
 
-const NavigationComponent = defineComponent("x-navigation")
+const navigationTag = defineCustomTag("x-navigation")
 export function Navigation() {
-	const component = new NavigationComponent()
+	const root = navigationTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	const firstPartOfPath = $.derive(() => route.pathArr.ref[0])
+	const firstPartOfPath = derive(() => route.pathArr.ref[0])
 
-	component.$html = html`
-		<div class="left">
-			<ul>
-				<li>
-					<x ${MyWalletUI()} class="profile" class:active=${() => firstPartOfPath.ref === Wallet.browserWallet.ref?.address}></x>
-				</li>
-			</ul>
-		</div>
+	dom.append(
+		fragment(html`
+			<div class="left">
+				<ul>
+					<li>
+						<x ${MyWalletUI()} class="profile" class:active=${() => firstPartOfPath.ref === Wallet.browserWallet.ref?.address}></x>
+					</li>
+				</ul>
+			</div>
 
-		<nav class="center">
-			<ul>
-				<li>
-					<a href="#" class="icon" class:active=${() => firstPartOfPath.ref === ""} aria-label="home" title="Home">
-						${$.switch(firstPartOfPath)
-							.match("", () => html`<x ${HomeFilledSvg()}></x>`)
-							.default(() => html`<x ${HomeOutlineSvg()}></x>`)}
-					</a>
-				</li>
-				<li>
-					<a href="#search" class="icon" class:active=${() => firstPartOfPath.ref === "search"} aria-label="search" title="Search">
-						<x ${SearchSvg()}></x>
-					</a>
-				</li>
-				<li>
-					<a href="#popular" class="icon" class:active=${() => firstPartOfPath.ref === "popular"} aria-label="top posts" title="Popular Posts">
-						${$.switch(firstPartOfPath)
-							.match("popular", () => html`<x ${ChartFilledSvg()}></x>`)
-							.default(() => html`<x ${ChartOutlineSvg()}></x>`)}
-					</a>
-				</li>
-			</ul>
-		</nav>
+			<nav class="center">
+				<ul>
+					<li>
+						<a href="#" class="icon" class:active=${() => firstPartOfPath.ref === ""} aria-label="home" title="Home">
+							${match(firstPartOfPath)
+								.case("", () => html`<x ${HomeFilledSvg()}></x>`)
+								.default(() => html`<x ${HomeOutlineSvg()}></x>`)}
+						</a>
+					</li>
+					<li>
+						<a href="#search" class="icon" class:active=${() => firstPartOfPath.ref === "search"} aria-label="search" title="Search">
+							<x ${SearchSvg()}></x>
+						</a>
+					</li>
+					<li>
+						<a href="#popular" class="icon" class:active=${() => firstPartOfPath.ref === "popular"} aria-label="top posts" title="Popular Posts">
+							${match(firstPartOfPath)
+								.case("popular", () => html`<x ${ChartFilledSvg()}></x>`)
+								.default(() => html`<x ${ChartOutlineSvg()}></x>`)}
+						</a>
+					</li>
+				</ul>
+			</nav>
 
-		<div class="right" class:hide=${() => !Wallet.browserWallet.ref}>
-			<ul>
-				<li>${ChainChangerButtonUI()}</li>
-			</ul>
-		</div>
-	`
+			<div class="right" class:hide=${() => !Wallet.browserWallet.ref}>
+				<ul>
+					<li>${ChainChangerButtonUI()}</li>
+				</ul>
+			</div>
+		`)
+	)
 
-	return component
+	return root
 }
 
-NavigationComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 		justify-content: space-between;

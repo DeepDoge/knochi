@@ -1,4 +1,4 @@
-import { html } from "master-ts/library/template/tags/html"
+import { html } from "master-ts/extra/html"
 
 export function EthereumChainSvg() {
 	return html`
@@ -10,5 +10,5 @@ export function EthereumChainSvg() {
 			<path d="M9.9963 22.116L19.9939 16.3098L9.9963 11.845V22.116Z" fill="#8197EE" />
 			<path d="M0 16.3097L9.9979 22.1159V11.8449L0 16.3097Z" fill="#C0CBF6" />
 		</svg>
-	`.firstChild as SVGElement
+	`[0] as SVGElement
 }

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "./IEternisTransactionEmitter.sol";
+import "./IEternis.sol";
 
 /* 
     Off-chain rules:
     - If you offer payment for a post that you didnt post, its being ignored and not showed. Even if the offer accepted on chain. So you would waste money.
 */
 
-contract EternisSponsoredPost is IEternisTransactionEmitter {
+contract EternisSponsoredPost is IEternis {
     uint256 public index; // offer and post index counter
 
     struct Offer

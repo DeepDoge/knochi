@@ -1,4 +1,4 @@
-import { html } from "master-ts/library/template/tags/html"
+import { html } from "master-ts/extra/html"
 
 export function CopySvg() {
 	return html`
@@ -16,5 +16,5 @@ export function CopySvg() {
 				fill-rule="nonzero"
 				fill="currentColor" />
 		</svg>
-	`.firstChild as SVGElement
+	`[0] as SVGElement
 }

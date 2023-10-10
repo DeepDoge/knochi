@@ -1,11 +1,9 @@
 import globalCss from "@/styles/global.css?inline"
 import rootCss from "@/styles/root.css?inline"
-import { ComponentBase } from "master-ts/library/component"
 
-const globalStyleSheet = new CSSStyleSheet()
-const rootStyleSheet = new CSSStyleSheet()
+export const commonStyle = new CSSStyleSheet()
+const rootStyle = new CSSStyleSheet()
 
-await Promise.all([globalStyleSheet.replace(globalCss), rootStyleSheet.replace(rootCss)])
+await Promise.all([commonStyle.replace(globalCss), rootStyle.replace(rootCss)])
 
-ComponentBase.$globalStyleSheets.push(globalStyleSheet)
-document.adoptedStyleSheets.push(rootStyleSheet, globalStyleSheet)
+document.adoptedStyleSheets.push(rootStyle, commonStyle)

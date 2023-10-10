@@ -1,58 +1,65 @@
 import { PostFormUI } from "@/components/post-form"
 import { TimelineUI } from "@/components/timeline"
+import { commonStyle } from "@/import-styles"
 import { route, routeHash } from "@/router"
 import { Post } from "@/utils/post"
 import type { PostId } from "@/utils/post-id"
 import { Timeline } from "@/utils/timeline"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal"
-import { INSTANCEOF } from "master-ts/library/signal/switch"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment, type Signal } from "master-ts/core"
+import { awaited } from "master-ts/extra/awaited"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
+import { INSTANCEOF, match } from "master-ts/extra/match"
 import { PostUI } from "./post"
 
-const PostTimelineComponent = defineComponent("x-post-timeline")
-export function PostTimelineUI(postId: SignalReadable<PostId>) {
-	const component = new PostTimelineComponent()
+const postTimelineTag = defineCustomTag("x-post-timeline")
+export function PostTimelineUI(postId: Readonly<Signal<PostId>>) {
+	const root = postTimelineTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	const post = $.await($.derive(() => Post.getPosts([postId.ref]).then((posts) => posts[0] ?? null), [postId]))
-		.catch((error) => (error instanceof Error ? error : new Error(`${error}`)))
-		.then()
-	const repliesTimeline = $.derive(() => Timeline.create({ parentId: postId.ref }))
+	const post = awaited(
+		Post.getPosts([postId.ref])
+			.then((posts) => posts[0] ?? null)
+			.catch((error) => (error instanceof Error ? error : new Error(`${error}`)))
+	)
+	const repliesTimeline = derive(() => Timeline.create({ parentId: postId.ref }))
 
-	component.$html = html`
-		<div class="top">
-			<a class="btn" href=${$.derive(() => routeHash({ postId: null }), [route.path])}>← Close</a>
-			<h2 class="title">Post</h2>
-		</div>
-		<div class="content">
-			<div class="family">
-				${$.switch(post)
-					.match(null, () => null)
-					.match(
-						{ [INSTANCEOF]: Error },
-						(error) => html`
-							<div class="error">
-								Can't load post ${postId}
-								<code><pre>${error.ref.message}</pre></code>
-							</div>
-						`
-					)
-					.default((post) => PostUI(post, null))}
+	dom.append(
+		fragment(html`
+			<div class="top">
+				<a class="btn" href=${derive(() => routeHash({ postId: null }), [route.path])}>← Close</a>
+				<h2 class="title">Post</h2>
 			</div>
-			<div class="replies">
-				<h3 class="title">Replies</h3>
-				<x ${PostFormUI(postId)} class="form"></x>
-				<x ${TimelineUI(repliesTimeline)} class="timeline"></x>
+			<div class="content">
+				<div class="family">
+					${match(post)
+						.case(null, () => null)
+						.case(
+							{ [INSTANCEOF]: Error },
+							(error) => html`
+								<div class="error">
+									Can't load post ${postId}
+									<code><pre>${error.ref.message}</pre></code>
+								</div>
+							`
+						)
+						.default((post) => PostUI(post, null))}
+				</div>
+				<div class="replies">
+					<h3 class="title">Replies</h3>
+					<x ${PostFormUI(postId)} class="form"></x>
+					<x ${TimelineUI(repliesTimeline)} class="timeline"></x>
+				</div>
 			</div>
-		</div>
-	`
+		`)
+	)
 
-	return component
+	return root
 }
 
-PostTimelineComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 		gap: calc(var(--span) * 1);

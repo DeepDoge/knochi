@@ -1,44 +1,48 @@
 import { ProfileNameUI } from "@/components/profile-name"
+import { commonStyle } from "@/import-styles"
 import { Address } from "@/utils/address"
 import type { Post } from "@/utils/post"
 import { PostId } from "@/utils/post-id"
 import { ethers } from "ethers"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment, type Signal } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { each } from "master-ts/extra/each"
+import { html } from "master-ts/extra/html"
+import { match } from "master-ts/extra/match"
 import { PostFromIdUI } from "./post-from-id"
 
-const PostContentComponent = defineComponent("x-post-content")
-export function PostContentUI(post: SignalReadable<Post>) {
-	const component = new PostContentComponent()
+const postContentTag = defineCustomTag("x-post-content")
+export function PostContentUI(post: Readonly<Signal<Post>>) {
+	const root = postContentTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	const postContents = $.derive(() => post.ref.contents)
+	const postContents = derive(() => post.ref.contents)
 
-	component.$html = html`
-		${$.each(postContents).as((content) =>
-			$.switch(content)
-				// Using async to catch errors
-				.match({ type: "text" }, () => html`<span>${$.await($.derive(async () => ethers.toUtf8String(content.ref.value))).then()}</span>`)
-				.match({ type: "@" }, () =>
-					$.await($.derive(async () => Address.from(ethers.toUtf8String(content.ref.value)))).then((address) => ProfileNameUI(address))
-				)
-				.match({ type: "echo" }, () =>
-					$.await($.derive(async () => PostId.fromUint8Array(content.ref.value))).then((postId) =>
-						$.switch(postId)
-							.match(post.ref.id, () => null)
-							.default((postId) => PostFromIdUI(postId, null))
-					)
-				)
-				.default(() => null)
-		)}
-	`
+	dom.append(
+		fragment(html`
+			${each(postContents)
+				.key((item) => item)
+				.as((content) =>
+					match(content)
+						// TODO: This doesn't handle errors
+						.case({ type: "text" }, (content) => html`<span>${derive(() => ethers.toUtf8String(content.ref.value))}</span>`)
+						.case({ type: "@" }, (content) => ProfileNameUI(derive(() => Address.from(ethers.toUtf8String(content.ref.value)))))
+						.case({ type: "echo" }, (content) =>
+							match(derive(() => PostId.fromUint8Array(content.ref.value)))
+								.case(post.ref.id, () => null)
+								.default((postId) => PostFromIdUI(postId, null))
+						)
+						.default(() => null)
+				)}
+		`)
+	)
 
-	return component
+	return root
 }
 
-PostContentComponent.$css = css`
+const style = css`
 	:host {
 		font-size: 1.1em;
 

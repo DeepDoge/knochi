@@ -1,75 +1,83 @@
 import { RepostSvg } from "@/assets/svgs/repost"
 import { ProfileNameUI } from "@/components/profile-name"
+import { commonStyle } from "@/import-styles"
 import { Networks } from "@/networks"
 import { route, routeHash } from "@/router"
 import type { Address } from "@/utils/address"
 import type { Post } from "@/utils/post"
 import { PostId } from "@/utils/post-id"
 import { relativeTimeSignal } from "@/utils/time"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment, type Signal } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
+import { match } from "master-ts/extra/match"
 import { PostActionsUI } from "./post-actions"
 import { PostContentUI } from "./post-content"
 import { PostFromIdUI } from "./post-from-id"
 import { ProfileAddressUI } from "./profile-address"
 import { ProfileAvatarUI } from "./profile-avatar"
 
-const PostComponent = defineComponent("x-post")
-export function PostUI(post: SignalReadable<Post>, reposterAddress: SignalReadable<Address | null> | null) {
-	const component = new PostComponent()
+const postTag = defineCustomTag("x-post")
+export function PostUI(post: Readonly<Signal<Post>>, reposterAddress: Readonly<Signal<Address | null>> | null) {
+	const root = postTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	const postId = $.derive(() => post.ref.id)
-	const postContents = $.derive(() => post.ref.contents)
-	const postAuthor = $.derive(() => post.ref.author)
-	const postHref = $.derive(() => routeHash({ postId: postId.ref }))
+	const postId = derive(() => post.ref.id)
+	const postContents = derive(() => post.ref.contents)
+	const postAuthor = derive(() => post.ref.author)
+	const postHref = derive(() => routeHash({ postId: postId.ref }))
 
-	const repostedPostId = $.derive(() =>
+	const repostedPostId = derive(() =>
 		postContents.ref.length === 1 && postContents.ref[0]!.type === "echo" ? PostId.fromUint8Array(postContents.ref[0]!.value) : null
 	)
 
-	component.$html = html`
-		${$.switch(repostedPostId)
-			.match(
-				null,
-				() => html`
-					<div class="post" class:is-repost=${() => !!(reposterAddress && reposterAddress.ref)} class:active=${() => route.postId.ref === postId.ref}>
-						<a href=${postHref} class="backdrop-link"></a>
-						<x ${RepostSvg()} class="repost-icon" style:grid-area=${"repost-icon"}></x>
-						<span class="repost-text" style:grid-area=${"repost-text"}>
-							<a href=${() => reposterAddress?.ref && routeHash({ path: reposterAddress.ref })}>${reposterAddress}</a> reposted
-						</span>
+	dom.append(
+		fragment(html`
+			${match(repostedPostId)
+				.case(
+					null,
+					() => html`
+						<div
+							class="post"
+							class:is-repost=${() => !!(reposterAddress && reposterAddress.ref)}
+							class:active=${() => route.postId.ref === postId.ref}>
+							<a href=${postHref} class="backdrop-link"></a>
+							<x ${RepostSvg()} class="repost-icon" style:grid-area=${"repost-icon"}></x>
+							<span class="repost-text" style:grid-area=${"repost-text"}>
+								<a href=${() => reposterAddress?.ref && routeHash({ path: reposterAddress.ref })}>${reposterAddress}</a> reposted
+							</span>
 
-						<x ${ProfileAvatarUI(postAuthor)} class="avatar" style:grid-area=${"avatar"}></x>
-						<x ${ProfileNameUI(postAuthor)} class="name" style:grid-area=${"name"}></x>
-						<x ${ProfileAddressUI(postAuthor)} class="address" style:grid-area=${"address"}></x>
+							<x ${ProfileAvatarUI(postAuthor)} class="avatar" style:grid-area=${"avatar"}></x>
+							<x ${ProfileNameUI(postAuthor)} class="name" style:grid-area=${"name"}></x>
+							<x ${ProfileAddressUI(postAuthor)} class="address" style:grid-area=${"address"}></x>
 
-						<span class="chain" style:grid-area=${"chain"} title=${() => Networks.chains[post.ref.chainKey].name}>
-							${() => Networks.chains[post.ref.chainKey].name}
-						</span>
+							<span class="chain" style:grid-area=${"chain"} title=${() => Networks.chains[post.ref.chainKey].name}>
+								${() => Networks.chains[post.ref.chainKey].name}
+							</span>
 
-						<x
-							${PostContentUI(post)}
-							class="content"
-							style:grid-area=${"content"}
-							on:click=${() => (location.hash = postHref.ref)}
-							style:cursor=${"pointer"}>
-						</x>
+							<x
+								${PostContentUI(post)}
+								class="content"
+								style:grid-area=${"content"}
+								on:click=${() => (location.hash = postHref.ref)}
+								style:cursor=${"pointer"}>
+							</x>
 
-						${() => html`<x ${PostActionsUI(post.ref)} class="actions" style:grid-area=${"actions"}></x>`}
-						<a class="date" style:grid-area=${"date"} href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
-					</div>
-				`
-			)
-			.default((repostedPostId) => PostFromIdUI(repostedPostId, postAuthor))}
-	`
+							${() => html`<x ${PostActionsUI(post.ref)} class="actions" style:grid-area=${"actions"}></x>`}
+							<a class="date" style:grid-area=${"date"} href=${postHref}>${() => relativeTimeSignal(post.ref.createdAt)}</a>
+						</div>
+					`
+				)
+				.default((repostedPostId) => PostFromIdUI(repostedPostId, postAuthor))}
+		`)
+	)
 
-	return component
+	return root
 }
 
-PostComponent.$css = css`
+const style = css`
 	:host {
 		display: contents;
 		font-size: 1rem;

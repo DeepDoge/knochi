@@ -1,11 +1,11 @@
 {
 	"mumbai": {
-		"IEternisTransactionEmitter": {
+		"IEternis": {
 			"startBlock": 34604962
 		}
 	},
 	"sepolia": {
-		"IEternisTransactionEmitter": {
+		"IEternis": {
 			"startBlock": 3325895
 		}
 	}

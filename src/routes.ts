@@ -4,28 +4,26 @@ import { unknownLayout } from "@/pages/unknown"
 import { userLayout } from "@/pages/user"
 import { route } from "@/router"
 import { Address } from "@/utils/address"
-import { $ } from "master-ts/library/$"
-import type { ComponentBase } from "master-ts/library/component"
-import type { SignalReadable, SignalWritable } from "master-ts/library/signal"
+import { signal, type Signal } from "master-ts/core"
 
 export type Layout = {
-	top: ComponentBase | null
-	page: ComponentBase
+	top: HTMLElement | null
+	page: HTMLElement
 }
 
 export function createLayout<T extends Record<PropertyKey, unknown> = Record<PropertyKey, never>>(
-	factory: (params: { [K in keyof T]: SignalReadable<T[K]> }) => Layout
+	factory: (params: { [K in keyof T]: Readonly<Signal<T[K]>> }) => Layout
 ) {
 	let cache: Layout | null = null
-	let paramSignals: { [K in keyof T]: SignalWritable<T[K]> }
+	let paramSignals: { [K in keyof T]: Signal<T[K]> }
 	return (params: T) => {
 		if (cache) {
 			const entries = Object.entries(paramSignals) as [keyof typeof paramSignals, (typeof paramSignals)[keyof typeof paramSignals]][]
 			entries.forEach(([key, signal]) => (signal.ref = params[key]))
 		} else {
 			cache = factory(
-				(paramSignals = Object.fromEntries(Object.entries(params).map(([key, value]) => [key, $.writable(value)])) as {
-					[K in keyof T]: SignalWritable<T[K]>
+				(paramSignals = Object.fromEntries(Object.entries(params).map(([key, value]) => [key, signal(value)])) as {
+					[K in keyof T]: Readonly<Signal<T[K]>>
 				})
 			)
 		}
@@ -33,8 +31,8 @@ export function createLayout<T extends Record<PropertyKey, unknown> = Record<Pro
 	}
 }
 
-export const routerLayout = $.readable<Layout>((set) => {
-	const sub = route.pathArr.subscribe(
+export const routerLayout = signal<Layout>(null!, (set) => {
+	const follow = route.pathArr.follow(
 		(path) => {
 			if (path[0] === "") {
 				set(homeLayout({}))
@@ -64,6 +62,6 @@ export const routerLayout = $.readable<Layout>((set) => {
 
 	return () => {
 		console.log("unsub")
-		sub.unsubscribe()
+		follow.unfollow()
 	}
 })

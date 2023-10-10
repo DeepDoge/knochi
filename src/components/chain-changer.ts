@@ -1,28 +1,45 @@
 import { Networks } from "@/networks"
 import { Wallet } from "@/utils/wallet"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
 import { ChainButtonUI } from "./chain-button"
 
-const ChainChangerComponent = defineComponent("x-chain-changer")
+const chainChangerTag = defineCustomTag("x-chain-changer")
+
 export function ChainChangerUI() {
-	const component = new ChainChangerComponent()
+	const root = chainChangerTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(style)
 
 	const chainKeys = Object.keys(Networks.chains) as (keyof typeof Networks.chains)[]
 
-	component.$html = html`
-		<div class="title">Change Network</div>
-		<div class="chains">
-			${chainKeys.map((key) => html`<x ${ChainButtonUI($.derive(() => key))} on:click=${(e) => (e.preventDefault(), Wallet.changeChain(key))}></x>`)}
-		</div>
-	`
+	dom.append(
+		fragment(
+			html`
+				<div class="title">Change Network</div>
+				<div class="chains">
+					${chainKeys.map((key) => {
+						const chainKey = derive(() => key)
+						return html`
+							<x
+								${ChainButtonUI(chainKey)}
+								on:click=${(e: MouseEvent) => {
+									e.preventDefault()
+									Wallet.changeChain(key)
+								}}></x>
+						`
+					})}
+				</div>
+			`
+		)
+	)
 
-	return component
+	return root
 }
 
-ChainChangerComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 		grid-auto-flow: row;

@@ -2,32 +2,32 @@ import { PaperPlaneSvg } from "@/assets/svgs/paper-plane"
 import { ProfileAvatarUI } from "@/components/profile-avatar"
 import { ProfileNameUI } from "@/components/profile-name"
 import { requireWallet } from "@/components/wallet"
+import { commonStyle } from "@/import-styles"
 import { route } from "@/router"
 import { PostContent } from "@/utils/post-content"
 import { PostId } from "@/utils/post-id"
 import { Wallet } from "@/utils/wallet"
 import { ethers } from "ethers"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import { onMount$ } from "master-ts/library/lifecycle"
-import { onEvent$ } from "master-ts/library/lifecycle/events"
-import type { SignalReadable } from "master-ts/library/signal"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment, onConnected$, signal, type Signal } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
 
-const PostFormComponent = defineComponent("x-post-form")
-export function PostFormUI(parentId: SignalReadable<PostId | null>) {
-	const component = new PostFormComponent()
+const postFormTag = defineCustomTag("x-post-form")
+export function PostFormUI(parentId: Readonly<Signal<PostId | null>>) {
+	const root = postFormTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	const state = $.writable<"loading" | "idle" | Error>("idle")
-	const loading = $.derive(() => state.ref === "loading")
+	const state = signal<"loading" | "idle" | Error>("idle")
+	const loading = derive(() => state.ref === "loading")
 
-	const text = $.writable("")
-	const postContents = $.derive<PostContent[]>(() => [
+	const text = signal("")
+	const postContents = derive<PostContent[]>(() => [
 		{ type: "text", value: ethers.toUtf8Bytes(text.ref.trim()) },
 		...(parentId.ref ? [{ type: "parent", value: ethers.toBeArray(PostId.toHex(parentId.ref)) }] : []),
 	])
-	const bytes = $.derive(() => PostContent.encode(postContents.ref))
+	const bytes = derive(() => PostContent.encode(postContents.ref))
 
 	async function sendPost() {
 		try {
@@ -44,7 +44,7 @@ export function PostFormUI(parentId: SignalReadable<PostId | null>) {
 	}
 
 	function resizeTextArea() {
-		const textarea = component.$shadowRoot.querySelector<HTMLTextAreaElement>(".fields textarea")
+		const textarea = dom.querySelector<HTMLTextAreaElement>(".fields textarea")
 		if (!textarea) return
 		const placeholder = document.createElement("div")
 		placeholder.style.height = `${textarea.scrollHeight}px`
@@ -53,38 +53,43 @@ export function PostFormUI(parentId: SignalReadable<PostId | null>) {
 		textarea.style.height = `${textarea.scrollHeight}px`
 		placeholder.remove()
 	}
-	$.effect$(component, resizeTextArea, [route.postId])
-	onMount$(component, resizeTextArea)
-	onEvent$(component, "resize", resizeTextArea)
+	route.postId.follow$(dom, resizeTextArea)
+	onConnected$(dom, resizeTextArea)
+	onConnected$(dom, () => {
+		dom.addEventListener("resize", resizeTextArea)
+		return () => dom.removeEventListener("resize", resizeTextArea)
+	})
 
-	component.$html = html`
-		${requireWallet((wallet) => {
-			const profileAddress = $.derive(() => wallet.ref.address)
+	dom.append(
+		fragment(html`
+			${requireWallet((wallet) => {
+				const profileAddress = derive(() => wallet.ref.address)
 
-			return html`
-				<form on:submit=${(e) => (e.preventDefault(), sendPost())} class:loading=${loading}>
-					<x ${ProfileAvatarUI(profileAddress)} class="profile-avatar"></x>
-					<x ${ProfileNameUI(profileAddress)} class="profile-name"></x>
-					<div class="fields">
-						<textarea
-							required
-							placeholder=${() => (parentId.ref ? "Reply..." : "Say something...")}
-							bind:value=${text}
-							on:input=${resizeTextArea}></textarea>
-					</div>
-					<div class="actions">
-						<button class="btn">Post${PaperPlaneSvg()}</button>
-					</div>
-					<div class="byte-size">${() => bytes.ref.byteLength} bytes</div>
-				</form>
-			`
-		})}
-	`
+				return html`
+					<form on:submit=${(e) => (e.preventDefault(), sendPost())} class:loading=${loading}>
+						<x ${ProfileAvatarUI(profileAddress)} class="profile-avatar"></x>
+						<x ${ProfileNameUI(profileAddress)} class="profile-name"></x>
+						<div class="fields">
+							<textarea
+								required
+								placeholder=${() => (parentId.ref ? "Reply..." : "Say something...")}
+								bind:value=${text}
+								on:input=${resizeTextArea}></textarea>
+						</div>
+						<div class="actions">
+							<button class="btn">Post${PaperPlaneSvg()}</button>
+						</div>
+						<div class="byte-size">${() => bytes.ref.byteLength} bytes</div>
+					</form>
+				`
+			})}
+		`)
+	)
 
-	return component
+	return root
 }
 
-PostFormComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 	}

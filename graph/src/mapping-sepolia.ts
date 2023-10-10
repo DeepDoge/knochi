@@ -1,5 +1,5 @@
 import { Bytes } from "@graphprotocol/graph-ts"
-import { EternisTransaction } from "../generated/IEternisTransactionEmitter/IEternisTransactionEmitter"
+import { EternisTransaction } from "../generated/IEternis/IEternis"
 import { handlePost } from "./post-db"
 
 const chainId = Bytes.fromHexString("0xAA36A7")

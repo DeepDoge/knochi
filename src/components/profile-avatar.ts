@@ -1,36 +1,40 @@
+import { commonStyle } from "@/import-styles"
 import { routeHash } from "@/router"
 import type { Address } from "@/utils/address"
-import { defineComponent } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { html } from "master-ts/extra/html"
 // @ts-ignore
 import jazzicon_ from "@metamask/jazzicon"
-import { $ } from "master-ts/library/$"
+import { derive, fragment, type Signal } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
 
 const jazzicon = jazzicon_ as { (diameter: number, seed: number): HTMLElement }
 
-const ProfileAvatarComponent = defineComponent("x-profile-avatar")
-export function ProfileAvatarUI(address: SignalReadable<Address>) {
-	const component = new ProfileAvatarComponent()
+const profileAvatarTag = defineCustomTag("x-profile-avatar")
+export function ProfileAvatarUI(address: Readonly<Signal<Address>>) {
+	const root = profileAvatarTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	const avatarUrl = $.derive(
+	const avatarUrl = derive(
 		() =>
 			`data:image/svg+xml;base64,${window.btoa(
 				new XMLSerializer().serializeToString(jazzicon(100, parseInt(address.ref.substring("0x".length, 10), 16)).querySelector("svg")!)
 			)}`
 	)
 
-	component.$html = html`
-		<a class="avatar" href=${() => routeHash({ path: address.ref, postId: null })}>
-			<img src=${avatarUrl} alt="Avatar of ${address}" />
-		</a>
-	`
+	dom.append(
+		fragment(html`
+			<a class="avatar" href=${() => routeHash({ path: address.ref, postId: null })}>
+				<img src=${avatarUrl} alt="Avatar of ${address}" />
+			</a>
+		`)
+	)
 
-	return component
+	return root
 }
 
-ProfileAvatarComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 	}

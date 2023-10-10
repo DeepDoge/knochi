@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "./IEternisTransactionEmitter.sol";
+import "./IEternis.sol";
 
-contract EternisTipPost is IEternisTransactionEmitter {
+contract EternisTipPost is IEternis {
     uint256 public postIndex;
 
     struct Tip

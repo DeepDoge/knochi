@@ -1,22 +1,26 @@
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import type { Template } from "master-ts/library/template/node"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { commonStyle } from "@/import-styles"
+import { fragment, onConnected$, type TagsNS } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
 
-const FloatingBoxComponent = defineComponent("x-floating-box")
-export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Template.Value[]) {
-	const component = new FloatingBoxComponent()
+const floatingBoxTag = defineCustomTag("x-floating-box")
+export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: TagsNS.AcceptedChild[]) {
+	const root = floatingBoxTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	component.$html = html`
-		<div class="backdrop" on:click=${close}></div>
-		<div class="box">${boxChildren}</div>
-	`
-	document.body.appendChild(component)
+	dom.append(
+		fragment(html`
+			<div class="backdrop" on:click=${close}></div>
+			<div class="box">${boxChildren}</div>
+		`)
+	)
+	document.body.appendChild(dom)
 
-	const box = component.$shadowRoot.querySelector(".box") as HTMLDivElement
+	const box = dom.querySelector(".box") as HTMLDivElement
 
-	$.onMount$(component, () => {
+	onConnected$(root, () => {
 		const rect = box.getBoundingClientRect()
 		box.style.transform =
 			`translate(calc(${mouseEvent.x - rect.width * 0.5}px + var(--offset-x, 0px)),` +
@@ -28,7 +32,7 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 	})
 
 	function close() {
-		component.remove()
+		root.remove()
 	}
 
 	function updateOffsets() {
@@ -47,10 +51,10 @@ export function spawnFloatingBox(mouseEvent: MouseEvent, ...boxChildren: Templat
 		if (right < 0) box.style.setProperty("--offset-x", `${right - 16}px`)
 	}
 
-	return component
+	return root
 }
 
-FloatingBoxComponent.$css = css`
+const style = css`
 	:host {
 		display: contents;
 	}

@@ -3,7 +3,7 @@ import { connect_EternisTipPost, type EternisTipPost_Contract } from "@/contract
 import { Networks } from "@/networks"
 import { Address } from "@/utils/address"
 import { ethers } from "ethers"
-import { $ } from "master-ts/library/$"
+import { derive, signal } from "master-ts/core"
 
 export type Wallet = {
 	chainKey: Networks.ChainKey
@@ -35,10 +35,10 @@ export namespace Wallet {
 		ethereum.on("chainChanged", () => connect())
 	}
 
-	const browserWalletStateWritable = $.writable<State>("not-connected")
-	const browserWalletWritable = $.writable<Wallet | null>(null)
-	export const browserWallet = $.derive(() => browserWalletWritable.ref)
-	export const browserWalletState = $.derive(() => browserWalletStateWritable.ref)
+	const browserWalletStateWritable = signal<State>("not-connected")
+	const browserWalletWritable = signal<Wallet | null>(null)
+	export const browserWallet = derive(() => browserWalletWritable.ref)
+	export const browserWalletState = derive(() => browserWalletStateWritable.ref)
 
 	export async function connect() {
 		browserProvider = ethereum && new ethers.BrowserProvider(ethereum, "any")
@@ -76,7 +76,7 @@ export namespace Wallet {
 			await browserProvider.send("wallet_switchEthereumChain", [{ chainId: ethers.toBeHex(chainConfig.id) }])
 		} catch (err) {
 			// This error code indicates that the chain has not been added to MetaMask
-			if (err && typeof err === "object" && "code" in err && err.code === 4902) {
+			if (err && typeof err === "object" && "code" in err) {
 				type JsonRpcProviderConfig = {
 					chainName: string
 					chainId: string

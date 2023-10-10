@@ -1,15 +1,17 @@
 import { CommentSvg } from "@/assets/svgs/comment"
 import { RepostSvg } from "@/assets/svgs/repost"
+import { commonStyle } from "@/import-styles"
 import { routeHash } from "@/router"
 import type { Post } from "@/utils/post"
 import { PostContent } from "@/utils/post-content"
 import { PostId } from "@/utils/post-id"
 import { Wallet } from "@/utils/wallet"
-import { defineComponent } from "master-ts/library/component"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { fragment } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
 
-const PostActionsComponent = defineComponent("x-post-actions")
+const postActionsTag = defineCustomTag("x-post-actions")
 
 export type PostAction = {
 	svg: SVGElement
@@ -20,7 +22,9 @@ export type PostAction = {
 }
 
 export function PostActionsUI(post: Post) {
-	const component = new PostActionsComponent()
+	const root = postActionsTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
 	async function repost() {
 		const bytes = PostContent.encode([
@@ -49,29 +53,31 @@ export function PostActionsUI(post: Post) {
 		},
 	]
 
-	component.$html = html`
-		${postActions.map((postAction) => {
-			if (typeof postAction.action === "string")
-				return html`
-					<a class="ghost" href=${postAction.action} title=${postAction.label} style:--color--hsl=${postAction.colorHsl}>
-						<x ${postAction.svg} aria-label=${postAction.label}></x>
-						${postAction.text}
-					</a>
-				`
-			else
-				return html`
-					<button class="ghost" on:click=${postAction.action} title=${postAction.label} style:--color--hsl=${postAction.colorHsl}>
-						<x ${postAction.svg} aria-label=${postAction.label}></x>
-						${postAction.text}
-					</button>
-				`
-		})}
-	`
+	dom.append(
+		fragment(html`
+			${postActions.map((postAction) => {
+				if (typeof postAction.action === "string")
+					return html`
+						<a class="ghost" href=${postAction.action} title=${postAction.label} style:--color--hsl=${postAction.colorHsl}>
+							<x ${postAction.svg} aria-label=${postAction.label}></x>
+							${postAction.text}
+						</a>
+					`
+				else
+					return html`
+						<button class="ghost" on:click=${postAction.action} title=${postAction.label} style:--color--hsl=${postAction.colorHsl}>
+							<x ${postAction.svg} aria-label=${postAction.label}></x>
+							${postAction.text}
+						</button>
+					`
+			})}
+		`)
+	)
 
-	return component
+	return root
 }
 
-PostActionsComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 		grid-auto-flow: column;

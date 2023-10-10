@@ -1,37 +1,43 @@
 import "@/import-styles"
 
 import { PostTimelineUI } from "@/components/post-timeline"
+import { commonStyle } from "@/import-styles"
 import { Navigation } from "@/navigation"
 import { route } from "@/router"
 import { routerLayout } from "@/routes"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
+import { match } from "master-ts/extra/match"
 
-const AppComponent = defineComponent("x-app")
+const appTag = defineCustomTag("x-app")
 function App() {
-	const component = new AppComponent()
+	const root = appTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	component.$html = html`
-		<header>${Navigation()}</header>
-		<main>
-			${$.switch($.derive(() => routerLayout.ref.top))
-				.match(null, () => null)
-				.default((layoutTop) => html`<div class="top">${layoutTop}</div>`)}
-			<div class="bottom">
-				<div class="page">${() => routerLayout.ref.page}</div>
-				${$.switch(route.postId)
-					.match(null, () => null)
-					.default((postId) => html` <div class="post">${PostTimelineUI(postId)}</div>`)}
-			</div>
-		</main>
-	`
+	dom.append(
+		fragment(html`
+			<header>${Navigation()}</header>
+			<main>
+				${match(derive(() => routerLayout.ref.top))
+					.case(null, () => null)
+					.default((layoutTop) => html`<div class="top">${layoutTop}</div>`)}
+				<div class="bottom">
+					<div class="page">${() => routerLayout.ref.page}</div>
+					${match(route.postId)
+						.case(null, () => null)
+						.default((postId) => html` <div class="post">${PostTimelineUI(postId)}</div>`)}
+				</div>
+			</main>
+		`)
+	)
 
-	return component
+	return root
 }
 
-AppComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 		--space: calc(var(--span) * 0.75);

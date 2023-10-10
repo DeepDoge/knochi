@@ -1,33 +1,42 @@
 import { spawnFloatingBox } from "@/components/floating-box"
+import { commonStyle } from "@/import-styles"
 import { Wallet } from "@/utils/wallet"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
+import { match } from "master-ts/extra/match"
 import { ChainButtonUI } from "./chain-button"
 import { ChainChangerUI } from "./chain-changer"
 
-const ChainChangerButtonComponent = defineComponent("x-chain-changer-button")
+const chainChangerButtonTag = defineCustomTag("x-chain-changer-button")
+
 export function ChainChangerButtonUI() {
-	const component = new ChainChangerButtonComponent()
+	const root = chainChangerButtonTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	component.$html = html`
-		${$.switch(Wallet.browserWallet)
-			.match(null, () => null)
-			.default(
-				(wallet) =>
-					html`
-						<x
-							${ChainButtonUI($.derive(() => wallet.ref.chainKey))}
-							on:click=${(e: MouseEvent) => (e.preventDefault(), spawnFloatingBox(e, ChainChangerUI()))}></x>
-					`
-			)}
-	`
+	const wallet = Wallet.browserWallet
 
-	return component
+	dom.append(
+		fragment(
+			match(wallet)
+				.case(null, () => null)
+				.default(
+					(wallet) =>
+						html`
+							<x
+								${ChainButtonUI(derive(() => wallet.ref.chainKey))}
+								on:click=${(e: MouseEvent) => (e.preventDefault(), spawnFloatingBox(e, ChainChangerUI()))}></x>
+						`
+				)
+		)
+	)
+
+	return root
 }
 
-ChainChangerButtonComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 		width: 3.5em;

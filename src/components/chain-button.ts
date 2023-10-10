@@ -1,30 +1,34 @@
+import { commonStyle } from "@/import-styles"
 import { Networks } from "@/networks"
-import { $ } from "master-ts/library/$"
-import { defineComponent } from "master-ts/library/component"
-import type { SignalReadable } from "master-ts/library/signal"
-import { css } from "master-ts/library/template/tags/css"
-import { html } from "master-ts/library/template/tags/html"
+import { derive, fragment, type Signal } from "master-ts/core"
+import { css } from "master-ts/extra/css"
+import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { html } from "master-ts/extra/html"
 
-const ChainButtonComponent = defineComponent("x-chain-button")
-export function ChainButtonUI(key: SignalReadable<Networks.ChainKey>) {
-	const component = new ChainButtonComponent()
+const chainButtonTag = defineCustomTag("x-chain-button")
+export function ChainButtonUI(key: Readonly<Signal<Networks.ChainKey>>) {
+	const root = chainButtonTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	const chain = $.derive(() => Networks.chains[key.ref])
+	const chain = derive(() => Networks.chains[key.ref])
 
-	component.$html = html`
-		<button
-			class="btn"
-			title=${() => chain.ref.name}
-			style:--current--background-hsl=${() => chain.ref.colorBackgroundHsl}
-			style:--current-text--hsl=${() => chain.ref.colorTextHsl}>
-			${() => chain.ref.iconSvg()}
-		</button>
-	`
+	dom.append(
+		fragment(html`
+			<button
+				class="btn"
+				title=${() => chain.ref.name}
+				style:--current--background-hsl=${() => chain.ref.colorBackgroundHsl}
+				style:--current-text--hsl=${() => chain.ref.colorTextHsl}>
+				${() => chain.ref.iconSvg()}
+			</button>
+		`)
+	)
 
-	return component
+	return root
 }
 
-ChainButtonComponent.$css = css`
+const style = css`
 	:host {
 		display: grid;
 	}
