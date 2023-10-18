@@ -29,21 +29,3 @@ Eternis uses a combination of existing technologies to achieve its functionality
 ## master-ts
 
 Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library.
-
-## Eternis by ChatGPT
-
-"Eternis" is a groundbreaking decentralized platform designed to empower users with unparalleled control over their online experiences while fostering a truly decentralized, censorship-resistant, and user-driven community.
-
-At its core, Eternis is a multi-chain, ownerless, and protocol-driven permanent database. It serves as a hub for users to post a wide variety of content, from text articles and multimedia, such as images and videos, to discussions and reviews. Users have the flexibility to choose whether to store content on-chain, benefiting from the immutability and security of blockchain technology, or to reference it from IPFS (InterPlanetary File System), which optimizes the hosting of large files and multimedia.
-
-One of Eternis' distinguishing features is its decentralized and censorship-resistant nature. It operates without any central authority, allowing users to interact directly with the platform according to established rules and protocols. Content moderation is not centralized, meaning that users have full control over their content exposure. Instead of muting or blocking, users have the ability to "unfollow" content creators, curating their own content feeds based on their preferences.
-
-The platform encourages content discovery and personalization through a follow-based model. Users only see content from those they follow, making it easy to tailor their experience to their interests. Furthermore, users can rate content while replying, adding depth to discussions and promoting thoughtful engagement.
-
-Eternis is highly accessible to both Web3 and Web2 users, with its main front-end hosted on IPFS and accessible through the Ethereum Name Service (ENS) for domain resolution. Users can also leverage IPFS gateways and JSON-RPC providers to access the platform even without deep knowledge of blockchain technology.
-
-In addition to content sharing and interaction, Eternis incorporates a supporter model, allowing content creators to receive support from their audience. Supporters are counted, fostering a sense of community and recognition.
-
-Overall, Eternis embodies the principles of decentralization, user control, and adaptability. It is a platform where users can communicate, share, and engage in a decentralized, censorship-resistant environment, and it encourages responsible behavior, content diversity, and user empowerment. As the platform continues to evolve, it will depend on the collaborative efforts and feedback of its community to shape the future of online interaction and content sharing.
-
-— Writen by ChatGPT
