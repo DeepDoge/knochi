@@ -46,4 +46,4 @@ In addition to content sharing and interaction, Eternis incorporates a supporter
 
 Overall, Eternis embodies the principles of decentralization, user control, and adaptability. It is a platform where users can communicate, share, and engage in a decentralized, censorship-resistant environment, and it encourages responsible behavior, content diversity, and user empowerment. As the platform continues to evolve, it will depend on the collaborative efforts and feedback of its community to shape the future of online interaction and content sharing.
 
-—— Writen by ChatGPT
+— Writen by ChatGPT
