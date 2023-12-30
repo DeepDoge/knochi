@@ -1,38 +1,23 @@
 {
-	"type": "module",
-	"name": "eternis",
-	"scripts": {
-		"dev": "vite --host",
-		"build": "vite build",
-		"preview": "vite preview --host",
-		"format": "prettier -w ./",
-		"test": "run-p test:*",
-		"test-watch": "run-p --race test-watch:*",
-		"test:types": "tsc --noEmit",
-		"test-watch:types": "tsc --watch --noEmit",
-		"test:node": "tsx --test src/**/*.test.ts",
-		"test-watch:node": "tsx --test --watch src/**/*.test.ts",
-		"contracts:compile": "typify-contracts --src ./src/contracts",
-		"graph:codegen": "npm run codegen --prefix ./graph",
-		"graph:build": "npm run build --prefix ./graph",
-		"graph:deploy": "npm run deploy --prefix ./graph",
-		"postinstall": "yarn --cwd ./graph && npm run contracts:compile && npm run graph:codegen && npm run format"
-	},
-	"devDependencies": {
-		"@metamask/jazzicon": "^2.0.0",
-		"@total-typescript/ts-reset": "^0.4.2",
-		"@types/node": "^20.1.2",
-		"ethers": "^6.3.0",
-		"hotscript": "^1.0.11",
-		"master-ts": "https://github.com/DeepDoge/master-ts/releases/download/0.0.107/package.tar.gz",
-		"npm-run-all": "^4.1.5",
-		"prettier": "^2.8.8",
-		"prettier-plugin-organize-imports": "^3.2.2",
-		"tsx": "^3.12.7",
-		"typescript": "^5.0.4",
-		"typify-contracts": "github:DeepDoge/typify-contracts#0.0.9",
-		"urql": "^4.0.2",
-		"vite": "^4.3.5",
-		"vite-plugin-singlefile": "^0.13.5"
-	}
+  "type": "module",
+  "name": "eternis",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "format": "prettier -w ./",
+    "contracts:compile": "typify-contracts --src ./src/contracts"
+  },
+  "devDependencies": {
+    "@metamask/jazzicon": "^2.0.0",
+    "@total-typescript/ts-reset": "^0.5.1",
+    "bun-types": "latest",
+    "ethers": "^6.9.1",
+    "master-ts": "https://github.com/DeepDoge/master-ts/releases/download/0.0.136/package.tgz",
+    "prettier": "^3.1.1",
+    "prettier-plugin-organize-imports": "^3.2.4",
+    "typescript": "^5.3.3",
+    "typify-contracts": "github:DeepDoge/typed-contracts#0.2.0",
+    "urql": "^4.0.6"
+  }
 }

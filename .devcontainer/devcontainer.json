@@ -1,6 +1,9 @@
 {
-	"name": "Node.js & TypeScript",
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-20",
+	"name": "Ubuntu",
+	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	"features": {
+		"ghcr.io/shyim/devcontainers-features/bun:0": {}
+	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -17,5 +20,5 @@
 			]
 		}
 	},
-	"postCreateCommand": "npm install"
+	"postCreateCommand": "bun update"
 }

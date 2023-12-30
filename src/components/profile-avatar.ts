@@ -1,17 +1,18 @@
 import { commonStyle } from "@/import-styles"
 import { routeHash } from "@/router"
 import type { Address } from "@/utils/address"
-import { html } from "master-ts/extra/html"
 // @ts-ignore
 import jazzicon_ from "@metamask/jazzicon"
-import { derive, fragment, type Signal } from "master-ts/core"
-import { css } from "master-ts/extra/css"
-import { defineCustomTag } from "master-ts/extra/custom-tags"
+import { SignalOrFn, css, customTag, derive, sheet, signalFrom, tags } from "master-ts"
 
 const jazzicon = jazzicon_ as { (diameter: number, seed: number): HTMLElement }
 
-const profileAvatarTag = defineCustomTag("x-profile-avatar")
-export function ProfileAvatarUI(address: Signal<Address>) {
+const { a, img } = tags
+
+const profileAvatarTag = customTag("x-profile-avatar")
+export function ProfileAvatarUI(addressSignal: SignalOrFn<Address>) {
+	const address = signalFrom(addressSignal)
+
 	const root = profileAvatarTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)
@@ -23,18 +24,12 @@ export function ProfileAvatarUI(address: Signal<Address>) {
 			)}`
 	)
 
-	dom.append(
-		fragment(html`
-			<a class="avatar" href=${() => routeHash({ path: address.ref, postId: null })}>
-				<img src=${avatarUrl} alt="Avatar of ${address}" />
-			</a>
-		`)
-	)
+	dom.append(a({ class: "avatar", href: () => routeHash({ path: address.ref, postId: null }) }, [img({ src: avatarUrl, alt: "Avatar of " + address })]))
 
 	return root
 }
 
-const style = css`
+const style = sheet(css`
 	:host {
 		display: grid;
 	}
@@ -54,4 +49,4 @@ const style = css`
 		inset: 0;
 		object-fit: contain;
 	}
-`
+`)

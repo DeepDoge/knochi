@@ -2,5 +2,5 @@
 pragma solidity ^0.8.9;
 
 interface IEternis {
-    event EternisTransaction(uint256 postIndex, bytes postData);
+    event EternisPost(uint256 postIndex, bytes postData);
 }

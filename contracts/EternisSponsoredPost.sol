@@ -47,7 +47,7 @@ contract EternisSponsoredPost is IEternis {
         // Because offer contract is platform specific
         // if a platform doesn't index for sponsorships of this contract, they will see the post as a normal repost. 
         bytes memory bytesData = abi.encodePacked(bytes20(offer.contractAddress), offer.contractPostIndex);
-        emit EternisTransaction(offerIndex, abi.encodePacked(hex"6563686f0a0000", bytes2(uint16(bytesData.length)), bytesData));
+        emit EternisPost(offerIndex, abi.encodePacked(hex"6563686f0a0000", bytes2(uint16(bytesData.length)), bytesData));
         payable(msg.sender).transfer(offer.value);
     }
     

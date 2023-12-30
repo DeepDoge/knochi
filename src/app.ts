@@ -1,118 +1,40 @@
-import "@/import-styles"
-
 import { PostTimelineUI } from "@/components/post-timeline"
-import { commonStyle } from "@/import-styles"
 import { Navigation } from "@/navigation"
 import { route } from "@/router"
 import { routerLayout } from "@/routes"
-import { derive, fragment } from "master-ts/core"
-import { css } from "master-ts/extra/css"
-import { defineCustomTag } from "master-ts/extra/custom-tags"
-import { html } from "master-ts/extra/html"
-import { match } from "master-ts/extra/match"
+import { css, customTag, fragment, match, sheet, tags } from "master-ts"
+import { globalSheet } from "./styles"
 
-const appTag = defineCustomTag("x-app")
+const { header, main, div } = tags
+
+const appTag = customTag("x-app")
 function App() {
 	const root = appTag()
 	const dom = root.attachShadow({ mode: "open" })
-	dom.adoptedStyleSheets.push(commonStyle, style)
+	dom.adoptedStyleSheets.push(globalSheet, appSheet)
 
 	dom.append(
-		fragment(html`
-			<header>${Navigation()}</header>
-			<main>
-				${match(derive(() => routerLayout.ref.top))
+		fragment(
+			header([Navigation()]),
+			main([
+				match(() => routerLayout.ref.top)
 					.case(null, () => null)
-					.default((layoutTop) => html`<div class="top">${layoutTop}</div>`)}
-				<div class="bottom">
-					<div class="page">${() => routerLayout.ref.page}</div>
-					${match(route.postId)
+					.default((layoutTop) => div({ class: "top" }, [layoutTop])),
+				div({ class: "bottom" }, [
+					div({ class: "page" }, [() => routerLayout.ref.page]),
+					match(route.postId)
 						.case(null, () => null)
-						.default((postId) => html` <div class="post">${PostTimelineUI(postId)}</div>`)}
-				</div>
-			</main>
-		`)
+						.default((postId) =>
+							div({ class: "post" }, [PostTimelineUI(postId)]),
+						),
+				]),
+			]),
+		),
 	)
 
 	return root
 }
 
-const style = css`
-	:host {
-		display: grid;
-		--space: calc(var(--span) * 0.75);
-	}
+const appSheet = sheet(css``)
 
-	header {
-		display: grid;
-
-		position: fixed;
-		bottom: 0;
-		width: 100%;
-		z-index: 10;
-
-		pointer-events: none;
-		& > * {
-			pointer-events: all;
-		}
-	}
-
-	main {
-		/* 
-			Using paddings here instead of gaps on purpose
-			Why? so outlines or effects like glow doesnt try to overflow, also sticky parts should have padding.
-		*/
-		display: grid;
-
-		& > .top,
-		& > .bottom > * {
-			/* sometimes, top might not exists, so this is both padding at the top and also padding between top and bottom */
-			padding-top: var(--space);
-		}
-
-		& > .top {
-			padding-inline: var(--space);
-		}
-
-		& > .bottom {
-			padding-inline: calc(var(--space) * 0.25);
-			& > * {
-				padding-bottom: 10em;
-				padding-inline: calc(var(--space) * 0.25);
-			}
-		}
-	}
-
-	main > .bottom {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-		position: relative;
-		& > .post {
-			position: sticky;
-			top: 0;
-			height: 100vh;
-			overflow: auto;
-		}
-	}
-
-	@media (max-width: 1023px) {
-		:host {
-			font-size: 0.8em;
-		}
-
-		main > .bottom:has(.post) {
-			& > .page {
-				position: fixed;
-				visibility: hidden;
-				pointer-events: none;
-			}
-
-			& > .post {
-				position: static;
-				height: auto;
-			}
-		}
-	}
-`
-
-document.querySelector("#app")?.replaceWith(App())
+document.body.append(App())

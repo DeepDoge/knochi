@@ -15,7 +15,7 @@ contract EternisTipPost is IEternis {
 
     function post(bytes calldata postData, address payable tipTo) external payable {
         postIndexToTip[postIndex] = Tip(tipTo, msg.value);
-        emit EternisTransaction(postIndex, postData);
+        emit EternisPost(postIndex, postData);
         postIndex++;
         tipTo.transfer(msg.value);
     }

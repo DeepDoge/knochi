@@ -5,20 +5,18 @@
 		},
 		"target": "ESNext",
 		"module": "ESNext",
-		"lib": ["DOM", "DOM.Iterable", "ESNext"],
-		"moduleResolution": "Node",
+		"moduleResolution": "Bundler",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"esModuleInterop": true,
 		"removeComments": true,
 		"sourceMap": true,
+		"forceConsistentCasingInFileNames": true,
 
-		"forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
-		"strict": true /* Enable all strict type-checking options. */,
-		"useUnknownInCatchVariables": true /* Require type checking of catch clause variables */,
-		"noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
 		"noPropertyAccessFromIndexSignature": true,
-		"strictNullChecks": true /* Enable strict null checks. */
+		"exactOptionalPropertyTypes": true
 	},
 	"include": ["src"]
 }

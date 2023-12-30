@@ -1,36 +1,41 @@
 import { Copy2Svg } from "@/assets/svgs/copy2"
 import { commonStyle } from "@/import-styles"
 import type { Address } from "@/utils/address"
-import { fragment, type Signal } from "master-ts/core"
-import { css } from "master-ts/extra/css"
-import { defineCustomTag } from "master-ts/extra/custom-tags"
-import { html } from "master-ts/extra/html"
+import { css, customTag, fragment, populate, sheet, signalFrom, SignalOrFn, tags } from "master-ts"
 
-const profileAddressTag = defineCustomTag("x-profile-address")
-export function ProfileAddressUI(address: Signal<Address>) {
+const { button, span } = tags
+
+const profileAddressTag = customTag("x-profile-address")
+export function ProfileAddressUI(addressSignal: SignalOrFn<Address>) {
+	const address = signalFrom(addressSignal)
+
 	const root = profileAddressTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)
 
 	dom.append(
-		fragment(html`
-			<button
-				on:click=${(e) => (
-					e.preventDefault(),
-					navigator.clipboard.writeText(address.ref).then(() => alert(`Address copied to clipboard\nTODO: Add toast notifactions etc..`))
-				)}
-				title=${address}
-				aria-label="wallet address, click to copy">
-				<x ${Copy2Svg()} aria-hidden></x>
-				<span>${() => address.ref.substring(0, address.ref.length - 4)}</span><span>${() => address.ref.substring(address.ref.length - 4)}</span>
-			</button>
-		`)
+		fragment(
+			button(
+				{
+					class: "address",
+					"on:click": (e) => (
+						e.preventDefault(),
+						navigator.clipboard.writeText(address.ref).then(() => alert(`Address copied to clipboard\nTODO: Add toast notifactions etc..`))
+					),
+				},
+				[
+					span({ class: "address-start" }, [address.ref.substring(0, address.ref.length - 4)]),
+					span({ class: "address-end" }, [address.ref.substring(address.ref.length - 4)]),
+					span({ class: "svg" }, [populate(Copy2Svg(), { "aria-hidden": true })]),
+				]
+			)
+		)
 	)
 
 	return root
 }
 
-const style = css`
+const style = sheet(css`
 	:host {
 		display: inline-grid;
 	}
@@ -81,4 +86,4 @@ const style = css`
 			background-color: hsl(var(--base-text--hsl), 0.2);
 		}
 	}
-`
+`)

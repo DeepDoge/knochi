@@ -1,23 +1,24 @@
 import { commonStyle } from "@/import-styles"
 import { routeHash } from "@/router"
 import type { Address } from "@/utils/address"
-import { fragment, type Signal } from "master-ts/core"
-import { css } from "master-ts/extra/css"
-import { defineCustomTag } from "master-ts/extra/custom-tags"
-import { html } from "master-ts/extra/html"
+import { css, customTag, fragment, sheet, signalFrom, SignalOrFn, tags } from "master-ts"
 
-const profileNameTag = defineCustomTag("x-profile-name")
-export function ProfileNameUI(address: Signal<Address>) {
+const { a } = tags
+
+const profileNameTag = customTag("x-profile-name")
+export function ProfileNameUI(addressSignal: SignalOrFn<Address>) {
+	const address = signalFrom(addressSignal)
+
 	const root = profileNameTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle, style)
 
-	dom.append(fragment(html` <a class="name" href=${() => routeHash({ path: address.ref, postId: null })}>Nameless</a> `))
+	dom.append(fragment(a({ class: "name", href: () => routeHash({ path: address.ref, postId: null }) }, ["Nameless"])))
 
 	return root
 }
 
-const style = css`
+const style = sheet(css`
 	:host {
 		display: grid;
 	}
@@ -27,4 +28,4 @@ const style = css`
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-`
+`)

@@ -2,24 +2,23 @@ import { spawnFloatingBox } from "@/components/floating-box"
 import { ProfileUI } from "@/components/profile"
 import { commonStyle } from "@/import-styles"
 import { Wallet } from "@/utils/wallet"
-import { derive, fragment, type Signal, type TagsNS } from "master-ts/core"
-import { defineCustomTag } from "master-ts/extra/custom-tags"
-import { html } from "master-ts/extra/html"
-import { match } from "master-ts/extra/match"
+import { Signal, Template, customTag, derive, fragment, match, tags } from "master-ts"
 import { ChainChangerUI } from "./chain-changer"
 
-const myWalletTag = defineCustomTag("x-my-wallet")
+const { button } = tags
+
+const myWalletTag = customTag("x-my-wallet")
 export function MyWalletUI() {
 	const root = myWalletTag()
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(commonStyle)
 
-	dom.append(fragment(html` ${requireWallet((wallet) => html` <x ${ProfileUI(derive(() => wallet.ref.address))}></x>`)} `))
+	dom.append(fragment(requireWallet((wallet) => ProfileUI(derive(() => wallet.ref.address)))))
 
 	return root
 }
 
-export function requireWallet(then: (wallet: Signal<Wallet>) => TagsNS.AcceptedChild) {
+export function requireWallet(then: (wallet: Signal<Wallet>) => Template.Member) {
 	// TODO: this and many other `match` signals can be simplified with the new feature of `match`
 	// `Wallet` itself can be simplified.
 	return match(Wallet.browserWallet)

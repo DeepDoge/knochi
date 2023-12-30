@@ -6,6 +6,6 @@ contract EternisPost is IEternis {
     uint256 public postIndex;
 
     function post(bytes calldata postData) external {
-        emit EternisTransaction(postIndex++, postData);
+        emit EternisPost(postIndex++, postData);
     }
 }
