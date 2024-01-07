@@ -13,6 +13,9 @@
 		"sourceMap": true,
 		"forceConsistentCasingInFileNames": true,
 
+		"jsx": "react-jsx",
+		"jsxImportSource": "master-ts",
+
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
 		"noPropertyAccessFromIndexSignature": true,

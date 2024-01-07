@@ -13,10 +13,10 @@
     "@total-typescript/ts-reset": "^0.5.1",
     "bun-types": "latest",
     "ethers": "^6.9.1",
-    "master-ts": "https://github.com/DeepDoge/master-ts/releases/download/0.0.136/package.tgz",
-    "prettier": "^3.1.1",
-    "prettier-plugin-organize-imports": "^3.2.4",
-    "typescript": "^5.3.3",
+    "master-ts": "https://github.com/DeepDoge/master-ts/releases/download/0.0.141/package.tgz",
+    "prettier": "latest",
+    "prettier-plugin-organize-imports": "latest",
+    "typescript": "latest",
     "typify-contracts": "github:DeepDoge/typed-contracts#0.2.0",
     "urql": "^4.0.6"
   }
