@@ -45,7 +45,13 @@ Enabling users to change nodes through a user-friendly settings page makes the a
 You don't need to host your own node. The real decentralization lies in the ability to easily switch between nodes, providing users with control and flexibility.
 
 Of course your own app being on IPFS is also a must.
-As I always say, If you wanna build something that is TRULY Web3, you always have to ask yourself "Is this self sustaining? ", "Would it continue working without me?", "Would it continue working without constant maintenance?", "Would it continue working without constant funding?", if the answer is "Yes", then it's decentralized.
+As I always say, If you wanna build something that is TRULY Web3, you always have to ask yourself:
+- "Is this self sustaining? "
+- "Would it continue working without me?"
+- "Would it continue working without constant maintenance?"
+- "Would it continue working without constant funding?"
+
+if the answer is "Yes", then it's decentralized.
 
 Fediverse (Mastadon) is a decentralized communication protocol, but it's not a decentralized post database. So it's a decentralized network of centralized social media platforms that hosts and owns your posts, which can be censored. So, it's not decentralized.
 
