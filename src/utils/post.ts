@@ -7,20 +7,22 @@ export namespace Post {
 		type: string
 		value: string
 	}
-}
 
-export type PostContentTypeMap = typeof PostContentTypeMap
-export const PostContentTypeMap = {
-	text: "t",
-	image: "i",
-	audio: "a",
-	video: "v",
-	mention: "@",
-	link: "l",
-	file: "f",
-	quote: "q",
-} as const
-true satisfies Utils.IsBijective<PostContentTypeMap>
+	export namespace Content {
+		export type TypeMap = typeof TypeMap
+		export const TypeMap = {
+			text: "t",
+			image: "i",
+			audio: "a",
+			video: "v",
+			mention: "@",
+			link: "l",
+			file: "f",
+			quote: "q",
+		} as const
+		true satisfies Utils.IsBijective<TypeMap>
+	}
+}
 
 export function encodePost(post: Post): Uint8Array {
 	const postBytes: number[] = []
