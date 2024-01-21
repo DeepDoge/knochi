@@ -1,6 +1,6 @@
 import { globalSheet } from "@/styles"
 import { EternisPost_connect } from "@/utils/contracts/EternisPost"
-import { encodePost } from "@/utils/post"
+import { PostContentTypeMap, encodePost } from "@/utils/post"
 import { uniqueId } from "@/utils/unique"
 import { getSigner } from "@/utils/wallet"
 import { css, customTag, populate, sheet, tags } from "cherry-ts"
@@ -25,7 +25,9 @@ export function PostForm() {
 		const signer = await getSigner()
 		const contract = EternisPost_connect(signer)
 
-		const encoded = encodePost([{ type: "t", value: content }])
+		const encoded = encodePost([
+			{ type: PostContentTypeMap.text, value: content },
+		])
 		const tx = await contract.post(encoded)
 	}
 
