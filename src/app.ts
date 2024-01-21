@@ -1,11 +1,7 @@
-import { PostTimelineUI } from "@/components/post-timeline"
-import { Navigation } from "@/navigation"
-import { route } from "@/router"
-import { routerLayout } from "@/routes"
-import { css, customTag, fragment, match, sheet, tags } from "master-ts"
+import { css, customTag, populate, sheet } from "cherry-ts"
+import { PostForm } from "./libs/PostForm"
+import { Timeline } from "./libs/Timeline"
 import { globalSheet } from "./styles"
-
-const { header, main, div } = tags
 
 const appTag = customTag("x-app")
 function App() {
@@ -13,28 +9,19 @@ function App() {
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(globalSheet, appSheet)
 
-	dom.append(
-		fragment(
-			header([Navigation()]),
-			main([
-				match(() => routerLayout.ref.top)
-					.case(null, () => null)
-					.default((layoutTop) => div({ class: "top" }, [layoutTop])),
-				div({ class: "bottom" }, [
-					div({ class: "page" }, [() => routerLayout.ref.page]),
-					match(route.postId)
-						.case(null, () => null)
-						.default((postId) =>
-							div({ class: "post" }, [PostTimelineUI(postId)]),
-						),
-				]),
-			]),
-		),
-	)
+	populate(dom, [PostForm(), Timeline()])
 
 	return root
 }
 
-const appSheet = sheet(css``)
+const appSheet = sheet(css`
+	:host {
+		display: grid;
+		gap: 1em;
+		padding: 1em;
+		grid-template-columns: minmax(0, 30em);
+		justify-content: center;
+	}
+`)
 
 document.body.append(App())

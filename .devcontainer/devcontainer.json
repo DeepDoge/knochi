@@ -1,24 +1,14 @@
 {
-	"name": "Ubuntu",
-	"image": "mcr.microsoft.com/devcontainers/base:jammy",
-	"features": {
-		"ghcr.io/shyim/devcontainers-features/bun:0": {}
-	},
+	"name": "Node.js & TypeScript",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"enhancedjs.html-in-template-string",
-				"pushqrdx.inline-html",
 				"esbenp.prettier-vscode",
-				"jock.svg",
-				"yzhang.markdown-all-in-one",
-				"Gruntfuggly.todo-tree",
 				"GraphQL.vscode-graphql",
-				"RemixProject.ethereum-remix",
 				"JuanBlanco.solidity",
-				"dbaeumer.vscode-eslint"
+				"pushqrdx.inline-html"
 			]
 		}
-	},
-	"postCreateCommand": "bun update"
+	}
 }

@@ -1,23 +1,30 @@
 {
-  "type": "module",
-  "name": "eternis",
-  "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview --host",
-    "format": "prettier -w ./",
-    "contracts:compile": "typify-contracts --src ./src/contracts"
-  },
-  "devDependencies": {
-    "@metamask/jazzicon": "^2.0.0",
-    "@total-typescript/ts-reset": "^0.5.1",
-    "bun-types": "latest",
-    "ethers": "^6.9.1",
-    "master-ts": "https://github.com/DeepDoge/master-ts/releases/download/0.0.141/package.tgz",
-    "prettier": "latest",
-    "prettier-plugin-organize-imports": "latest",
-    "typescript": "latest",
-    "typify-contracts": "github:DeepDoge/typed-contracts#0.2.0",
-    "urql": "^4.0.6"
-  }
+	"type": "module",
+	"name": "eternis",
+	"scripts": {
+		"dev": "vite --host",
+		"build": "vite build",
+		"preview": "vite preview --host",
+		"format": "prettier -w ./",
+		"contracts:compile": "npx tsx ./contracts/compile.ts",
+		"graph:codegen": "graph codegen ./graph/subgraph.yaml -o ./graph/generated",
+		"graph:build": "graph build ./graph/subgraph.yaml -o ./graph/build",
+		"graph:deploy": "npx tsx ./graph/deploy.ts"
+	},
+	"devDependencies": {
+		"@graphprotocol/graph-cli": "^0.65.0",
+		"@graphprotocol/graph-ts": "^0.32.0",
+		"@metamask/jazzicon": "^2.0.0",
+		"@total-typescript/ts-reset": "^0.5.1",
+		"cherry-ts": "https://github.com/DeepDoge/cherry-ts/releases/download/0.0.143/package.tgz",
+		"console-log-colors": "^0.4.0",
+		"ethers": "^6.9.1",
+		"prettier": "latest",
+		"prettier-plugin-organize-imports": "latest",
+		"solc-typed-ast": "^18.1.0",
+		"typescript": "latest",
+		"typify-contracts": "github:DeepDoge/typed-contracts#0.2.0",
+		"urql": "^4.0.6",
+		"vite": "^5.0.11"
+	}
 }

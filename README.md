@@ -1,6 +1,4 @@
-**UPDATE:** I don't have free time for this anymore (gotta make money), but I will continue working on this as soon as I'm free to work on hobby stuff again. Or you can donate me c: 🍙
-
-Not finished yet...
+**UPDATE:** Rewrite in progress... 🚧
 
 Inspired by https://github.com/DeepDoge/dweb-forum
 
@@ -26,6 +24,6 @@ Eternis uses a combination of existing technologies to achieve its functionality
 
 -   **LBRY/Odysee:** LBRY/Odysee and Eternis are both decentralized content sharing platforms with very similar designs. However, there are some distinct differences between the two. LBRY/Odysee is primarily based on the LBRY blockchain, while Eternis is a multichain platform that can operate on multiple blockchains. Eternis provides greater customization and flexibility through its smart contract-based architecture, allowing for the implementation of additional features and functionalities. Moreover, Eternis utilizes a combination of existing solutions, such as IPFS and The Graph, to achieve its functionality and has the flexibility to adapt and change them in the future. This ensures the platform's adaptability and future-proofing.
 
-## master-ts
+## cherry-ts
 
-Made with [master-ts](https://github.com/DeepDoge/master-ts) UI building library.
+Made with [cherry-ts](https://github.com/DeepDoge/cherry-ts) UI building library.

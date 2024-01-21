@@ -1,12 +1,7 @@
 {
-	"mumbai": {
-		"IEternis": {
-			"startBlock": 34604962
-		}
-	},
 	"sepolia": {
 		"IEternis": {
-			"startBlock": 3325895
+			"startBlock": 5127837
 		}
 	}
 }

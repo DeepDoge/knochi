@@ -1,4 +1,4 @@
-import { css, sheet } from "master-ts"
+import { css, sheet } from "cherry-ts"
 
 document.adoptedStyleSheets.push(
 	sheet(css`
@@ -6,16 +6,24 @@ document.adoptedStyleSheets.push(
 			font-family: system-ui;
 			font-size: clamp(0.85rem, max(2dvw, 1.5dvh), 1rem);
 
+			--back: var(--dark);
+			--front: var(--light);
 			color-scheme: dark;
-			color: hsl(var(--light));
-			background-color: hsl(var(--dark));
+
+			color: var(--front);
+			background-color: var(--back);
 		}
 
 		:root {
-			--light: hsv(0, 0%, 100%);
-			--dark: hsv(0, 0%, 0%);
+			--light: hsl(0, 0%, 100%);
+			--dark: hsl(0, 0%, 0%);
 
-			--primary: hsv(0, 0%, 100%);
+			--primary: hsl(0, 0%, 100%);
+		}
+
+		:root {
+			--radius: 0.75em;
+			--radius-full: 100000vmax;
 		}
 
 		body {
@@ -32,7 +40,46 @@ export const globalSheet = sheet(css`
 	}
 
 	* {
+		color: var(--front);
+		background-color: var(--back);
+	}
+
+	* {
 		margin: 0;
 		padding: 0;
+	}
+
+	.input {
+		all: unset;
+		display: inline-block;
+		padding: 0.5em;
+		border-radius: var(--radius);
+		border: none;
+		background-color: hsl(
+			from var(--back) h s calc(calc(1 - l) * 0.5) / 0.1
+		);
+		font: inherit;
+
+		&:focus-visible {
+			outline: solid 1px var(--primary);
+			outline-offset: 0.5em;
+		}
+
+		textarea& {
+			resize: vertical;
+			min-height: 4.5em;
+		}
+	}
+
+	.button {
+		all: unset;
+		display: inline-block;
+		padding: 0.5em 1em;
+		border-radius: var(--radius);
+		border: solid 1px var(--primary);
+		background-color: var(--primary);
+		color: var(--back);
+		font: inherit;
+		cursor: pointer;
 	}
 `)

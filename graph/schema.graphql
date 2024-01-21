@@ -1,6 +1,7 @@
-# Off-chain post metadata for the post, per chain
 type Post @entity(immutable: true) {
-	id: Bytes! # chainIdSize(u8) + chainId(dynamic) + chain post index(dynamic)
+	# We need chainId on the postId because we can reply to a post from another chain
+	# and having chain id on all post ids makes it easier.
+	id: Bytes! # chainId length(u8) + chainId(known length) + post counter(dynamic)
 	parentId: Bytes! # post id(dynamic)
 	index: BigInt!
 	author: Bytes! # address
@@ -11,7 +12,7 @@ type Post @entity(immutable: true) {
 
 # Off-chain content metadata for the post, per chain
 type PostContent @entity(immutable: true) {
-	id: Bytes! # content index(u8) + chain post index (dynamic)
+	id: Bytes! # content index(u8) + post id(dynamic)
 	type: Bytes!
 	value: Bytes!
 }
@@ -22,14 +23,8 @@ type PostReplyCounter @entity {
 	count: BigInt!
 }
 
-# Used for finding the top posts of last 24+(0 to 4) hour, per chain
-type PostReplyCounter_FourHourTimeframe @entity {
-	id: Bytes! # timeframe(timestamp(second) / (60 * 60 * 4))(u64) + post id(dynamic)
-	count: BigInt!
-}
-
 # Used for counting posts, per chain
-type PostChainCounter @entity {
+type PostCounter @entity {
 	id: Bytes! # post id(dynamic)
 	count: BigInt!
 }
