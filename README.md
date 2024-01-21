@@ -14,7 +14,7 @@ Eternis uses a combination of existing technologies to achieve its functionality
 
 ## Key Features
 
--   **Permissionless Platform:** Eternis is designed to be ownerless/permissionless from the ground up. This means that no entity or group has control over the content posted by users. Your content always remains under your control on the blockchain and can be accessed by any platform.
+-   **Permissionless Platform:** Eternis is designed to be ownerless/permissionless/adminless from the ground up. This means that no entity or group has control over the content posted by users. Your content always remains under your control on the blockchain and can be accessed by any platform.
 
 -   **Multichain Support with Combined Timeline:** Eternis supports multiple blockchains, allowing users to post their content on different chains. However, all the posts from all chains are combined under one unified timeline. This means that you have the freedom to choose any blockchain without being restricted to a single network.
 
