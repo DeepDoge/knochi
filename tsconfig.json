@@ -2,7 +2,8 @@
 	"compilerOptions": {
 		"paths": {
 			"@/*": ["./src/*"],
-			"@contracts/*": ["./contracts/*"]
+			"@contracts/*": ["./contracts/*"],
+			"@graph/*": ["./graph/*"]
 		},
 		"target": "ESNext",
 		"module": "ESNext",

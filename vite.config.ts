@@ -10,6 +10,7 @@ export default defineConfig({
 		alias: {
 			"@": "/src",
 			"@contracts": "/contracts",
+			"@graph": "/graph",
 		},
 	},
 })

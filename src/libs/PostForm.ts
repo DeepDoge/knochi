@@ -3,9 +3,17 @@ import { EternisPost_connect } from "@/utils/contracts/EternisPost"
 import { Post, encodePost } from "@/utils/post"
 import { uniqueId } from "@/utils/unique"
 import { getSigner } from "@/utils/wallet"
-import { css, customTag, populate, sheet, tags } from "cherry-ts"
+import {
+	css,
+	customTag,
+	derive,
+	populate,
+	sheet,
+	signal,
+	tags,
+} from "cherry-ts"
 
-const { form, div, textarea, input, button } = tags
+const { form, div, textarea, button, small } = tags
 
 const postFormTag = customTag("x-post-form")
 export function PostForm() {
@@ -13,28 +21,22 @@ export function PostForm() {
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(globalSheet, postFormSheet)
 
-	async function onSubmit(
-		event: SubmitEvent & { currentTarget: HTMLFormElement },
-	) {
-		event.preventDefault()
-		const form = event.currentTarget
-		const formData = new FormData(form)
-		const content = formData.get("content")
-		if (typeof content !== "string") throw new Error()
-
-		const signer = await getSigner()
-		const contract = EternisPost_connect(signer)
-
-		const encoded = encodePost([
-			{ type: Post.Content.TypeMap.text, value: content },
-		])
-		const tx = await contract.post(encoded)
-	}
+	const text = signal("")
+	const textEncoded = derive(() =>
+		encodePost([{ type: Post.Content.TypeMap.text, value: text.ref }]),
+	)
 
 	const postForm = form({
 		hidden: "",
 		id: uniqueId("post-form"),
-		"on:submit": onSubmit,
+		async "on:submit"(event) {
+			event.preventDefault()
+
+			const signer = await getSigner()
+			const contract = EternisPost_connect(signer)
+
+			const tx = await contract.post(textEncoded.ref)
+		},
 	})
 
 	// TODO: Let's start basic with text only. Later add other stuff.
@@ -47,7 +49,16 @@ export function PostForm() {
 					name: "content",
 					required: "",
 					class: "input",
+					"aria-label": "Post content",
+					placeholder: "Just say it...",
+					"bind:value": text,
+					"on:input"(event) {
+						const textarea = event.currentTarget
+						textarea.style.height = "auto"
+						textarea.style.height = `calc(calc(${textarea.scrollHeight}px - 1em))`
+					},
 				}),
+				small([() => textEncoded.ref.byteLength, " bytes"]),
 			]),
 		]),
 		div({ class: "actions" }, [
@@ -73,7 +84,11 @@ const postFormSheet = sheet(css`
 
 	.field {
 		display: grid;
-		gap: 1em;
+		gap: 0.25em;
+
+		& small {
+			justify-self: end;
+		}
 	}
 
 	.actions {
@@ -81,5 +96,13 @@ const postFormSheet = sheet(css`
 		grid-auto-flow: column;
 		justify-content: end;
 		gap: 1em;
+	}
+
+	textarea {
+		resize: none;
+		min-height: 2em;
+		font-size: 1.25em;
+		overflow-x: hidden;
+		word-break: break-word;
 	}
 `)

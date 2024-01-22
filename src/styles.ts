@@ -33,53 +33,56 @@ document.adoptedStyleSheets.push(
 )
 
 export const globalSheet = sheet(css`
-	*,
-	*::before,
-	*::after {
-		box-sizing: border-box;
-	}
+	@layer global;
 
-	* {
-		color: var(--front);
-		background-color: var(--back);
-	}
-
-	* {
-		margin: 0;
-		padding: 0;
-	}
-
-	.input {
-		all: unset;
-		display: inline-block;
-		padding: 0.5em;
-		border-radius: var(--radius);
-		border: none;
-		background-color: hsl(
-			from var(--back) h s calc(calc(1 - l) * 0.5) / 0.1
-		);
-		font: inherit;
-
-		&:focus-visible {
-			outline: solid 1px var(--primary);
-			outline-offset: 0.5em;
+	@layer global {
+		*,
+		*::before,
+		*::after {
+			box-sizing: border-box;
 		}
 
-		textarea& {
-			resize: vertical;
-			min-height: 4.5em;
+		* {
+			color: var(--front);
+			background-color: var(--back);
 		}
-	}
 
-	.button {
-		all: unset;
-		display: inline-block;
-		padding: 0.5em 1em;
-		border-radius: var(--radius);
-		border: solid 1px var(--primary);
-		background-color: var(--primary);
-		color: var(--back);
-		font: inherit;
-		cursor: pointer;
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		.input {
+			all: unset;
+			display: inline-block;
+			padding: 0.75em;
+			border-radius: var(--radius);
+			border: none;
+			background-color: hsl(
+				from var(--back) h s calc(calc(1 - l) * 0.5) / 0.1
+			);
+			font: inherit;
+
+			&:focus-visible {
+				outline: solid 1px var(--primary);
+			}
+
+			textarea& {
+				resize: vertical;
+				min-height: 4.5em;
+			}
+		}
+
+		.button {
+			all: unset;
+			display: inline-block;
+			padding: 0.5em 1em;
+			border-radius: var(--radius);
+			border: solid 1px var(--primary);
+			background-color: var(--primary);
+			color: var(--back);
+			font: inherit;
+			cursor: pointer;
+		}
 	}
 `)
