@@ -16,7 +16,7 @@ export namespace Settings {
 	}
 
 	export type Ipfs = {
-		gateways: [string, ...string[]]
+		gateways: Record<string, string>
 	}
 }
 
@@ -44,17 +44,16 @@ const settings = {
 		},
 	],
 	ipfs: {
-		gateways: [
-			"https://ipfs.io",
-			"https://cloudflare-ipfs.com",
-			"https://ipfs.infura.io",
-			"https://nft.storage",
-			"https://ipfs.fleek.co",
-			"https://ipfs.jimpick.com",
-			"https://ipfs.dweb.link",
-			"http://localhost:8080", // Local IPFS gateway
-			"http://localhost:48080", // Local Brave IPFS gateway
-		],
+		gateways: {
+			local_default: "http://localhost:8080",
+			local_brave: "http://localhost:48080",
+			ipfs_io: "https://ipfs.io",
+			infura: "https://ipfs.infura.io",
+			w3s: "https://w3s.link",
+			dweb: "https://dweb.link",
+			cloudflare: "https://cloudflare-ipfs.com",
+			storj: "https://demo.storj-ipfs.com",
+		},
 	},
 } as const satisfies Settings
 
