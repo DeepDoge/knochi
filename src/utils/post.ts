@@ -11,14 +11,14 @@ export namespace Post {
 	export namespace Content {
 		export type TypeMap = typeof TypeMap
 		export const TypeMap = {
-			text: "t",
-			image: "i",
-			audio: "a",
-			video: "v",
-			mention: "@",
-			link: "l",
-			file: "f",
-			quote: "q",
+			Text: "t",
+			Image: "i",
+			Audio: "a",
+			Video: "v",
+			Mention: "@",
+			Link: "l",
+			File: "f",
+			Quote: "q",
 		} as const
 		true satisfies Utils.IsBijective<TypeMap>
 	}

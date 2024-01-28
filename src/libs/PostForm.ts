@@ -23,7 +23,7 @@ export function PostForm() {
 
 	const text = signal("")
 	const textEncoded = derive(() =>
-		encodePost([{ type: Post.Content.TypeMap.text, value: text.ref }]),
+		encodePost([{ type: Post.Content.TypeMap.Text, value: text.ref }]),
 	)
 
 	const postForm = form({

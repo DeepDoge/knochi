@@ -30,11 +30,17 @@ export namespace Utils {
 	export type ToString<T> =
 		`${T extends string | number | bigint | boolean | null | undefined ? T : never}`
 
+	export type Invert<T extends Record<PropertyKey, PropertyKey>> = {
+		[K in keyof T as T[K]]: K
+	}
+
+	export type Pretty<T> = {
+		[K in keyof T]: T[K]
+	}
+
 	export type IsBijective<
 		TMap extends Record<PropertyKey, PropertyKey>,
-		inverted = {
-			[K in keyof TMap as TMap[K]]: K
-		},
+		inverted = Invert<TMap>,
 		result = {
 			[K in keyof inverted]: Utils.TuplifyUnion<
 				inverted[K]

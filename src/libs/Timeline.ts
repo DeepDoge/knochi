@@ -31,8 +31,8 @@ const queryData = object({
 		id: string(),
 		parentId: string(),
 		index: string().transform(BigInt),
-		author: string(),
-		contract: string(),
+		author: string().transform((value) => value as `0x${string}`),
+		contract: string().transform((value) => value as `0x${string}`),
 		blockTimestamp: string().transform(
 			(value) => new Date(Number(value) * 1000),
 		),
@@ -41,7 +41,7 @@ const queryData = object({
 			value: string().transform(toBeArray),
 		})
 			.transform((content) =>
-				content.type === Post.Content.TypeMap.text
+				content.type === Post.Content.TypeMap.Text
 					? {
 							type: content.type,
 							value: toUtf8String(content.value),
@@ -66,7 +66,7 @@ export async function Timeline() {
 		posts.map((post) =>
 			div([
 				post.contents.map((content) =>
-					content.type === Post.Content.TypeMap.text
+					content.type === Post.Content.TypeMap.Text
 						? span([content.value])
 						: null,
 				),
