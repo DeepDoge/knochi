@@ -62,8 +62,9 @@ const settings = {
 ok also you can use this trick while racing gateways:
 
 const response = await fetch(..., {
+	method: 'HEAD', // only get the headers
     headers: {
-        'Range': 'bytes=0-1'
+        'Range': 'bytes=0-999999999' // force the gateway to include Content-Length header, so we can check file size without downloading the whole file
     }
 })
 
