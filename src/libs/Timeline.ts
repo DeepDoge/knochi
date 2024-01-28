@@ -8,6 +8,32 @@ import { object, string } from "zod"
 
 const { div, span } = tags
 
+const timelineTag = customTag("x-timeline")
+export async function Timeline() {
+	const root = timelineTag()
+	const dom = root.attachShadow({ mode: "open" })
+	dom.adoptedStyleSheets.push(timelineSheet, globalSheet)
+
+	const result = await client.query(query, {}).toPromise()
+	const posts = (await queryData.parseAsync(result.data)).posts
+
+	populate(dom, [
+		posts.map((post) =>
+			div([
+				post.contents.map((content) =>
+					content.type === Post.Content.TypeMap.Text
+						? span([content.value])
+						: null,
+				),
+			]),
+		),
+	])
+
+	return root
+}
+
+const timelineSheet = sheet(css``)
+
 const query = gql`
 	{
 		posts(orderBy: index, orderDirection: desc) {
@@ -52,29 +78,3 @@ const queryData = object({
 			.transform((value) => value.filter(Boolean)),
 	}).array(),
 })
-
-const timelineTag = customTag("x-timeline")
-export async function Timeline() {
-	const root = timelineTag()
-	const dom = root.attachShadow({ mode: "open" })
-	dom.adoptedStyleSheets.push(timelineSheet, globalSheet)
-
-	const result = await client.query(query, {}).toPromise()
-	const posts = (await queryData.parseAsync(result.data)).posts
-
-	populate(dom, [
-		posts.map((post) =>
-			div([
-				post.contents.map((content) =>
-					content.type === Post.Content.TypeMap.Text
-						? span([content.value])
-						: null,
-				),
-			]),
-		),
-	])
-
-	return root
-}
-
-const timelineSheet = sheet(css``)
