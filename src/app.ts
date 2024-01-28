@@ -1,4 +1,4 @@
-import { css, customTag, populate, sheet } from "cherry-ts"
+import { awaited, css, customTag, populate, sheet } from "cherry-ts"
 import { PostForm } from "./libs/PostForm"
 import { Timeline } from "./libs/Timeline"
 import { globalSheet } from "./styles"
@@ -9,7 +9,7 @@ function App() {
 	const dom = root.attachShadow({ mode: "open" })
 	dom.adoptedStyleSheets.push(globalSheet, appSheet)
 
-	populate(dom, [PostForm(), Timeline()])
+	populate(dom, [PostForm(), awaited(Timeline())])
 
 	return root
 }
