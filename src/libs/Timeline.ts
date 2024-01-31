@@ -2,11 +2,11 @@ import { globalSheet } from "@/styles"
 import { client } from "@/utils/graph"
 import { Post } from "@/utils/post"
 import { gql } from "@urql/core"
-import { css, customTag, populate, sheet, tags } from "cherry-ts"
+import { Tags, css, customTag, populate, sheet } from "cherry-ts"
 import { toBeArray, toUtf8String } from "ethers"
 import { object, string } from "zod"
 
-const { div, span } = tags
+const { div, span } = Tags
 
 const timelineTag = customTag("x-timeline")
 export async function Timeline() {

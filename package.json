@@ -16,7 +16,7 @@
 		"@graphprotocol/graph-ts": "^0.32.0",
 		"@metamask/jazzicon": "^2.0.0",
 		"@total-typescript/ts-reset": "^0.5.1",
-		"cherry-ts": "https://github.com/DeepDoge/cherry-ts/releases/download/0.0.145/package.tgz",
+		"cherry-ts": "https://github.com/DeepDoge/cherry-ts/releases/download/0.0.148/package.tgz",
 		"console-log-colors": "^0.4.0",
 		"ethers": "^6.9.1",
 		"prettier": "latest",
