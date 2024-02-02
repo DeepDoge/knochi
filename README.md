@@ -4,9 +4,7 @@ Inspired by https://github.com/DeepDoge/dweb-forum
 
 # Eternis
 
-An unstoppable, public, permissionless platform with a multi-chain perma-database.
-Allows users to post and interact across different blockchains while maintaining control over their data.
-Indexed through various technologies and protocols, it offers a customizable and resilient experience built on blockchain and decentralized principles.
+An unstoppable, adminless, permissionless, permanent and ungoverned multi-chain platform that offers a customizable and resilient experience built on blockchain and real decentralized principles
 
 ## How Eternis Works
 
