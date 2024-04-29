@@ -5,10 +5,11 @@
 		"vscode": {
 			"extensions": [
 				"esbenp.prettier-vscode",
-				"GraphQL.vscode-graphql",
 				"JuanBlanco.solidity",
 				"pushqrdx.inline-html"
 			]
 		}
-	}
+	},
+
+	"postCreateCommand": "npm install"
 }

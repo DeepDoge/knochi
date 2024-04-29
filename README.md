@@ -1,4 +1,5 @@
-**UPDATE:** Rewrite in progress... 🚧
+**UPDATE:** Rewrite in progress... 🚧 <br>
+Many changes to the idea is coming, so most of the explanation below is outdated. <br>
 
 Inspired by https://github.com/DeepDoge/dweb-forum
 

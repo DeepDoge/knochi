@@ -12,8 +12,6 @@
 		"graph:deploy": "npx tsx ./graph/deploy.ts"
 	},
 	"devDependencies": {
-		"@graphprotocol/graph-cli": "^0.65.0",
-		"@graphprotocol/graph-ts": "^0.32.0",
 		"@metamask/jazzicon": "^2.0.0",
 		"@total-typescript/ts-reset": "^0.5.1",
 		"cherry-ts": "https://github.com/DeepDoge/cherry-ts/releases/download/0.0.148/package.tgz",
@@ -22,9 +20,7 @@
 		"prettier": "latest",
 		"prettier-plugin-organize-imports": "latest",
 		"solc-typed-ast": "^18.1.0",
-		"typescript": "latest",
 		"typify-contracts": "github:DeepDoge/typed-contracts#0.2.0",
-		"urql": "^4.0.6",
 		"vite": "^5.0.11",
 		"vite-plugin-singlefile": "^1.0.0",
 		"zod": "^3.22.4"
