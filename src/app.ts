@@ -1,17 +1,17 @@
-import { awaited, css, customTag, populate, sheet } from "cherry-ts"
+import { css, fragment, sheet, tags } from "purify-js"
 import { PostForm } from "./libs/PostForm"
-import { Timeline } from "./libs/Timeline"
 import { globalSheet } from "./styles"
 
-const appTag = customTag("x-app")
+const { div } = tags
+
 function App() {
-	const root = appTag()
-	const dom = root.attachShadow({ mode: "open" })
-	dom.adoptedStyleSheets.push(globalSheet, appSheet)
+	const host = div()
+	const shadow = host.element.attachShadow({ mode: "open" })
+	shadow.adoptedStyleSheets.push(globalSheet, appSheet)
 
-	populate(dom, [PostForm(), awaited(Timeline())])
+	shadow.append(fragment(PostForm()))
 
-	return root
+	return host
 }
 
 const appSheet = sheet(css`
@@ -24,4 +24,4 @@ const appSheet = sheet(css`
 	}
 `)
 
-document.body.append(App())
+document.body.append(App().element)

@@ -1,4 +1,4 @@
-import { css, sheet } from "cherry-ts"
+import { css, sheet } from "purify-js"
 
 document.adoptedStyleSheets.push(
 	sheet(css`

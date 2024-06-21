@@ -3,18 +3,26 @@ pragma solidity ^0.8.9;
 import "./IEternisIndexer.sol";
 
 contract EternisDefaultIndexer is IEternisIndexer {
+	struct Post {
+		address origin;
+		address proxy;
+		bytes32 postId;
+		uint256 time;
+	}
+
 	mapping(bytes32 => Post[]) public feeds;
 
 	function index(bytes32[] calldata feedIds, bytes32 postId) external {
+		Post memory post = Post({
+			origin: tx.origin,
+			proxy: msg.sender,
+			postId: postId,
+			time: block.timestamp
+		});
 		for (uint256 i = 0; i < feedIds.length; i++) {
-			feeds[feedIds[i]].push(
-				Post({
-					origin: tx.origin,
-					proxy: msg.sender,
-					postId: postId,
-					time: block.timestamp
-				})
-			);
+			bytes32 feedId = feedIds[i];
+			feeds[feedId].push(post);
+			emit EternisPost(feedId, postId);
 		}
 	}
 

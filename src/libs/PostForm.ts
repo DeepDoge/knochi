@@ -1,85 +1,77 @@
+import { IEternisIndexer, IEternisProxy } from "@/contracts"
 import { globalSheet } from "@/styles"
-import { EternisPost_connect } from "@/utils/contracts/EternisPost"
 import { Post, encodePost } from "@/utils/post"
 import { uniqueId } from "@/utils/unique"
 import { getSigner } from "@/utils/wallet"
-import {
-	Tags,
-	css,
-	customTag,
-	derive,
-	populate,
-	sheet,
-	signal,
-} from "cherry-ts"
+import {} from "@contracts/artifacts/IEternisProxy"
+import { zeroPadBytes } from "ethers"
+import { computed, css, fragment, ref, sheet, tags } from "purify-js"
 
-const { form, div, textarea, button, small, input } = Tags
+const { form, div, textarea, button, small, input } = tags
 
-const postFormTag = customTag("x-post-form")
 export function PostForm() {
-	const root = postFormTag({ role: "form" })
-	const dom = root.attachShadow({ mode: "open" })
-	dom.adoptedStyleSheets.push(globalSheet, postFormSheet)
+	const host = div({ role: "form" })
+	const shadow = host.element.attachShadow({ mode: "open" })
+	shadow.adoptedStyleSheets.push(globalSheet, PostFormStyle)
 
-	const text = signal("")
-	const textEncoded = derive(() =>
-		encodePost([{ type: Post.Content.TypeMap.Text, value: text.ref }]),
+	const text = ref("")
+	const textEncoded = computed(() =>
+		encodePost([{ type: Post.Content.TypeMap.Text, value: text.val }]),
 	)
 
-	const postForm = form({
-		hidden: true,
-		id: uniqueId("post-form"),
-		async "on:submit"(event) {
+	const postForm = form()
+		.id(uniqueId("post-form"))
+		.hidden(true)
+		.onsubmit(async (event) => {
 			event.preventDefault()
 
 			const signer = await getSigner()
-			const contract = EternisPost_connect(signer)
+			const proxyContract = IEternisProxy.connect(signer)
 
-			const tx = await contract.post(textEncoded.ref)
-		},
-	})
+			const tx = await proxyContract.post(
+				IEternisIndexer.defaultAddress,
+				[zeroPadBytes(signer.address, 32)],
+				textEncoded.val,
+			)
+		}).element
 
-	const n = signal(0)
-
-	// TODO: Let's start basic with text only. Later add other stuff.
-	populate(dom, [
-		postForm,
-		div({ className: "fields" }, [
-			div({ className: "field" }, [
-				input({ type: "number", "bind:valueAsNumber": n }),
-				textarea({
-					"attr:form": postForm.id,
-					name: "content",
-					required: true,
-					className: "input",
-					ariaLabel: "Post content",
-					placeholder: "Just say it...",
-					"bind:value": text,
-					"on:input"(event) {
-						const textarea = event.currentTarget
-						textarea.style.height = "auto"
-						textarea.style.height = `calc(calc(${textarea.scrollHeight}px - 1em))`
-					},
-				}),
-				small([() => textEncoded.ref.byteLength, " bytes"]),
-			]),
-		]),
-		div({ className: "actions" }, [
-			button(
-				{
-					"attr:form": postForm.id,
-					type: "submit",
-					className: "button",
-				},
-				["Post"],
+	shadow.append(
+		fragment(
+			postForm,
+			div({ class: "fields" }).children(
+				div({ class: "field" }).children(
+					textarea({ form: postForm.id, class: "input" })
+						.name("content")
+						.required(true)
+						.ariaLabel("Post content")
+						.placeholder("Just say it...")
+						.value(text)
+						.oninput((event) => {
+							const textarea = event.currentTarget
+							textarea.style.height = "auto"
+							textarea.style.height = `calc(calc(${textarea.scrollHeight}px - 1em))`
+							text.val = textarea.value
+						}),
+					small().children(
+						computed(() => textEncoded.val.byteLength),
+						" bytes",
+					),
+				),
 			),
-		]),
-	])
+			div({ class: "actions" }).children(
+				button({
+					form: postForm.id,
+					type: "submit",
+					class: "button",
+				}).children("Post"),
+			),
+		),
+	)
 
-	return root
+	return host
 }
 
-const postFormSheet = sheet(css`
+const PostFormStyle = sheet(css`
 	:host {
 		display: grid;
 		gap: 1em;
@@ -111,6 +103,6 @@ const postFormSheet = sheet(css`
 		min-height: 2em;
 		font-size: 1.25em;
 		overflow-x: hidden;
-		word-break: break-word;
+		overflow-wrap: break-word;
 	}
 `)

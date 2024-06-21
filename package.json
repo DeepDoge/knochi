@@ -14,11 +14,11 @@
 	"devDependencies": {
 		"@metamask/jazzicon": "^2.0.0",
 		"@total-typescript/ts-reset": "^0.5.1",
-		"cherry-ts": "https://github.com/DeepDoge/cherry-ts/releases/download/0.0.148/package.tgz",
 		"console-log-colors": "^0.4.0",
 		"ethers": "^6.9.1",
 		"prettier": "latest",
 		"prettier-plugin-organize-imports": "latest",
+		"purify-js": "github:DeepDoge/purify.js#0.0.208",
 		"solc-typed-ast": "^18.1.0",
 		"typify-contracts": "github:DeepDoge/typed-contracts#0.2.0",
 		"vite": "^5.0.11",

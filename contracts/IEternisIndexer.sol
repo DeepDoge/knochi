@@ -2,12 +2,7 @@
 pragma solidity ^0.8.9;
 
 interface IEternisIndexer {
-	struct Post {
-		address origin;
-		address proxy;
-		bytes32 postId;
-		uint256 time;
-	}
+	event EternisPost(bytes32 indexed feedId, bytes32 postId);
 
 	function index(bytes32[] calldata feedIds, bytes32 postId) external;
 	function length(bytes32 feedId) external view returns (uint256);
