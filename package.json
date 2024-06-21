@@ -2,27 +2,33 @@
 	"type": "module",
 	"name": "eternis",
 	"scripts": {
-		"dev": "vite --host",
+		"dev": "npm-run-all --parallel vite:dev sw:watch",
 		"build": "vite build",
 		"preview": "vite preview --host",
+		"vite:dev": "vite --host",
 		"format": "prettier -w ./",
 		"contracts:compile": "npx tsx ./contracts/compile.ts",
-		"graph:codegen": "graph codegen ./graph/subgraph.yaml -o ./graph/generated",
-		"graph:build": "graph build ./graph/subgraph.yaml -o ./graph/build",
-		"graph:deploy": "npx tsx ./graph/deploy.ts"
+		"sw:watch": "npm-run-all --parallel sw:*:watch",
+		"sw:compile:watch": "tsc -w -p ./service/tsconfig.build.json",
+		"sw:bundle:watch": "rollup -w -c ./service/rollup.config.mjs"
 	},
 	"devDependencies": {
 		"@metamask/jazzicon": "^2.0.0",
+		"@rollup/plugin-node-resolve": "^15.2.3",
 		"@total-typescript/ts-reset": "^0.5.1",
 		"console-log-colors": "^0.4.0",
 		"ethers": "^6.9.1",
+		"kysely": "^0.27.3",
+		"kysely-wasqlite-worker": "^0.6.1",
+		"npm-run-all": "^4.1.5",
 		"prettier": "latest",
 		"prettier-plugin-organize-imports": "latest",
+		"prisma": "^5.15.1",
+		"prisma-kysely": "^1.8.0",
 		"purify-js": "github:DeepDoge/purify.js#0.0.208",
 		"solc-typed-ast": "^18.1.0",
 		"typify-contracts": "github:DeepDoge/typed-contracts#0.2.0",
 		"vite": "^5.0.11",
-		"vite-plugin-singlefile": "^1.0.0",
 		"zod": "^3.22.4"
 	}
 }

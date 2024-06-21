@@ -28,8 +28,7 @@ const solidityFiles = await findSolidityFilesRecursive(CONTRACTS_DIR)
 const solidityFilesByDir = solidityFiles.reduce(
 	(acc, filePath) => {
 		const dirPath = path.dirname(filePath)
-		if (!acc[dirPath]) acc[dirPath] = []
-		acc[dirPath].push(filePath)
+		;(acc[dirPath] ??= []).push(filePath)
 		return acc
 	},
 	{} as Record<string, string[]>,

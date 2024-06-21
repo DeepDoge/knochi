@@ -1,39 +1,37 @@
-import { IEternisIndexer, IEternisProxy } from "@/contracts"
-import { globalSheet } from "@/styles"
-import { Post, encodePost } from "@/utils/post"
-import { uniqueId } from "@/utils/unique"
-import { getSigner } from "@/utils/wallet"
-import {} from "@contracts/artifacts/IEternisProxy"
-import { zeroPadBytes } from "ethers"
-import { computed, css, fragment, ref, sheet, tags } from "purify-js"
+import { IEternisIndexer, IEternisProxy } from "@/contracts";
+import { globalSheet } from "@/styles";
+import { Post, encodePost } from "@/utils/post";
+import { uniqueId } from "@/utils/unique";
+import { getSigner } from "@/utils/wallet";
+import {} from "@contracts/artifacts/IEternisProxy";
+import { zeroPadBytes } from "ethers";
+import { computed, css, fragment, ref, sheet, tags } from "purify-js";
 
-const { form, div, textarea, button, small, input } = tags
+const { form, div, textarea, button, small, input } = tags;
 
 export function PostForm() {
-	const host = div({ role: "form" })
-	const shadow = host.element.attachShadow({ mode: "open" })
-	shadow.adoptedStyleSheets.push(globalSheet, PostFormStyle)
+	const host = div({ role: "form" });
+	const shadow = host.element.attachShadow({ mode: "open" });
+	shadow.adoptedStyleSheets.push(globalSheet, PostFormStyle);
 
-	const text = ref("")
-	const textEncoded = computed(() =>
-		encodePost([{ type: Post.Content.TypeMap.Text, value: text.val }]),
-	)
+	const text = ref("");
+	const textEncoded = computed(() => encodePost([{ type: Post.Content.TypeMap.Text, value: text.val }]));
 
 	const postForm = form()
 		.id(uniqueId("post-form"))
 		.hidden(true)
 		.onsubmit(async (event) => {
-			event.preventDefault()
+			event.preventDefault();
 
-			const signer = await getSigner()
-			const proxyContract = IEternisProxy.connect(signer)
+			const signer = await getSigner();
+			const proxyContract = IEternisProxy.connect(signer);
 
 			const tx = await proxyContract.post(
 				IEternisIndexer.defaultAddress,
 				[zeroPadBytes(signer.address, 32)],
 				textEncoded.val,
-			)
-		}).element
+			);
+		}).element;
 
 	shadow.append(
 		fragment(
@@ -47,10 +45,10 @@ export function PostForm() {
 						.placeholder("Just say it...")
 						.value(text)
 						.oninput((event) => {
-							const textarea = event.currentTarget
-							textarea.style.height = "auto"
-							textarea.style.height = `calc(calc(${textarea.scrollHeight}px - 1em))`
-							text.val = textarea.value
+							const textarea = event.currentTarget;
+							textarea.style.height = "auto";
+							textarea.style.height = `calc(calc(${textarea.scrollHeight}px - 1em))`;
+							text.val = textarea.value;
 						}),
 					small().children(
 						computed(() => textEncoded.val.byteLength),
@@ -66,9 +64,9 @@ export function PostForm() {
 				}).children("Post"),
 			),
 		),
-	)
+	);
 
-	return host
+	return host;
 }
 
 const PostFormStyle = sheet(css`
@@ -105,4 +103,4 @@ const PostFormStyle = sheet(css`
 		overflow-x: hidden;
 		overflow-wrap: break-word;
 	}
-`)
+`);

@@ -1,18 +1,30 @@
-// vite config
-import { defineConfig } from "vite"
-import { viteSingleFile } from "vite-plugin-singlefile"
+import { defineConfig } from "vite";
 
 export default defineConfig({
-	plugins: [viteSingleFile()],
+	plugins: [],
 	build: {
 		target: "esnext",
 		outDir: "dist",
+		rollupOptions: {
+			input: {
+				app: "./index.html",
+				sw: "./service/sw.ts",
+			},
+			output: {
+				entryFileNames: (assetInfo) => {
+					return assetInfo.name === "sw" ? "[name].js" : "app.[name].js";
+				},
+			},
+		},
 	},
 	resolve: {
 		alias: {
 			"@": "/src",
 			"@contracts": "/contracts",
-			"@graph": "/graph",
+			"@service": "/service",
 		},
 	},
-})
+	worker: {
+		format: "es",
+	},
+});

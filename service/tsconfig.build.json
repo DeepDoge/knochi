@@ -4,8 +4,8 @@
 		"target": "ESNext",
 
 		"moduleResolution": "Bundler",
-		"noEmit": true,
 		"moduleDetection": "force",
+		"outDir": "dist",
 
 		"esModuleInterop": true,
 
@@ -14,13 +14,7 @@
 		"noUncheckedIndexedAccess": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"exactOptionalPropertyTypes": true,
-		"checkJs": true,
-
-		"paths": {
-			"@/*": ["./src/*"],
-			"@contracts/*": ["./contracts/*"],
-			"@service/*": ["./service/*"]
-		}
+		"checkJs": true
 	},
-	"include": ["src", "contracts", "service"]
+	"include": ["src"]
 }

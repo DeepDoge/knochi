@@ -1,17 +1,29 @@
-import { css, fragment, sheet, tags } from "purify-js"
-import { PostForm } from "./libs/PostForm"
-import { globalSheet } from "./styles"
+import { css, fragment, sheet, tags } from "purify-js";
 
-const { div } = tags
+import { PostForm } from "./libs/PostForm";
+import { globalSheet } from "./styles";
+
+await navigator.serviceWorker.getRegistrations().then((registrations) => {
+	for (let registration of registrations) {
+		registration.unregister();
+	}
+});
+
+await navigator.serviceWorker.register(import.meta.env.DEV ? "/dist/sw.js" : "/sw.js").then(
+	(registration) => console.log("ServiceWorker registration successful"),
+	(err) => console.log("ServiceWorker registration failed: ", err),
+);
+
+const { div } = tags;
 
 function App() {
-	const host = div()
-	const shadow = host.element.attachShadow({ mode: "open" })
-	shadow.adoptedStyleSheets.push(globalSheet, appSheet)
+	const host = div();
+	const shadow = host.element.attachShadow({ mode: "open" });
+	shadow.adoptedStyleSheets.push(globalSheet, appSheet);
 
-	shadow.append(fragment(PostForm()))
+	shadow.append(fragment(PostForm()));
 
-	return host
+	return host;
 }
 
 const appSheet = sheet(css`
@@ -22,6 +34,6 @@ const appSheet = sheet(css`
 		grid-template-columns: minmax(0, 30em);
 		justify-content: center;
 	}
-`)
+`);
 
-document.body.append(App().element)
+document.body.append(App().element);
