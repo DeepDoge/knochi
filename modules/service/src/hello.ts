@@ -50,3 +50,10 @@ const db = DB.create("test")
 		},
 	)
 	.build();
+
+db.add("User")
+	.values({
+		id: Math.random().toString(36).slice(2),
+		name: Math.random().toString(36).slice(2),
+	})
+	.execute();

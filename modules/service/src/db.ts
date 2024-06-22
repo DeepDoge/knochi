@@ -1,7 +1,24 @@
 export namespace DB {
+	export namespace IDB {
+		export function toPromise<T = unknown>(request: IDBRequest<T>): Promise<T> {
+			return new Promise((resolve, reject) => {
+				request.onsuccess = (event) => resolve(request.result);
+				request.onerror = (event) => reject(request.error);
+			});
+		}
+
+		export async function* toIterPromise<T extends IDBCursorWithValue | null>(request: IDBRequest<T>) {
+			const cursor = await toPromise(request);
+			if (!cursor) return;
+			yield cursor;
+			cursor.continue();
+		}
+	}
+
 	export type Fields = Record<string, unknown>;
 
-	type ModelKeyParameters_internal<T extends Fields> = { keyPath?: keyof T | (keyof T)[]; autoIncrement?: boolean };
+	type ModelKeyParameters_internal<T extends Fields> = { keyPath?: keyof T | (keyof T)[] };
+
 	export type ModelKeyParameters<T extends Fields> = Omit<
 		IDBObjectStoreParameters,
 		keyof ModelKeyParameters_internal<T>
@@ -26,45 +43,29 @@ export namespace DB {
 	export type ModelBuilder = ReturnType<typeof ModelBuilder>;
 	export function ModelBuilder() {
 		return {
-			parser<TFields extends Fields>(parser: (fields: unknown) => TFields) {
+			parser<TFields extends Fields>(parser: (fields: TFields) => TFields) {
 				return {
 					key<TParams extends ModelKeyParameters<TFields>>(parameters: TParams) {
-						function indexBuilder<const TIndexes extends readonly ModalIndexParameters<TFields>[]>(
+						function innerBuilder<const TIndexes extends readonly ModalIndexParameters<TFields>[]>(
 							indexes: TIndexes,
 						) {
 							return {
 								index<TIndex extends ModalIndexParameters<TFields>>(newIndex: TIndex) {
-									return indexBuilder([...indexes, newIndex]);
+									return innerBuilder([...indexes, newIndex]);
 								},
 								build(): Model<TFields, TParams, TIndexes> {
 									return { parser, parameters: parameters as TParams, indexes };
 								},
 							};
 						}
-						return indexBuilder([]);
+						return innerBuilder([]);
 					},
 				};
 			},
 		};
 	}
 
-	export namespace IDB {
-		export function toPromise<T = unknown>(request: IDBRequest<T>): Promise<T> {
-			return new Promise((resolve, reject) => {
-				request.onsuccess = (event) => resolve(request.result);
-				request.onerror = (event) => reject(request.error);
-			});
-		}
-
-		export async function* toIterPromise<T extends IDBCursorWithValue | null>(request: IDBRequest<T>) {
-			const cursor = await toPromise(request);
-			if (!cursor) return;
-			yield cursor;
-			cursor.continue();
-		}
-	}
-
-	export function create(name: string) {
+	export function create(databaseName: string) {
 		function versionBuilder<
 			const TVersions extends readonly {
 				version: number;
@@ -87,7 +88,7 @@ export namespace DB {
 						throw new Error("No last version");
 					}
 
-					const openRequest = indexedDB.open(name, lastVersion.version);
+					const openRequest = indexedDB.open(databaseName, lastVersion.version);
 					openRequest.onupgradeneeded = async (event) => {
 						const db = openRequest.result;
 						const tx = openRequest.transaction;
@@ -157,15 +158,36 @@ export namespace DB {
 						};
 					};
 
-					openRequest.onsuccess = (event) => {
-						const db = openRequest.result;
-						console.log(`Database ${name} opened successfully`);
-						// Handle success logic here
-					};
+					const promise = IDB.toPromise(openRequest);
 
-					openRequest.onerror = (event) => {
-						console.error(`Database ${name} failed to open`, openRequest.error);
-						// Handle error logic here
+					type LastVersion = TVersions extends readonly [...infer _, infer U] ? U : never;
+
+					return {
+						add<TModelName extends Extract<keyof LastVersion["models"], string>>(modelName: TModelName) {
+							const model = lastVersion.models[modelName];
+							if (!model) {
+								throw new Error(`Model ${modelName} not found`);
+							}
+							type Model = LastVersion["models"][TModelName];
+							type Values = ReturnType<Model["parser"]>;
+							return {
+								values(values: Values) {
+									model.parser(values);
+									return {
+										async execute() {
+											await promise;
+											const db = await IDB.toPromise(indexedDB.open(databaseName));
+											await IDB.toPromise(
+												db
+													.transaction(modelName, "readwrite")
+													.objectStore(modelName)
+													.add(values),
+											);
+										},
+									};
+								},
+							};
+						},
 					};
 				},
 			};
