@@ -6,8 +6,7 @@
 			"extensions": [
 				"esbenp.prettier-vscode",
 				"JuanBlanco.solidity",
-				"pushqrdx.inline-html",
-				"Prisma.prisma"
+				"pushqrdx.inline-html"
 			]
 		}
 	},
