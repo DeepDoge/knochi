@@ -1,12 +1,11 @@
 {
-	"extends": "../../tsconfig.common.json",
+	"extends": "../../../tsconfig.common.json",
 	"compilerOptions": {
-		"lib": ["ESNext", "DOM"],
+		"lib": ["ESNext"],
 
 		"module": "ESNext",
 		"target": "ESNext",
 
-		"moduleResolution": "Bundler",
 		"moduleDetection": "force",
 		"noEmit": true,
 

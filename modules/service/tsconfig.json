@@ -1,6 +1,8 @@
 {
 	"extends": "../../tsconfig.common.json",
 	"compilerOptions": {
+		"lib": ["webworker", "ESNext"],
+
 		"module": "ESNext",
 		"target": "ESNext",
 

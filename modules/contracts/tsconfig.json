@@ -1,12 +1,14 @@
 {
 	"extends": "../../tsconfig.common.json",
 	"compilerOptions": {
+		"lib": ["ESNext"],
+
 		"module": "NodeNext",
 		"target": "ESNext",
 
 		"moduleResolution": "NodeNext",
 		"moduleDetection": "force",
-		"outDir": "dist",
+		"noEmit": true,
 
 		"paths": {
 			"@/*": ["./src/*"]
