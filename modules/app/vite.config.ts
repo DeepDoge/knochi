@@ -9,11 +9,11 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				app: "./index.html",
-				/* sw: "./service/sw.ts", */
+				sw: "./public/sw.js",
 			},
 			output: {
 				entryFileNames: (assetInfo) => {
-					return /* assetInfo.name === "sw" ? "[name].js" :  */ "app.[name].js";
+					return assetInfo.name === "sw" ? "[name].js" : "app.[name].js";
 				},
 			},
 		},

@@ -4,8 +4,8 @@
 	"scripts": {
 		"dev": "npm-run-all --parallel *:watch",
 		"build": "npm run compile && npm run bundle",
-		"compile": "tsc -p ./tsconfig.json",
-		"compile:watch": "tsc -w -p ./tsconfig.json",
+		"compile": "rm -rf ./dist/* && tsc -p ./tsconfig.json",
+		"compile:watch": "tsc -w -p ./tsconfig.json ",
 		"bundle": "rollup -c ./rollup.config.mjs",
 		"bundle:watch": "rollup -w -c ./rollup.config.mjs"
 	}
