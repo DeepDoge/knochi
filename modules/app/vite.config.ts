@@ -9,7 +9,7 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				app: "./index.html",
-				sw: "./public/sw.js",
+				sw: "./public/sw.js" /* processed again by Vite and its rules */,
 			},
 			output: {
 				entryFileNames: (assetInfo) => {
