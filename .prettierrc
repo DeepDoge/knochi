@@ -8,7 +8,8 @@
 				"bracketSameLine": true,
 				"printWidth": 120,
 				"arrowParens": "always",
-				"bracketSpacing": true
+				"bracketSpacing": true,
+				"experimentalTernaries": true
 			}
 		}
 	],
