@@ -1,4 +1,4 @@
-export namespace Database {
+export namespace DB {
 	export type Fields = Record<string, unknown>;
 
 	type ModelKeyParameters_internal<T extends Fields> = { keyPath?: keyof T | (keyof T)[]; autoIncrement?: boolean };
@@ -48,19 +48,35 @@ export namespace Database {
 		};
 	}
 
+	export namespace IDB {
+		export function toPromise<T = unknown>(request: IDBRequest<T>): Promise<T> {
+			return new Promise((resolve, reject) => {
+				request.onsuccess = (event) => resolve(request.result);
+				request.onerror = (event) => reject(request.error);
+			});
+		}
+
+		export async function* toIterPromise<T extends IDBCursorWithValue | null>(request: IDBRequest<T>) {
+			const cursor = await toPromise(request);
+			if (!cursor) return;
+			yield cursor;
+			cursor.continue();
+		}
+	}
+
 	export function create(name: string) {
 		function versionBuilder<
 			const TVersions extends readonly {
 				version: number;
 				models: Record<string, Model>;
-				customMigration: { (tx: IDBTransaction, done: () => void): unknown };
+				customMigration: { (tx: IDBTransaction): unknown };
 			}[],
 		>(versions: TVersions) {
 			return {
 				version<Models extends Record<string, Model>>(
 					version: number,
 					models: Models,
-					customMigration: { (tx: IDBTransaction, done: () => void): unknown } = (_, done) => done(),
+					customMigration: { (tx: IDBTransaction): unknown } = async () => {},
 				) {
 					return versionBuilder([...versions, { version, models, customMigration }]);
 				},
@@ -72,7 +88,7 @@ export namespace Database {
 					}
 
 					const openRequest = indexedDB.open(name, lastVersion.version);
-					openRequest.onupgradeneeded = (event) => {
+					openRequest.onupgradeneeded = async (event) => {
 						const db = openRequest.result;
 						const tx = openRequest.transaction;
 						if (!tx) {
@@ -117,26 +133,18 @@ export namespace Database {
 									}
 								}
 
-								version.customMigration(tx, () => {
-									// Validate data against parser before committing
-									const cursorRequest = store.openCursor();
-									cursorRequest.onsuccess = (e) => {
-										const cursor = cursorRequest.result;
-										if (cursor) {
-											const data = cursor.value;
-											try {
-												model.parser(data); // This will throw if data does not match parser schema
-												cursor.continue();
-											} catch (error) {
-												console.error(
-													`Validation error in ${modelName} store: `,
-													String(error),
-												);
-												throw error;
-											}
-										}
-									};
-								});
+								await version.customMigration(tx);
+
+								// Validate data against parser before committing
+								const cursorRequest = store.openCursor();
+								for await (const cursor of IDB.toIterPromise(cursorRequest)) {
+									try {
+										model.parser(cursor.value); // This will throw if data does not match parser schema
+									} catch (error) {
+										console.error(`Validation error in ${modelName} store: `, String(error));
+										throw error;
+									}
+								}
 							}
 						}
 
