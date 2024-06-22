@@ -4,30 +4,31 @@ import { Database } from "./db";
 export const hello = "hello";
 
 const db = Database.create("test")
-	.version(1, {
-		User: Database.ModelBuilder()
-			.parser(object({ id: string(), name: string() }).parse)
-			.key({ keyPath: "id" })
-			.index({ field: "name", options: { unique: true } })
-			.build(),
-	})
 	.version(
-		2,
+		1,
 		{
 			User: Database.ModelBuilder()
-				.parser(object({ id: string() }).parse)
+				.parser(object({ id: string(), name: string() }).strict().parse)
 				.key({ keyPath: "id" })
+				.index({ field: "name", options: { unique: true } })
 				.build(),
 		},
-		(tx) => {
-			tx.objectStore("User").add({ id: "123" });
+		(tx, done) => {
+			tx.objectStore("User").add({ id: "123", name: "hello" });
+			done();
 		},
 	)
-	.version(
+	.version(2, {
+		User: Database.ModelBuilder()
+			.parser(object({ id: string() }).strict().parse)
+			.key({ keyPath: "id" })
+			.build(),
+	})
+	/* .version(
 		3,
 		{
 			User: Database.ModelBuilder()
-				.parser(object({ id: string(), name: string() }).parse)
+				.parser(object({ id: string(), name: string() }).strict().parse)
 				.key({ keyPath: "id" })
 				.index({ field: "name", options: { unique: true } })
 				.build(),
@@ -54,5 +55,5 @@ const db = Database.create("test")
 				};
 			};
 		},
-	)
+	) */
 	.build();
