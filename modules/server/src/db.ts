@@ -1,3 +1,5 @@
+// TODO: This needs a refactor, but I only care about making it work. At this time.
+
 export namespace DB {
 	export namespace IDB {
 		export function toPromise<T = unknown>(request: IDBRequest<T>): Promise<T> {
