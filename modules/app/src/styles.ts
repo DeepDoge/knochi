@@ -1,4 +1,4 @@
-import { css, sheet } from "purify-js"
+import { css, sheet } from "purify-js";
 
 document.adoptedStyleSheets.push(
 	sheet(css`
@@ -30,7 +30,7 @@ document.adoptedStyleSheets.push(
 			min-height: 100svh;
 		}
 	`),
-)
+);
 
 export const globalSheet = sheet(css`
 	@layer global;
@@ -58,9 +58,7 @@ export const globalSheet = sheet(css`
 			padding: 0.75em;
 			border-radius: var(--radius);
 			border: none;
-			background-color: hsl(
-				from var(--back) h s calc(calc(1 - l) * 0.5) / 0.1
-			);
+			background-color: hsl(from var(--back) h s calc(calc(1 - l) * 0.5) / 0.1);
 			font: inherit;
 
 			&:focus-visible {
@@ -85,4 +83,4 @@ export const globalSheet = sheet(css`
 			cursor: pointer;
 		}
 	}
-`)
+`);

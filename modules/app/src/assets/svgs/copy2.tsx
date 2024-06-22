@@ -14,4 +14,4 @@ export const Copy2Svg = (
 			fill="currentColor"
 		/>
 	</svg>
-).render() as SVGElement
+).render() as SVGElement;

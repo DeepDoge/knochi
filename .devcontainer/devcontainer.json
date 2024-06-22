@@ -3,11 +3,7 @@
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
 	"customizations": {
 		"vscode": {
-			"extensions": [
-				"esbenp.prettier-vscode",
-				"JuanBlanco.solidity",
-				"pushqrdx.inline-html"
-			]
+			"extensions": ["esbenp.prettier-vscode", "JuanBlanco.solidity", "pushqrdx.inline-html"]
 		}
 	},
 

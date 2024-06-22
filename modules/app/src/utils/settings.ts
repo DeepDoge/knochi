@@ -1,23 +1,23 @@
 export type Settings = {
-	networks: Settings.Network[]
-	ipfs: Settings.Ipfs
-}
+	networks: Settings.Network[];
+	ipfs: Settings.Ipfs;
+};
 
 export namespace Settings {
 	export type Network = {
-		name: string
-		chainId: bigint
-		providers: [string, ...string[]]
-		subgraph: string
+		name: string;
+		chainId: bigint;
+		providers: [string, ...string[]];
+		subgraph: string;
 		contracts: {
-			EternisPost: string
-			EternisTipPost: string
-		}
-	}
+			EternisPost: string;
+			EternisTipPost: string;
+		};
+	};
 
 	export type Ipfs = {
-		gateways: Record<string, string>
-	}
+		gateways: Record<string, string>;
+	};
 }
 
 // TODO: Finish this, also make a user interface for it, so users can add their own networks and gateways, and stuff
@@ -35,8 +35,7 @@ const settings = {
 			name: "Sepolia",
 			chainId: 123n,
 			providers: ["https://rpc-sepolia.dforum.network"],
-			subgraph:
-				"https://api.studio.thegraph.com/query/45351/dforum-sepolia/dev-1705864167904",
+			subgraph: "https://api.studio.thegraph.com/query/45351/dforum-sepolia/dev-1705864167904",
 			contracts: {
 				EternisPost: "0x23446DdCe60FB29B0265412eCB60B5feB76058CD",
 				EternisTipPost: "0x23446DdCe60FB29B0265412eCB60B5feB76058CD",
@@ -55,7 +54,7 @@ const settings = {
 			storj: "https://demo.storj-ipfs.com",
 		},
 	},
-} as const satisfies Settings
+} as const satisfies Settings;
 
 /* 
 ok also you can use this trick while racing gateways:

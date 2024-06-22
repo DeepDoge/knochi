@@ -1,9 +1,9 @@
 self.addEventListener("install", (event) => {
-    console.log("Installed");
+	console.log("Installed");
 });
 self.addEventListener("activate", (event) => {
-    console.log("Activated");
+	console.log("Activated");
 });
 self.addEventListener("fetch", (event) => {
-    event.respondWith(fetch(event.request));
+	event.respondWith(fetch(event.request));
 });
