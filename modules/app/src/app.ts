@@ -9,7 +9,7 @@ await navigator.serviceWorker.getRegistrations().then((registrations) => {
 	}
 });
 
-await navigator.serviceWorker.register(import.meta.env.DEV ? "/dist/sw.js" : "/sw.js").then(
+await navigator.serviceWorker.register("/sw.js").then(
 	(registration) => console.log("ServiceWorker registration successful"),
 	(err) => console.log("ServiceWorker registration failed: ", err),
 );

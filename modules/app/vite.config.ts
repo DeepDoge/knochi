@@ -4,27 +4,21 @@ export default defineConfig({
 	plugins: [],
 	build: {
 		target: "esnext",
-		outDir: "dist",
+		outDir: "../../dist",
+		emptyOutDir: true,
 		rollupOptions: {
 			input: {
 				app: "./index.html",
-				sw: "./service/sw.ts",
+				/* sw: "./service/sw.ts", */
 			},
 			output: {
 				entryFileNames: (assetInfo) => {
-					return assetInfo.name === "sw" ? "[name].js" : "app.[name].js";
+					return /* assetInfo.name === "sw" ? "[name].js" :  */ "app.[name].js";
 				},
 			},
 		},
 	},
 	resolve: {
-		alias: {
-			"@": "/src",
-			"@contracts": "/contracts",
-			"@service": "/service",
-		},
-	},
-	worker: {
-		format: "es",
+		alias: { "@": "/src" },
 	},
 });

@@ -5,7 +5,7 @@ export default {
 	plugins: [nodeResolve()],
 	input: path.join(String(import.meta.dirname), "/dist/sw.js"),
 	output: {
-		file: path.join(String(import.meta.dirname), "../dist/sw.js"),
+		file: path.join(String(import.meta.dirname), "../app/public/sw.js"),
 		format: "es",
 	},
 };

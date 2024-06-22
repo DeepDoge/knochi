@@ -1,20 +1,11 @@
 {
 	"compilerOptions": {
-		"module": "ESNext",
-		"target": "ESNext",
-
-		"moduleResolution": "Bundler",
-		"moduleDetection": "force",
-		"outDir": "dist",
-
-		"esModuleInterop": true,
-
+		"types": ["@total-typescript/ts-reset"],
 		"skipLibCheck": true,
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"exactOptionalPropertyTypes": true,
 		"checkJs": true
-	},
-	"include": ["src"]
+	}
 }

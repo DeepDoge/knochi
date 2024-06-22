@@ -1,0 +1,7 @@
+{
+	"type": "module",
+	"name": "@modules/contracts",
+	"scripts": {
+		"compile": "tsx ./compile.ts"
+	}
+}

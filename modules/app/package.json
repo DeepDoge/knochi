@@ -1,0 +1,9 @@
+{
+	"type": "module",
+	"name": "@modules/app",
+	"scripts": {
+		"dev": "vite --host",
+		"build": "vite build",
+		"preview": "vite preview --host"
+	}
+}

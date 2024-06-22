@@ -1,16 +1,20 @@
 {
 	"type": "module",
 	"name": "eternis",
+	"workspaces": [
+		"./modules/*"
+	],
 	"scripts": {
-		"dev": "npm-run-all --parallel vite:dev sw:watch",
-		"build": "vite build",
-		"preview": "vite preview --host",
-		"vite:dev": "vite --host",
+		"dev": "npm-run-all --parallel *:dev",
+		"build": "npm run service:build && npm run app:build",
+		"postinstall": "npm run contracts:compile",
 		"format": "prettier -w ./",
-		"contracts:compile": "npx tsx ./contracts/compile.ts",
-		"sw:watch": "npm-run-all --parallel sw:*:watch",
-		"sw:compile:watch": "tsc -w -p ./service/tsconfig.build.json",
-		"sw:bundle:watch": "rollup -w -c ./service/rollup.config.mjs"
+		"___": "___",
+		"app:dev": "npm run dev --prefix ./modules/app",
+		"app:build": "npm run build --prefix ./modules/app",
+		"service:dev": "npm run dev --prefix ./modules/service",
+		"service:build": "npm run build --prefix ./modules/service",
+		"contracts:compile": "npm run compile --prefix ./modules/contracts"
 	},
 	"devDependencies": {
 		"@metamask/jazzicon": "^2.0.0",
@@ -18,13 +22,9 @@
 		"@total-typescript/ts-reset": "^0.5.1",
 		"console-log-colors": "^0.4.0",
 		"ethers": "^6.9.1",
-		"kysely": "^0.27.3",
-		"kysely-wasqlite-worker": "^0.6.1",
 		"npm-run-all": "^4.1.5",
 		"prettier": "latest",
 		"prettier-plugin-organize-imports": "latest",
-		"prisma": "^5.15.1",
-		"prisma-kysely": "^1.8.0",
 		"purify-js": "github:DeepDoge/purify.js#0.0.208",
 		"solc-typed-ast": "^18.1.0",
 		"typify-contracts": "github:DeepDoge/typed-contracts#0.2.0",
