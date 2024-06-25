@@ -12,8 +12,8 @@
 		"___": "___",
 		"app:dev": "npm run dev --prefix ./modules/app",
 		"app:build": "npm run build --prefix ./modules/app",
-		"service:dev": "npm run dev --prefix ./modules/service",
-		"service:build": "npm run build --prefix ./modules/service",
+		"service:dev": "npm run dev --prefix ./modules/server",
+		"service:build": "npm run build --prefix ./modules/server",
 		"contracts:compile": "npm run compile --prefix ./modules/contracts"
 	},
 	"devDependencies": {

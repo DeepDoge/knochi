@@ -5,22 +5,28 @@ import "./IEternisIndexer.sol";
 contract EternisDefaultIndexer is IEternisIndexer {
 	struct Post {
 		address origin;
+		uint96 postId;
 		address proxy;
-		bytes32 postId;
-		uint256 time;
+		uint96 time;
 	}
 
 	mapping(bytes32 => Post[]) public feeds;
 
-	function index(bytes32[] calldata feedIds, bytes32 postId) external {
+	function index(bytes32[] calldata feedIds, uint96 postId) external {
 		Post memory post = Post({
 			origin: tx.origin,
 			proxy: msg.sender,
 			postId: postId,
-			time: block.timestamp
+			time: uint96(block.timestamp)
 		});
 		for (uint256 i = 0; i < feedIds.length; i++) {
 			bytes32 feedId = feedIds[i];
+			if (feedId & 0xFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000000000000000000000000000 == 0) {
+				address exportedAddress = address(uint160(uint256(feedId)));
+				if (tx.origin != exportedAddress) {
+					continue;
+				}
+			}
 			feeds[feedId].push(post);
 			emit EternisPost(feedId, postId);
 		}
@@ -33,11 +39,7 @@ contract EternisDefaultIndexer is IEternisIndexer {
 	function get(
 		bytes32 feedId,
 		uint256 postIndex
-	)
-		external
-		view
-		returns (address origin, address proxy, bytes32 postId, uint256 time)
-	{
+	) external view returns (address origin, address proxy, uint96 postId, uint256 time) {
 		Post memory post = feeds[feedId][postIndex];
 		return (post.origin, post.proxy, post.postId, post.time);
 	}
