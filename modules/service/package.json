@@ -1,6 +1,6 @@
 {
 	"type": "module",
-	"name": "@modules/server",
+	"name": "@modules/service",
 	"scripts": {
 		"dev": "npm-run-all --parallel *:watch",
 		"build": "npm run compile && npm run bundle",

@@ -12,12 +12,13 @@
 		"___": "___",
 		"app:dev": "npm run dev --prefix ./modules/app",
 		"app:build": "npm run build --prefix ./modules/app",
-		"service:dev": "npm run dev --prefix ./modules/server",
-		"service:build": "npm run build --prefix ./modules/server",
+		"service:dev": "npm run dev --prefix ./modules/service",
+		"service:build": "npm run build --prefix ./modules/service",
 		"contracts:compile": "npm run compile --prefix ./modules/contracts"
 	},
 	"devDependencies": {
 		"@metamask/jazzicon": "^2.0.0",
+		"@rollup/plugin-dynamic-import-vars": "^2.1.2",
 		"@rollup/plugin-node-resolve": "^15.2.3",
 		"@total-typescript/ts-reset": "^0.5.1",
 		"console-log-colors": "^0.4.0",
