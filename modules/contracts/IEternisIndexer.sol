@@ -9,5 +9,5 @@ interface IEternisIndexer {
 	function get(
 		bytes32 feedId,
 		uint256 index
-	) external view returns (address origin, address proxy, uint96 postId, uint256 time);
+	) external view returns (address origin, address sender, uint96 postId, uint256 time);
 }

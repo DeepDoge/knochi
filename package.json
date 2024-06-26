@@ -22,6 +22,7 @@
 		"@total-typescript/ts-reset": "^0.5.1",
 		"console-log-colors": "^0.4.0",
 		"ethers": "^6.9.1",
+		"hotscript": "^1.0.13",
 		"npm-run-all": "^4.1.5",
 		"prettier": "latest",
 		"prettier-plugin-organize-imports": "latest",

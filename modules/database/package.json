@@ -1,0 +1,9 @@
+{
+	"type": "module",
+	"name": "@modules/database",
+	"exports": {
+		".": {
+			"default": "./src/db.ts"
+		}
+	}
+}

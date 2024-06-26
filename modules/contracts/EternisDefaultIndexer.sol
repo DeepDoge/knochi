@@ -6,7 +6,7 @@ contract EternisDefaultIndexer is IEternisIndexer {
 	struct Post {
 		address origin;
 		uint96 postId;
-		address proxy;
+		address sender;
 		uint96 time;
 	}
 
@@ -15,7 +15,7 @@ contract EternisDefaultIndexer is IEternisIndexer {
 	function index(bytes32[] calldata feedIds, uint96 postId) external {
 		Post memory post = Post({
 			origin: tx.origin,
-			proxy: msg.sender,
+			sender: msg.sender,
 			postId: postId,
 			time: uint96(block.timestamp)
 		});
@@ -39,8 +39,8 @@ contract EternisDefaultIndexer is IEternisIndexer {
 	function get(
 		bytes32 feedId,
 		uint256 postIndex
-	) external view returns (address origin, address proxy, uint96 postId, uint256 time) {
+	) external view returns (address origin, address sender, uint96 postId, uint256 time) {
 		Post memory post = feeds[feedId][postIndex];
-		return (post.origin, post.proxy, post.postId, post.time);
+		return (post.origin, post.sender, post.postId, post.time);
 	}
 }
