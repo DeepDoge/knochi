@@ -2,12 +2,8 @@
 	"type": "module",
 	"name": "@modules/service",
 	"scripts": {
-		"dev": "npm-run-all --parallel *:watch",
-		"build": "npm run compile && npm run bundle",
-		"compile": "rm -rf ./dist/* && tsc -p ./tsconfig.json",
-		"compile:watch": "tsc -w -p ./tsconfig.json ",
-		"bundle": "vite build",
-		"bundle:watch": "vite build -w"
+		"dev": "vite build -w",
+		"build": "vite build"
 	},
 	"exports": {
 		"./contracts": {
