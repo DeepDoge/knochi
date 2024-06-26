@@ -22,6 +22,7 @@ export const db = DB.create("eternis")
 				}).strict().parse,
 			)
 			.key({ keyPath: ["indexerContractAddress", "feedId"] })
+			.index({ field: "feedId", options: {} })
 			.build(),
 		PostIndex: DB.ModelBuilder()
 			.parser(
