@@ -8,6 +8,8 @@ self.addEventListener("activate", (event) => {
 	console.log("Activated");
 });
 
+const signalsChannel = new BroadcastChannel("signals");
+
 self.addEventListener("fetch", (event) => {
 	const url = new URL(event.request.url);
 
