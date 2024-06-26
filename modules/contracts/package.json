@@ -3,5 +3,10 @@
 	"name": "@modules/contracts",
 	"scripts": {
 		"compile": "tsx ./compile.ts"
+	},
+	"exports": {
+		".": {
+			"default": "./exports.ts"
+		}
 	}
 }

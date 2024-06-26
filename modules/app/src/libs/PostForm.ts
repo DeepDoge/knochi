@@ -1,9 +1,8 @@
-import { IEternisIndexer, IEternisProxy } from "@/contracts";
 import { globalSheet } from "@/styles";
 import { Post, encodePost } from "@/utils/post";
 import { uniqueId } from "@/utils/unique";
 import { getSigner } from "@/utils/wallet";
-import {} from "@contracts/artifacts/IEternisProxy";
+import { IEternisIndexer, IEternisProxy } from "@modules/service/contracts";
 import { zeroPadBytes } from "ethers";
 import { computed, css, fragment, ref, sheet, tags } from "purify-js";
 

@@ -8,11 +8,7 @@
 
 		"moduleResolution": "Bundler",
 		"moduleDetection": "force",
-		"outDir": "dist",
-
-		"paths": {
-			"@/*": ["./src/*"]
-		}
+		"outDir": "dist"
 	},
 	"include": ["src"]
 }

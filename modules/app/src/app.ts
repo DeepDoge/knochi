@@ -1,7 +1,9 @@
 import { css, fragment, sheet, tags } from "purify-js";
 
+import { zeroPadBytes } from "ethers";
 import { PostForm } from "./libs/PostForm";
 import { globalSheet } from "./styles";
+import { getSigner } from "./utils/wallet";
 
 await navigator.serviceWorker.getRegistrations().then((registrations) => {
 	for (let registration of registrations) {
@@ -33,6 +35,12 @@ function App() {
 
 	return host;
 }
+
+getSigner().then(async (signer) => {
+	const myFeedId = zeroPadBytes(signer.address, 32);
+	const response = await fetch(`/api/feed?feedId=${myFeedId}`);
+	console.log(await response.json());
+});
 
 const appSheet = sheet(css`
 	:host {

@@ -165,6 +165,7 @@ export namespace DB {
 					type LastVersion = TVersions extends readonly [...infer _, infer U] ? U : never;
 
 					return {
+						lastVersion,
 						add<TModelName extends Extract<keyof LastVersion["models"], string>>(modelName: TModelName) {
 							const model = lastVersion.models[modelName];
 							if (!model) {

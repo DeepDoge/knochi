@@ -10,7 +10,6 @@ lerna-debug.log*
 .pnpm-store
 node_modules
 dist
-artifacts
 
 # OS generated files
 .DS_Store

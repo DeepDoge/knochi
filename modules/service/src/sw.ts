@@ -15,7 +15,7 @@ self.addEventListener("fetch", (event) => {
 
 	if (url.pathname.startsWith("/api/")) {
 		event.respondWith(
-			import(`./api/${url.pathname.slice(5)}.js`)
+			import(`./api/${url.pathname.slice(5)}.ts`)
 				.then(async (module) => {
 					const method = event.request.method.toUpperCase();
 					const handler = module[method];

@@ -1,15 +1,6 @@
 import { DB } from "@modules/database";
-import { getAddress, isAddress, isHexString } from "ethers";
 import { bigint, object, string } from "zod";
-
-const Address = string().refine(isAddress, "Invalid EVM address").transform(getAddress);
-type Address = (typeof Address)["_output"];
-
-const Bytes32 = string().refine(
-	(value): value is typeof isHexString extends (value: any, ...args: any[]) => value is infer U ? U : never =>
-		isHexString(value, 32),
-);
-type Bytes32 = (typeof Bytes32)["_output"];
+import { Address, Bytes32 } from "./types";
 
 export const db = DB.create("eternis")
 	.version(1, {

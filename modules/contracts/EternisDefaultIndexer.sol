@@ -21,8 +21,8 @@ contract EternisDefaultIndexer is IEternisIndexer {
 		});
 		for (uint256 i = 0; i < feedIds.length; i++) {
 			bytes32 feedId = feedIds[i];
-			if (feedId & 0xFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000000000000000000000000000 == 0) {
-				address exportedAddress = address(uint160(uint256(feedId)));
+			if (feedId & 0x0000000000000000000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF == 0) {
+				address exportedAddress = address(bytes20(feedId));
 				if (tx.origin != exportedAddress) {
 					continue;
 				}
