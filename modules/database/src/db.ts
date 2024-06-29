@@ -191,6 +191,46 @@ export namespace DB {
 								},
 							};
 						},
+						set<TModelName extends Extract<keyof LastVersion["models"], string>>(modelName: TModelName) {
+							const model = lastVersion.models[modelName];
+							if (!model) {
+								throw new Error(`Model ${modelName} not found`);
+							}
+							type Model = LastVersion["models"][TModelName];
+							type Values = ReturnType<Model["parser"]>;
+							type KeyPath = Model["parameters"]["keyPath"];
+
+							type GetValuesOf<
+								TFields extends readonly (keyof Values)[],
+								R extends readonly unknown[] = readonly [],
+							> =
+								TFields extends (
+									readonly [infer First extends keyof Values, ...infer Rest extends (keyof Values)[]]
+								) ?
+									GetValuesOf<Rest, readonly [...R, Values[First]]>
+								:	R;
+							return {
+								byKey(
+									key: KeyPath extends readonly string[] ? GetValuesOf<KeyPath>
+									:	Values[`${KeyPath extends string ? KeyPath : ""}`],
+									values: Values,
+								) {
+									model.parser(values);
+									return {
+										async execute() {
+											await promise;
+											const db = await IDB.toPromise(indexedDB.open(databaseName));
+											await IDB.toPromise(
+												db
+													.transaction(modelName, "readwrite")
+													.objectStore(modelName)
+													.put(values, key as never),
+											);
+										},
+									};
+								},
+							};
+						},
 						find<TModelName extends Extract<keyof LastVersion["models"], string>>(modelName: TModelName) {
 							const model = lastVersion.models[modelName];
 							if (!model) {
