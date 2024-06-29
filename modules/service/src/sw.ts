@@ -10,13 +10,16 @@ self.addEventListener("activate", (event) => {
 
 const signalsChannel = new BroadcastChannel("signals");
 
+const apiImports = import.meta.glob("./api/**/*.ts");
+console.log(Object.keys(apiImports));
+
 self.addEventListener("fetch", (event) => {
 	const url = new URL(event.request.url);
 
 	if (url.pathname.startsWith("/api/")) {
 		event.respondWith(
-			import(`./api/${url.pathname.slice(5)}.ts`)
-				.then(async (module) => {
+			apiImports[`./api/${url.pathname.slice(5)}.ts`]!()
+				.then(async (module: any) => {
 					const method = event.request.method.toUpperCase();
 					const handler = module[method];
 					if (typeof handler === "function") {

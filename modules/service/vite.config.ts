@@ -1,16 +1,12 @@
 import { defineConfig } from "vite";
-import dynamicImport from "vite-plugin-dynamic-import";
 
 export default defineConfig({
-	plugins: [dynamicImport({})],
+	plugins: [],
 	build: {
 		target: "esnext",
 		outDir: "../app/public",
 		emptyOutDir: false,
-		dynamicImportVarsOptions: {
-			include: ["./src/api"],
-			warnOnError: true,
-		},
+
 		lib: {
 			entry: ["./src/sw.ts"],
 			formats: ["es"],

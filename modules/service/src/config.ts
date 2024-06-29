@@ -8,7 +8,7 @@ export namespace Config {
 	export type Network = {
 		readonly name: string;
 		readonly logoSrc?: string | null;
-		readonly chainId: bigint;
+		readonly chainId: string;
 		readonly providers: readonly [string, ...string[]];
 		readonly contracts: {
 			EternisIndexer: Address;
@@ -33,7 +33,7 @@ export namespace Config {
 		networks: [
 			{
 				name: "Sepolia",
-				chainId: 11155111n,
+				chainId: "11155111",
 				providers: ["https://sepolia.infura.io/v3/a104675596c145f29f50bf72c27a82f3"],
 				contracts: {
 					EternisIndexer: "0xD9506b33E141FFBf2A2A9F48B59dE7D1C6FfC795",

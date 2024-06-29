@@ -1,4 +1,5 @@
 import { Config } from "@/config";
+import { db } from "@/db";
 import { JsonRpcProvider, toBeHex } from "ethers";
 import { IEternisIndexer, IEternisProxy } from "../contracts";
 import { Bytes32 } from "../types";
@@ -18,8 +19,19 @@ export async function GET(request: Request) {
 		new Array<null>(Number(length)).fill(null).map(async (_, index) => {
 			const postMetadata = await indexerContract.get(feedId, BigInt(index));
 			const [origin, sender, postId, time] = postMetadata;
-			const proxyContract = IEternisProxy.connect(provider, sender);
-			const content = await proxyContract.get(postId);
+			const postIdHex = toBeHex(postId);
+
+			let content = await db.find("Post").byKey([sender, postIdHex]);
+
+			if (!content) {
+				const proxyContract = IEternisProxy.connect(provider, sender);
+				content = {
+					proxyContractAddress: sender,
+					postIdHex,
+					content: await proxyContract.get(postId),
+				};
+				await db.add("Post").values(content).execute();
+			}
 
 			return {
 				origin,

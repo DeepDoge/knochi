@@ -17,9 +17,14 @@ export namespace DB {
 		}
 	}
 
-	export type Fields = Record<string, unknown>;
+	export type Fields = Record<string, any>;
 
-	type ModelKeyParameters_internal<T extends Fields> = { keyPath?: keyof T | (keyof T)[] };
+	type ModelKeyParameters_internal<
+		T extends Fields,
+		U = { [K in keyof T as T[K] extends IDBValidKey ? K : never]: T[K] },
+	> = {
+		keyPath?: Extract<keyof U, string> | Extract<keyof U, string>[];
+	};
 
 	export type ModelKeyParameters<T extends Fields> = Omit<
 		IDBObjectStoreParameters,
@@ -27,8 +32,11 @@ export namespace DB {
 	> &
 		ModelKeyParameters_internal<T>;
 
-	export type ModalIndexParameters<T extends Fields> = {
-		field: keyof T | (keyof T)[];
+	export type ModalIndexParameters<
+		T extends Fields,
+		U = { [K in keyof T as T[K] extends IDBValidKey ? K : never]: T[K] },
+	> = {
+		field: Extract<keyof U, string> | Extract<keyof U, string>[];
 		options: IDBIndexParameters;
 	};
 
@@ -47,7 +55,7 @@ export namespace DB {
 		return {
 			parser<TFields extends Fields>(parser: (fields: TFields) => TFields) {
 				return {
-					key<TParams extends ModelKeyParameters<TFields>>(parameters: TParams) {
+					key<const TParams extends ModelKeyParameters<TFields>>(parameters: TParams) {
 						function innerBuilder<const TIndexes extends readonly ModalIndexParameters<TFields>[]>(
 							indexes: TIndexes,
 						) {
@@ -165,7 +173,7 @@ export namespace DB {
 					type LastVersion = TVersions extends readonly [...infer _, infer U] ? U : never;
 
 					return {
-						lastVersion,
+						lastVersion: lastVersion as LastVersion,
 						add<TModelName extends Extract<keyof LastVersion["models"], string>>(modelName: TModelName) {
 							const model = lastVersion.models[modelName];
 							if (!model) {
@@ -249,7 +257,10 @@ export namespace DB {
 								R extends readonly unknown[] = readonly [],
 							> =
 								TFields extends (
-									readonly [infer First extends keyof Values, ...infer Rest extends (keyof Values)[]]
+									readonly [
+										infer First extends keyof Values,
+										...infer Rest extends readonly (keyof Values)[],
+									]
 								) ?
 									GetValuesOf<Rest, readonly [...R, Values[First]]>
 								:	R;

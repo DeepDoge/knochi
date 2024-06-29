@@ -29,28 +29,28 @@ export const db = DB.create("eternis.posts")
 				object({
 					indexerContractAddress: Address,
 					feedId: Bytes32,
-					index: bigint(),
-					postId: bigint(),
+					indexHex: string(),
+					postIdHex: string(),
 					/** Most likely a `proxyContractAddress` */
 					senderAddress: Address,
 					originAddress: Address,
 					timestamp: bigint(),
 				}).strict().parse,
 			)
-			.key({ keyPath: ["indexerContractAddress", "feedId", "index"] })
-			.index({ field: ["indexerContractAddress", "feedId", "index"], options: {} })
-			.index({ field: ["senderAddress", "postId"], options: { unique: true } }) // Sender decides the post ID
+			.key({ keyPath: ["indexerContractAddress", "feedId", "indexHex"] })
+			.index({ field: ["indexerContractAddress", "feedId", "indexHex"], options: {} })
+			.index({ field: ["senderAddress", "postIdHex"], options: { unique: true } }) // Sender decides the post ID
 			.index({ field: "originAddress", options: {} })
 			.build(),
 		Post: DB.ModelBuilder()
 			.parser(
 				object({
 					proxyContractAddress: Address,
-					postId: bigint(),
+					postIdHex: string(),
 					content: string(),
 				}).strict().parse,
 			)
-			.key({ keyPath: ["proxyContractAddress", "postId"] })
+			.key({ keyPath: ["proxyContractAddress", "postIdHex"] })
 			.build(),
 	})
 	.build();

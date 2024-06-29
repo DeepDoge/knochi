@@ -8,6 +8,9 @@
 	"exports": {
 		"./contracts": {
 			"default": "./src/contracts.ts"
+		},
+		"./config": {
+			"default": "./src/config.ts"
 		}
 	}
 }
