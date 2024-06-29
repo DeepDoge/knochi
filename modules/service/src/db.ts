@@ -1,9 +1,18 @@
 import { DB } from "@modules/database";
-import { bigint, object, string } from "zod";
+import { bigint, object, string, unknown } from "zod";
 import { Address, Bytes32 } from "./types";
 
-export const db = DB.create("eternis")
+export const db = DB.create("eternis.posts")
 	.version(1, {
+		KV: DB.ModelBuilder()
+			.parser(
+				object({
+					key: string(),
+					value: unknown(),
+				}).strict().parse,
+			)
+			.key({ keyPath: "key" })
+			.build(),
 		Feed: DB.ModelBuilder()
 			.parser(
 				object({

@@ -16,14 +16,6 @@ await navigator.serviceWorker.register("/sw.js").then(
 	(err) => console.log("ServiceWorker registration failed: ", err),
 );
 
-function random(): string | number {
-	if (Math.random() < 0.5) {
-		return "abc";
-	} else {
-		return 123;
-	}
-}
-
 const { div } = tags;
 
 function App() {
