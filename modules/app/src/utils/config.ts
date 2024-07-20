@@ -1,9 +1,9 @@
 import { sw } from "@/sw";
+import { configUpdateBroadcastChannel } from "@modules/service/features/config/broadcastChannels";
 import { ref } from "purify-js";
 
-export const config = ref(await sw.calls.getConfig());
+export const config = ref(await sw.calls.getConfigs());
 
-const broadcastChannel = new BroadcastChannel("config");
-broadcastChannel.addEventListener("message", (value) => {
+configUpdateBroadcastChannel.addEventListener("message", (value) => {
 	config.val = value.data;
 });

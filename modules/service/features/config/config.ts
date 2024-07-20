@@ -1,5 +1,6 @@
-import { db } from "./db";
-import { Address } from "./types";
+import { db } from "@/db";
+import { Address } from "@/types";
+import { configUpdateBroadcastChannel } from "./broadcastChannels";
 
 export type Config = {
 	readonly networks: readonly [Config.Network, ...Config.Network[]];
@@ -22,7 +23,7 @@ export namespace Config {
 			.byKey("config", { key: "config", value })
 			.execute()
 			.then(() => structuredClone(value)));
-		broadcastChannel.postMessage(value);
+		configUpdateBroadcastChannel.postMessage(value);
 	}
 
 	export async function get() {
@@ -44,8 +45,6 @@ export namespace Config {
 			},
 		],
 	};
-
-	const broadcastChannel = new BroadcastChannel("config");
 
 	let currentConfig: Promise<Config> = db
 		.find("KV")

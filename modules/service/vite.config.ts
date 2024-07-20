@@ -8,7 +8,7 @@ export default defineConfig({
 		emptyOutDir: false,
 
 		lib: {
-			entry: ["./src/sw.ts"],
+			entry: ["./sw.ts"],
 			formats: ["es"],
 			name: "sw",
 			fileName: "sw",
@@ -20,6 +20,6 @@ export default defineConfig({
 		},
 	},
 	resolve: {
-		alias: { "@": "/src" },
+		alias: { "@": "" },
 	},
 });

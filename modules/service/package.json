@@ -4,16 +4,5 @@
 	"scripts": {
 		"dev": "vite build -w",
 		"build": "vite build"
-	},
-	"exports": {
-		"./contracts": {
-			"default": "./src/contracts.ts"
-		},
-		"./config": {
-			"default": "./src/config.ts"
-		},
-		"./calls": {
-			"default": "./src/calls.common.ts"
-		}
 	}
 }

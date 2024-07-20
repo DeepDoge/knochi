@@ -1,16 +1,8 @@
+import { IEternisIndexer, IEternisProxy } from "@/contracts";
+import { db } from "@/db";
+import { Config } from "@/features/config/config";
+import { Bytes32 } from "@/types";
 import { JsonRpcProvider, toBeHex } from "ethers";
-import { Config } from "./config";
-import { IEternisIndexer, IEternisProxy } from "./contracts";
-import { db } from "./db";
-import { Bytes32 } from "./types";
-
-export function hello(name: string) {
-	return `Hello, ${name}!`;
-}
-
-export async function getConfig() {
-	return await Config.get();
-}
 
 export async function getFeed(feedId: string) {
 	Bytes32.parse(feedId);
