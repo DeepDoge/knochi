@@ -3,8 +3,9 @@ import { Config } from "@/features/config/module";
 import { Bytes32 } from "@/types";
 import { IEternisIndexer, IEternisProxy } from "@modules/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
+import { min } from "extra-bigint";
 
-export async function getFeed(feedId: string) {
+export async function getFeed(feedId: string, exclusiveAfterIndex: bigint = -1n, limit: bigint = 256n) {
 	Bytes32.parse(feedId);
 	const config = await Config.get();
 
@@ -13,8 +14,11 @@ export async function getFeed(feedId: string) {
 	const indexerContract = IEternisIndexer.connect(provider, config.networks[0].contracts.EternisIndexer);
 
 	const length = await indexerContract.length(feedId);
+	const startInclusive = exclusiveAfterIndex + 1n;
+	const endExclusive = min(startInclusive + limit, length);
 	const posts = await Promise.all(
-		new Array<null>(Number(length)).fill(null).map(async (_, index) => {
+		new Array<null>(Number(endExclusive - startInclusive)).fill(null).map(async (_, i) => {
+			const index = startInclusive + BigInt(i);
 			const postMetadata = await indexerContract.get(feedId, BigInt(index));
 			const [origin, sender, postId, time] = postMetadata;
 			const postIdHex = toBeHex(postId);
