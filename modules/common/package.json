@@ -1,9 +1,0 @@
-{
-	"type": "module",
-	"name": "@modules/common",
-	"exports": {
-		".": {
-			"default": "./src/utils.ts"
-		}
-	}
-}

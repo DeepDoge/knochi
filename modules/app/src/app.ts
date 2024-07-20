@@ -3,18 +3,8 @@ import { css, fragment, sheet, tags } from "purify-js";
 import { zeroPadBytes } from "ethers";
 import { PostForm } from "./libs/PostForm";
 import { globalSheet } from "./styles";
+import { sw } from "./sw";
 import { getSigner } from "./utils/wallet";
-
-await navigator.serviceWorker.getRegistrations().then((registrations) => {
-	for (let registration of registrations) {
-		registration.unregister();
-	}
-});
-
-await navigator.serviceWorker.register("/sw.js").then(
-	(registration) => console.log("ServiceWorker registration successful"),
-	(err) => console.log("ServiceWorker registration failed: ", err),
-);
 
 const { div } = tags;
 
@@ -30,8 +20,8 @@ function App() {
 
 getSigner().then(async (signer) => {
 	const myFeedId = zeroPadBytes(signer.address, 32);
-	const response = await fetch(`/api/feed?feedId=${myFeedId}`);
-	console.log(await response.json());
+	const response = await sw.calls.getFeed(myFeedId);
+	console.log(response);
 });
 
 const appSheet = sheet(css`

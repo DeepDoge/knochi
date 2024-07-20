@@ -1,13 +1,19 @@
-import { Config } from "@/config";
-import { db } from "@/db";
 import { JsonRpcProvider, toBeHex } from "ethers";
-import { IEternisIndexer, IEternisProxy } from "../contracts";
-import { Bytes32 } from "../types";
+import { Config } from "./config";
+import { IEternisIndexer, IEternisProxy } from "./contracts";
+import { db } from "./db";
+import { Bytes32 } from "./types";
 
-export async function GET(request: Request) {
-	const url = new URL(request.url);
-	const feedId = Bytes32.parse(url.searchParams.get("feedId"));
+export function hello(name: string) {
+	return `Hello, ${name}!`;
+}
 
+export async function getConfig() {
+	return await Config.get();
+}
+
+export async function getFeed(feedId: string) {
+	Bytes32.parse(feedId);
 	const config = await Config.get();
 
 	const provider = new JsonRpcProvider(config.networks[0].providers[0]);
@@ -43,10 +49,5 @@ export async function GET(request: Request) {
 		}),
 	);
 
-	return new Response(JSON.stringify(posts), {
-		status: 200,
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
+	return posts;
 }

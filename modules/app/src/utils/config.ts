@@ -1,11 +1,7 @@
-import type { Config as ConfigType } from "@modules/service/config";
+import { sw } from "@/sw";
 import { ref } from "purify-js";
 
-export const config = ref(
-	await fetch("/api/config")
-		.then((response) => response.json())
-		.then((data) => data as ConfigType),
-);
+export const config = ref(await sw.calls.getConfig());
 
 const broadcastChannel = new BroadcastChannel("config");
 broadcastChannel.addEventListener("message", (value) => {

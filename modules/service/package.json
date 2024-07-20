@@ -11,6 +11,9 @@
 		},
 		"./config": {
 			"default": "./src/config.ts"
+		},
+		"./calls": {
+			"default": "./src/calls.common.ts"
 		}
 	}
 }
