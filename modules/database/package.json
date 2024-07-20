@@ -3,7 +3,7 @@
 	"name": "@modules/database",
 	"exports": {
 		".": {
-			"default": "./src/db.ts"
+			"default": "./db.ts"
 		}
 	}
 }

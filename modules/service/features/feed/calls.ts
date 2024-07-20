@@ -1,7 +1,7 @@
-import { IEternisIndexer, IEternisProxy } from "@/contracts";
 import { db } from "@/db";
 import { Config } from "@/features/config/module";
 import { Bytes32 } from "@/types";
+import { IEternisIndexer, IEternisProxy } from "@modules/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
 
 export async function getFeed(feedId: string) {

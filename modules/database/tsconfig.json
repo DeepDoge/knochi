@@ -10,5 +10,5 @@
 		"moduleDetection": "force",
 		"outDir": "dist"
 	},
-	"include": ["src"]
+	"include": ["."]
 }
