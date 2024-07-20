@@ -45,7 +45,8 @@ export function PostForm() {
 			postForm,
 			div({ class: "fields" }).children(
 				div({ class: "field" }).children(
-					textarea({ form: postForm.id, class: "input" })
+					textarea({ form: postForm.id })
+						.role("textbox")
 						.name("content")
 						.required(true)
 						.ariaLabel("Post content")

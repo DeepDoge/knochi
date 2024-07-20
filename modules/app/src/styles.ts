@@ -52,7 +52,7 @@ export const globalSheet = sheet(css`
 			padding: 0;
 		}
 
-		.input {
+		[role="textbox"] {
 			all: unset;
 			display: inline-block;
 			padding: 0.75em;
