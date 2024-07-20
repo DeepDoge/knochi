@@ -1,5 +1,5 @@
-import * as calls from "./calls";
-import { CallRequestMessageData, CallResponseMessageData } from "./calls.common";
+import * as calls from "./all";
+import { CallRequestMessageData, CallResponseMessageData } from "./messageData";
 
 export function registerCalls() {
 	(Object.keys(calls) as (keyof typeof calls)[]).forEach((name) => {

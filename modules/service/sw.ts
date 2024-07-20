@@ -1,4 +1,4 @@
-import { registerCalls } from "./calls.register";
+import { registerCalls } from "./features/calls/register";
 
 declare const self: ServiceWorkerGlobalScope;
 

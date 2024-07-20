@@ -1,6 +1,6 @@
 import { IEternisIndexer, IEternisProxy } from "@/contracts";
 import { db } from "@/db";
-import { Config } from "@/features/config/config";
+import { Config } from "@/features/config/module";
 import { Bytes32 } from "@/types";
 import { JsonRpcProvider, toBeHex } from "ethers";
 

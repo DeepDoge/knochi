@@ -1,4 +1,4 @@
-import { CallRequestMessageData, CallResponseMessageData } from "@modules/service/calls.common";
+import { CallRequestMessageData, CallResponseMessageData } from "@modules/service/features/calls/messageData";
 
 await navigator.serviceWorker.getRegistrations().then((registrations) => {
 	for (let registration of registrations) {
@@ -23,7 +23,7 @@ const swPromise = new Promise<ServiceWorker>((resolve, reject) =>
 );
 
 export namespace sw {
-	type CallsModuleType = typeof import("@modules/service/calls");
+	type CallsModuleType = typeof import("@modules/service/features/calls/all");
 	type calls = {
 		[K in keyof CallsModuleType]: CallsModuleType[K] extends { (...args: infer Args): infer Returns } ?
 			(...args: Args) => Promise<Awaited<Returns>>
