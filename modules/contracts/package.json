@@ -7,6 +7,9 @@
 	"exports": {
 		".": {
 			"default": "./exports.ts"
+		},
+		"./connect": {
+			"default": "./connect.ts"
 		}
 	}
 }

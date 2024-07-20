@@ -3,7 +3,7 @@ import { config } from "@/utils/config";
 import { Post, encodePost } from "@/utils/post";
 import { uniqueId } from "@/utils/unique";
 import { getSigner } from "@/utils/wallet";
-import { IEternisProxy } from "@modules/service/contracts";
+import { IEternisProxy } from "@modules/contracts/connect";
 import { zeroPadBytes } from "ethers";
 import { computed, css, fragment, ref, sheet, tags } from "purify-js";
 
