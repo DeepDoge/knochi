@@ -66,8 +66,8 @@ export function PostForm() {
 			div({ class: "actions" }).children(
 				button({
 					form: postForm.id,
-					class: "button",
 				})
+					.role("button")
 					.type("submit")
 					.disabled(computed(() => !currentProxy.val))
 					.children("Post"),
@@ -75,8 +75,9 @@ export function PostForm() {
 			div({ class: "select-proxy" }).children(
 				computed(() =>
 					Object.entries(proxyContracts.val).map(([key, address]) =>
-						button({ class: "button" })
+						button()
 							.type("button")
+							.role("button")
 							.onclick(() => (currentProxyKey.val = key))
 							.children(key),
 					),

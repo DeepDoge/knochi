@@ -71,7 +71,7 @@ export const globalSheet = sheet(css`
 			}
 		}
 
-		.button {
+		[role="button"] {
 			all: unset;
 			display: inline-block;
 			padding: 0.5em 1em;
