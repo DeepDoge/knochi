@@ -7,7 +7,7 @@ import { IEternisProxy } from "@modules/contracts/connect";
 import { zeroPadBytes } from "ethers";
 import { computed, css, fragment, ref, sheet, tags } from "purify-js";
 
-const { form, div, textarea, button, small, input } = tags;
+const { form, div, textarea, button, small, input, details, summary, ul, li, label } = tags;
 
 export function PostForm() {
 	const host = div({ role: "form" });
@@ -18,7 +18,11 @@ export function PostForm() {
 	const textEncoded = computed(() => PostContent.toBytes([{ type: PostContent.Part.TypeMap.Text, value: text.val }]));
 
 	const proxyContracts = computed(() => config.val.networks[0].contracts.EternisProxies);
+	const proxyContractEntries = computed(() => Object.entries(proxyContracts.val));
 	const currentProxyKey = ref("");
+	host.element.onConnect(() =>
+		proxyContractEntries.follow((entries) => (currentProxyKey.val = entries[0]?.[0] ?? ""), true),
+	);
 	const currentProxy = computed(() => proxyContracts.val[currentProxyKey.val]);
 
 	const postForm = form()
@@ -65,24 +69,45 @@ export function PostForm() {
 				),
 			),
 			div({ class: "actions" }).children(
-				button({
-					form: postForm.id,
-				})
-					.role("button")
-					.type("submit")
-					.disabled(computed(() => !currentProxy.val))
-					.children("Post"),
-			),
-			div({ class: "select-proxy" }).children(
-				computed(() =>
-					Object.entries(proxyContracts.val).map(([key, address]) =>
-						button()
-							.type("button")
+				div()
+					.role("group")
+					.children(
+						button({
+							form: postForm.id,
+						})
 							.role("button")
-							.onclick(() => (currentProxyKey.val = key))
-							.children(key),
+							.type("submit")
+							.disabled(computed(() => !currentProxy.val))
+							.children("Post"),
+						button()
+							.role("button")
+							.children(
+								details().children(
+									summary().children(),
+									ul().children(
+										computed(() =>
+											proxyContractEntries.val.map(([key, address]) =>
+												li().children(
+													label().children(
+														input()
+															.type("radio")
+															.name("proxy")
+															.value(key)
+															.checked(computed(() => currentProxyKey.val === key))
+															.onchange(
+																(event) =>
+																	event.currentTarget.checked &&
+																	(currentProxyKey.val = key),
+															),
+														key,
+													),
+												),
+											),
+										),
+									),
+								),
+							),
 					),
-				),
 			),
 		),
 	);
@@ -123,5 +148,22 @@ const PostFormStyle = sheet(css`
 		font-size: 1.25em;
 		overflow-x: hidden;
 		overflow-wrap: break-word;
+	}
+
+	.actions [role="group"] {
+		position: relative;
+	}
+
+	details:has(> ul) {
+		ul {
+			position: absolute;
+			inset-block-start: calc(100% + 0.5em);
+			inset-inline-end: 0;
+			color: var(--back);
+			background-color: var(--front);
+			list-style: none;
+			padding: 0.5em;
+			border-radius: var(--radius);
+		}
 	}
 `);

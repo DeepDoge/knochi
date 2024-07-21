@@ -27,8 +27,7 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 			const response = await sw.calls.getFeed(feedId, oldestPost ? oldestPost.index - 1n : null, -1n, 256n);
 			posts.children(response.map((post) => li().children(PostViewer(post))));
 
-			const oldest = response.at(-1);
-			oldestPost = oldest ?? null;
+			oldestPost = response.at(-1) ?? null;
 			if (!newestPost) {
 				const newest = response.at(0);
 				if (newest) newestPost = newest;

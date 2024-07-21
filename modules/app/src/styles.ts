@@ -43,13 +43,13 @@ export const globalSheet = sheet(css`
 		}
 
 		* {
-			color: var(--front);
-			background-color: var(--back);
-		}
-
-		* {
 			margin: 0;
 			padding: 0;
+		}
+
+		body {
+			color: var(--front);
+			background-color: var(--back);
 		}
 
 		[role="textbox"] {
@@ -58,7 +58,7 @@ export const globalSheet = sheet(css`
 			padding: 0.75em;
 			border-radius: var(--radius);
 			border: none;
-			background-color: hsl(from var(--back) h s calc(calc(1 - l) * 0.5) / 0.1);
+			background-color: color-mix(in srgb, var(--back) 95%, currentColor);
 			font: inherit;
 
 			&:focus-visible {
@@ -68,6 +68,11 @@ export const globalSheet = sheet(css`
 			textarea& {
 				resize: vertical;
 				min-height: 4.5em;
+			}
+
+			&:disabled {
+				cursor: not-allowed;
+				opacity: 0.5;
 			}
 		}
 
@@ -81,6 +86,61 @@ export const globalSheet = sheet(css`
 			color: var(--back);
 			font: inherit;
 			cursor: pointer;
+
+			&:disabled {
+				cursor: not-allowed;
+				opacity: 0.5;
+			}
+		}
+
+		[role="group"] {
+			display: inline-flex;
+			gap: 1px;
+
+			& > *:not(:first-child) {
+				border-start-start-radius: 0;
+				border-end-start-radius: 0;
+			}
+
+			& > *:not(:last-child) {
+				border-start-end-radius: 0;
+				border-end-end-radius: 0;
+			}
+		}
+
+		label:has(> input:is([type="checkbox"], [type="radio"])) {
+			display: inline-flex;
+			inline-size: fit-content;
+			gap: 0.5ch;
+			align-items: center;
+
+			& > input {
+				position: absolute;
+				pointer-events: none;
+				scale: 0;
+			}
+
+			&::before {
+				content: "";
+				display: block;
+				inline-size: 1.25em;
+				aspect-ratio: 1;
+				border: solid 0.15em currentColor;
+				padding: 0.1em;
+			}
+
+			&:has(> input[type="checkbox"])::before {
+				border-radius: var(--radius);
+			}
+
+			&:has(> input[type="radio"])::before {
+				border-radius: var(--radius-full);
+			}
+
+			&:has(> input:checked)::before {
+				background-color: currentColor;
+				background-clip: content-box;
+			}
 		}
 	}
 `);
