@@ -1,6 +1,6 @@
+import { PostContent } from "@/features/post/utils";
 import { globalSheet } from "@/styles";
 import { config } from "@/utils/config";
-import { Post, encodePost } from "@/utils/post";
 import { uniqueId } from "@/utils/unique";
 import { getSigner } from "@/utils/wallet";
 import { IEternisProxy } from "@modules/contracts/connect";
@@ -15,7 +15,7 @@ export function PostForm() {
 	shadow.adoptedStyleSheets.push(globalSheet, PostFormStyle);
 
 	const text = ref("");
-	const textEncoded = computed(() => encodePost([{ type: Post.Content.TypeMap.Text, value: text.val }]));
+	const textEncoded = computed(() => PostContent.toBytes([{ type: PostContent.Part.TypeMap.Text, value: text.val }]));
 
 	const proxyContracts = computed(() => config.val.networks[0].contracts.EternisProxies);
 	const currentProxyKey = ref("");

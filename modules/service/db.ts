@@ -1,6 +1,6 @@
 import { DB } from "@modules/database";
 import { bigint, object, string, unknown } from "zod";
-import { Address, Bytes32 } from "./types";
+import { AddressHex, Bytes32Hex } from "./types";
 
 export const db = DB.create("eternis.posts")
 	.version(1, {
@@ -16,8 +16,8 @@ export const db = DB.create("eternis.posts")
 		Feed: DB.ModelBuilder()
 			.parser(
 				object({
-					indexerContractAddress: Address,
-					feedId: Bytes32,
+					indexerContractAddress: AddressHex,
+					feedId: Bytes32Hex,
 					length: bigint(),
 				}).strict().parse,
 			)
@@ -27,13 +27,13 @@ export const db = DB.create("eternis.posts")
 		PostIndex: DB.ModelBuilder()
 			.parser(
 				object({
-					indexerContractAddress: Address,
-					feedId: Bytes32,
+					indexerContractAddress: AddressHex,
+					feedId: Bytes32Hex,
 					indexHex: string(),
 					postIdHex: string(),
 					/** Most likely a `proxyContractAddress` */
-					senderAddress: Address,
-					originAddress: Address,
+					senderAddress: AddressHex,
+					originAddress: AddressHex,
 					timestamp: bigint(),
 				}).strict().parse,
 			)
@@ -45,7 +45,7 @@ export const db = DB.create("eternis.posts")
 		Post: DB.ModelBuilder()
 			.parser(
 				object({
-					proxyContractAddress: Address,
+					proxyContractAddress: AddressHex,
 					postIdHex: string(),
 					content: string(),
 				}).strict().parse,

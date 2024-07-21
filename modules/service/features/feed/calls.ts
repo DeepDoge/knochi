@@ -1,12 +1,23 @@
 import { db } from "@/db";
 import { Config } from "@/features/config/module";
-import { Bytes32 } from "@/types";
+import { Bytes32Hex } from "@/types";
 import { IEternisIndexer, IEternisProxy } from "@modules/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
 import { min } from "extra-bigint";
 
-export async function getFeed(feedId: string, exclusiveAfterIndex: bigint = -1n, limit: bigint = 256n) {
-	Bytes32.parse(feedId);
+export type FeedPost = {
+	origin: `0x${string}`;
+	sender: `0x${string}`;
+	id: string;
+	index: bigint;
+	time: number;
+	contentBytesHex: string;
+};
+export async function getFeed(
+	feedId: Bytes32Hex,
+	startIndexInclusive: bigint = 0n,
+	limit: bigint = 256n,
+): Promise<FeedPost[]> {
 	const config = await Config.get();
 
 	const provider = new JsonRpcProvider(config.networks[0].providers[0]);
@@ -14,7 +25,7 @@ export async function getFeed(feedId: string, exclusiveAfterIndex: bigint = -1n,
 	const indexerContract = IEternisIndexer.connect(provider, config.networks[0].contracts.EternisIndexer);
 
 	const length = await indexerContract.length(feedId);
-	const startInclusive = exclusiveAfterIndex + 1n;
+	const startInclusive = startIndexInclusive;
 	const endExclusive = min(startInclusive + limit, length);
 	const posts = await Promise.all(
 		new Array<null>(Number(endExclusive - startInclusive)).fill(null).map(async (_, i) => {
@@ -23,25 +34,26 @@ export async function getFeed(feedId: string, exclusiveAfterIndex: bigint = -1n,
 			const [origin, sender, postId, time] = postMetadata;
 			const postIdHex = toBeHex(postId);
 
-			let content = await db.find("Post").byKey([sender, postIdHex]);
+			let dbPost = await db.find("Post").byKey([sender, postIdHex]);
 
-			if (!content) {
+			if (!dbPost) {
 				const proxyContract = IEternisProxy.connect(provider, sender);
-				content = {
+				dbPost = {
 					proxyContractAddress: sender,
 					postIdHex,
 					content: await proxyContract.get(postId),
 				};
-				await db.add("Post").values(content).execute();
+				await db.add("Post").values(dbPost).execute();
 			}
 
 			return {
 				origin,
 				sender,
-				postId: toBeHex(postId),
+				id: toBeHex(postId),
+				index,
 				time: Number(time) * 1000,
-				content,
-			};
+				contentBytesHex: dbPost.content,
+			} satisfies FeedPost;
 		}),
 	);
 
