@@ -6,7 +6,7 @@ import { Bytes32Hex } from "@modules/service/types";
 import { fragment, tags } from "purify-js";
 import { PostViewer } from "./PostViewer";
 
-const { div, ul, li, address, time, a, header, article } = tags;
+const { div, ul, li } = tags;
 
 export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n) {
 	const host = div();
@@ -15,21 +15,51 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 
 	const posts = ul();
 
-	let lastPost: FeedPost | null = null;
-	let loadingMore = false;
+	let oldestPost: FeedPost | null | undefined;
+	let newestPost: FeedPost | undefined;
+	let busy = false;
 	loadMore();
 	async function loadMore() {
-		if (loadingMore) return;
-		loadingMore = true;
+		if (busy) return;
+		busy = true;
 		try {
-			const response = await sw.calls.getFeed(feedId, lastPost ? lastPost.index + 1n : 0n);
+			if (oldestPost === null) return;
+			const response = await sw.calls.getFeed(feedId, oldestPost ? oldestPost.index - 1n : null, -1n, 256n);
 			posts.children(response.map((post) => li().children(PostViewer(post))));
 
-			lastPost = response.at(-1) ?? null;
+			const oldest = response.at(-1);
+			oldestPost = oldest ?? null;
+			if (!newestPost) {
+				const newest = response.at(0);
+				if (newest) newestPost = newest;
+			}
 		} finally {
-			loadingMore = false;
+			busy = false;
 		}
 	}
+	async function loadNewer() {
+		if (busy) return;
+		busy = true;
+		try {
+			const response = await sw.calls.getFeed(feedId, newestPost ? newestPost.index + 1n : 0n, 1n, 256n);
+			response.sort((a, b) => b.time - a.time);
+			posts.element.prepend(...response.map((post) => li().children(PostViewer(post)).element));
+
+			const newest = response.at(0);
+			if (newest) {
+				newestPost = newest;
+			}
+		} finally {
+			busy = false;
+		}
+	}
+
+	host.element.onConnect(() => {
+		const interval = setInterval(() => {
+			loadNewer();
+		}, 10000);
+		return () => clearInterval(interval);
+	});
 
 	shadow.append(fragment(posts));
 
@@ -37,10 +67,5 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 }
 
 const FeedViewerStyle = style`
-	${".hello"} {
-		color: var(--primary);
-		font-weight: bold;
-		text-align: center;
-		margin-bottom: 1em;
-	}
+
 `;
