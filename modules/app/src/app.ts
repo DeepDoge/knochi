@@ -1,13 +1,13 @@
-import { awaited, css, fragment, sheet, tags } from "purify-js";
+import { computed, css, fragment, sheet, tags } from "purify-js";
 
-import { Bytes32Hex } from "@root/service/types";
+import { Bytes32Hex } from "@root/common";
 import { zeroPadBytes } from "ethers";
 import { FeedViewer } from "~/features/post/FeedViewer";
 import { PostForm } from "~/features/post/PostForm";
 import { globalSheet } from "~/styles";
-import { getSigner } from "~/utils/wallet";
+import { getOrRequestSigner, signer } from "~/utils/wallet";
 
-const { div } = tags;
+const { div, button } = tags;
 
 function App() {
 	const host = div();
@@ -17,12 +17,12 @@ function App() {
 	shadow.append(
 		fragment(
 			PostForm(),
-			awaited(
-				getSigner().then((signer) => {
-					const myFeedId = Bytes32Hex.parse(zeroPadBytes(signer.address, 32));
-					return FeedViewer(myFeedId);
-				}),
-			),
+			computed(() => {
+				if (!signer.val) return null;
+				const myFeedId = Bytes32Hex.parse(zeroPadBytes(signer.val.address, 32));
+				return FeedViewer(myFeedId);
+			}),
+			button().onclick(getOrRequestSigner).textContent("Connect Wallet"),
 		),
 	);
 

@@ -1,6 +1,6 @@
+import { AddressHex, Bytes32Hex } from "@root/common";
 import { DB } from "@root/database";
 import { bigint, object, string, unknown } from "zod";
-import { AddressHex, Bytes32Hex } from "./types";
 
 export const db = DB.create("eternis.posts")
 	.version(1, {

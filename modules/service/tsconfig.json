@@ -1,9 +1,19 @@
 {
-	"extends": "../../tsconfig.worker.json",
+	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
+		"lib": ["webworker", "ESNext"],
+		"types": ["vite/client", "@total-typescript/ts-reset"],
+
+		"module": "ESNext",
+		"target": "ESNext",
+
+		"moduleResolution": "Bundler",
+		"moduleDetection": "force",
+		"noEmit": true,
+
 		"paths": {
-			"~/*": ["./*"]
+			"~/*": ["./src/*"]
 		}
 	},
-	"include": ["."]
+	"include": ["src"]
 }

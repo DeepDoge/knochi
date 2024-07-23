@@ -1,4 +1,4 @@
-import { CallRequestMessageData, CallResponseMessageData } from "@root/service/features/calls/messageData";
+import { Calls } from "@root/service";
 
 await navigator.serviceWorker.getRegistrations().then((registrations) => {
 	for (let registration of registrations) {
@@ -23,11 +23,10 @@ const swPromise = new Promise<ServiceWorker>((resolve, reject) =>
 );
 
 export namespace sw {
-	type CallsModuleType = typeof import("@root/service/features/calls/all");
 	type calls = {
-		[K in keyof CallsModuleType]: CallsModuleType[K] extends { (...args: infer Args): infer Returns } ?
+		[K in keyof Calls.Types]: Calls.Types[K] extends { (...args: infer Args): infer Returns } ?
 			(...args: Args) => Promise<Awaited<Returns>>
-		:	() => Promise<CallsModuleType[K]>;
+		:	() => Promise<Calls.Types[K]>;
 	};
 	export const calls = new Proxy(
 		{},
@@ -37,7 +36,7 @@ export namespace sw {
 					new Promise(async (resolve, reject) => {
 						const sw = await swPromise;
 
-						const data: CallRequestMessageData = {
+						const data: Calls.RequestMessageData = {
 							type: "call:request",
 							name: String(prop),
 							args,
@@ -45,7 +44,7 @@ export namespace sw {
 
 						const channel = new MessageChannel();
 						channel.port1.onmessage = (event) => {
-							const parsed = CallResponseMessageData.safeParse(event.data);
+							const parsed = Calls.ResponseMessageData.safeParse(event.data);
 							if (!parsed.success) {
 								reject(new Error("Invalid response from service worker"));
 							} else if (parsed.data.type === "success") {

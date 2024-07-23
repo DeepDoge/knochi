@@ -1,10 +1,10 @@
 import * as calls from "./all";
-import { CallRequestMessageData, CallResponseMessageData } from "./messageData";
+import { RequestMessageData, ResponseMessageData } from "./types";
 
 export function registerCalls() {
 	(Object.keys(calls) as (keyof typeof calls)[]).forEach((name) => {
 		self.addEventListener("message", async (event: MessageEvent) => {
-			const parsed = CallRequestMessageData.safeParse(event.data);
+			const parsed = RequestMessageData.safeParse(event.data);
 			if (!parsed.success) {
 				return;
 			}
@@ -18,12 +18,12 @@ export function registerCalls() {
 			});
 			try {
 				let result = typeof call === "function" ? await call(...data.args) : call;
-				event.ports[0]?.postMessage({ type: "success", result } satisfies CallResponseMessageData);
+				event.ports[0]?.postMessage({ type: "success", result } satisfies ResponseMessageData);
 				console.log(`ServiceWorker Call Success`, { name, result });
 			} catch (throwed) {
 				console.error(throwed);
 				const error = String(throwed);
-				event.ports[0]?.postMessage({ type: "error", error } satisfies CallResponseMessageData);
+				event.ports[0]?.postMessage({ type: "error", error } satisfies ResponseMessageData);
 				console.error(`ServiceWorker Call Error`, { name, error });
 			}
 		});

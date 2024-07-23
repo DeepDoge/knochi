@@ -1,17 +1,10 @@
+import { Bytes32Hex } from "@root/common";
 import { IEternisIndexer, IEternisProxy } from "@root/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
 import { db } from "~/db";
 import { Config } from "~/features/config/module";
-import { Bytes32Hex } from "~/types";
+import { FeedPost } from "./exports";
 
-export type FeedPost = {
-	origin: `0x${string}`;
-	sender: `0x${string}`;
-	id: string;
-	index: bigint;
-	time: number;
-	contentBytesHex: string;
-};
 export async function getFeed(
 	feedId: Bytes32Hex,
 	cursor: bigint | null,

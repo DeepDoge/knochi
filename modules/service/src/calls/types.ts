@@ -1,14 +1,14 @@
 import { literal, object, string, union, unknown } from "zod";
 
-export type CallRequestMessageData = (typeof CallRequestMessageData)["_type"];
-export const CallRequestMessageData = object({
+export type RequestMessageData = (typeof RequestMessageData)["_type"];
+export const RequestMessageData = object({
 	type: literal("call:request"),
 	name: string(),
 	args: unknown().array(),
 });
 
-export type CallResponseMessageData = (typeof CallResponseMessageData)["_type"];
-export const CallResponseMessageData = union([
+export type ResponseMessageData = (typeof ResponseMessageData)["_type"];
+export const ResponseMessageData = union([
 	object({ type: literal("success"), result: unknown() }),
 	object({ type: literal("error"), error: string() }),
 ]);

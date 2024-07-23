@@ -5,7 +5,7 @@ import { PostContent } from "~/features/post/utils";
 import { globalSheet } from "~/styles";
 import { config } from "~/utils/config";
 import { uniqueId } from "~/utils/unique";
-import { getSigner } from "~/utils/wallet";
+import { getOrRequestSigner } from "~/utils/wallet";
 
 const { form, div, textarea, button, small, input, details, summary, ul, li, label } = tags;
 
@@ -34,7 +34,11 @@ export function PostForm() {
 			const address = currentProxy.val;
 			if (!address) return;
 
-			const signer = await getSigner();
+			const signer = await getOrRequestSigner();
+			if (!signer) {
+				alert("Something went wrong");
+				return;
+			}
 			const proxyContract = IEternisProxy.connect(signer, address);
 
 			const tx = await proxyContract.post(

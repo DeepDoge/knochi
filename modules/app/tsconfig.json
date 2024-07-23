@@ -1,6 +1,15 @@
 {
-	"extends": "../../tsconfig.app.json",
+	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
+		"lib": ["ESNext", "DOM"],
+		"types": ["vite/client", "@total-typescript/ts-reset"],
+
+		"module": "ESNext",
+		"target": "ESNext",
+
+		"moduleResolution": "Bundler",
+		"moduleDetection": "force",
+		"noEmit": true,
 		"paths": {
 			"~/*": ["./src/*"]
 		}

@@ -1,3 +1,4 @@
+import path from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -8,7 +9,7 @@ export default defineConfig({
 		emptyOutDir: false,
 
 		lib: {
-			entry: ["./sw.ts"],
+			entry: ["./src/sw.ts"],
 			formats: ["es"],
 			name: "sw",
 			fileName: "sw",
@@ -17,9 +18,10 @@ export default defineConfig({
 			output: {
 				inlineDynamicImports: true,
 			},
+			treeshake: true,
 		},
 	},
 	resolve: {
-		alias: { "~": "" },
+		alias: { "~": path.resolve(__dirname, "./src") },
 	},
 });

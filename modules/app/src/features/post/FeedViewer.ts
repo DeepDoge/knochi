@@ -1,5 +1,5 @@
-import { FeedPost } from "@root/service/features/feed/calls";
-import { Bytes32Hex } from "@root/service/types";
+import { Bytes32Hex } from "@root/common";
+import { Feed } from "@root/service";
 import { fragment, tags } from "purify-js";
 import { globalSheet } from "~/styles";
 import { sw } from "~/sw";
@@ -15,8 +15,8 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 
 	const posts = ul();
 
-	let oldestPost: FeedPost | null | undefined;
-	let newestPost: FeedPost | undefined;
+	let oldestPost: Feed.FeedPost | null | undefined;
+	let newestPost: Feed.FeedPost | undefined;
 	let busy = false;
 	loadMore();
 	async function loadMore() {

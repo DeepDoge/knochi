@@ -1,4 +1,15 @@
 {
-	"extends": "../../tsconfig.node.json",
-	"include": ["./compile.ts"]
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"lib": ["ESNext"],
+		"types": ["@types/node", "@total-typescript/ts-reset"],
+
+		"module": "NodeNext",
+		"target": "ESNext",
+
+		"moduleResolution": "NodeNext",
+		"moduleDetection": "force",
+		"noEmit": true
+	},
+	"include": ["compile.ts"]
 }

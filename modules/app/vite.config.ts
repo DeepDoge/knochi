@@ -1,3 +1,4 @@
+import path from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -15,9 +16,10 @@ export default defineConfig({
 					return "[name].js";
 				},
 			},
+			treeshake: true,
 		},
 	},
 	resolve: {
-		alias: { "~": "/src" },
+		alias: { "~": path.resolve(__dirname, "./src") },
 	},
 });

@@ -1,3 +1,4 @@
+import { AddressHex } from "@root/common";
 import { db } from "~/db";
 import { configUpdateBroadcastChannel } from "./broadcastChannels";
 
@@ -11,8 +12,8 @@ export namespace Config {
 		readonly chainId: string;
 		readonly providers: readonly [string, ...string[]];
 		readonly contracts: {
-			EternisIndexer: Address;
-			readonly EternisProxies: Readonly<Record<string, Address>>;
+			EternisIndexer: AddressHex;
+			readonly EternisProxies: Readonly<Record<string, AddressHex>>;
 		};
 	};
 

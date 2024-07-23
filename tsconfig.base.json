@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-		"types": ["@total-typescript/ts-reset"],
 		"skipLibCheck": true,
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
