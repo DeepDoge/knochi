@@ -1,4 +1,4 @@
-import { Calls } from "@root/service";
+import { Calls, Routes } from "@root/service";
 
 await navigator.serviceWorker.getRegistrations().then((registrations) => {
 	for (let registration of registrations) {
@@ -23,40 +23,43 @@ const swPromise = new Promise<ServiceWorker>((resolve, reject) =>
 );
 
 export namespace sw {
-	type calls = {
-		[K in keyof Calls.Types]: Calls.Types[K] extends { (...args: infer Args): infer Returns } ?
-			(...args: Args) => Promise<Awaited<Returns>>
-		:	() => Promise<Calls.Types[K]>;
-	};
-	export const calls = new Proxy(
-		{},
-		{
-			get(_, prop) {
-				return (...args: unknown[]): Promise<unknown> =>
-					new Promise(async (resolve, reject) => {
-						const sw = await swPromise;
+	export function use<TModuleName extends keyof Routes>(module: TModuleName) {
+		type MembersType = {
+			[K in keyof Routes[TModuleName]]: Routes[TModuleName][K] extends { (...args: infer Args): infer Returns } ?
+				(...args: Args) => Promise<Awaited<Returns>>
+			:	() => Promise<Routes[TModuleName][K]>;
+		};
+		return new Proxy(
+			{},
+			{
+				get(_, prop) {
+					return (...args: unknown[]): Promise<unknown> =>
+						new Promise(async (resolve, reject) => {
+							const sw = await swPromise;
 
-						const data: Calls.RequestMessageData = {
-							type: "call:request",
-							name: String(prop),
-							args,
-						};
+							const data: Calls.RequestMessageData = {
+								type: "call:request",
+								module,
+								name: String(prop),
+								args,
+							};
 
-						const channel = new MessageChannel();
-						channel.port1.onmessage = (event) => {
-							const parsed = Calls.ResponseMessageData.safeParse(event.data);
-							if (!parsed.success) {
-								reject(new Error("Invalid response from service worker"));
-							} else if (parsed.data.type === "success") {
-								resolve(parsed.data.result);
-							} else if (parsed.data.type === "error") {
-								reject(new Error(parsed.data.error));
-							}
-						};
+							const channel = new MessageChannel();
+							channel.port1.onmessage = (event) => {
+								const parsed = Calls.ResponseMessageData.safeParse(event.data);
+								if (!parsed.success) {
+									reject(new Error("Invalid response from service worker"));
+								} else if (parsed.data.type === "success") {
+									resolve(parsed.data.result);
+								} else if (parsed.data.type === "error") {
+									reject(new Error(parsed.data.error));
+								}
+							};
 
-						sw.postMessage(data, [channel.port2]);
-					});
+							sw.postMessage(data, [channel.port2]);
+						});
+				},
 			},
-		},
-	) as never as calls;
+		) as never as MembersType;
+	}
 }

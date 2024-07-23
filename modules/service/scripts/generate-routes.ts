@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const routesPath = path.join(__dirname, "../src/routes");
-const outputFilePath = path.join(__dirname, "../src/routes/index.ts");
+const outputFilePath = path.join(__dirname, "../src/routes.ts");
 const files = await getFiles(routesPath);
 
 const output = `export type Routes = {

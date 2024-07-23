@@ -1,3 +1,4 @@
 export * as Calls from "./calls/exports";
-export * as Config from "./features/config/broadcastChannels";
-export * as Feed from "./features/feed/exports";
+export type { Routes } from "./routes";
+export * as Config from "./routes/config/broadcastChannels";
+export * as Feed from "./routes/posts/feed/exports";
