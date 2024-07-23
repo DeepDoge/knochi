@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { compileSol } from "solc-typed-ast";
 
-const CONTRACTS_DIR = path.resolve(".");
+const CONTRACTS_DIR = path.resolve("./src");
 const NODE_MODULES_DIR = path.resolve("../../node_modules");
 
 async function findSolidityFilesRecursive(dir: string): Promise<string[]> {

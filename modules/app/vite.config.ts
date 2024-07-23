@@ -9,16 +9,15 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				app: "./index.html",
-				sw: "./public/sw.js" /* processed again by Vite and its rules */,
 			},
 			output: {
 				entryFileNames: (assetInfo) => {
-					return assetInfo.name === "sw" ? "[name].js" : "app.[name].js";
+					return "[name].js";
 				},
 			},
 		},
 	},
 	resolve: {
-		alias: { "@": "/src" },
+		alias: { "~": "/src" },
 	},
 });

@@ -1,11 +1,11 @@
-import { PostContent } from "@/features/post/utils";
-import { globalSheet } from "@/styles";
-import { config } from "@/utils/config";
-import { uniqueId } from "@/utils/unique";
-import { getSigner } from "@/utils/wallet";
-import { IEternisProxy } from "@modules/contracts/connect";
+import { IEternisProxy } from "@root/contracts/connect";
 import { zeroPadBytes } from "ethers";
 import { computed, css, fragment, ref, sheet, tags } from "purify-js";
+import { PostContent } from "~/features/post/utils";
+import { globalSheet } from "~/styles";
+import { config } from "~/utils/config";
+import { uniqueId } from "~/utils/unique";
+import { getSigner } from "~/utils/wallet";
 
 const { form, div, textarea, button, small, input, details, summary, ul, li, label } = tags;
 

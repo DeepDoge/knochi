@@ -1,15 +1,10 @@
 {
 	"type": "module",
-	"name": "@modules/contracts",
+	"name": "@root/contracts",
 	"scripts": {
 		"compile": "tsx ./compile.ts"
 	},
 	"exports": {
-		".": {
-			"default": "./exports.ts"
-		},
-		"./connect": {
-			"default": "./connect.ts"
-		}
+		"./connect": "./connect.ts"
 	}
 }

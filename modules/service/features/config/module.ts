@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import { db } from "~/db";
 import { configUpdateBroadcastChannel } from "./broadcastChannels";
 
 export type Config = {

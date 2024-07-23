@@ -1,17 +1,8 @@
 {
-	"extends": "../../tsconfig.common.json",
+	"extends": "../../tsconfig.app.json",
 	"compilerOptions": {
-		"lib": ["ESNext", "DOM"],
-
-		"module": "ESNext",
-		"target": "ESNext",
-
-		"moduleResolution": "Bundler",
-		"moduleDetection": "force",
-		"noEmit": true,
-
 		"paths": {
-			"@/*": ["./src/*"]
+			"~/*": ["./src/*"]
 		}
 	},
 	"include": ["src"]

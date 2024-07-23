@@ -1,4 +1,4 @@
-import { DB } from "@modules/database";
+import { DB } from "@root/database";
 import { bigint, object, string, unknown } from "zod";
 import { AddressHex, Bytes32Hex } from "./types";
 

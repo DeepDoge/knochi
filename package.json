@@ -7,6 +7,7 @@
 	"scripts": {
 		"dev": "npm-run-all --parallel *:dev",
 		"build": "npm run service:build && npm run app:build",
+		"preview": "npm run preview --prefix ./modules/app",
 		"postinstall": "npm run contracts:compile",
 		"format": "prettier -w ./",
 		"___": "___",

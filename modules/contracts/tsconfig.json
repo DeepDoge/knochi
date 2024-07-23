@@ -1,14 +1,4 @@
 {
-	"extends": "../../tsconfig.common.json",
-	"compilerOptions": {
-		"lib": ["ESNext"],
-
-		"module": "NodeNext",
-		"target": "ESNext",
-
-		"moduleResolution": "NodeNext",
-		"moduleDetection": "force",
-		"noEmit": true
-	},
+	"extends": "../../tsconfig.node.json",
 	"include": ["./compile.ts"]
 }

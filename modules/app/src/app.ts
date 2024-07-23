@@ -1,11 +1,11 @@
 import { awaited, css, fragment, sheet, tags } from "purify-js";
 
-import { FeedViewer } from "@/features/post/FeedViewer";
-import { PostForm } from "@/features/post/PostForm";
-import { globalSheet } from "@/styles";
-import { getSigner } from "@/utils/wallet";
-import { Bytes32Hex } from "@modules/service/types";
+import { Bytes32Hex } from "@root/service/types";
 import { zeroPadBytes } from "ethers";
+import { FeedViewer } from "~/features/post/FeedViewer";
+import { PostForm } from "~/features/post/PostForm";
+import { globalSheet } from "~/styles";
+import { getSigner } from "~/utils/wallet";
 
 const { div } = tags;
 

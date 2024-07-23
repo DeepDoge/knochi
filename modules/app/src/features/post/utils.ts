@@ -1,5 +1,5 @@
-import { Utils } from "@/utils/types";
 import { BytesLike, toBeArray, toUtf8Bytes } from "ethers";
+import { Utils } from "~/utils/types";
 
 export type PostContent = PostContent.Part[];
 export namespace PostContent {
@@ -15,7 +15,7 @@ export namespace PostContent {
 			Image: "i",
 			Audio: "a",
 			Video: "v",
-			Mention: "@",
+			Mention: "~",
 			Link: "l",
 			File: "f",
 			Quote: "q",

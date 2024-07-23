@@ -1,6 +1,6 @@
-import { sw } from "@/sw";
-import { configUpdateBroadcastChannel } from "@modules/service/features/config/broadcastChannels";
+import { configUpdateBroadcastChannel } from "@root/service/features/config/broadcastChannels";
 import { ref } from "purify-js";
+import { sw } from "~/sw";
 
 export const config = ref(await sw.calls.getConfigs());
 

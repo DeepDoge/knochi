@@ -1,4 +1,4 @@
-import { FeedPost } from "@modules/service/features/feed/calls";
+import { FeedPost } from "@root/service/features/feed/calls";
 import { tags } from "purify-js";
 import { PostContent } from "./utils";
 

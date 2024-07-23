@@ -1,6 +1,6 @@
 {
 	"type": "module",
-	"name": "@modules/service",
+	"name": "@root/service",
 	"scripts": {
 		"dev": "vite build -w",
 		"build": "vite build"

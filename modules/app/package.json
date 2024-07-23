@@ -1,6 +1,6 @@
 {
 	"type": "module",
-	"name": "@modules/app",
+	"name": "@root/app",
 	"scripts": {
 		"dev": "vite --host",
 		"build": "vite build",

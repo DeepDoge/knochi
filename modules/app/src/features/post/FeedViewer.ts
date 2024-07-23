@@ -1,9 +1,9 @@
-import { globalSheet } from "@/styles";
-import { sw } from "@/sw";
-import { style } from "@/utils/style";
-import { FeedPost } from "@modules/service/features/feed/calls";
-import { Bytes32Hex } from "@modules/service/types";
+import { FeedPost } from "@root/service/features/feed/calls";
+import { Bytes32Hex } from "@root/service/types";
 import { fragment, tags } from "purify-js";
+import { globalSheet } from "~/styles";
+import { sw } from "~/sw";
+import { style } from "~/utils/style";
 import { PostViewer } from "./PostViewer";
 
 const { div, ul, li } = tags;

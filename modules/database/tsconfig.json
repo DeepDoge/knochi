@@ -1,14 +1,7 @@
 {
-	"extends": "../../tsconfig.common.json",
+	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"lib": ["webworker", "ESNext"],
-
-		"module": "ESNext",
-		"target": "ESNext",
-
-		"moduleResolution": "Bundler",
-		"moduleDetection": "force",
-		"outDir": "dist"
+		"lib": ["webworker", "ESNext"]
 	},
-	"include": ["."]
+	"include": ["src"]
 }

@@ -1,8 +1,8 @@
-import { db } from "@/db";
-import { Config } from "@/features/config/module";
-import { Bytes32Hex } from "@/types";
-import { IEternisIndexer, IEternisProxy } from "@modules/contracts/connect";
+import { IEternisIndexer, IEternisProxy } from "@root/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
+import { db } from "~/db";
+import { Config } from "~/features/config/module";
+import { Bytes32Hex } from "~/types";
 
 export type FeedPost = {
 	origin: `0x${string}`;
