@@ -1,5 +1,5 @@
 import { configUpdateBroadcastChannel } from "@root/app/src/features/config/broadcastChannels";
-import { AddressHex } from "@root/common";
+import { AddressHex } from "@root/app/src/utils/hex";
 import { db } from "~/db";
 
 export type Config = {

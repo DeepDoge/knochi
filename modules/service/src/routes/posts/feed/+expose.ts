@@ -1,5 +1,5 @@
 import { FeedPost } from "@root/app/src/features/post/types";
-import { Bytes32Hex } from "@root/common";
+import { Bytes32Hex } from "@root/app/src/utils/hex";
 import { IEternisIndexer, IEternisProxy } from "@root/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
 import { db } from "~/db";

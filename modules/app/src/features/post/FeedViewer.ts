@@ -1,11 +1,10 @@
-import { Bytes32Hex } from "@root/common";
 import { fragment, tags } from "purify-js";
 import { globalSheet } from "~/styles";
 import { sw } from "~/sw";
+import { Bytes32Hex } from "~/utils/hex";
 import { style } from "~/utils/style";
 import { PostViewer } from "./PostViewer";
 import { FeedPost } from "./types";
-
 const { div, ul, li } = tags;
 
 export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n) {

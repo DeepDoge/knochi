@@ -1,11 +1,11 @@
 import { computed, css, fragment, sheet, tags } from "purify-js";
 
-import { Bytes32Hex } from "@root/common";
 import { zeroPadBytes } from "ethers";
 import { FeedViewer } from "~/features/post/FeedViewer";
 import { PostForm } from "~/features/post/PostForm";
 import { getOrRequestSigner, signer } from "~/features/wallet";
 import { globalSheet } from "~/styles";
+import { Bytes32Hex } from "~/utils/hex";
 
 const { div, button } = tags;
 
