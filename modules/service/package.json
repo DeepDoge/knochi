@@ -3,7 +3,7 @@
 	"name": "@root/service",
 	"scripts": {
 		"dev": "npm-run-all --parallel *:dev",
-		"build": "npm run routes:generate && vite build",
+		"build": "npm run routes-generate && vite build",
 		"vite:build": "vite build",
 		"vite:dev": "vite build -w",
 		"routes-generate": "tsx ./scripts/generate-routes.ts",

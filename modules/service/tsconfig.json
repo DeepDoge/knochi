@@ -1,7 +1,7 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"lib": ["webworker", "ESNext"],
+		"lib": ["WebWorker", "ESNext"],
 		"types": ["vite/client", "@total-typescript/ts-reset"],
 
 		"module": "ESNext",
