@@ -1,7 +1,0 @@
-{
-	"type": "module",
-	"name": "@root/common",
-	"exports": {
-		".": "./exports.ts"
-	}
-}

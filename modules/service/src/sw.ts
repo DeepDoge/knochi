@@ -1,7 +1,5 @@
 import { registerExposedModules } from "./exposed/register";
 
-declare const self: ServiceWorkerGlobalScope;
-
 self.addEventListener("install", (event) => {
 	console.log("Installed");
 });
