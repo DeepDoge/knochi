@@ -1,10 +1,10 @@
 import { Bytes32Hex } from "@root/common";
-import { Feed } from "@root/service";
 import { fragment, tags } from "purify-js";
 import { globalSheet } from "~/styles";
 import { sw } from "~/sw";
 import { style } from "~/utils/style";
 import { PostViewer } from "./PostViewer";
+import { FeedPost } from "./types";
 
 const { div, ul, li } = tags;
 
@@ -15,8 +15,8 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 
 	const posts = ul();
 
-	let oldestPost: Feed.FeedPost | null | undefined;
-	let newestPost: Feed.FeedPost | undefined;
+	let oldestPost: FeedPost | null | undefined;
+	let newestPost: FeedPost | undefined;
 	let busy = false;
 	loadMore();
 	async function loadMore() {

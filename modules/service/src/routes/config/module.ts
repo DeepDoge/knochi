@@ -1,6 +1,6 @@
+import { configUpdateBroadcastChannel } from "@root/app/src/features/config/broadcastChannels";
 import { AddressHex } from "@root/common";
 import { db } from "~/db";
-import { configUpdateBroadcastChannel } from "./broadcastChannels";
 
 export type Config = {
 	readonly networks: readonly [Config.Network, ...Config.Network[]];

@@ -1,11 +1,11 @@
 import { IEternisProxy } from "@root/contracts/connect";
 import { zeroPadBytes } from "ethers";
 import { computed, css, fragment, ref, sheet, tags } from "purify-js";
+import { config } from "~/features/config";
 import { PostContent } from "~/features/post/utils";
+import { getOrRequestSigner } from "~/features/wallet";
 import { globalSheet } from "~/styles";
-import { config } from "~/utils/config";
 import { uniqueId } from "~/utils/unique";
-import { getOrRequestSigner } from "~/utils/wallet";
 
 const { form, div, textarea, button, small, input, details, summary, ul, li, label } = tags;
 

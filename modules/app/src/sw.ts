@@ -1,4 +1,4 @@
-import { Calls, Routes } from "@root/service";
+import { ExposedRequestMessageData, ExposedResponseMessageData, Routes } from "@root/service";
 
 await navigator.serviceWorker.getRegistrations().then((registrations) => {
 	for (let registration of registrations) {
@@ -37,8 +37,8 @@ export namespace sw {
 						new Promise(async (resolve, reject) => {
 							const sw = await swPromise;
 
-							const data: Calls.RequestMessageData = {
-								type: "call:request",
+							const data: ExposedRequestMessageData = {
+								type: "exposed:request",
 								module,
 								name: String(prop),
 								args,
@@ -46,7 +46,7 @@ export namespace sw {
 
 							const channel = new MessageChannel();
 							channel.port1.onmessage = (event) => {
-								const parsed = Calls.ResponseMessageData.safeParse(event.data);
+								const parsed = ExposedResponseMessageData.safeParse(event.data);
 								if (!parsed.success) {
 									reject(new Error("Invalid response from service worker"));
 								} else if (parsed.data.type === "success") {

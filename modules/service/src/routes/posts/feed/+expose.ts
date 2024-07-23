@@ -1,9 +1,9 @@
+import { FeedPost } from "@root/app/src/features/post/types";
 import { Bytes32Hex } from "@root/common";
 import { IEternisIndexer, IEternisProxy } from "@root/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
 import { db } from "~/db";
 import { Config } from "~/routes/config/module";
-import { FeedPost } from "./exports";
 
 export async function getFeed(
 	feedId: Bytes32Hex,

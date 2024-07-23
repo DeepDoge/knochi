@@ -15,5 +15,5 @@
 			"~/*": ["./src/*"]
 		}
 	},
-	"include": ["src"]
+	"include": ["src", "../app/src/features/post/types.ts", "../app/src/features/config/broadcastChannels.ts"]
 }

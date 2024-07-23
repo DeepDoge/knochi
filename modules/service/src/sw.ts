@@ -1,4 +1,4 @@
-import { registerCalls } from "./calls/register";
+import { registerExposedModules } from "./exposed/register";
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -12,4 +12,4 @@ self.addEventListener("activate", (event) => {
 
 const signalsChannel = new BroadcastChannel("signals");
 
-registerCalls();
+registerExposedModules();

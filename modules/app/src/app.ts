@@ -4,8 +4,8 @@ import { Bytes32Hex } from "@root/common";
 import { zeroPadBytes } from "ethers";
 import { FeedViewer } from "~/features/post/FeedViewer";
 import { PostForm } from "~/features/post/PostForm";
+import { getOrRequestSigner, signer } from "~/features/wallet";
 import { globalSheet } from "~/styles";
-import { getOrRequestSigner, signer } from "~/utils/wallet";
 
 const { div, button } = tags;
 
@@ -22,7 +22,11 @@ function App() {
 				const myFeedId = Bytes32Hex.parse(zeroPadBytes(signer.val.address, 32));
 				return FeedViewer(myFeedId);
 			}),
-			button().onclick(getOrRequestSigner).textContent("Connect Wallet"),
+			computed(() =>
+				signer.val ?
+					["Connected Wallet: ", signer.val.address]
+				:	button().onclick(getOrRequestSigner).textContent("Connect Wallet"),
+			),
 		),
 	);
 

@@ -1,14 +1,16 @@
 import { Routes } from "~/routes";
-import { RequestMessageData, ResponseMessageData } from "./types";
+import { ExposedRequestMessageData, ExposedResponseMessageData } from "./types";
 
-export function registerCalls() {
+export async function registerExposedModules() {
+	const imports = import.meta.glob("../routes/**/+expose.ts", { eager: true });
 	self.addEventListener("message", async (event: MessageEvent) => {
-		const parsed = RequestMessageData.safeParse(event.data);
+		const parsed = ExposedRequestMessageData.safeParse(event.data);
 		if (!parsed.success) {
 			return;
 		}
 		const { data } = parsed;
-		const module = (await import(data.module)) as Routes[keyof Routes];
+		const moduleKey = `../routes${data.module}/+expose.ts` as const;
+		const module = imports[moduleKey] as Routes[keyof Routes];
 		const member = module[data.name as keyof typeof module] as unknown;
 
 		console.log(`ServiceWorker Call`, {
@@ -17,12 +19,12 @@ export function registerCalls() {
 		});
 		try {
 			let result = typeof member === "function" ? await member(...data.args) : member;
-			event.ports[0]?.postMessage({ type: "success", result } satisfies ResponseMessageData);
+			event.ports[0]?.postMessage({ type: "success", result } satisfies ExposedResponseMessageData);
 			console.log(`ServiceWorker Call Success`, { name: data.name, result });
 		} catch (throwed) {
 			console.error(throwed);
 			const error = String(throwed);
-			event.ports[0]?.postMessage({ type: "error", error } satisfies ResponseMessageData);
+			event.ports[0]?.postMessage({ type: "error", error } satisfies ExposedResponseMessageData);
 			console.error(`ServiceWorker Call Error`, { name: data.name, error });
 		}
 	});
