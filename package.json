@@ -5,7 +5,7 @@
 		"./modules/*"
 	],
 	"scripts": {
-		"dev": "npm-run-all --parallel *:dev",
+		"dev": "npm run contracts:compile && npm-run-all --parallel *:dev",
 		"build": "npm run service:build && npm run app:build",
 		"preview": "npm run preview --prefix ./modules/app",
 		"postinstall": "npm run contracts:compile",
@@ -15,6 +15,7 @@
 		"app:build": "npm run build --prefix ./modules/app",
 		"service:dev": "npm run dev --prefix ./modules/service",
 		"service:build": "npm run build --prefix ./modules/service",
+		"contracts:dev": "npm run dev --prefix ./modules/contracts",
 		"contracts:compile": "npm run compile --prefix ./modules/contracts"
 	},
 	"devDependencies": {

@@ -1,8 +1,8 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"lib": ["WebWorker", "ESNext"],
-		"types": ["vite/client", "@total-typescript/ts-reset"],
+		"lib": ["WebWorker", "DOM", "ESNext"],
+		"types": ["vite/client", "@total-typescript/ts-reset"], // Both service and client use the vite/client
 
 		"module": "ESNext",
 		"target": "ESNext",
@@ -12,8 +12,8 @@
 		"noEmit": true,
 
 		"paths": {
-			"~/*": ["./src/*"]
+			"~/*": ["./*"]
 		}
 	},
-	"include": ["src"]
+	"include": ["."]
 }

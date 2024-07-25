@@ -6,21 +6,39 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const routesPath = path.join(__dirname, "../src/routes");
 const outputFilePath = path.join(__dirname, "../src/routes.ts");
-const files = await getFiles(routesPath);
+const files = (await getFiles(routesPath)).filter((filepath) => {
+	const basename = path.basename(filepath);
+	return basename === "+expose.ts";
+});
 
-const output = `export type Routes = {
-${files
-	.filter((filepath) => {
-		const basename = path.basename(filepath);
-		return basename === "+expose.ts";
-	})
-	.map((filepath) => {
-		const key = filepath.slice(routesPath.length, -("+expose.ts".length + 1));
-		return `${JSON.stringify(key)}: typeof import(${JSON.stringify(path.resolve(filepath))})`;
-	})
-	.join(",\n")}
-}
-`;
+const output = [
+	files
+		.map((filepath, index) => {
+			const from = JSON.stringify(path.resolve(filepath).slice(0, -3));
+			return `import type * as _${index} from ${from}`;
+		})
+		.join("\n"),
+	[
+		"export type Routes = {\n\t",
+		files
+			.map((filepath, index) => {
+				const key = filepath.slice(routesPath.length, -("+expose.ts".length + 1));
+				return `${JSON.stringify(key)}: typeof _${index}`;
+			})
+			.join(",\n\t"),
+		"\n}",
+	].join(""),
+	[
+		"export {\n\t",
+		files
+			.map((filepath, index) => {
+				const key = filepath.slice(routesPath.length + 1, -("+expose.ts".length + 1)).replaceAll("/", "_");
+				return `_${index} as ${key}`;
+			})
+			.join(",\n\t"),
+		"\n}",
+	].join(""),
+].join("\n\n");
 
 fs.writeFileSync(outputFilePath, output, "utf-8");
 

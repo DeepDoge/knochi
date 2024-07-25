@@ -1,16 +1,27 @@
-import { FeedPost } from "@root/app/src/features/post/types";
 import { Bytes32Hex } from "@root/app/src/utils/hex";
 import { IEternisIndexer, IEternisProxy } from "@root/contracts/connect";
+import { memoizeUntilSettled } from "@root/shared/utils/memoize";
 import { JsonRpcProvider, toBeHex } from "ethers";
 import { db } from "~/db";
 import { Config } from "~/routes/config/module";
 
-export async function getFeed(
-	feedId: Bytes32Hex,
-	cursor: bigint | null,
-	direction: -1n | 1n,
-	limit: bigint,
-): Promise<FeedPost[]> {
+export type GetFeedParameters = {
+	feedId: Bytes32Hex;
+	cursor: bigint | null;
+	direction: -1n | 1n;
+	limit: bigint;
+};
+
+export type FeedPost = {
+	origin: `0x${string}`;
+	sender: `0x${string}`;
+	id: string;
+	index: bigint;
+	time: number;
+	contentBytesHex: string;
+};
+
+export const getFeed = memoizeUntilSettled(async ({ feedId, cursor, direction, limit }): Promise<FeedPost[]> => {
 	const config = await Config.get();
 	const provider = new JsonRpcProvider(config.networks[0].providers[0]);
 	const indexerContract = IEternisIndexer.connect(provider, config.networks[0].contracts.EternisIndexer);
@@ -53,4 +64,4 @@ export async function getFeed(
 	}
 
 	return await Promise.all(postPromises);
-}
+});
