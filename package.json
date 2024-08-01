@@ -27,7 +27,7 @@
 		"npm-run-all": "^4.1.5",
 		"prettier": "latest",
 		"prettier-plugin-organize-imports": "latest",
-		"purify-js": "github:DeepDoge/purify.js#0.0.211",
+		"purified-js": "github:DeepDoge/purified.js#0.0.213",
 		"solc-typed-ast": "^18.1.0",
 		"tsx": "^4.15.7",
 		"typify-contracts": "github:DeepDoge/typed-contracts#0.2.2",

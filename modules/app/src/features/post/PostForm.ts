@@ -1,6 +1,6 @@
 import { IEternisProxy } from "@root/contracts/connect";
 import { zeroPadBytes } from "ethers";
-import { computed, css, fragment, ref, sheet, tags } from "purify-js";
+import { computed, css, fragment, ref, sheet, tags } from "purified-js";
 import { config } from "~/features/config";
 import { PostContent } from "~/features/post/utils";
 import { getOrRequestSigner } from "~/features/wallet";

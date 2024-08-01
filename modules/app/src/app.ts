@@ -1,4 +1,4 @@
-import { computed, css, fragment, sheet, tags } from "purify-js";
+import { computed, css, fragment, sheet, tags } from "purified-js";
 
 import { zeroPadBytes } from "ethers";
 import { FeedViewer } from "~/features/post/FeedViewer";
@@ -6,8 +6,11 @@ import { PostForm } from "~/features/post/PostForm";
 import { getOrRequestSigner, signer } from "~/features/wallet";
 import { globalSheet } from "~/styles";
 import { Bytes32Hex } from "~/utils/hex";
+import { trackPromise } from "./features/progress/utils";
 
 const { div, button } = tags;
+
+trackPromise("Infinite Job", new Promise(() => {}));
 
 function App() {
 	const host = div();
@@ -25,7 +28,9 @@ function App() {
 			computed(() =>
 				signer.val ?
 					["Connected Wallet: ", signer.val.address]
-				:	button().onclick(getOrRequestSigner).textContent("Connect Wallet"),
+				:	button()
+						.onclick(() => trackPromise("Connect Wallet", getOrRequestSigner()))
+						.textContent("Connect Wallet"),
 			),
 		),
 	);

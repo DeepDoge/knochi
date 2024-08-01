@@ -1,4 +1,4 @@
-import { ref } from "purify-js";
+import { ref } from "purified-js";
 import { configUpdateBroadcastChannel } from "~/features/config/broadcastChannels";
 import { sw } from "~/sw";
 

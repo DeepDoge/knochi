@@ -1,10 +1,10 @@
-import { tags } from "purify-js";
-import { FeedPost } from "./types";
+import { posts_feed } from "@root/service";
+import { tags } from "purified-js";
 import { PostContent } from "./utils";
 
 const { article, header, address, time, div, a } = tags;
 
-export function PostViewer(post: FeedPost) {
+export function PostViewer(post: posts_feed.FeedPost) {
 	const date = new Date(post.time);
 	const content = PostContent.fromBytes(post.contentBytesHex);
 

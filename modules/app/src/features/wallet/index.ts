@@ -1,5 +1,5 @@
 import { BrowserProvider, Eip1193Provider, JsonRpcSigner } from "ethers";
-import { ref } from "purify-js";
+import { ref } from "purified-js";
 
 declare global {
 	interface Window {
@@ -9,8 +9,8 @@ declare global {
 			on(event: "networkChanged", callback: (networkId: string) => void): void;
 			on(event: "disconnected", callback: () => void): void;
 			on(event: "error", callback: (error: Error) => void): void;
-			on(event: string, callback: (...args: any[]) => void): void;
-			off(event: string, callback: (...args: any[]) => void): void;
+			on(event: string, callback: (...args: unknown[]) => void): void;
+			off(event: string, callback: (...args: unknown[]) => void): void;
 		};
 	}
 }
@@ -19,7 +19,8 @@ const browserProvider = window.ethereum ? new BrowserProvider(window.ethereum) :
 
 export async function getOrRequestSigner() {
 	if (!browserProvider) return null;
-	return await browserProvider.getSigner();
+	const signer = await browserProvider.getSigner();
+	return signer;
 }
 
 export async function getSigner() {
