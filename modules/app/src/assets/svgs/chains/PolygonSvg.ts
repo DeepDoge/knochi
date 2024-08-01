@@ -1,8 +1,8 @@
 import { html } from "~/utils/html";
 
-export function PolygonSvg() {
+export function PolygonSvg(size = "100%") {
 	return html`
-		<svg width="100%" height="100%" viewBox="0 0 40 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<svg width="${size}" height="${size}" viewBox="0 0 40 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path
 				fill-rule="evenodd"
 				clip-rule="evenodd"
