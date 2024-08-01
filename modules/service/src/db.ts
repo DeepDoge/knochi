@@ -1,6 +1,6 @@
 import { AddressHex, Bytes32Hex } from "@root/app/src/utils/hex";
-import { DB } from "@root/database";
 import { bigint, object, string, unknown } from "zod";
+import { DB } from "~/utils/db";
 export const db = DB.create("eternis.posts")
 	.version(1, {
 		KV: DB.ModelBuilder()

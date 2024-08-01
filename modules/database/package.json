@@ -1,7 +1,0 @@
-{
-	"type": "module",
-	"name": "@root/database",
-	"exports": {
-		".": "./src/db.ts"
-	}
-}
