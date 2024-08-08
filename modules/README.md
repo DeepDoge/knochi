@@ -6,4 +6,4 @@ Each of these needs a different TS environment:
 - **contracts:** made out of scripts that builds contracts, so they need NodeJS environment.
 - **shared:** contains shared utils between every environment which doesn't contain any specialized types like DOM, webworker, or NodeJS. So it doesn't have `window`, `fetch` event, `process`, and etc. Just basic JS types.
 
-But most of the app exists in `app` directory.
+So if you check `tsconfig.json` in each of these, you will see that all of them are different.
