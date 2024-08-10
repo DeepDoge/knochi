@@ -60,46 +60,15 @@ export type WalletData = {
 };
 
 export const walletDatas = ref<WalletData[]>([]);
-if (window.ethereum) {
+function addWalletData(ethereum: Eip1193Provider, info: WalletData["info"]) {
 	const signer = ref<WalletData["signer"]["val"]>(null);
 	const walletData: WalletData = {
-		ethereum: window.ethereum,
-		provider: new BrowserProvider(window.ethereum),
+		ethereum,
+		provider: new BrowserProvider(ethereum),
 		signer,
-		info: {
-			key: "eip1193",
-			name: "Browser Wallet",
-			icon: walletSrc,
-		},
+		info,
 	};
-	window.ethereum.on("accountsChanged", () => {
-		getSigner(walletData).then((value) => {
-			signer.val = value;
-		});
-	});
-	getSigner(walletData).then((value) => {
-		signer.val = value;
-	});
-
-	walletDatas.val.push(walletData);
-	walletDatas.notify();
-}
-
-window.addEventListener("eip6963:announceProvider", (event) => {
-	if (walletDatas.val.some((p) => p.info.key === event.detail.info.uuid)) return;
-
-	const signer = ref<WalletData["signer"]["val"]>(null);
-	const walletData: WalletData = {
-		ethereum: event.detail.provider,
-		provider: new BrowserProvider(event.detail.provider),
-		signer,
-		info: {
-			key: event.detail.info.uuid,
-			name: event.detail.info.name,
-			icon: event.detail.info.icon,
-		},
-	};
-	walletData.ethereum.on("accountsChanged", () => {
+	ethereum.on("accountsChanged", () => {
 		getSigner(walletData).then((value) => {
 			signer.val = value;
 		});
@@ -110,6 +79,23 @@ window.addEventListener("eip6963:announceProvider", (event) => {
 
 	walletDatas.val.unshift(walletData);
 	walletDatas.notify();
+}
+
+if (window.ethereum) {
+	addWalletData(window.ethereum, {
+		key: "eip1193",
+		name: "Browser Wallet",
+		icon: walletSrc,
+	});
+}
+
+window.addEventListener("eip6963:announceProvider", (event) => {
+	if (walletDatas.val.some((p) => p.info.key === event.detail.info.uuid)) return;
+	addWalletData(event.detail.provider, {
+		key: event.detail.info.uuid,
+		name: event.detail.info.name,
+		icon: event.detail.info.icon,
+	});
 });
 window.dispatchEvent(new Event("eip6963:requestProvider"));
 
