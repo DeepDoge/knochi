@@ -6,7 +6,7 @@
 	],
 	"scripts": {
 		"dev": "npm run contracts:compile && npm-run-all --parallel *:dev",
-		"build": "npm run service:build && npm run app:build",
+		"build": "npm run contracts:compile && npm run service:build && npm run app:build",
 		"preview": "npm run preview --prefix ./modules/app",
 		"postinstall": "npm run contracts:compile",
 		"format": "prettier -w ./",
