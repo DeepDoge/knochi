@@ -1,42 +1,16 @@
-import { computed, ref, tags } from "purified-js";
+import { computed, css, ref, sheet, tags } from "purified-js";
 import { PreloadSvg } from "~/assets/svgs/PreloadSvg";
-import { style } from "~/utils/style";
+import { globalSheet } from "~/styles";
 
 const DELETE_TIMEOUT_MS = 5 * 1000;
 
-const listStyle = style`
-    display: grid;
+const { div, ul, li, strong } = tags;
 
-    --margin: 0.5em;
+const progressHost = div();
+const shadow = progressHost.element.attachShadow({ mode: "open" });
 
-    position: fixed;
-    inset-block-end: var(--margin);
-    inset-inline-end: var(--margin);
-
-    inline-size: min(100%, 15em);
-    gap: 0.5em;
-`;
-
-const itemStyle = style`
-    list-style: none;
-
-    display: grid;
-    grid-auto-flow: column;
-    align-items: center;
-    justify-content: start;
-    gap: 0.5em;
-    padding-inline: 1em;
-    padding-block: 0.75em;
-
-    background-color: var(--light);
-    color: var(--dark);
-    border-radius: var(--radius);
-`;
-
-const { ul, li, strong } = tags;
-
-const progressList = ul({ class: listStyle });
-document.body.append(progressList.element);
+const progressList = ul();
+shadow.append(progressList.element);
 
 export function trackPromise<T extends Promise<unknown>>(title: string, promise: T) {
 	const status = ref<"progress" | "success" | "fail">("progress");
@@ -84,13 +58,47 @@ export function trackPromise<T extends Promise<unknown>>(title: string, promise:
 		status.val satisfies never;
 	});
 
-	const progressItem = li({ class: itemStyle })
+	const progressItem = li()
 		.ariaBusy(computed(() => String(dynamic.val.busy)))
 		.children(
 			computed(() => dynamic.val.icon),
 			strong().textContent(title),
 		);
-	progressList.children(progressItem);
+	progressList.element.prepend(progressItem.element);
 
 	return promise;
 }
+
+const progressSheet = sheet(css`
+	ul {
+		display: grid;
+
+		--margin: 0.5em;
+
+		position: fixed;
+		inset-block-end: var(--margin);
+		inset-inline-end: var(--margin);
+
+		inline-size: min(100%, 15em);
+		gap: 0.4em;
+	}
+
+	li {
+		list-style: none;
+
+		display: grid;
+		grid-auto-flow: column;
+		align-items: center;
+		justify-content: start;
+		gap: 0.4em;
+		padding-inline: 1em;
+		padding-block: 0.75em;
+
+		background-color: var(--light);
+		color: var(--dark);
+		border-radius: var(--radius);
+	}
+`);
+
+shadow.adoptedStyleSheets.push(globalSheet, progressSheet);
+document.body.append(progressHost.element);

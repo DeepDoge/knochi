@@ -7,7 +7,7 @@ import { getOrRequestSigner } from "~/features/wallet";
 import { globalSheet } from "~/styles";
 import { uniqueId } from "~/utils/unique";
 
-const { form, div, textarea, button, small, input, details, summary, ul, li, label } = tags;
+const { form, div, textarea, button, small, hr, input, details, summary, ul, li, label } = tags;
 
 export function PostForm() {
 	const host = div({ role: "form" });
@@ -16,6 +16,7 @@ export function PostForm() {
 
 	const text = ref("");
 	const textEncoded = computed(() => PostContent.toBytes([{ type: PostContent.Part.TypeMap.Text, value: text.val }]));
+	const textByteLength = computed(() => textEncoded.val.byteLength);
 
 	const proxyContracts = computed(() => config.val.networks[0].contracts.EternisProxies);
 	const proxyContractEntries = computed(() => Object.entries(proxyContracts.val));
@@ -66,52 +67,16 @@ export function PostForm() {
 							textarea.style.height = `calc(calc(${textarea.scrollHeight}px - 1em))`;
 							text.val = textarea.value;
 						}),
-					small().children(
-						computed(() => textEncoded.val.byteLength),
-						" bytes",
-					),
 				),
 			),
 			div({ class: "actions" }).children(
-				div()
-					.role("group")
-					.children(
-						button({
-							form: postForm.id,
-						})
-							.role("button")
-							.type("submit")
-							.disabled(computed(() => !currentProxy.val))
-							.children("Post"),
-						button()
-							.role("button")
-							.children(
-								details().children(
-									summary().children(),
-									ul().children(
-										computed(() =>
-											proxyContractEntries.val.map(([key, address]) =>
-												li().children(
-													label().children(
-														input()
-															.type("radio")
-															.name("proxy")
-															.value(key)
-															.checked(computed(() => currentProxyKey.val === key))
-															.onchange(
-																(event) =>
-																	event.currentTarget.checked &&
-																	(currentProxyKey.val = key),
-															),
-														key,
-													),
-												),
-											),
-										),
-									),
-								),
-							),
-					),
+				small().children(textByteLength, " bytes"),
+				hr(),
+				button({ form: postForm.id })
+					.role("button")
+					.type("submit")
+					.disabled(computed(() => !currentProxy.val))
+					.children("Post"),
 			),
 		),
 	);
@@ -122,17 +87,17 @@ export function PostForm() {
 const PostFormStyle = sheet(css`
 	:host {
 		display: grid;
-		gap: 1em;
+		gap: 0.8em;
 	}
 
 	.fields {
 		display: grid;
-		gap: 1em;
+		gap: 0.8em;
 	}
 
 	.field {
 		display: grid;
-		gap: 0.25em;
+		gap: 0.2em;
 
 		& small {
 			justify-self: end;
@@ -143,7 +108,8 @@ const PostFormStyle = sheet(css`
 		display: grid;
 		grid-auto-flow: column;
 		justify-content: end;
-		gap: 1em;
+		align-items: center;
+		gap: 0.8em;
 	}
 
 	textarea {
@@ -154,10 +120,6 @@ const PostFormStyle = sheet(css`
 		overflow-wrap: break-word;
 	}
 
-	.actions [role="group"] {
-		position: relative;
-	}
-
 	details:has(> ul) {
 		ul {
 			position: absolute;
@@ -166,7 +128,7 @@ const PostFormStyle = sheet(css`
 			color: var(--back);
 			background-color: var(--front);
 			list-style: none;
-			padding: 0.5em;
+			padding: 0.4em;
 			border-radius: var(--radius);
 		}
 	}

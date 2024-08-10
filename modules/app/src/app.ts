@@ -41,8 +41,8 @@ function App() {
 const appSheet = sheet(css`
 	:host {
 		display: grid;
-		gap: 1em;
-		padding: 1em;
+		gap: 0.8em;
+		padding: 0.8em;
 		grid-template-columns: minmax(0, 30em);
 		justify-content: center;
 	}
