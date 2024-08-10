@@ -1,6 +1,6 @@
 import { computed, css, fragment, sheet, tags } from "purified-js";
+import { trackPromise } from "~/features/progress/utils";
 import { globalSheet } from "~/styles";
-import { trackPromise } from "../progress/utils";
 import { getOrRequestSigner, walletDetails } from "./util.s";
 
 const { div, span, button, img } = tags;
