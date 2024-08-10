@@ -103,7 +103,6 @@ export const currentWalletData = ref<WalletData | null>(null);
 
 export async function getOrRequestSigner(walletData = currentWalletData.val) {
 	currentWalletData.val = walletData;
-	currentWalletData.notify();
 	if (!walletData) return null;
 	const signer = await walletData.provider.getSigner();
 	return signer;
