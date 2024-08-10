@@ -1,7 +1,7 @@
 import { computed, css, fragment, sheet, tags } from "purified-js";
 import { globalSheet } from "~/styles";
 import { trackPromise } from "../progress/utils";
-import { getOrRequestSigner, walletDatas } from "./util.s";
+import { getOrRequestSigner, walletDetails } from "./util.s";
 
 const { div, span, button, img } = tags;
 
@@ -12,11 +12,11 @@ export function WalletList() {
 
 	const children = fragment(
 		computed(() =>
-			walletDatas.val.map((walletData) => {
+			walletDetails.val.map((walletDetail) => {
 				return button()
 					.role("button")
-					.onclick(() => trackPromise("Connect Wallet", getOrRequestSigner(walletData)))
-					.children(img().src(walletData.info.icon), span().children(walletData.info.name));
+					.onclick(() => trackPromise("Connect Wallet", getOrRequestSigner(walletDetail)))
+					.children(img().src(walletDetail.info.icon), span().children(walletDetail.info.name));
 			}),
 		),
 	);

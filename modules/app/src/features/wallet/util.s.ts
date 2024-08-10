@@ -48,7 +48,7 @@ declare global {
 	}
 }
 
-export type WalletData = {
+export type WalletDetail = {
 	ethereum: Eip1193Provider;
 	provider: BrowserProvider;
 	signer: Signal<JsonRpcSigner | null>;
@@ -59,30 +59,30 @@ export type WalletData = {
 	};
 };
 
-export const walletDatas = ref<WalletData[]>([]);
-function addWalletData(ethereum: Eip1193Provider, info: WalletData["info"]) {
-	const signer = ref<WalletData["signer"]["val"]>(null);
-	const walletData: WalletData = {
+export const walletDetails = ref<WalletDetail[]>([]);
+function addWalletDetail(ethereum: Eip1193Provider, info: WalletDetail["info"]) {
+	const signer = ref<WalletDetail["signer"]["val"]>(null);
+	const walletDetail: WalletDetail = {
 		ethereum,
 		provider: new BrowserProvider(ethereum),
 		signer,
 		info,
 	};
 	ethereum.on("accountsChanged", () => {
-		getSigner(walletData).then((value) => {
+		getSigner(walletDetail).then((value) => {
 			signer.val = value;
 		});
 	});
-	getSigner(walletData).then((value) => {
+	getSigner(walletDetail).then((value) => {
 		signer.val = value;
 	});
 
-	walletDatas.val.unshift(walletData);
-	walletDatas.notify();
+	walletDetails.val.unshift(walletDetail);
+	walletDetails.notify();
 }
 
 if (window.ethereum) {
-	addWalletData(window.ethereum, {
+	addWalletDetail(window.ethereum, {
 		key: "eip1193",
 		name: "Browser Wallet",
 		icon: walletSrc,
@@ -90,8 +90,8 @@ if (window.ethereum) {
 }
 
 window.addEventListener("eip6963:announceProvider", (event) => {
-	if (walletDatas.val.some((p) => p.info.key === event.detail.info.uuid)) return;
-	addWalletData(event.detail.provider, {
+	if (walletDetails.val.some((p) => p.info.key === event.detail.info.uuid)) return;
+	addWalletDetail(event.detail.provider, {
 		key: event.detail.info.uuid,
 		name: event.detail.info.name,
 		icon: event.detail.info.icon,
@@ -99,16 +99,16 @@ window.addEventListener("eip6963:announceProvider", (event) => {
 });
 window.dispatchEvent(new Event("eip6963:requestProvider"));
 
-export const currentWalletData = ref<WalletData | null>(null);
+export const currentWalletDetail = ref<WalletDetail | null>(null);
 
-export async function getOrRequestSigner(walletData = currentWalletData.val) {
-	currentWalletData.val = walletData;
-	if (!walletData) return null;
-	const signer = await walletData.provider.getSigner();
+export async function getOrRequestSigner(walletDetail = currentWalletDetail.val) {
+	currentWalletDetail.val = walletDetail;
+	if (!walletDetail) return null;
+	const signer = await walletDetail.provider.getSigner();
 	return signer;
 }
 
-export async function getSigner(walletData = currentWalletData.val) {
-	if (!walletData) return null;
-	return await walletData.provider.listAccounts().then((accounts) => accounts[0] ?? null);
+export async function getSigner(walletDetail = currentWalletDetail.val) {
+	if (!walletDetail) return null;
+	return await walletDetail.provider.listAccounts().then((accounts) => accounts[0] ?? null);
 }
