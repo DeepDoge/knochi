@@ -3,12 +3,13 @@ import { computed, css, fragment, sheet, tags } from "purified-js";
 import { zeroPadBytes } from "ethers";
 import { FeedViewer } from "~/features/post/FeedViewer";
 import { PostForm } from "~/features/post/PostForm";
-import { getOrRequestSigner, signer } from "~/features/wallet";
+import { currentWalletData } from "~/features/wallet/util.s";
 import { globalSheet } from "~/styles";
 import { Bytes32Hex } from "~/utils/hex";
 import { trackPromise } from "./features/progress/utils";
+import { WalletList } from "./features/wallet/WalletList";
 
-const { div, button } = tags;
+const { div, button, img } = tags;
 
 trackPromise("Infinite Job", new Promise(() => {}));
 
@@ -21,17 +22,19 @@ function App() {
 		fragment(
 			PostForm(),
 			computed(() => {
-				if (!signer.val) return null;
-				const myFeedId = Bytes32Hex.parse(zeroPadBytes(signer.val.address, 32));
+				const signer = currentWalletData.val?.signer.val;
+				if (!signer) return null;
+				const myFeedId = Bytes32Hex.parse(zeroPadBytes(signer.address, 32));
 				return FeedViewer(myFeedId);
 			}),
-			computed(() =>
-				signer.val ?
-					["Connected Wallet: ", signer.val.address]
-				:	button()
-						.onclick(() => trackPromise("Connect Wallet", getOrRequestSigner()))
-						.textContent("Connect Wallet"),
-			),
+			computed(() => {
+				const signer = currentWalletData.val?.signer.val;
+				if (signer) {
+					return ["Connected Wallet: ", signer.address];
+				}
+				return "Not Connected";
+			}),
+			WalletList(),
 		),
 	);
 

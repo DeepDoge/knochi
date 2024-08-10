@@ -3,7 +3,7 @@ import { zeroPadBytes } from "ethers";
 import { computed, css, fragment, ref, sheet, tags } from "purified-js";
 import { config } from "~/features/config";
 import { PostContent } from "~/features/post/utils";
-import { getOrRequestSigner } from "~/features/wallet";
+import { getOrRequestSigner } from "~/features/wallet/util.s";
 import { globalSheet } from "~/styles";
 import { uniqueId } from "~/utils/unique";
 
