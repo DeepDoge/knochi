@@ -23,7 +23,8 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
-	self.clients.claim();
+	event.waitUntil(cacheAll());
+	event.waitUntil(self.clients.claim());
 	console.log("Activated");
 });
 
