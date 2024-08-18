@@ -1,6 +1,7 @@
-import { BrowserProvider, JsonRpcSigner } from "ethers";
+import { BrowserProvider, JsonRpcSigner, toBeHex } from "ethers";
 import { ref, Signal } from "purified-js";
 import walletSrc from "~/assets/svgs/wallet.svg?url";
+import { config } from "../config";
 
 interface Eip1193Provider {
 	isStatus?: boolean; // Optional: Indicates the status of the provider
@@ -101,10 +102,58 @@ window.dispatchEvent(new Event("eip6963:requestProvider"));
 
 export const currentWalletDetail = ref<WalletDetail | null>(null);
 
+// Later there should be a network choise
+const network = config.val.networks[0];
+
 export async function getOrRequestSigner(walletDetail = currentWalletDetail.val) {
 	currentWalletDetail.val = walletDetail;
 	if (!walletDetail) return null;
-	const signer = await walletDetail.provider.getSigner();
+
+	// Get the chain ID as a hex string
+	const chainIdHex = toBeHex(network.chainId);
+
+	// Attempt to switch to the network
+	await walletDetail.ethereum
+		.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainIdHex }] })
+		.catch(async (error) => {
+			console.error("Failed to switch network, attempting to add it:", error);
+
+			// If switching fails, add the network
+			await walletDetail.ethereum
+				.request({
+					method: "wallet_addEthereumChain",
+					params: [
+						{
+							chainId: chainIdHex,
+							rpcUrls: network.providers,
+							chainName: network.name,
+							nativeCurrency: {
+								name: network.nativeCurrency.symbol,
+								symbol: network.nativeCurrency.symbol,
+								decimals: network.nativeCurrency.decimals,
+							},
+							blockExplorerUrls: [network.blockExplorer],
+						},
+					],
+				})
+				.catch((addError) => {
+					const message = "Failed to add the network";
+					console.error(message, addError);
+					throw new Error(message);
+				});
+
+			// Attempt to switch to the network again after adding
+			await walletDetail.ethereum
+				.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainIdHex }] })
+				.catch((switchError) => {
+					const message = "Failed to switch to the network after adding";
+					console.error(message, switchError);
+					throw new Error(message);
+				});
+		});
+
+	// Create and return the signer
+	const signer = walletDetail.provider.getSigner();
 	return signer;
 }
 

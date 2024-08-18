@@ -1,4 +1,4 @@
-import { computed, css, fragment, sheet, tags } from "purified-js";
+import { computed, fragment, tags } from "purified-js";
 
 import { zeroPadBytes } from "ethers";
 import { FeedViewer } from "~/features/post/FeedViewer";
@@ -8,6 +8,7 @@ import { globalSheet } from "~/styles";
 import { Bytes32Hex } from "~/utils/hex";
 import { trackPromise } from "./features/progress/utils";
 import { WalletList } from "./features/wallet/WalletList";
+import { css } from "./utils/style";
 
 const { div, button, img } = tags;
 
@@ -41,7 +42,7 @@ function App() {
 	return host;
 }
 
-const appSheet = sheet(css`
+const appSheet = css`
 	:host {
 		display: grid;
 		gap: 0.8em;
@@ -49,6 +50,6 @@ const appSheet = sheet(css`
 		grid-template-columns: minmax(0, 30em);
 		justify-content: center;
 	}
-`);
+`;
 
 document.body.append(App().element);

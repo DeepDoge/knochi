@@ -1,37 +1,35 @@
-import { css, sheet } from "purified-js";
+import { css } from "./utils/style";
 
-document.adoptedStyleSheets.push(
-	sheet(css`
-		:root {
-			font-family: system-ui;
+document.adoptedStyleSheets.push(css`
+	:root {
+		font-family: system-ui;
 
-			--back: var(--dark);
-			--front: var(--light);
-			color-scheme: dark;
+		--back: var(--dark);
+		--front: var(--light);
+		color-scheme: dark;
 
-			color: var(--front);
-			background-color: var(--back);
-		}
+		color: var(--front);
+		background-color: var(--back);
+	}
 
-		:root {
-			--light: hsl(0, 0%, 100%);
-			--dark: hsl(0, 0%, 0%);
+	:root {
+		--light: hsl(0, 0%, 100%);
+		--dark: hsl(0, 0%, 0%);
 
-			--primary: hsl(0, 0%, 100%);
-		}
+		--primary: hsl(0, 0%, 100%);
+	}
 
-		:root {
-			--radius: 0.75em;
-			--radius-full: 100000vmax;
-		}
+	:root {
+		--radius: 0.75em;
+		--radius-full: 100000vmax;
+	}
 
-		body {
-			min-height: 100svh;
-		}
-	`),
-);
+	body {
+		min-height: 100svh;
+	}
+`);
 
-export const globalSheet = sheet(css`
+export const globalSheet = css`
 	@layer global;
 
 	@layer global {
@@ -153,6 +151,6 @@ export const globalSheet = sheet(css`
 			}
 		}
 	}
-`);
+`;
 
 document.adoptedStyleSheets.push(globalSheet);

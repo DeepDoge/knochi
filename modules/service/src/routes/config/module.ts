@@ -9,7 +9,12 @@ export namespace Config {
 	export type Network = {
 		readonly name: string;
 		readonly logoSrc?: string | null;
-		readonly chainId: string;
+		readonly chainId: bigint;
+		readonly blockExplorer: string;
+		readonly nativeCurrency: {
+			readonly symbol: string;
+			readonly decimals: number;
+		};
 		readonly providers: readonly [string, ...string[]];
 		readonly contracts: {
 			EternisIndexer: AddressHex;
@@ -34,8 +39,13 @@ export namespace Config {
 		networks: [
 			{
 				name: "Sepolia",
-				chainId: "11155111",
+				chainId: 11155111n,
 				providers: ["https://sepolia.infura.io/v3/a104675596c145f29f50bf72c27a82f3"],
+				nativeCurrency: {
+					symbol: "SepoliaETH",
+					decimals: 18,
+				},
+				blockExplorer: "https://sepolia.etherscan.io",
 				contracts: {
 					EternisIndexer: "0xD9506b33E141FFBf2A2A9F48B59dE7D1C6FfC795",
 					EternisProxies: {

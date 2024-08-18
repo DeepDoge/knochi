@@ -1,6 +1,7 @@
-import { computed, css, fragment, sheet, tags } from "purified-js";
+import { computed, fragment, tags } from "purified-js";
 import { trackPromise } from "~/features/progress/utils";
 import { globalSheet } from "~/styles";
+import { css } from "~/utils/style";
 import { getOrRequestSigner, walletDetails } from "./util.s";
 
 const { div, span, button, img } = tags;
@@ -25,11 +26,11 @@ export function WalletList() {
 	return host;
 }
 
-const walletListSheet = sheet(css`
+const walletListSheet = css`
 	:host {
 		display: grid;
-		gap: 0.8em;
-		grid-template-columns: 1fr [icon-start] 2em [icon-end name-start] auto [name-end] 1fr;
+		row-gap: 0.8em;
+		grid-template-columns: 1fr [icon-start] 1.5em [icon-end] 0.4em [name-start] auto [name-end] 1fr;
 	}
 
 	button {
@@ -48,4 +49,4 @@ const walletListSheet = sheet(css`
 			grid-column: name;
 		}
 	}
-`);
+`;

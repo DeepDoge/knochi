@@ -1,10 +1,11 @@
 import { IEternisProxy } from "@root/contracts/connect";
 import { zeroPadBytes } from "ethers";
-import { computed, css, fragment, ref, sheet, tags } from "purified-js";
+import { computed, fragment, ref, tags } from "purified-js";
 import { config } from "~/features/config";
 import { PostContent } from "~/features/post/utils";
 import { getOrRequestSigner } from "~/features/wallet/util.s";
 import { globalSheet } from "~/styles";
+import { css } from "~/utils/style";
 import { uniqueId } from "~/utils/unique";
 
 const { form, div, textarea, button, small, hr, input, details, summary, ul, li, label } = tags;
@@ -84,7 +85,7 @@ export function PostForm() {
 	return host;
 }
 
-const PostFormStyle = sheet(css`
+const PostFormStyle = css`
 	:host {
 		display: grid;
 		gap: 0.8em;
@@ -132,4 +133,4 @@ const PostFormStyle = sheet(css`
 			border-radius: var(--radius);
 		}
 	}
-`);
+`;

@@ -1,6 +1,7 @@
-import { computed, css, ref, sheet, tags } from "purified-js";
+import { computed, ref, tags } from "purified-js";
 import { PreloadSvg } from "~/assets/svgs/PreloadSvg";
 import { globalSheet } from "~/styles";
+import { css } from "~/utils/style";
 
 const DELETE_TIMEOUT_MS = 5 * 1000;
 
@@ -69,7 +70,7 @@ export function trackPromise<T extends Promise<unknown>>(title: string, promise:
 	return promise;
 }
 
-const progressSheet = sheet(css`
+const progressSheet = css`
 	ul {
 		display: grid;
 
@@ -98,7 +99,7 @@ const progressSheet = sheet(css`
 		color: var(--dark);
 		border-radius: var(--radius);
 	}
-`);
+`;
 
 shadow.adoptedStyleSheets.push(globalSheet, progressSheet);
 document.body.append(progressHost.element);

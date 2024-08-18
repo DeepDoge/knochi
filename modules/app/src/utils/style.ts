@@ -23,3 +23,9 @@ export function createStyleBuilder() {
 		},
 	};
 }
+
+export function css(template: TemplateStringsArray, ...substitutions: unknown[]) {
+	const sheet = new CSSStyleSheet();
+	sheet.replaceSync(String.raw(template, ...substitutions));
+	return sheet;
+}
