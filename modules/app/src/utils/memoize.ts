@@ -17,8 +17,8 @@ export function memoize<TParams extends unknown[], TReturns>(
 }
 
 export function memoizeUntilSettled<TParams extends unknown[], TReturns extends Promise<unknown>>(
+	key: (...args: TParams) => unknown,
 	fn: (...args: TParams) => TReturns,
-	key: (...args: TParams) => unknown = (...args) => JSON.stringify(args, (_, value) => String(value)),
 ) {
 	const caches = new Map<unknown, TReturns>();
 	return (...args: TParams): TReturns => {

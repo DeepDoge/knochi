@@ -1,23 +1,12 @@
 import path from "node:path";
 import { defineConfig } from "vite";
+import { viteSingleFile } from "vite-plugin-singlefile";
 
 export default defineConfig({
-	plugins: [],
+	plugins: [viteSingleFile()],
 	build: {
 		target: "esnext",
-		outDir: "../../dist",
 		emptyOutDir: true,
-		rollupOptions: {
-			input: {
-				app: "./index.html",
-			},
-			output: {
-				entryFileNames: (assetInfo) => {
-					return "[name].js";
-				},
-			},
-			treeshake: true,
-		},
 	},
 	resolve: {
 		alias: { "~": path.resolve(__dirname, "./src") },

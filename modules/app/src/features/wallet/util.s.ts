@@ -1,8 +1,7 @@
 import { BrowserProvider, JsonRpcSigner } from "ethers";
 import { ref, Signal } from "purify-js";
 import walletSrc from "~/assets/svgs/wallet.svg?url";
-import { config } from "../config";
-
+import { currentConfig } from "../config/state";
 interface Eip1193Provider {
 	isStatus?: boolean; // Optional: Indicates the status of the provider
 	host?: string; // Optional: Host URL of the Ethereum node
@@ -104,11 +103,13 @@ window.dispatchEvent(new Event("eip6963:requestProvider"));
 export const currentWalletDetail = ref<WalletDetail | null>(null);
 
 // Later there should be a network choise
-const network = config.val.networks[0];
+const getNetwork = async () => (await currentConfig.val).networks[0];
 
 export async function getOrRequestSigner(walletDetail = currentWalletDetail.val) {
 	currentWalletDetail.val = walletDetail;
 	if (!walletDetail) return null;
+
+	const network = await getNetwork();
 
 	// Get the chain ID as a hex string
 	// - Should be 0x prefixed

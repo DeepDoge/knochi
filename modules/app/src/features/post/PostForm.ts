@@ -1,13 +1,13 @@
 import { IKnochiSender } from "@root/contracts/connect";
 import { zeroPadBytes } from "ethers";
-import { computed, fragment, ref, tags } from "purify-js";
-import { config } from "~/features/config";
+import { awaited, computed, fragment, ref, tags } from "purify-js";
 import { PostContent } from "~/features/post/utils";
 import { getOrRequestSigner } from "~/features/wallet/util.s";
 import { rootSheet } from "~/styles";
 import { bind } from "~/utils/actions/bind";
 import { css } from "~/utils/style";
 import { uniqueId } from "~/utils/unique";
+import { currentConfig } from "../config/state";
 
 const { form, div, textarea, button, small, hr, input, details, summary, ul, li, label } = tags;
 
@@ -22,13 +22,18 @@ export function PostForm() {
 	);
 	const textByteLength = textEncoded.derive((textEncoded) => textEncoded.byteLength);
 
-	const proxyContracts = config.derive((config) => config.networks[0].contracts.KnochiProxies);
-	const proxyContractEntries = proxyContracts.derive((proxyContracts) => Object.entries(proxyContracts));
+	const configAwaited = currentConfig.derive((config) => awaited(config));
+	const config = computed((add) => add(add(configAwaited).val).val);
+
+	const proxyContracts = config.derive((config) => config?.networks[0].contracts.KnochiProxies ?? null);
+	const proxyContractEntries = proxyContracts.derive((proxyContracts) =>
+		proxyContracts ? Object.entries(proxyContracts) : null,
+	);
 	const currentProxyKey = ref("");
 	host.element.onConnect(() =>
-		proxyContractEntries.follow((entries) => (currentProxyKey.val = entries[0]?.[0] ?? ""), true),
+		proxyContractEntries.follow((entries) => (currentProxyKey.val = entries?.[0]?.[0] ?? ""), true),
 	);
-	const currentProxy = computed((add) => add(proxyContracts).val[add(currentProxyKey).val]);
+	const currentProxy = computed((add) => add(proxyContracts).val?.[add(currentProxyKey).val] ?? null);
 
 	const postForm = form()
 		.id(uniqueId("post-form"))
@@ -36,21 +41,20 @@ export function PostForm() {
 		.onsubmit(async (event) => {
 			event.preventDefault();
 
-			const address = currentProxy.val;
-			if (!address) return;
+			const indexerAddress = config.val?.networks[0].contracts.KnochiIndexer;
+			if (!indexerAddress) return;
+
+			const proxyAddress = currentProxy.val;
+			if (!proxyAddress) return;
 
 			const signer = await getOrRequestSigner();
 			if (!signer) {
 				alert("Something went wrong");
 				return;
 			}
-			const proxyContract = IKnochiSender.connect(signer, address);
+			const proxyContract = IKnochiSender.connect(signer, proxyAddress);
 
-			const tx = await proxyContract.post(
-				config.val.networks[0].contracts.KnochiIndexer,
-				[zeroPadBytes(signer.address, 32)],
-				textEncoded.val,
-			);
+			const tx = await proxyContract.post(indexerAddress, [zeroPadBytes(signer.address, 32)], textEncoded.val);
 		}).element;
 
 	shadow.append(

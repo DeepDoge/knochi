@@ -6,14 +6,12 @@
 	],
 	"scripts": {
 		"dev": "npm-run-all --parallel *:dev",
-		"build": "npm run contracts:compile && npm run service:build && npm run app:build",
+		"build": "npm run contracts:compile && npm run app:build",
 		"preview": "npm run preview --prefix ./modules/app",
 		"format": "prettier -w ./",
 		"___": "___",
 		"app:dev": "npm run dev --prefix ./modules/app",
 		"app:build": "npm run build --prefix ./modules/app",
-		"service:dev": "npm run dev --prefix ./modules/service",
-		"service:build": "npm run build --prefix ./modules/service",
 		"contracts:dev": "npm run dev --prefix ./modules/contracts",
 		"contracts:compile": "npm run compile --prefix ./modules/contracts"
 	},
@@ -26,7 +24,8 @@
 		"solc-typed-ast": "^18.1.0",
 		"tsx": "^4.15.7",
 		"typify-contracts": "github:DeepDoge/typed-contracts#0.2.2",
-		"vite": "^5.0.11"
+		"vite": "^5.0.11",
+		"vite-plugin-singlefile": "^2.0.2"
 	},
 	"dependencies": {
 		"@metamask/jazzicon": "^2.0.0",

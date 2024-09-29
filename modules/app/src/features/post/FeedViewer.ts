@@ -1,9 +1,8 @@
-import { posts_feed } from "@root/service";
 import { fragment, tags } from "purify-js";
 import { rootSheet } from "~/styles";
-import { sw } from "~/sw";
 import { Bytes32Hex } from "~/utils/hex";
 import { PostViewer } from "./PostViewer";
+import { FeedPost, getFeed } from "./feed";
 
 const { div, ul, li } = tags;
 
@@ -14,8 +13,8 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 
 	const posts = ul();
 
-	let oldestPost: posts_feed.FeedPost | null | undefined;
-	let newestPost: posts_feed.FeedPost | undefined;
+	let oldestPost: FeedPost | null | undefined;
+	let newestPost: FeedPost | undefined;
 	let busy = false;
 	loadMore();
 	async function loadMore() {
@@ -23,7 +22,7 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 		busy = true;
 		try {
 			if (oldestPost === null) return;
-			const response = await sw.use("/posts/feed").getFeed({
+			const response = await getFeed({
 				feedId,
 				cursor: oldestPost ? oldestPost.index - 1n : null,
 				direction: -1n,
@@ -44,7 +43,7 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 		if (busy) return;
 		busy = true;
 		try {
-			const response = await sw.use("/posts/feed").getFeed({
+			const response = await getFeed({
 				feedId,
 				cursor: newestPost ? newestPost.index + 1n : 0n,
 				direction: 1n,

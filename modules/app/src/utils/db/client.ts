@@ -1,6 +1,7 @@
 import { AddressHex, Bytes32Hex } from "@root/app/src/utils/hex";
 import { bigint, object, string, unknown } from "zod";
-import { DB } from "~/utils/db";
+import { DB } from "./module";
+
 export const db = DB.create("knochi.posts")
 	.version(1, {
 		KV: DB.ModelBuilder()

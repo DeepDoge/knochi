@@ -1,6 +1,6 @@
 import { AddressHex } from "@root/app/src/utils/hex";
-import { db } from "~/db";
-import { TypedChannel } from "~/exports";
+import { ref, Signal } from "purify-js";
+import { db } from "../../utils/db/client";
 
 export type Config = {
 	readonly networks: readonly [Config.Network, ...Config.Network[]];
@@ -44,24 +44,18 @@ const DEFAULT_CONFIG: Config = {
 	],
 };
 
-let currentConfig: Promise<Config> = db
-	.find("KV")
-	.byKey("config")
-	.then((config) => (config?.value as Config | undefined) ?? structuredClone(DEFAULT_CONFIG));
-
-export let foo = 123;
-
-export const configChannel = new TypedChannel<Config>();
+const configState = ref<Promise<Config>>(
+	db
+		.find("KV")
+		.byKey("config")
+		.then((config) => (config?.value as Config | undefined) ?? structuredClone(DEFAULT_CONFIG)),
+);
+export const currentConfig = configState as Signal<Promise<Config>>;
 
 export async function setConfig(value: Config) {
-	await (currentConfig = db
+	await (configState.val = db
 		.set("KV")
 		.byKey("config", { key: "config", value })
 		.execute()
 		.then(() => structuredClone(value)));
-	configChannel.post(value);
-}
-
-export async function getConfig() {
-	return await currentConfig;
 }
