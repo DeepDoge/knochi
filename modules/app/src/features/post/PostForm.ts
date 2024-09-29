@@ -1,15 +1,16 @@
 import { IKnochiSender } from "@root/contracts/connect";
 import { zeroPadBytes } from "ethers";
 import { awaited, computed, fragment, ref, tags } from "purify-js";
+import { currentConfig } from "~/features/config/state";
 import { PostContent } from "~/features/post/utils";
-import { getOrRequestSigner } from "~/features/wallet/util.s";
+import { showConnectModalHref } from "~/features/wallet/modal";
+import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/util.s";
 import { rootSheet } from "~/styles";
 import { bind } from "~/utils/actions/bind";
 import { css } from "~/utils/style";
 import { uniqueId } from "~/utils/unique";
-import { currentConfig } from "../config/state";
 
-const { form, div, textarea, button, small, hr, input, details, summary, ul, li, label } = tags;
+const { form, div, textarea, button, small, hr, a, input, details, summary, ul, li, label } = tags;
 
 export function PostForm() {
 	const host = div({ role: "form" });
@@ -78,10 +79,18 @@ export function PostForm() {
 			div({ class: "actions" }).children(
 				small().children(textByteLength, " bytes"),
 				hr(),
-				button({ form: postForm.id, class: "button" })
-					.type("submit")
-					.disabled(currentProxy.derive((currentProxy) => !currentProxy))
-					.children("Post"),
+				computed((add) => {
+					const detail = add(currentWalletDetail).val;
+
+					if (!detail) {
+						return a({ class: "button" }).href(showConnectModalHref).textContent("Connect Wallet");
+					}
+
+					return button({ form: postForm.id, class: "button" })
+						.type("submit")
+						.disabled(currentProxy.derive((currentProxy) => !currentProxy))
+						.children("Publish");
+				}),
 			),
 		),
 	);

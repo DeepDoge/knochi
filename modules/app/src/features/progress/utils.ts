@@ -12,7 +12,7 @@ const { div, ul, li, strong, small } = tags;
 const progressHost = div();
 const shadow = progressHost.element.attachShadow({ mode: "open" });
 
-const progressList = ul();
+const progressList = ul().id("progress-list");
 shadow.append(progressList.element);
 
 export function trackPromise<T extends Promise<unknown>>(

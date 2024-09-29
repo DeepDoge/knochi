@@ -6,16 +6,12 @@ import { PostForm } from "~/features/post/PostForm";
 import { currentWalletDetail } from "~/features/wallet/util.s";
 import { rootSheet } from "~/styles";
 import { Bytes32Hex } from "~/utils/hex";
-import { trackPromise } from "./features/progress/utils";
-import { WalletList } from "./features/wallet/WalletList";
 import { css } from "./utils/style";
 
-const { div, button, img } = tags;
-
-trackPromise("Infinite Job", "", new Promise(() => {}));
+const { div } = tags;
 
 function App() {
-	const host = div();
+	const host = div().id("app");
 	const shadow = host.element.attachShadow({ mode: "open" });
 	shadow.adoptedStyleSheets.push(rootSheet, appSheet);
 
@@ -45,7 +41,6 @@ function App() {
 				}
 				return "Not Connected";
 			}),
-			WalletList(),
 		),
 	);
 

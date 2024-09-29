@@ -6,7 +6,7 @@ import { getOrRequestSigner, walletDetails } from "./util.s";
 
 const { div, span, button, img, picture, ul, li } = tags;
 
-export function WalletList() {
+export function WalletList(params?: { onFinally?: () => unknown }) {
 	const host = div();
 	const shadow = host.element.attachShadow({ mode: "open" });
 	shadow.adoptedStyleSheets.push(rootSheet, walletListSheet);
@@ -17,7 +17,7 @@ export function WalletList() {
 				walletDetails.map((walletDetail) => {
 					return li().children(
 						button({ style: `--icon: url(${walletDetail.info.icon})` })
-							.onclick(() =>
+							.onclick(() => {
 								trackPromise(
 									["Connect Wallet"],
 
@@ -37,10 +37,9 @@ export function WalletList() {
 										}).src(walletDetail.info.icon),
 										span().textContent(walletDetail.info.name),
 									),
-
-									getOrRequestSigner(walletDetail),
-								),
-							)
+									getOrRequestSigner(walletDetail).finally(() => params?.onFinally?.()),
+								);
+							})
 							.children(
 								div({ class: "box" }).children(picture().children(img().src(walletDetail.info.icon))),
 								span({ class: "name" }).title(walletDetail.info.name).children(walletDetail.info.name),
