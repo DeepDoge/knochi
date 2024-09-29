@@ -1,6 +1,6 @@
 {
 	"type": "module",
-	"name": "eternis",
+	"name": "knochi",
 	"workspaces": [
 		"./modules/*"
 	],
@@ -8,7 +8,6 @@
 		"dev": "npm-run-all --parallel *:dev",
 		"build": "npm run contracts:compile && npm run service:build && npm run app:build",
 		"preview": "npm run preview --prefix ./modules/app",
-		"postinstall": "npm run contracts:compile",
 		"format": "prettier -w ./",
 		"___": "___",
 		"app:dev": "npm run dev --prefix ./modules/app",
@@ -19,19 +18,21 @@
 		"contracts:compile": "npm run compile --prefix ./modules/contracts"
 	},
 	"devDependencies": {
-		"@metamask/jazzicon": "^2.0.0",
 		"@total-typescript/ts-reset": "^0.5.1",
 		"console-log-colors": "^0.4.0",
-		"ethers": "^6.9.1",
-		"extra-bigint": "^1.1.18",
 		"npm-run-all": "^4.1.5",
-		"prettier": "latest",
-		"prettier-plugin-organize-imports": "latest",
-		"purified-js": "github:DeepDoge/purified.js#master",
+		"prettier": "^3.1.0",
+		"prettier-plugin-organize-imports": "^4.1.0",
 		"solc-typed-ast": "^18.1.0",
 		"tsx": "^4.15.7",
 		"typify-contracts": "github:DeepDoge/typed-contracts#0.2.2",
-		"vite": "^5.0.11",
+		"vite": "^5.0.11"
+	},
+	"dependencies": {
+		"@metamask/jazzicon": "^2.0.0",
+		"ethers": "^6.9.1",
+		"extra-bigint": "^1.1.18",
+		"purify-js": "github:DeepDoge/purify.js#0.0.223",
 		"zod": "^3.22.4"
 	}
 }

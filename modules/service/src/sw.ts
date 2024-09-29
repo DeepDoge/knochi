@@ -5,6 +5,8 @@ declare const self: ServiceWorkerGlobalScope;
 const VERSION = "v1";
 const URLS_TO_CACHE = ["/", "/index.html", "/app.js", "/manifest.json"];
 
+registerExposedModules();
+
 async function cacheAll() {
 	try {
 		const cache = await caches.open(VERSION);
@@ -48,5 +50,3 @@ self.addEventListener("fetch", (event) => {
 		})(),
 	);
 });
-
-registerExposedModules();

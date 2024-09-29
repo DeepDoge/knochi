@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "./IEternisIndexer.sol";
+import "./IKnochiIndexer.sol";
 
-contract EternisDefaultIndexer is IEternisIndexer {
+contract KnochiDefaultIndexer is IKnochiIndexer {
 	struct Post {
 		address origin;
 		uint96 postId;
@@ -12,23 +12,23 @@ contract EternisDefaultIndexer is IEternisIndexer {
 
 	mapping(bytes32 => Post[]) public feeds;
 
-	function index(bytes32[] calldata feedIds, uint96 postId) external {
+	function index(bytes32[] memory feedIds, uint96 postId) external {
 		Post memory post = Post({
 			origin: tx.origin,
-			sender: msg.sender,
 			postId: postId,
+			sender: msg.sender,
 			time: uint96(block.timestamp)
 		});
+
 		for (uint256 i = 0; i < feedIds.length; i++) {
 			bytes32 feedId = feedIds[i];
-			if (feedId & 0x0000000000000000000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF == 0) {
-				address exportedAddress = address(bytes20(feedId));
-				if (tx.origin != exportedAddress) {
-					continue;
-				}
+
+			if (bytes12(feedId << 20) == bytes12(0) && bytes20(feedId) != bytes20(tx.origin)) {
+				continue;
 			}
+
 			feeds[feedId].push(post);
-			emit EternisPost(feedId, postId);
+			emit KnochiPost(feedId, postId);
 		}
 	}
 
@@ -39,8 +39,8 @@ contract EternisDefaultIndexer is IEternisIndexer {
 	function get(
 		bytes32 feedId,
 		uint256 postIndex
-	) external view returns (address origin, address sender, uint96 postId, uint256 time) {
+	) external view returns (address origin, uint96 postId, address sender, uint96 time) {
 		Post memory post = feeds[feedId][postIndex];
-		return (post.origin, post.sender, post.postId, post.time);
+		return (post.origin, post.postId, post.sender, post.time);
 	}
 }

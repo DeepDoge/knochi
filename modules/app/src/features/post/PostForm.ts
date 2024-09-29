@@ -1,10 +1,11 @@
-import { IEternisProxy } from "@root/contracts/connect";
+import { IKnochiSender } from "@root/contracts/connect";
 import { zeroPadBytes } from "ethers";
-import { computed, fragment, ref, tags } from "purified-js";
+import { computed, fragment, ref, tags } from "purify-js";
 import { config } from "~/features/config";
 import { PostContent } from "~/features/post/utils";
 import { getOrRequestSigner } from "~/features/wallet/util.s";
-import { globalSheet } from "~/styles";
+import { rootSheet } from "~/styles";
+import { bind } from "~/utils/actions/bind";
 import { css } from "~/utils/style";
 import { uniqueId } from "~/utils/unique";
 
@@ -13,19 +14,21 @@ const { form, div, textarea, button, small, hr, input, details, summary, ul, li,
 export function PostForm() {
 	const host = div({ role: "form" });
 	const shadow = host.element.attachShadow({ mode: "open" });
-	shadow.adoptedStyleSheets.push(globalSheet, PostFormStyle);
+	shadow.adoptedStyleSheets.push(rootSheet, PostFormStyle);
 
 	const text = ref("");
-	const textEncoded = computed(() => PostContent.toBytes([{ type: PostContent.Part.TypeMap.Text, value: text.val }]));
-	const textByteLength = computed(() => textEncoded.val.byteLength);
+	const textEncoded = text.derive((text) =>
+		PostContent.toBytes([{ type: PostContent.Part.TypeMap.Text, value: text }]),
+	);
+	const textByteLength = textEncoded.derive((textEncoded) => textEncoded.byteLength);
 
-	const proxyContracts = computed(() => config.val.networks[0].contracts.EternisProxies);
-	const proxyContractEntries = computed(() => Object.entries(proxyContracts.val));
+	const proxyContracts = config.derive((config) => config.networks[0].contracts.KnochiProxies);
+	const proxyContractEntries = proxyContracts.derive((proxyContracts) => Object.entries(proxyContracts));
 	const currentProxyKey = ref("");
 	host.element.onConnect(() =>
 		proxyContractEntries.follow((entries) => (currentProxyKey.val = entries[0]?.[0] ?? ""), true),
 	);
-	const currentProxy = computed(() => proxyContracts.val[currentProxyKey.val]);
+	const currentProxy = computed((add) => add(proxyContracts).val[add(currentProxyKey).val]);
 
 	const postForm = form()
 		.id(uniqueId("post-form"))
@@ -41,10 +44,10 @@ export function PostForm() {
 				alert("Something went wrong");
 				return;
 			}
-			const proxyContract = IEternisProxy.connect(signer, address);
+			const proxyContract = IKnochiSender.connect(signer, address);
 
 			const tx = await proxyContract.post(
-				config.val.networks[0].contracts.EternisIndexer,
+				config.val.networks[0].contracts.KnochiIndexer,
 				[zeroPadBytes(signer.address, 32)],
 				textEncoded.val,
 			);
@@ -54,29 +57,26 @@ export function PostForm() {
 		fragment(
 			postForm,
 			div({ class: "fields" }).children(
-				div({ class: "field" }).children(
+				div({ class: "field input" }).children(
 					textarea({ form: postForm.id })
-						.role("textbox")
 						.name("content")
 						.required(true)
 						.ariaLabel("Post content")
 						.placeholder("Just say it...")
-						.value(text)
+						.use(bind(text, "value", "input"))
 						.oninput((event) => {
 							const textarea = event.currentTarget;
 							textarea.style.height = "auto";
-							textarea.style.height = `calc(calc(${textarea.scrollHeight}px - 1em))`;
-							text.val = textarea.value;
+							textarea.style.height = `${textarea.scrollHeight}px`;
 						}),
 				),
 			),
 			div({ class: "actions" }).children(
 				small().children(textByteLength, " bytes"),
 				hr(),
-				button({ form: postForm.id })
-					.role("button")
+				button({ form: postForm.id, class: "button" })
 					.type("submit")
-					.disabled(computed(() => !currentProxy.val))
+					.disabled(currentProxy.derive((currentProxy) => !currentProxy))
 					.children("Post"),
 			),
 		),

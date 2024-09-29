@@ -10,6 +10,9 @@
 		"routes-generate:dev": "tsx --watch-path ./src/routes ./scripts/generate-routes.ts"
 	},
 	"exports": {
-		".": "./src/exports.ts"
+		".": "./src/exports.ts",
+		"./routes/config": {
+			"types": "./src/routes/config/+expose.ts"
+		}
 	}
 }

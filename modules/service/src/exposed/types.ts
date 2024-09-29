@@ -10,6 +10,9 @@ export const ExposedRequestMessageData = object({
 
 export type ExposedResponseMessageData = (typeof ExposedResponseMessageData)["_type"];
 export const ExposedResponseMessageData = union([
-	object({ type: literal("success"), result: unknown() }),
+	object({
+		type: literal("success"),
+		response: union([object({ type: literal("data"), data: unknown() }), object({ type: literal("channel") })]),
+	}),
 	object({ type: literal("error"), error: string() }),
 ]);

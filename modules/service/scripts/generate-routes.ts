@@ -29,7 +29,7 @@ const output = [
 		"\n}",
 	].join(""),
 	[
-		"export {\n\t",
+		"export type {\n\t",
 		files
 			.map((filepath, index) => {
 				const key = filepath.slice(routesPath.length + 1, -("+expose.ts".length + 1)).replaceAll("/", "_");

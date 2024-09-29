@@ -1,11 +1,13 @@
-import { computed, ref, tags } from "purified-js";
-import { PreloadSvg } from "~/assets/svgs/PreloadSvg";
-import { globalSheet } from "~/styles";
+import { MemberOf, ref, tags } from "purify-js";
+import { ErrorSvg } from "~/assets/svgs/ErrorSvg";
+import { LoadingSvg } from "~/assets/svgs/LoadingSvg";
+import { SuccessSvg } from "~/assets/svgs/SuccessSvg";
+import { rootSheet } from "~/styles";
 import { css } from "~/utils/style";
 
 const DELETE_TIMEOUT_MS = 5 * 1000;
 
-const { div, ul, li, strong } = tags;
+const { div, ul, li, strong, small } = tags;
 
 const progressHost = div();
 const shadow = progressHost.element.attachShadow({ mode: "open" });
@@ -13,7 +15,11 @@ const shadow = progressHost.element.attachShadow({ mode: "open" });
 const progressList = ul();
 shadow.append(progressList.element);
 
-export function trackPromise<T extends Promise<unknown>>(title: string, promise: T) {
+export function trackPromise<T extends Promise<unknown>>(
+	strongMembers: MemberOf<HTMLElement>,
+	smallMembers: MemberOf<HTMLElement> | null,
+	promise: T,
+) {
 	const status = ref<"progress" | "success" | "fail">("progress");
 	promise.then(() => {
 		status.val = "success";
@@ -27,43 +33,48 @@ export function trackPromise<T extends Promise<unknown>>(title: string, promise:
 		}, DELETE_TIMEOUT_MS);
 	});
 
-	const dynamic = computed<{
+	const dynamic = status.derive<{
 		icon: SVGSVGElement | null;
 		background: string;
 		color: string;
 		busy: boolean;
-	}>(() => {
-		switch (status.val) {
+	}>((status) => {
+		switch (status) {
 			case "progress":
 				return {
-					icon: PreloadSvg("1.5em"),
-					background: "var(--light)",
-					color: "var(--dark)",
+					icon: LoadingSvg(),
+					background: "var(--accent)",
+					color: "var(--base)",
 					busy: true,
 				};
 			case "success":
 				return {
-					icon: null,
+					icon: SuccessSvg(),
 					background: "var(--success)",
-					color: "var(--dark)",
+					color: "var(--accent)",
 					busy: false,
 				};
 			case "fail":
 				return {
-					icon: null,
+					icon: ErrorSvg(),
 					background: "var(--fail)",
-					color: "var(--dark)",
+					color: "var(--accent)",
 					busy: false,
 				};
 		}
-		status.val satisfies never;
+		status satisfies never;
 	});
 
-	const progressItem = li()
-		.ariaBusy(computed(() => String(dynamic.val.busy)))
+	const progressItem = li({
+		style: dynamic.derive((dynamic) =>
+			[`background-color:${dynamic.background}`, `color:${dynamic.color}`].join(";"),
+		),
+	})
+		.ariaBusy(dynamic.derive((dynamic) => String(dynamic.busy)))
 		.children(
-			computed(() => dynamic.val.icon),
-			strong().textContent(title),
+			dynamic.derive((dynamic) => dynamic.icon),
+			strong().children(strongMembers),
+			smallMembers ? small().children(smallMembers) : null,
 		);
 	progressList.element.prepend(progressItem.element);
 
@@ -73,6 +84,7 @@ export function trackPromise<T extends Promise<unknown>>(title: string, promise:
 const progressSheet = css`
 	ul {
 		display: grid;
+		padding: 0;
 
 		--margin: 0.5em;
 
@@ -88,18 +100,34 @@ const progressSheet = css`
 		list-style: none;
 
 		display: grid;
-		grid-auto-flow: column;
+		grid-template-columns: 1.5em 0.4em 1fr;
+		grid-template-areas:
+			"icon . label"
+			"icon . text";
+		&:not(:has(small)) {
+			grid-template-areas: "icon . label";
+		}
+
+		svg {
+			grid-area: icon;
+		}
+		strong {
+			grid-area: label;
+		}
+		small {
+			grid-area: text;
+		}
+
 		align-items: center;
-		justify-content: start;
-		gap: 0.4em;
+
 		padding-inline: 1em;
 		padding-block: 0.75em;
 
-		background-color: var(--light);
-		color: var(--dark);
+		background-color: var(--accent);
+		color: var(--base);
 		border-radius: var(--radius);
 	}
 `;
 
-shadow.adoptedStyleSheets.push(globalSheet, progressSheet);
+shadow.adoptedStyleSheets.push(rootSheet, progressSheet);
 document.body.append(progressHost.element);

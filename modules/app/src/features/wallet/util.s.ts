@@ -1,5 +1,5 @@
-import { BrowserProvider, JsonRpcSigner, toBeHex } from "ethers";
-import { ref, Signal } from "purified-js";
+import { BrowserProvider, JsonRpcSigner } from "ethers";
+import { ref, Signal } from "purify-js";
 import walletSrc from "~/assets/svgs/wallet.svg?url";
 import { config } from "../config";
 
@@ -26,7 +26,7 @@ interface Eip1193Provider {
 }
 
 interface Eip6963ProviderInfo {
-	walletId: string; // Unique identifier for the wallet e.g io.metamask, io.metamask.flask
+	rdns: string; // Unique identifier for the wallet e.g io.metamask, io.metamask.flask
 	uuid: string; // Globally unique ID to differentiate between provider sessions for the lifetime of the page
 	name: string; // Human-readable name of the wallet
 	icon: string; // URL to the wallet's icon
@@ -79,7 +79,7 @@ function addWalletDetail(ethereum: Eip1193Provider, info: WalletDetail["info"]) 
 	});
 
 	walletDetails.val.unshift(walletDetail);
-	walletDetails.notify();
+	walletDetails.emit();
 }
 
 if (window.ethereum) {
@@ -91,9 +91,10 @@ if (window.ethereum) {
 }
 
 window.addEventListener("eip6963:announceProvider", (event) => {
-	if (walletDetails.val.some((p) => p.info.key === event.detail.info.uuid)) return;
+	console.log(event.detail.info);
+	if (walletDetails.val.some((p) => p.info.key === event.detail.info.rdns)) return;
 	addWalletDetail(event.detail.provider, {
-		key: event.detail.info.uuid,
+		key: event.detail.info.rdns,
 		name: event.detail.info.name,
 		icon: event.detail.info.icon,
 	});
@@ -110,7 +111,9 @@ export async function getOrRequestSigner(walletDetail = currentWalletDetail.val)
 	if (!walletDetail) return null;
 
 	// Get the chain ID as a hex string
-	const chainIdHex = toBeHex(network.chainId);
+	// - Should be 0x prefixed
+	// - Shouldnt have padding
+	const chainIdHex = `0x${network.chainId.toString(16)}`;
 
 	// Attempt to switch to the network
 	await walletDetail.ethereum
@@ -139,7 +142,7 @@ export async function getOrRequestSigner(walletDetail = currentWalletDetail.val)
 				.catch((addError) => {
 					const message = "Failed to add the network";
 					console.error(message, addError);
-					throw new Error(message);
+					return new Error(message);
 				});
 
 			// Attempt to switch to the network again after adding
@@ -148,7 +151,7 @@ export async function getOrRequestSigner(walletDetail = currentWalletDetail.val)
 				.catch((switchError) => {
 					const message = "Failed to switch to the network after adding";
 					console.error(message, switchError);
-					throw new Error(message);
+					return new Error(message);
 				});
 		});
 

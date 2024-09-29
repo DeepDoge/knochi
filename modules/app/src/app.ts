@@ -1,10 +1,10 @@
-import { computed, fragment, tags } from "purified-js";
+import { computed, fragment, tags } from "purify-js";
 
 import { zeroPadBytes } from "ethers";
 import { FeedViewer } from "~/features/post/FeedViewer";
 import { PostForm } from "~/features/post/PostForm";
 import { currentWalletDetail } from "~/features/wallet/util.s";
-import { globalSheet } from "~/styles";
+import { rootSheet } from "~/styles";
 import { Bytes32Hex } from "~/utils/hex";
 import { trackPromise } from "./features/progress/utils";
 import { WalletList } from "./features/wallet/WalletList";
@@ -12,24 +12,34 @@ import { css } from "./utils/style";
 
 const { div, button, img } = tags;
 
-trackPromise("Infinite Job", new Promise(() => {}));
+trackPromise("Infinite Job", "", new Promise(() => {}));
 
 function App() {
 	const host = div();
 	const shadow = host.element.attachShadow({ mode: "open" });
-	shadow.adoptedStyleSheets.push(globalSheet, appSheet);
+	shadow.adoptedStyleSheets.push(rootSheet, appSheet);
+
+	computed((add) => {
+		const details = add(currentWalletDetail).val;
+		const signer = details ? add(details.signer).val : null;
+		if (!signer) return null;
+		const myFeedId = Bytes32Hex.parse(zeroPadBytes(signer.address, 32));
+		return FeedViewer(myFeedId);
+	});
 
 	shadow.append(
 		fragment(
 			PostForm(),
-			computed(() => {
-				const signer = currentWalletDetail.val?.signer.val;
+			computed((add) => {
+				const details = add(currentWalletDetail).val;
+				const signer = details ? add(details.signer).val : null;
 				if (!signer) return null;
 				const myFeedId = Bytes32Hex.parse(zeroPadBytes(signer.address, 32));
 				return FeedViewer(myFeedId);
 			}),
-			computed(() => {
-				const signer = currentWalletDetail.val?.signer.val;
+			computed((add) => {
+				const details = add(currentWalletDetail).val;
+				const signer = details ? add(details.signer).val : null;
 				if (signer) {
 					return ["Connected Wallet: ", signer.address];
 				}

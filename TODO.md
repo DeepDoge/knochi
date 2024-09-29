@@ -6,4 +6,4 @@
 
 -   But we shouldn't use `tx.origin` because some contracts might decide to spam on our behalf which would be bad. We should have signature. But we shouldn't store the signature on the SSTORE that would be expensive. Instead, we should just verify it on the indexer and store the signer address only. After all all trust is on the indexer contract. Usually only one indexer contract should be enough per chain, and its not something dynamic like proxies. It can only be changed from the settings.
 
--   Eternis in the future can also support other decenterlized social media protocols, but real decenterlized ones. Not the ones that are called "decenterlized" but requires a whole brand and server to run. And that server stores stuff centerally.
+-   Knochi in the future can also support other decenterlized social media protocols, but real decenterlized ones. Not the ones that are called "decenterlized" but requires a whole brand and server to run. And that server stores stuff centerally.

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "./IEternisProxy.sol";
-import "./IEternisIndexer.sol";
+import "./IKnochiSender.sol";
+import "./IKnochiIndexer.sol";
 
-contract EternisProxy_SSTORE is IEternisProxy {
+contract KnochiSender_SSTORE is IKnochiSender {
 	mapping(uint96 => bytes) public store;
 	uint96 public counter;
 
-	function post(IEternisIndexer indexer, bytes32[] calldata feedIds, bytes memory postData) external {
+	function post(IKnochiIndexer indexer, bytes32[] calldata feedIds, bytes memory postData) external {
 		uint96 postId = counter++;
 		store[postId] = postData;
 		indexer.index(feedIds, postId);

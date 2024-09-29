@@ -3,27 +3,27 @@ Many changes to the idea is coming, so most of the explanation below is outdated
 
 Inspired by https://github.com/DeepDoge/dweb-forum
 
-# Eternis
+# Knochi
 
 An unstoppable, adminless, permissionless, permanent and ungoverned multi-chain platform that offers a customizable and resilient experience built on blockchain and real decentralized principles
 
-## How Eternis Works
+## How Knochi Works
 
-Eternis uses a combination of existing technologies to achieve its functionality. The platform utilizes IPFS (InterPlanetary File System) to host front-end and content media. It also utilizes The Graph to index chains and smart contracts to enable on-chain logic. This architecture allows for a flexible and customizable platform that meets the needs of content creators and users.
+Knochi uses a combination of existing technologies to achieve its functionality. The platform utilizes IPFS (InterPlanetary File System) to host front-end and content media. It also utilizes The Graph to index chains and smart contracts to enable on-chain logic. This architecture allows for a flexible and customizable platform that meets the needs of content creators and users.
 
 ## Key Features
 
--   **Permissionless Platform:** Eternis is designed to be ownerless/permissionless/adminless/ungoverned from the ground up. This means that no entity or group has control over the content posted by users. Your content always remains under your control on the blockchain and can be accessed by any platform.
+-   **Permissionless Platform:** Knochi is designed to be ownerless/permissionless/adminless/ungoverned from the ground up. This means that no entity or group has control over the content posted by users. Your content always remains under your control on the blockchain and can be accessed by any platform.
 
--   **Multichain Support with Combined Timeline:** Eternis supports multiple blockchains, allowing users to post their content on different chains. However, all the posts from all chains are combined under one unified timeline. This means that you have the freedom to choose any blockchain without being restricted to a single network.
+-   **Multichain Support with Combined Timeline:** Knochi supports multiple blockchains, allowing users to post their content on different chains. However, all the posts from all chains are combined under one unified timeline. This means that you have the freedom to choose any blockchain without being restricted to a single network.
 
--   **Customization and Flexibility:** Eternis utilizes smart contracts, which enable the creation and deployment of custom on-chain logic. This allows for the implementation of various features such as tipping, sponsored posts, and more. Platform developers have the freedom to customize and enhance the functionality of Eternis.
+-   **Customization and Flexibility:** Knochi utilizes smart contracts, which enable the creation and deployment of custom on-chain logic. This allows for the implementation of various features such as tipping, sponsored posts, and more. Platform developers have the freedom to customize and enhance the functionality of Knochi.
 
-## How Eternis Differs from Other Platforms
+## How Knochi Differs from Other Platforms
 
--   **Mastodon/Fediverse:** While both Eternis and Mastodon are social media platforms, they differ in their architectures and priorities. Mastodon operates through instances that host and own your content. It uses a protocol to enable communication between Mastodon instances and other fediverse platforms. In contrast, Eternis stores your content on the blockchain, ensuring that no single platform owns or controls it. If one platform censors your content, other platforms can still display it, providing a more resilient and censorship-resistant environment.
+-   **Mastodon/Fediverse:** While both Knochi and Mastodon are social media platforms, they differ in their architectures and priorities. Mastodon operates through instances that host and own your content. It uses a protocol to enable communication between Mastodon instances and other fediverse platforms. In contrast, Knochi stores your content on the blockchain, ensuring that no single platform owns or controls it. If one platform censors your content, other platforms can still display it, providing a more resilient and censorship-resistant environment.
 
--   **LBRY/Odysee:** LBRY/Odysee and Eternis are both decentralized content sharing platforms with very similar designs. However, there are some distinct differences between the two. LBRY/Odysee is primarily based on the LBRY blockchain, while Eternis is a multichain platform that can operate on multiple blockchains. Eternis provides greater customization and flexibility through its smart contract-based architecture, allowing for the implementation of additional features and functionalities. Moreover, Eternis utilizes a combination of existing solutions, such as IPFS and The Graph, to achieve its functionality and has the flexibility to adapt and change them in the future. This ensures the platform's adaptability and future-proofing.
+-   **LBRY/Odysee:** LBRY/Odysee and Knochi are both decentralized content sharing platforms with very similar designs. However, there are some distinct differences between the two. LBRY/Odysee is primarily based on the LBRY blockchain, while Knochi is a multichain platform that can operate on multiple blockchains. Knochi provides greater customization and flexibility through its smart contract-based architecture, allowing for the implementation of additional features and functionalities. Moreover, Knochi utilizes a combination of existing solutions, such as IPFS and The Graph, to achieve its functionality and has the flexibility to adapt and change them in the future. This ensures the platform's adaptability and future-proofing.
 
 ## What do I mean by decentralized
 

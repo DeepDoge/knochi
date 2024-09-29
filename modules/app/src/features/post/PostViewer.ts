@@ -1,8 +1,10 @@
 import { posts_feed } from "@root/service";
-import { tags } from "purified-js";
+import { tags } from "purify-js";
+import { html } from "~/utils/html";
+import { instancesOf } from "~/utils/instanceOf";
 import { PostContent } from "./utils";
 
-const { article, header, address, time, div, a } = tags;
+const { article, header, address, time, div, a, template } = tags;
 
 export function PostViewer(post: posts_feed.FeedPost) {
 	const date = new Date(post.time);
@@ -14,14 +16,16 @@ export function PostViewer(post: posts_feed.FeedPost) {
 			["on ", time({ pubdate: "pubdate" }).dateTime(date.toString()).children(date.toLocaleString())],
 		),
 		div().children(
-			content.map((part) => {
-				switch (part.type) {
-					case PostContent.Part.TypeMap.Text:
-						part.value;
-					default:
-						return part.value;
-				}
-			}),
+			instancesOf(content, Error) ?
+				html` <div>Test</div> `
+			:	content.map((part) => {
+					switch (part.type) {
+						case PostContent.Part.TypeMap.Text:
+							part.value;
+						default:
+							return part.value;
+					}
+				}),
 		),
 	);
 }

@@ -2,8 +2,5 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[solidity]": {
 		"editor.defaultFormatter": "JuanBlanco.solidity"
-	},
-	"[prisma]": {
-		"editor.defaultFormatter": "Prisma.prisma"
 	}
 }

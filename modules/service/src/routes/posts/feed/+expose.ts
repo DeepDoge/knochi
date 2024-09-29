@@ -1,9 +1,9 @@
 import { Bytes32Hex } from "@root/app/src/utils/hex";
-import { IEternisIndexer, IEternisProxy } from "@root/contracts/connect";
-import { memoizeUntilSettled } from "@root/shared/utils/memoize";
+import { IKnochiIndexer, IKnochiSender } from "@root/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
 import { db } from "~/db";
-import { Config } from "~/routes/config/module";
+import { getConfig } from "~/routes/config/+expose";
+import { memoizeUntilSettled } from "~/utils/memoize";
 
 export type GetFeedParameters = {
 	feedId: Bytes32Hex;
@@ -15,53 +15,55 @@ export type GetFeedParameters = {
 export type FeedPost = {
 	origin: `0x${string}`;
 	sender: `0x${string}`;
-	id: string;
+	id: bigint;
 	index: bigint;
 	time: number;
 	contentBytesHex: string;
 };
 
-export const getFeed = memoizeUntilSettled(async ({ feedId, cursor, direction, limit }): Promise<FeedPost[]> => {
-	const config = await Config.get();
-	const provider = new JsonRpcProvider(config.networks[0].providers[0]);
-	const indexerContract = IEternisIndexer.connect(provider, config.networks[0].contracts.EternisIndexer);
+export const getFeed = memoizeUntilSettled(
+	async ({ feedId, cursor, direction, limit }: GetFeedParameters): Promise<FeedPost[]> => {
+		const config = await getConfig();
+		const provider = new JsonRpcProvider(config.networks[0].providers[0]);
+		const indexerContract = IKnochiIndexer.connect(provider, config.networks[0].contracts.KnochiIndexer);
 
-	const postPromises: Promise<FeedPost>[] = [];
-	const length = await indexerContract.length(feedId);
-	cursor ??= length - 1n;
-	for (let i = 0n; i < limit; i++) {
-		const index = cursor + i * direction;
-		if (index < 0) break;
-		if (index >= length) break;
+		const postPromises: Promise<FeedPost>[] = [];
+		const length = await indexerContract.length(feedId);
+		cursor ??= length - 1n;
+		for (let i = 0n; i < limit; i++) {
+			const index = cursor + i * direction;
+			if (index < 0) break;
+			if (index >= length) break;
 
-		postPromises.push(
-			indexerContract.get(feedId, index).then(async (postMetadata) => {
-				const [origin, sender, postId, time] = postMetadata;
-				const postIdHex = toBeHex(postId);
+			postPromises.push(
+				indexerContract.get(feedId, index).then(async (postMetadata) => {
+					const [origin, postId, sender, time] = postMetadata;
+					const postIdHex = toBeHex(postId);
 
-				let dbPost = await db.find("Post").byKey([sender, postIdHex]);
+					let dbPost = await db.find("Post").byKey([sender, postIdHex]);
 
-				if (!dbPost) {
-					const proxyContract = IEternisProxy.connect(provider, sender);
-					dbPost = {
-						proxyContractAddress: sender,
-						postIdHex,
-						content: await proxyContract.get(postId),
-					};
-					await db.add("Post").values(dbPost).execute();
-				}
+					if (!dbPost) {
+						const proxyContract = IKnochiSender.connect(provider, sender);
+						dbPost = {
+							proxyContractAddress: sender,
+							postIdHex,
+							content: await proxyContract.get(postId),
+						};
+						await db.add("Post").values(dbPost).execute();
+					}
 
-				return {
-					origin,
-					sender,
-					id: toBeHex(postId),
-					index,
-					time: Number(time) * 1000,
-					contentBytesHex: dbPost.content,
-				} satisfies FeedPost;
-			}),
-		);
-	}
+					return {
+						origin,
+						sender,
+						id: postId,
+						index,
+						time: Number(time) * 1000,
+						contentBytesHex: dbPost.content,
+					} satisfies FeedPost;
+				}),
+			);
+		}
 
-	return await Promise.all(postPromises);
-});
+		return await Promise.all(postPromises);
+	},
+);

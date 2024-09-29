@@ -1,156 +1,137 @@
 import { css } from "./utils/style";
 
-document.adoptedStyleSheets.push(css`
+export const rootSheet = css`
 	:root {
-		font-family: system-ui;
+		font-family: monospace;
+		font-size: 1.25em;
+		color-scheme: dark light;
 
-		--back: var(--dark);
-		--front: var(--light);
-		color-scheme: dark;
+		--base: #000;
+		--accent: #fff;
+		accent-color: var(--accent);
 
-		color: var(--front);
-		background-color: var(--back);
+		--success: #388e3c;
+		--fail: #d32f2f;
 	}
 
-	:root {
-		--light: hsl(0, 0%, 100%);
-		--dark: hsl(0, 0%, 0%);
+	@media (prefers-color-scheme: light) {
+		:root {
+			--base: #fff;
+			--accent: #000;
 
-		--primary: hsl(0, 0%, 100%);
+			--success: #4caf50;
+			--fail: #f44336;
+		}
 	}
 
-	:root {
-		--radius: 0.75em;
-		--radius-full: 100000vmax;
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	* {
+		font: inherit;
 	}
 
 	body {
-		min-height: 100svh;
+		min-block-size: 100lvh;
+		background-color: var(--base);
+		color: var(--accent);
 	}
-`);
 
-export const globalSheet = css`
-	@layer global;
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	input,
+	select,
+	textarea,
+	hr {
+		margin: 0;
+		padding: 0;
+	}
 
-	@layer global {
-		*,
-		*::before,
-		*::after {
-			box-sizing: border-box;
+	img,
+	picture,
+	svg,
+	video {
+		display: block;
+		max-inline-size: 100%;
+	}
+
+	strong {
+		font-weight: bold;
+	}
+
+	small {
+		font-size: smaller;
+	}
+
+	input,
+	select,
+	textarea {
+		min-inline-size: 0;
+		background-color: transparent;
+		border: 0;
+		outline: 0;
+	}
+
+	select option {
+		color: var(--accent);
+		background-color: var(--base);
+	}
+
+	button {
+		all: unset;
+		font: inherit;
+		color: inherit;
+		cursor: pointer;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.button {
+		padding-block: 0.5em;
+		padding-inline: 1em;
+		background-color: color-mix(in srgb, var(--accent) 95%, var(--base));
+		color: var(--base);
+		text-align: center;
+	}
+
+	.button:focus-visible {
+		outline: solid 0.2em currentColor;
+		outline-offset: -0.25em;
+	}
+
+	.input {
+		border: 0;
+		background-color: color-mix(in srgb, var(--accent) 10%, var(--base));
+		color: var(--accent);
+		padding-block: 0.5em;
+		padding-inline: 0.5em;
+	}
+
+	.input:focus-visible {
+		outline: solid 0.2em currentColor;
+	}
+
+	[role="group"] {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.5em;
+
+		&.input :focus {
+			outline: none;
 		}
 
-		* {
-			margin: 0;
-			padding: 0;
-		}
-
-		body {
-			color: var(--front);
-			background-color: var(--back);
-		}
-
-		[role="textbox"] {
-			all: unset;
-			display: inline-block;
-			padding: 0.8em;
-			border-radius: var(--radius);
-			border: none;
-			background-color: color-mix(in srgb, var(--back) 95%, currentColor);
-			font: inherit;
-
-			&:focus-visible {
-				outline: solid 1px var(--primary);
-			}
-
-			textarea& {
-				resize: vertical;
-				min-height: 4.5em;
-			}
-
-			&:disabled {
-				cursor: not-allowed;
-				opacity: 0.5;
-			}
-		}
-
-		hr {
-			all: unset;
-			display: block;
-			min-block-size: 0.01em;
-			min-inline-size: 0.01em;
-			border-radius: 0.005em;
-			background-color: currentColor;
-			opacity: 0.2;
-			place-self: stretch;
-		}
-
-		[role="button"] {
-			all: unset;
-			display: inline-block;
-			padding: 0.4em 1.2em;
-			border-radius: var(--radius-full);
-			border: solid 1px var(--primary);
-			background-color: var(--primary);
-			color: var(--back);
-			font: inherit;
-			cursor: pointer;
-
-			&:disabled {
-				cursor: not-allowed;
-				opacity: 0.5;
-			}
-		}
-
-		[role="group"] {
-			display: inline-flex;
-			gap: 1px;
-
-			& > *:not(:first-child) {
-				border-start-start-radius: 0;
-				border-end-start-radius: 0;
-			}
-
-			& > *:not(:last-child) {
-				border-start-end-radius: 0;
-				border-end-end-radius: 0;
-			}
-		}
-
-		label:has(> input:is([type="checkbox"], [type="radio"])) {
-			display: inline-flex;
-			inline-size: fit-content;
-			gap: 0.5ch;
-			align-items: center;
-
-			& > input {
-				position: absolute;
-				pointer-events: none;
-				scale: 0;
-			}
-
-			&::before {
-				content: "";
-				display: block;
-				inline-size: 1.25em;
-				aspect-ratio: 1;
-				border: solid 0.15em currentColor;
-				padding: 0.1em;
-			}
-
-			&:has(> input[type="checkbox"])::before {
-				border-radius: var(--radius);
-			}
-
-			&:has(> input[type="radio"])::before {
-				border-radius: var(--radius-full);
-			}
-
-			&:has(> input:checked)::before {
-				background-color: currentColor;
-				background-clip: content-box;
-			}
+		&.input:has(:focus-visible) {
+			outline: solid 0.2em currentColor;
 		}
 	}
 `;
-
-document.adoptedStyleSheets.push(globalSheet);
+document.adoptedStyleSheets.push(rootSheet);

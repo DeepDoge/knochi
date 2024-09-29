@@ -1,4 +1,5 @@
 import { Routes } from "~/routes";
+import { TypedChannel } from "~/utils/channel";
 import { ExposedRequestMessageData, ExposedResponseMessageData } from "./types";
 
 export async function registerExposedModules() {
@@ -11,16 +12,31 @@ export async function registerExposedModules() {
 		const { data } = parsed;
 		const moduleKey = `../routes${data.module}/+expose.ts` as const;
 		const module = imports[moduleKey] as Routes[keyof Routes];
-		const member = module[data.name as keyof typeof module] as unknown;
+		const value: unknown = data.name in module ? (module[data.name as keyof typeof module] ?? null) : null;
 
 		console.log(`ServiceWorker Call`, {
 			name: data.name,
 			args: data.args,
 		});
 		try {
-			let result = typeof member === "function" ? await member(...data.args) : member;
-			event.ports[0]?.postMessage({ type: "success", result } satisfies ExposedResponseMessageData);
-			console.log(`ServiceWorker Call Success`, { name: data.name, result });
+			let response: (ExposedResponseMessageData & { type: "success" })["response"];
+			const transferable: Transferable[] = [];
+			if (typeof value === "function") {
+				const returns = value(...data.args);
+				if (returns instanceof Promise) {
+					response = { type: "data", data: await returns };
+				} else {
+					response = { type: "data", data: returns };
+				}
+			} else if (value instanceof TypedChannel) {
+				response = { type: "channel" };
+				transferable.push(value.listenPort);
+			} else {
+				response = { type: "data", data: value };
+			}
+
+			event.ports[0]?.postMessage({ type: "success", response } satisfies ExposedResponseMessageData);
+			console.log(`ServiceWorker Call Success`, { name: data.name, response });
 		} catch (throwed) {
 			console.error(throwed);
 			const error = String(throwed);

@@ -1,6 +1,6 @@
 import { posts_feed } from "@root/service";
-import { fragment, tags } from "purified-js";
-import { globalSheet } from "~/styles";
+import { fragment, tags } from "purify-js";
+import { rootSheet } from "~/styles";
 import { sw } from "~/sw";
 import { Bytes32Hex } from "~/utils/hex";
 import { PostViewer } from "./PostViewer";
@@ -10,7 +10,7 @@ const { div, ul, li } = tags;
 export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n) {
 	const host = div();
 	const shadow = host.element.attachShadow({ mode: "open" });
-	shadow.adoptedStyleSheets.push(globalSheet);
+	shadow.adoptedStyleSheets.push(rootSheet);
 
 	const posts = ul();
 

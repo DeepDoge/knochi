@@ -1,7 +1,7 @@
 import { AddressHex, Bytes32Hex } from "@root/app/src/utils/hex";
 import { bigint, object, string, unknown } from "zod";
 import { DB } from "~/utils/db";
-export const db = DB.create("eternis.posts")
+export const db = DB.create("knochi.posts")
 	.version(1, {
 		KV: DB.ModelBuilder()
 			.parser(

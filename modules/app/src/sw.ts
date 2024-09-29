@@ -1,4 +1,5 @@
-import { ExposedRequestMessageData, ExposedResponseMessageData, Routes } from "@root/service";
+import { ExposedRequestMessageData, ExposedResponseMessageData, Routes, TypedChannel } from "@root/service";
+import { Signal } from "purify-js";
 
 await navigator.serviceWorker.getRegistrations().then((registrations) => {
 	for (let registration of registrations) {
@@ -22,12 +23,16 @@ const swPromise = new Promise<ServiceWorker>((resolve, reject) =>
 	}),
 );
 
+const portToSignalMap = new Map<MessagePort, Signal.State<unknown>>();
+
 export namespace sw {
 	export function use<TModuleName extends keyof Routes>(module: TModuleName) {
-		type MembersType = {
-			[K in keyof Routes[TModuleName]]: Routes[TModuleName][K] extends { (...args: infer Args): infer Returns } ?
+		type RouteModule = Routes[TModuleName];
+		type RouteModuleMembers = {
+			[K in keyof RouteModule]: RouteModule[K] extends { (...args: infer Args): infer Returns } ?
 				(...args: Args) => Promise<Awaited<Returns>>
-			:	() => Promise<Routes[TModuleName][K]>;
+			: RouteModule[K] extends TypedChannel<infer Type> ? Signal<Type>
+			: () => Promise<RouteModule[K]>;
 		};
 		return new Proxy(
 			{},
@@ -50,7 +55,31 @@ export namespace sw {
 								if (!parsed.success) {
 									reject(new Error("Invalid response from service worker"));
 								} else if (parsed.data.type === "success") {
-									resolve(parsed.data.result);
+									const response = parsed.data.response;
+									if (response.type === "data") {
+										resolve(response.data);
+									} else if (response.type === "channel") {
+										const listenPort = event.ports[0];
+										if (!listenPort) {
+											return reject(
+												new Error(
+													"Channel request requires a channel port transfered with the message",
+												),
+											);
+										}
+
+										const cache = portToSignalMap.get(listenPort);
+										if (cache) {
+											return resolve(cache);
+										}
+
+										const signal = new Signal.State<unknown>(null);
+										portToSignalMap.set(listenPort, signal);
+										listenPort.onmessage = (event) => {
+											signal.val = event.data;
+										};
+										resolve(signal);
+									}
 								} else if (parsed.data.type === "error") {
 									reject(new Error(parsed.data.error));
 								}
@@ -60,6 +89,6 @@ export namespace sw {
 						});
 				},
 			},
-		) as never as MembersType;
+		) as never as RouteModuleMembers;
 	}
 }
