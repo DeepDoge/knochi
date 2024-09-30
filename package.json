@@ -2,18 +2,18 @@
 	"type": "module",
 	"name": "knochi",
 	"workspaces": [
-		"./modules/*"
+		"./project/*"
 	],
 	"scripts": {
 		"dev": "npm-run-all --parallel *:dev",
 		"build": "npm run contracts:compile && npm run app:build",
-		"preview": "npm run preview --prefix ./modules/app",
+		"preview": "npm run preview --prefix ./project/app",
 		"format": "prettier -w ./",
 		"___": "___",
-		"app:dev": "npm run dev --prefix ./modules/app",
-		"app:build": "npm run build --prefix ./modules/app",
-		"contracts:dev": "npm run dev --prefix ./modules/contracts",
-		"contracts:compile": "npm run compile --prefix ./modules/contracts"
+		"app:dev": "npm run dev --prefix ./project/app",
+		"app:build": "npm run build --prefix ./project/app",
+		"contracts:dev": "npm run dev --prefix ./project/contracts",
+		"contracts:compile": "npm run compile --prefix ./project/contracts"
 	},
 	"devDependencies": {
 		"@total-typescript/ts-reset": "^0.5.1",

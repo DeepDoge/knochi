@@ -1,6 +1,6 @@
-import { AddressHex } from "@root/app/src/utils/hex";
 import { ref, Signal } from "purify-js";
-import { db } from "../../utils/db/client";
+import { db } from "~/utils/db/client";
+import { AddressHex } from "~/utils/hex";
 
 export type Config = {
 	readonly networks: readonly [Config.Network, ...Config.Network[]];

@@ -1,5 +1,5 @@
-import { AddressHex, Bytes32Hex } from "@root/app/src/utils/hex";
 import { bigint, object, string, unknown } from "zod";
+import { AddressHex, Bytes32Hex } from "~/utils/hex";
 import { DB } from "./module";
 
 export const db = DB.create("knochi.posts")

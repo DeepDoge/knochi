@@ -1,5 +1,5 @@
 import { tags } from "purify-js";
-import { SearchParamsSignal } from "../router/url";
+import { SearchParamsSignal } from "~/features/router/url";
 import { WalletList } from "./WalletList";
 
 const css = String.raw;
@@ -23,7 +23,6 @@ const styleElementPrototype = style().textContent(css`
 
 		strong {
 			font-size: 2em;
-			justify-self: center;
 		}
 
 		.list {

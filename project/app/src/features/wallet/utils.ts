@@ -1,7 +1,7 @@
 import { BrowserProvider, JsonRpcSigner } from "ethers";
 import { ref, Signal } from "purify-js";
 import walletSrc from "~/assets/svgs/wallet.svg?url";
-import { currentConfig } from "../config/state";
+import { currentConfig } from "~/features/config/state";
 interface Eip1193Provider {
 	isStatus?: boolean; // Optional: Indicates the status of the provider
 	host?: string; // Optional: Host URL of the Ethereum node

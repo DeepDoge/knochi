@@ -2,7 +2,7 @@ import { fragment, tags } from "purify-js";
 import { trackPromise } from "~/features/progress/utils";
 import { rootSheet } from "~/styles";
 import { css } from "~/utils/style";
-import { getOrRequestSigner, walletDetails } from "./util.s";
+import { getOrRequestSigner, walletDetails } from "./utils";
 
 const { div, span, button, img, picture, ul, li } = tags;
 

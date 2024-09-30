@@ -4,7 +4,7 @@ import { awaited, computed, fragment, ref, tags } from "purify-js";
 import { currentConfig } from "~/features/config/state";
 import { PostContent } from "~/features/post/utils";
 import { showConnectModalHref } from "~/features/wallet/modal";
-import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/util.s";
+import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { rootSheet } from "~/styles";
 import { bind } from "~/utils/actions/bind";
 import { css } from "~/utils/style";

@@ -1,8 +1,8 @@
-import { Bytes32Hex } from "@root/app/src/utils/hex";
 import { IKnochiIndexer, IKnochiSender } from "@root/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
+import { currentConfig } from "~/features/config/state";
 import { db } from "~/utils/db/client";
-import { currentConfig } from "../config/state";
+import { Bytes32Hex } from "~/utils/hex";
 
 export type GetFeedParameters = {
 	feedId: Bytes32Hex;

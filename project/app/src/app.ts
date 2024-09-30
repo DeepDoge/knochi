@@ -3,7 +3,7 @@ import { computed, fragment, tags } from "purify-js";
 import { zeroPadBytes } from "ethers";
 import { FeedViewer } from "~/features/post/FeedViewer";
 import { PostForm } from "~/features/post/PostForm";
-import { currentWalletDetail } from "~/features/wallet/util.s";
+import { currentWalletDetail } from "~/features/wallet/utils";
 import { rootSheet } from "~/styles";
 import { Bytes32Hex } from "~/utils/hex";
 import { css } from "./utils/style";
