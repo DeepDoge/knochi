@@ -83,7 +83,7 @@ export function trackPromise<T extends Promise<unknown>>(
 
 const progressSheet = css`
 	ul {
-		display: grid;
+		display: block grid;
 		padding: 0;
 
 		--margin: 0.5em;
@@ -99,7 +99,7 @@ const progressSheet = css`
 	li {
 		list-style: none;
 
-		display: grid;
+		display: block grid;
 		grid-template-columns: 1.5em 0.4em 1fr;
 		grid-template-areas:
 			"icon . label"

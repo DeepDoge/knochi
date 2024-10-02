@@ -58,7 +58,7 @@ export const rootSheet = css`
 	picture,
 	svg,
 	video {
-		display: block;
+		display: block flow;
 		max-inline-size: 100%;
 	}
 
@@ -121,7 +121,7 @@ export const rootSheet = css`
 	}
 
 	[role="group"] {
-		display: grid;
+		display: block grid;
 		grid-template-columns: auto 1fr;
 		gap: 0.5em;
 

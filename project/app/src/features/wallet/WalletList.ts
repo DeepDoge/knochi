@@ -23,7 +23,7 @@ export function WalletList(params?: { onFinally?: () => unknown }) {
 
 									span({
 										style: [
-											"display: grid",
+											"display: block grid",
 											"grid-auto-flow:column",
 											"justify-content:start",
 											"align-items:center",
@@ -31,7 +31,7 @@ export function WalletList(params?: { onFinally?: () => unknown }) {
 										].join(";"),
 									}).children(
 										img({
-											style: ["inline-size:1.5em", "aspect-ratio:1", "display:inline-block"].join(
+											style: ["inline-size:1.5em", "aspect-ratio:1", "display:inline flow"].join(
 												";",
 											),
 										}).src(walletDetail.info.icon),
@@ -56,7 +56,7 @@ export function WalletList(params?: { onFinally?: () => unknown }) {
 
 const walletListSheet = css`
 	:host {
-		display: grid;
+		display: block grid;
 		gap: 0.5em;
 		grid-template-columns: repeat(auto-fill, minmax(min(10em, 100%), 1fr));
 	}
@@ -72,7 +72,7 @@ const walletListSheet = css`
 			--hover: 1;
 		}
 
-		display: grid;
+		display: block grid;
 		text-align: center;
 		gap: 0.25em;
 
@@ -83,7 +83,7 @@ const walletListSheet = css`
 		}
 
 		.box {
-			display: grid;
+			display: block grid;
 			grid-template-columns: minmax(0, 5em);
 			place-content: center;
 

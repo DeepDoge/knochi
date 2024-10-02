@@ -81,8 +81,9 @@ export function PostForm() {
 				hr(),
 				computed((add) => {
 					const detail = add(currentWalletDetail).val;
+					const signer = detail ? add(detail.signer).val : null;
 
-					if (!detail) {
+					if (!signer) {
 						return a({ class: "button" }).href(showConnectModalHref).textContent("Connect Wallet");
 					}
 
@@ -100,17 +101,17 @@ export function PostForm() {
 
 const PostFormStyle = css`
 	:host {
-		display: grid;
+		display: block grid;
 		gap: 0.8em;
 	}
 
 	.fields {
-		display: grid;
+		display: block grid;
 		gap: 0.8em;
 	}
 
 	.field {
-		display: grid;
+		display: block grid;
 		gap: 0.2em;
 
 		& small {
@@ -119,7 +120,7 @@ const PostFormStyle = css`
 	}
 
 	.actions {
-		display: grid;
+		display: block grid;
 		grid-auto-flow: column;
 		justify-content: end;
 		align-items: center;

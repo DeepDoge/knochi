@@ -7,3 +7,10 @@
 -   But we shouldn't use `tx.origin` because some contracts might decide to spam on our behalf which would be bad. We should have signature. But we shouldn't store the signature on the SSTORE that would be expensive. Instead, we should just verify it on the indexer and store the signer address only. After all all trust is on the indexer contract. Usually only one indexer contract should be enough per chain, and its not something dynamic like proxies. It can only be changed from the settings.
 
 -   Knochi in the future can also support other decenterlized social media protocols, but real decenterlized ones. Not the ones that are called "decenterlized" but requires a whole brand and server to run. And that server stores stuff centerally.
+
+# Reminder to self
+
+Ok so im gonna change PostForm, it should be made out of parts. if same parts next to each other
+they can combine based on their logic, for example multiple pictures can create gallery look
+but everything should be a part.
+even text. so when creating a new post you select to add a part.

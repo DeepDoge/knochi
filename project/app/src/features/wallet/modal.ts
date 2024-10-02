@@ -17,7 +17,7 @@ const styleElementPrototype = style().textContent(css`
 		}
 
 		.body {
-			display: grid;
+			display: block grid;
 			align-content: start;
 		}
 
