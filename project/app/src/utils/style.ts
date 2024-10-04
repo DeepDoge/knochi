@@ -14,7 +14,7 @@ export function sheet(css: string) {
 	return sheet;
 }
 
-export function scope(css: string): Enhanced.OnConnected {
+export function scopeCss(css: string): Enhanced.OnConnected {
 	return (element) => {
 		if (element.dataset.scope) return;
 

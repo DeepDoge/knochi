@@ -8,7 +8,7 @@ import { currentWalletDetail } from "~/features/wallet/utils";
 import { Bytes32Hex } from "~/utils/hex";
 import { AddressAvatar } from "./features/address/AddressAvatar";
 import { AddressText } from "./features/address/AddressText";
-import { css, scope } from "./utils/style";
+import { css, scopeCss } from "./utils/style";
 
 const { div } = tags;
 
@@ -23,7 +23,7 @@ function App() {
 
 	return div()
 		.id("app")
-		.use(scope(AppStyle))
+		.use(scopeCss(AppStyle))
 		.children(
 			PostForm(),
 			computed((add) => {

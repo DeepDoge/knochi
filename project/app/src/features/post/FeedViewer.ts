@@ -1,13 +1,13 @@
 import { tags } from "purify-js";
 import { Bytes32Hex } from "~/utils/hex";
-import { scope } from "~/utils/style";
+import { scopeCss } from "~/utils/style";
 import { PostViewer } from "./PostViewer";
 import { FeedPost, getFeed } from "./feed";
 
 const { div, ul, li } = tags;
 
 export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n) {
-	const host = div().use(scope(""));
+	const host = div().use(scopeCss(""));
 
 	const posts = ul();
 

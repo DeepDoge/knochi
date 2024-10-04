@@ -6,13 +6,13 @@ import { PostContent } from "~/features/post/utils";
 import { showConnectModalHref } from "~/features/wallet/modal";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { bind } from "~/utils/actions/bind";
-import { css, scope } from "~/utils/style";
+import { css, scopeCss } from "~/utils/style";
 import { uniqueId } from "~/utils/unique";
 
 const { form, div, textarea, button, small, hr, a, input, details, summary, ul, li, label } = tags;
 
 export function PostForm() {
-	const host = div({ role: "form" }).use(scope(PostFormStyle));
+	const host = div({ role: "form" }).use(scopeCss(PostFormStyle));
 
 	const text = ref("");
 	const textEncoded = text.derive((text) =>

@@ -1,13 +1,13 @@
 import { tags } from "purify-js";
 import { trackPromise } from "~/features/progress/utils";
-import { css, scope } from "~/utils/style";
+import { css, scopeCss } from "~/utils/style";
 import { getOrRequestSigner, walletDetails } from "./utils";
 
 const { div, span, button, img, picture, ul, li } = tags;
 
 export function WalletList(params?: { onFinally?: () => unknown }) {
 	return div()
-		.use(scope(WalletListStyle))
+		.use(scopeCss(WalletListStyle))
 		.children(
 			walletDetails.derive((walletDetails) =>
 				ul().children(
