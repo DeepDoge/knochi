@@ -1,4 +1,5 @@
 import { tags } from "purify-js";
+import { AddressText } from "~/features/address/AddressText";
 import { html } from "~/utils/html";
 import { instancesOf } from "~/utils/instanceOf";
 import { FeedPost } from "./feed";
@@ -12,8 +13,8 @@ export function PostViewer(post: FeedPost) {
 
 	return article().children(
 		header().children(
-			[address().children("By ", a().rel("author").children(post.origin))],
-			["on ", time({ pubdate: "pubdate" }).dateTime(date.toString()).children(date.toLocaleString())],
+			["By ", address().children(a().rel("author").children(AddressText(post.origin)))],
+			["on ", time({ pubdate: "pubdate" }).dateTime(date.toISOString()).children(date.toLocaleString())],
 		),
 		div().children(
 			instancesOf(content, Error) ?
@@ -21,7 +22,7 @@ export function PostViewer(post: FeedPost) {
 			:	content.map((part) => {
 					switch (part.type) {
 						case PostContent.Part.TypeMap.Text:
-							part.value;
+							return part.value;
 						default:
 							return part.value;
 					}

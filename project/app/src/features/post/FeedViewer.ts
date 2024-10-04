@@ -1,15 +1,13 @@
-import { fragment, tags } from "purify-js";
-import { rootSheet } from "~/styles";
+import { tags } from "purify-js";
 import { Bytes32Hex } from "~/utils/hex";
+import { scope } from "~/utils/style";
 import { PostViewer } from "./PostViewer";
 import { FeedPost, getFeed } from "./feed";
 
 const { div, ul, li } = tags;
 
 export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n) {
-	const host = div();
-	const shadow = host.element.attachShadow({ mode: "open" });
-	shadow.adoptedStyleSheets.push(rootSheet);
+	const host = div().use(scope(""));
 
 	const posts = ul();
 
@@ -68,7 +66,5 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 		return () => clearInterval(interval);
 	});
 
-	shadow.append(fragment(posts));
-
-	return host;
+	return host.children(posts);
 }

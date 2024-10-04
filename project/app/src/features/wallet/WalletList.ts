@@ -1,61 +1,61 @@
-import { fragment, tags } from "purify-js";
+import { tags } from "purify-js";
 import { trackPromise } from "~/features/progress/utils";
-import { rootSheet } from "~/styles";
-import { css } from "~/utils/style";
+import { css, scope } from "~/utils/style";
 import { getOrRequestSigner, walletDetails } from "./utils";
 
 const { div, span, button, img, picture, ul, li } = tags;
 
 export function WalletList(params?: { onFinally?: () => unknown }) {
-	const host = div();
-	const shadow = host.element.attachShadow({ mode: "open" });
-	shadow.adoptedStyleSheets.push(rootSheet, walletListSheet);
+	return div()
+		.use(scope(WalletListStyle))
+		.children(
+			walletDetails.derive((walletDetails) =>
+				ul().children(
+					walletDetails.map((walletDetail) => {
+						return li().children(
+							button({ style: `--icon: url(${walletDetail.info.icon})` })
+								.onclick(() => {
+									trackPromise(
+										["Connect Wallet"],
 
-	const children = fragment(
-		walletDetails.derive((walletDetails) =>
-			ul().children(
-				walletDetails.map((walletDetail) => {
-					return li().children(
-						button({ style: `--icon: url(${walletDetail.info.icon})` })
-							.onclick(() => {
-								trackPromise(
-									["Connect Wallet"],
-
-									span({
-										style: [
-											"display: block grid",
-											"grid-auto-flow:column",
-											"justify-content:start",
-											"align-items:center",
-											"gap:0.5em",
-										].join(";"),
-									}).children(
-										img({
-											style: ["inline-size:1.5em", "aspect-ratio:1", "display:inline flow"].join(
-												";",
-											),
-										}).src(walletDetail.info.icon),
-										span().textContent(walletDetail.info.name),
+										span({
+											style: [
+												"display: block grid",
+												"grid-auto-flow:column",
+												"justify-content:start",
+												"align-items:center",
+												"gap:0.5em",
+											].join(";"),
+										}).children(
+											img({
+												style: [
+													"inline-size:1.5em",
+													"aspect-ratio:1",
+													"display:inline flow",
+												].join(";"),
+											}).src(walletDetail.info.icon),
+											span().textContent(walletDetail.info.name),
+										),
+										getOrRequestSigner(walletDetail).finally(() => params?.onFinally?.()),
+									);
+								})
+								.children(
+									div({ class: "box" }).children(
+										picture().children(img().src(walletDetail.info.icon)),
 									),
-									getOrRequestSigner(walletDetail).finally(() => params?.onFinally?.()),
-								);
-							})
-							.children(
-								div({ class: "box" }).children(picture().children(img().src(walletDetail.info.icon))),
-								span({ class: "name" }).title(walletDetail.info.name).children(walletDetail.info.name),
-							),
-					);
-				}),
+									span({ class: "name" })
+										.title(walletDetail.info.name)
+										.children(walletDetail.info.name),
+								),
+						);
+					}),
+				),
 			),
-		),
-	);
-
-	shadow.append(children);
-	return host;
+		);
 }
 
-const walletListSheet = css`
-	:host {
+const WalletListStyle = css`
+	:scope {
 		display: block grid;
 		gap: 0.5em;
 		grid-template-columns: repeat(auto-fill, minmax(min(10em, 100%), 1fr));

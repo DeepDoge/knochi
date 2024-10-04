@@ -1,31 +1,19 @@
-export function style(template: TemplateStringsArray, ...substitutions: unknown[]) {
+import { Enhanced } from "purify-js";
+
+export const css = String.raw;
+
+export function sheet(css: string) {
 	const sheet = new CSSStyleSheet();
-	const className = `style-${Math.random().toString(36).slice(2)}`;
-	const css = `.${className} { ${String.raw(template, ...substitutions)} }`;
 	sheet.replaceSync(css);
-	document.adoptedStyleSheets.push(sheet);
-
-	return className;
-}
-
-export function createStyleBuilder() {
-	let css = "";
-	const sheet = new CSSStyleSheet();
-
-	return {
-		sheet,
-		style(template: TemplateStringsArray, ...substitutions: unknown[]) {
-			const className = `style-${Math.random().toString(36).slice(2)}`;
-			css += `.${className} { ${String.raw(template, ...substitutions)} }`;
-			sheet.replaceSync(css);
-
-			return className;
-		},
-	};
-}
-
-export function css(template: TemplateStringsArray, ...substitutions: unknown[]) {
-	const sheet = new CSSStyleSheet();
-	sheet.replaceSync(String.raw(template, ...substitutions));
 	return sheet;
+}
+
+export function scope(css: string): Enhanced.OnConnected {
+	return (element) => {
+		if (element.dataset["scope"]) return;
+
+		const scopeId = Math.random().toString(36).slice(2);
+		document.adoptedStyleSheets.push(sheet(`@scope ([data-scope="${scopeId}"]) to ([data-scope]) {${css}}`));
+		element.dataset["scope"] = scopeId;
+	};
 }

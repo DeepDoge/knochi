@@ -4,7 +4,7 @@ export function bind<T, P extends keyof HTMLElement | (string & {})>(
 	signal: Signal.State<T>,
 	propertyName: P,
 	eventName: keyof HTMLElementEventMap | (string & {}),
-): Enhanced.ConnectedCallback<Enhanced & { [_ in P]: T }> {
+): Enhanced.OnConnected<HTMLElement & { [_ in P]: T }> {
 	return (element) => {
 		const handler = () => (signal.val = element[propertyName]);
 		element.addEventListener(eventName, handler);

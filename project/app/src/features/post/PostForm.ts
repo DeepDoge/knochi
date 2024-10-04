@@ -1,21 +1,18 @@
 import { IKnochiSender } from "@root/contracts/connect";
 import { zeroPadBytes } from "ethers";
-import { awaited, computed, fragment, ref, tags } from "purify-js";
+import { awaited, computed, ref, tags } from "purify-js";
 import { currentConfig } from "~/features/config/state";
 import { PostContent } from "~/features/post/utils";
 import { showConnectModalHref } from "~/features/wallet/modal";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
-import { rootSheet } from "~/styles";
 import { bind } from "~/utils/actions/bind";
-import { css } from "~/utils/style";
+import { css, scope } from "~/utils/style";
 import { uniqueId } from "~/utils/unique";
 
 const { form, div, textarea, button, small, hr, a, input, details, summary, ul, li, label } = tags;
 
 export function PostForm() {
-	const host = div({ role: "form" });
-	const shadow = host.element.attachShadow({ mode: "open" });
-	shadow.adoptedStyleSheets.push(rootSheet, PostFormStyle);
+	const host = div({ role: "form" }).use(scope(PostFormStyle));
 
 	const text = ref("");
 	const textEncoded = text.derive((text) =>
@@ -58,41 +55,39 @@ export function PostForm() {
 			const tx = await proxyContract.post(indexerAddress, [zeroPadBytes(signer.address, 32)], textEncoded.val);
 		}).element;
 
-	shadow.append(
-		fragment(
-			postForm,
-			div({ class: "fields" }).children(
-				div({ class: "field input" }).children(
-					textarea({ form: postForm.id })
-						.name("content")
-						.required(true)
-						.ariaLabel("Post content")
-						.placeholder("Just say it...")
-						.use(bind(text, "value", "input"))
-						.oninput((event) => {
-							const textarea = event.currentTarget;
-							textarea.style.height = "auto";
-							textarea.style.height = `${textarea.scrollHeight}px`;
-						}),
-				),
+	host.children(
+		postForm,
+		div({ class: "fields" }).children(
+			div({ class: "field input" }).children(
+				textarea({ form: postForm.id })
+					.name("content")
+					.required(true)
+					.ariaLabel("Post content")
+					.placeholder("Just say it...")
+					.use(bind(text, "value", "input"))
+					.oninput((event) => {
+						const textarea = event.currentTarget;
+						textarea.style.height = "auto";
+						textarea.style.height = `${textarea.scrollHeight}px`;
+					}),
 			),
-			div({ class: "actions" }).children(
-				small().children(textByteLength, " bytes"),
-				hr(),
-				computed((add) => {
-					const detail = add(currentWalletDetail).val;
-					const signer = detail ? add(detail.signer).val : null;
+		),
+		div({ class: "actions" }).children(
+			small().children(textByteLength, " bytes"),
+			hr(),
+			computed((add) => {
+				const detail = add(currentWalletDetail).val;
+				const signer = detail ? add(detail.signer).val : null;
 
-					if (!signer) {
-						return a({ class: "button" }).href(showConnectModalHref).textContent("Connect Wallet");
-					}
+				if (!signer) {
+					return a({ class: "button" }).href(showConnectModalHref).textContent("Connect Wallet");
+				}
 
-					return button({ form: postForm.id, class: "button" })
-						.type("submit")
-						.disabled(currentProxy.derive((currentProxy) => !currentProxy))
-						.children("Publish");
-				}),
-			),
+				return button({ form: postForm.id, class: "button" })
+					.type("submit")
+					.disabled(currentProxy.derive((currentProxy) => !currentProxy))
+					.children("Publish");
+			}),
 		),
 	);
 
@@ -100,7 +95,7 @@ export function PostForm() {
 }
 
 const PostFormStyle = css`
-	:host {
+	:scope {
 		display: block grid;
 		gap: 0.8em;
 	}

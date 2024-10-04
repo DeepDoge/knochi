@@ -1,22 +1,18 @@
-import { computed, fragment, tags } from "purify-js";
+import "./styles";
 
 import { zeroPadBytes } from "ethers";
+import { computed, tags } from "purify-js";
 import { FeedViewer } from "~/features/post/FeedViewer";
 import { PostForm } from "~/features/post/PostForm";
 import { currentWalletDetail } from "~/features/wallet/utils";
-import { rootSheet } from "~/styles";
 import { Bytes32Hex } from "~/utils/hex";
 import { AddressAvatar } from "./features/address/AddressAvatar";
 import { AddressText } from "./features/address/AddressText";
-import { css } from "./utils/style";
+import { css, scope } from "./utils/style";
 
 const { div } = tags;
 
 function App() {
-	const host = div().id("app");
-	const shadow = host.element.attachShadow({ mode: "open" });
-	shadow.adoptedStyleSheets.push(rootSheet, appSheet);
-
 	computed((add) => {
 		const details = add(currentWalletDetail).val;
 		const signer = details ? add(details.signer).val : null;
@@ -25,8 +21,10 @@ function App() {
 		return FeedViewer(myFeedId);
 	});
 
-	shadow.append(
-		fragment(
+	return div()
+		.id("app")
+		.use(scope(AppStyle))
+		.children(
 			PostForm(),
 			computed((add) => {
 				const details = add(currentWalletDetail).val;
@@ -43,14 +41,11 @@ function App() {
 				}
 				return "Not Connected";
 			}),
-		),
-	);
-
-	return host;
+		);
 }
 
-const appSheet = css`
-	:host {
+const AppStyle = css`
+	:scope {
 		display: block grid;
 		gap: 0.8em;
 		padding: 0.8em;
