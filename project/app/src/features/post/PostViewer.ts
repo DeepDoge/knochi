@@ -1,5 +1,5 @@
 import { tags } from "purify-js";
-import { AddressText } from "~/features/address/AddressText";
+import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { html } from "~/utils/html";
 import { instancesOf } from "~/utils/instanceOf";
 import { FeedPost } from "./feed";
@@ -13,7 +13,7 @@ export function PostViewer(post: FeedPost) {
 
 	return article().children(
 		header().children(
-			["By ", address().children(a().rel("author").children(AddressText(post.origin)))],
+			["By ", address().children(a().rel("author").children(WalletAddress(post.origin)))],
 			["on ", time({ pubdate: "pubdate" }).dateTime(date.toISOString()).children(date.toLocaleString())],
 		),
 		div().children(

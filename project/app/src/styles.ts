@@ -39,6 +39,7 @@ document.adoptedStyleSheets.push(
 			min-block-size: 100lvh;
 			background-color: var(--base);
 			color: var(--accent);
+			margin: 0;
 		}
 
 		h1,

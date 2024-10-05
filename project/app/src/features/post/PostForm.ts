@@ -3,7 +3,7 @@ import { zeroPadBytes } from "ethers";
 import { awaited, computed, ref, tags } from "purify-js";
 import { currentConfig } from "~/features/config/state";
 import { PostContent } from "~/features/post/utils";
-import { showConnectModalHref } from "~/features/wallet/modal";
+import { connectWalletShowModalHref } from "~/features/wallet/modal";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { bind } from "~/utils/actions/bind";
 import { css, scopeCss } from "~/utils/style";
@@ -12,7 +12,7 @@ import { uniqueId } from "~/utils/unique";
 const { form, div, textarea, button, small, hr, a, input, details, summary, ul, li, label } = tags;
 
 export function PostForm() {
-	const host = div({ role: "form" }).use(scopeCss(PostFormStyle));
+	const host = div({ role: "form" }).use(scopeCss(PostFormCss));
 
 	const text = ref("");
 	const textEncoded = text.derive((text) =>
@@ -80,7 +80,7 @@ export function PostForm() {
 				const signer = detail ? add(detail.signer).val : null;
 
 				if (!signer) {
-					return a({ class: "button" }).href(showConnectModalHref).textContent("Connect Wallet");
+					return a({ class: "button" }).href(connectWalletShowModalHref).textContent("Connect Wallet");
 				}
 
 				return button({ form: postForm.id, class: "button" })
@@ -94,7 +94,7 @@ export function PostForm() {
 	return host;
 }
 
-const PostFormStyle = css`
+const PostFormCss = css`
 	:scope {
 		display: block grid;
 		gap: 0.8em;

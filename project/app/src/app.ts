@@ -1,56 +1,38 @@
 import "./styles";
 
-import { zeroPadBytes } from "ethers";
-import { computed, tags } from "purify-js";
-import { FeedViewer } from "~/features/post/FeedViewer";
-import { PostForm } from "~/features/post/PostForm";
-import { currentWalletDetail } from "~/features/wallet/utils";
-import { Bytes32Hex } from "~/utils/hex";
-import { AddressAvatar } from "./features/address/AddressAvatar";
-import { AddressText } from "./features/address/AddressText";
+import { tags } from "purify-js";
+import { Header } from "./features/header/Header";
 import { css, scopeCss } from "./utils/style";
 
-const { div } = tags;
+const { div, main } = tags;
 
 function App() {
-	computed((add) => {
-		const details = add(currentWalletDetail).val;
-		const signer = details ? add(details.signer).val : null;
-		if (!signer) return null;
-		const myFeedId = Bytes32Hex.parse(zeroPadBytes(signer.address, 32));
-		return FeedViewer(myFeedId);
-	});
-
-	return div()
-		.id("app")
-		.use(scopeCss(AppStyle))
-		.children(
-			PostForm(),
-			computed((add) => {
-				const details = add(currentWalletDetail).val;
-				const signer = details ? add(details.signer).val : null;
-				if (!signer) return null;
-				const myFeedId = Bytes32Hex.parse(zeroPadBytes(signer.address, 32));
-				return FeedViewer(myFeedId);
-			}),
-			computed((add) => {
-				const details = add(currentWalletDetail).val;
-				const signer = details ? add(details.signer).val : null;
-				if (signer) {
-					return ["Connected Wallet: ", AddressAvatar(signer.address), AddressText(signer.address)];
-				}
-				return "Not Connected";
-			}),
-		);
+	return div().id("app").use(scopeCss(AppCss)).children(Header(), main().children("Content Here"));
 }
 
-const AppStyle = css`
+const AppCss = css`
 	:scope {
+		container-name: app;
+		container-type: inline-size;
+
 		display: block grid;
-		gap: 0.8em;
-		padding: 0.8em;
-		grid-template-columns: minmax(0, 30em);
-		justify-content: center;
+		gap: 1em;
+		grid-template-areas:
+			"main"
+			"header";
+	}
+
+	header {
+		grid-area: header;
+
+		position: sticky;
+		inset-inline: 0;
+		inset-block-end: 0;
+	}
+
+	main {
+		grid-area: main;
+		min-block-size: 100svh;
 	}
 `;
 

@@ -2,7 +2,7 @@ import { getAddress } from "ethers";
 import jazzicon from "jazzicon-ts";
 import { AddressHex } from "~/utils/hex";
 
-export function AddressAvatar(address: AddressHex) {
+export function WalletAvatarSvg(address: AddressHex) {
 	address = getAddress(address); // Format address
 
 	const iconWrapper = jazzicon(64, parseInt(address.slice(2, 10), 16));

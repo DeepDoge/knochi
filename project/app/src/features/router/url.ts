@@ -20,13 +20,15 @@ const hashSearchParams = hash.derive((hash) => {
 	return new URLSearchParams(search ?? []);
 });
 
-export class SearchParamsSignal extends Signal.State<string | null> {
+export class SearchParamsSignal<T extends string> extends Signal.State<T | (string & {}) | null> {
 	public readonly name: string;
 
 	constructor(name: string) {
 		super(hashSearchParams.val.get(name), (set) => {
 			const unfollow = hashSearchParams.follow((searchParams) => {
-				set(searchParams.get(name));
+				const newValue = searchParams.get(name);
+				if (this.val === newValue) return;
+				set(newValue);
 			}, true);
 
 			return () => {
@@ -36,7 +38,7 @@ export class SearchParamsSignal extends Signal.State<string | null> {
 		this.name = name;
 	}
 
-	public toHref(value: string | null) {
+	public toHref(value: T | (string & {}) | null) {
 		return computed((add) => {
 			const pathname = add(currentPathname).val;
 			const searchParams = new URLSearchParams(add(hashSearchParams).val);
@@ -54,7 +56,7 @@ export class SearchParamsSignal extends Signal.State<string | null> {
 		return super.val;
 	}
 
-	public override set val(value: string | null) {
+	public override set val(value: T | (string & {}) | null) {
 		hash.val = location.hash = this.toHref(value).val;
 		super.val = value;
 	}

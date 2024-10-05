@@ -5,18 +5,18 @@ import { css, scopeCss } from "~/utils/style";
 
 const { span } = tags;
 
-export function AddressText(address: AddressHex, suffixLength = 3) {
+export function WalletAddress(address: AddressHex, suffixLength = 3) {
 	address = getAddress(address); // Format address
 
 	const prefix = address.slice(0, -suffixLength);
 	const suffix = address.slice(-suffixLength);
 
 	return span()
-		.use(scopeCss(AddressTextStyle))
+		.use(scopeCss(AddressTextCss))
 		.children(span({ class: "prefix" }).textContent(prefix), span({ class: "suffix" }).textContent(suffix));
 }
 
-const AddressTextStyle = css`
+const AddressTextCss = css`
 	:scope {
 		display: inline grid;
 		grid-auto-flow: column;

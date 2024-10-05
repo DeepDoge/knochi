@@ -7,7 +7,7 @@ const { div, span, button, img, picture, ul, li } = tags;
 
 export function WalletList(params?: { onFinally?: () => unknown }) {
 	return div()
-		.use(scopeCss(WalletListStyle))
+		.use(scopeCss(WalletListCss))
 		.children(
 			walletDetails.derive((walletDetails) =>
 				ul().children(
@@ -54,7 +54,7 @@ export function WalletList(params?: { onFinally?: () => unknown }) {
 		);
 }
 
-const WalletListStyle = css`
+const WalletListCss = css`
 	:scope {
 		display: block grid;
 		gap: 0.5em;
