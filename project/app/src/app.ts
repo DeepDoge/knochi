@@ -1,10 +1,11 @@
 import "./styles";
 
 import { tags } from "purify-js";
+import { Header } from "~/Header";
 import { SearchParamsSignal } from "./features/router/url";
 import { css, scopeCss } from "./utils/style";
 
-const { div, header, main } = tags;
+const { div, main } = tags;
 
 const documentScroller = document.scrollingElement ?? document.body;
 
@@ -18,41 +19,48 @@ function App() {
 	return div()
 		.id("app")
 		.use(scopeCss(AppCss))
-		.onscrollend((event) => {
-			const currentTarget = event.currentTarget;
-			currentTarget.scrollTo({
-				left: menuSearchParam.val ? 0 : currentTarget.clientWidth,
-				behavior: "smooth",
-			});
-		})
-		.onscroll((event) => {
-			const scrollProgress = Math.min(1, event.currentTarget.scrollLeft / event.currentTarget.clientWidth);
+		.use((element) => {
+			scroll(menuSearchParam.val, "instant");
+			element.addEventListener("scrollend", scrollEndHandler);
+			function scrollEndHandler() {
+				const scrollProgress = Math.min(1, element.scrollLeft / (element.scrollWidth - element.clientWidth));
 
-			menuSearchParam.val = scrollProgress < 0.5 ? "open" : null;
+				scroll((menuSearchParam.val = scrollProgress < 0.5 ? "open" : null));
 
-			const atActivationFrame = scrollProgress === 1;
-			if (atActivationFrame) {
-				if (mainScrollActive) return;
-				const scrollY = mainElement.scrollTop;
-				mainElement.style.overflow = "visible";
-				mainElement.style.blockSize = "";
-				documentScroller.scrollTop = scrollY;
-				mainScrollActive = true;
+				const atActivationFrame = scrollProgress === 1;
+				if (atActivationFrame) {
+					if (mainScrollActive) return;
+					const scrollY = mainElement.scrollTop;
+					mainElement.style.overflow = "visible";
+					mainElement.style.blockSize = "";
+					documentScroller.scrollTop = scrollY;
+					mainScrollActive = true;
+				}
+
+				if (!atActivationFrame) {
+					if (!mainScrollActive) return;
+					const scrollY = documentScroller.scrollTop;
+					mainElement.style.overflow = "hidden";
+					mainElement.style.blockSize = "100dvh";
+					mainElement.scrollTop = scrollY;
+					mainScrollActive = false;
+				}
 			}
 
-			if (!atActivationFrame) {
-				if (!mainScrollActive) return;
-				const scrollY = documentScroller.scrollTop;
-				mainElement.style.overflow = "hidden";
-				mainElement.style.blockSize = "100dvh";
-				mainElement.scrollTop = scrollY;
-				mainScrollActive = false;
+			function scroll(menuSearchParam: string | null, behavior: ScrollBehavior = "smooth") {
+				const left = menuSearchParam ? 0 : element.scrollWidth - element.clientWidth;
+				if (left === element.scrollLeft) return;
+				element.scrollTo({ left, behavior });
 			}
+
+			const unfollow = menuSearchParam.follow(scroll);
+
+			return () => {
+				unfollow();
+				element.removeEventListener("scrollend", scrollEndHandler);
+			};
 		})
-		.children(
-			header().children(new Array(1024).fill("content ")),
-			(mainElement = main().children(new Array(1024).fill("content ")).element),
-		);
+		.children(Header(), (mainElement = main().children(new Array(1024).fill("content ")).element));
 }
 
 const AppCss = css`
@@ -62,10 +70,11 @@ const AppCss = css`
 		display: block grid;
 		align-items: start;
 		grid-template-columns:
-			2fr
 			[header-start]
-			minmax(0, 25em)
-			[header-end main-start]
+			minmax(0, 20em)
+			[header-end]
+			2fr
+			[main-start]
 			minmax(0, 50em)
 			[main-end]
 			4fr;
@@ -79,7 +88,10 @@ const AppCss = css`
 				100%
 				[main-end];
 
-			overflow-x: auto;
+			overflow: auto;
+			&::-webkit-scrollbar {
+				display: none; /* Safari and Chrome */
+			}
 			/* 
 				snap breaks randomly if stuff changes at the middle of scrolling.
 				also it would be better if i store the scrolling state on the url anyway
@@ -103,7 +115,7 @@ const AppCss = css`
 		to {
 			scale: 0.95;
 			translate: calc(100% + 1em) 0;
-			opacity: 0;
+			/* opacity: 0; */
 		}
 	}
 
@@ -111,20 +123,18 @@ const AppCss = css`
 		grid-row: 1;
 		grid-column: header;
 
-		background-color: red;
-
 		position: sticky;
 		inset-block-start: 0;
 		block-size: 100dvh;
 
-		overflow: auto;
+		overflow: clip;
 	}
 
 	main {
 		grid-row: 1;
 		grid-column: main;
 
-		background-color: blue;
+		background-color: var(--base);
 	}
 `;
 

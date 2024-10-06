@@ -1,13 +1,12 @@
 import { computed, tags } from "purify-js";
-import { HomeSvg } from "~/assets/svgs/HomeSvg";
-import { UserSvg } from "~/assets/svgs/UserSvg";
+import { RssSvg } from "~/assets/svgs/RssSvg";
+import { currentPathname } from "~/features/router/url";
+import { connectWalletShowModalHref } from "~/features/wallet/modal";
 import { currentWalletDetail } from "~/features/wallet/utils";
+import { WalletAvatarSvg } from "~/features/wallet/WalletAvatarSvg";
 import { css, scopeCss } from "~/utils/style";
-import { currentPathname } from "../router/url";
-import { WalletAvatarSvg } from "../wallet/WalletAvatarSvg";
-import { connectWalletSearchParam, connectWalletShowModalHref } from "../wallet/modal";
 
-const { header, a, nav, ul, li, section } = tags;
+const { div, header, a, nav, ul, li, section } = tags;
 
 export function Header() {
 	const signerAddress = computed((add) => {
@@ -20,36 +19,24 @@ export function Header() {
 	return header()
 		.use(scopeCss(HeaderCss))
 		.children(
-			section()
-				.ariaLabel("Home")
+			div()
+				.role("tablist")
 				.children(
 					a()
+						.role("tab")
 						.href("#/")
-						.title("Home")
-						.children(currentPathname.derive((pathname) => HomeSvg({ filled: pathname === "/" }))),
+						.title("Home Feed")
+						.attributes({ "aria-controls": "header-tabpanel-home" })
+						.ariaSelected(currentPathname.derive((pathname) => (pathname === "/" ? "true" : "false")))
+						.tabIndex(currentPathname.derive((pathname) => (pathname === "/" ? 0 : -1)))
+						.children(RssSvg()),
 				),
-			nav().children(
-				ul().children(
-					li().children(
-						a()
-							.href("#/")
-							.title("Home")
-							.children(currentPathname.derive((pathname) => HomeSvg({ filled: pathname === "/" }))),
-					),
-					li().children(
-						a()
-							.href("#/")
-							.title("Home")
-							.children(currentPathname.derive((pathname) => HomeSvg({ filled: pathname === "/" }))),
-					),
-					li().children(
-						a()
-							.href("#/")
-							.title("Home")
-							.children(currentPathname.derive((pathname) => HomeSvg({ filled: pathname === "/" }))),
-					),
-				),
-			),
+			div()
+				.role("tabpanel")
+				.id("header-tabpanel-home")
+				.tabIndex(0)
+				.ariaLabel("Home Feed")
+				.children("Feed List Here"),
 			section({ class: "profile" })
 				.ariaLabel("Profile")
 				.children(
@@ -65,14 +52,7 @@ export function Header() {
 								.title("My Wallet")
 								.children(WalletAvatarSvg(signerAddress));
 						} else {
-							return a()
-								.href(connectWalletShowModalHref)
-								.title("Connect Wallet")
-								.children(
-									connectWalletSearchParam.derive((searchParam) =>
-										UserSvg({ filled: searchParam === "true" }),
-									),
-								);
+							return a({ class: "button" }).href(connectWalletShowModalHref).children("Conect Wallet");
 						}
 					}),
 				),
@@ -80,54 +60,76 @@ export function Header() {
 }
 
 const HeaderCss = css`
-	:scope {
-		display: block grid;
-		grid-template-columns: minmax(0, 1fr) auto minmax(min-content, 1fr);
-		padding-inline: 1.5em;
-		padding-block: 0.5em;
-		--gap: 1em;
-		gap: var(--gap);
-
-		container-type: inline-size;
-		@container (inline-size >= 40em) {
-			background-image: linear-gradient(to top, var(--base), transparent);
-		}
-		@container (inline-size < 40em) {
-			background-color: color-mix(in srgb, transparent, var(--base) 90%);
-			border-block-start: solid 0.1em color-mix(in srgb, transparent, currentColor 25%);
-		}
-	}
-
-	a:has(svg) {
-		display: grid;
-		grid-template-columns: 2.5em;
+	a {
 		color: inherit;
 	}
 
-	section {
+	:scope {
 		display: block grid;
-		gap: var(--gap);
+		grid-template-areas:
+			"tablist	.		tabpanel"
+			".			.		."
+			"profile	profile	profile";
+		grid-template-columns: auto 0 1fr;
+		grid-template-rows: 1fr 0 auto;
 	}
 
 	section.profile {
-		justify-content: end;
+		grid-area: profile;
+
+		display: block grid;
+		padding-block: 0.5em;
+		padding-inline: 1em;
+		background-color: color-mix(in srgb, var(--base), var(--accent) 10%);
+
+		a:has(svg) {
+			display: block grid;
+			inline-size: 2.5em;
+		}
 
 		a[aria-current] {
-			outline: solid currentColor 0.2em;
-			outline-offset: 0.15em;
+			border: solid currentColor 0.2em;
+			padding: 0.15em;
 			border-radius: 50%;
 		}
 	}
 
-	nav {
-		ul,
-		li {
-			display: contents;
+	[role="tablist"] {
+		grid-area: tablist;
+
+		display: block grid;
+		align-content: start;
+		gap: 0.5em;
+		overflow: auto;
+
+		padding-inline: 0.5em;
+		padding-block: 1em;
+
+		background-color: color-mix(in srgb, var(--base), var(--accent) 5%);
+
+		[role="tab"] {
+			display: block grid;
+			inline-size: 3em;
+
+			border-radius: 50%;
+			overflow: clip;
+
+			background-color: color-mix(in srgb, var(--base), var(--accent) 20%);
+			padding: 0.75em;
 		}
 
-		display: grid;
-		grid-auto-flow: column;
-		justify-content: space-around;
-		gap: var(--gap);
+		[role="tab"][aria-selected="true"] {
+			background-color: var(--accent);
+			color: var(--base);
+		}
+	}
+
+	[role="tabpanel"] {
+		grid-area: tabpanel;
+
+		padding-inline: 1em;
+		padding-block: 1em;
+
+		background-color: color-mix(in srgb, var(--base), var(--accent) 7.5%);
 	}
 `;

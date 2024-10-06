@@ -98,6 +98,7 @@ document.adoptedStyleSheets.push(
 		}
 
 		.button {
+			display: block flow;
 			padding-block: 0.5em;
 			padding-inline: 1em;
 			background-color: color-mix(in srgb, var(--accent) 95%, var(--base));
