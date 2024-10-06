@@ -93,6 +93,8 @@ host.use(
 
 			inline-size: min(100%, 15em);
 			gap: 0.4em;
+
+			z-index: 1;
 		}
 
 		li {
