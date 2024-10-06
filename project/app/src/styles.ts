@@ -36,7 +36,7 @@ document.adoptedStyleSheets.push(
 		}
 
 		body {
-			min-block-size: 100lvh;
+			container-type: inline-size;
 			background-color: var(--base);
 			color: var(--accent);
 			margin: 0;
