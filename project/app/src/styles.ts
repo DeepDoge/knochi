@@ -97,6 +97,12 @@ document.adoptedStyleSheets.push(
 			text-decoration: none;
 		}
 
+		hr {
+			border-color: color-mix(in srgb, currentColor, transparent 75%);
+			margin-inline: 16%;
+			margin-block: 0.5em;
+		}
+
 		.button {
 			display: block flow;
 			padding-block: 0.5em;

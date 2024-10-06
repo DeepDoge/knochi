@@ -3,10 +3,11 @@ import { RssSvg } from "~/assets/svgs/RssSvg";
 import { currentPathname } from "~/features/router/url";
 import { connectWalletShowModalHref } from "~/features/wallet/modal";
 import { currentWalletDetail } from "~/features/wallet/utils";
+import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { WalletAvatarSvg } from "~/features/wallet/WalletAvatarSvg";
 import { css, scopeCss } from "~/utils/style";
 
-const { div, header, a, nav, ul, li, section } = tags;
+const { div, header, a, hr, nav, ul, li, section } = tags;
 
 export function Header() {
 	const signerAddress = computed((add) => {
@@ -30,6 +31,7 @@ export function Header() {
 						.ariaSelected(currentPathname.derive((pathname) => (pathname === "/" ? "true" : "false")))
 						.tabIndex(currentPathname.derive((pathname) => (pathname === "/" ? 0 : -1)))
 						.children(RssSvg()),
+					hr(),
 				),
 			div()
 				.role("tabpanel")
@@ -42,17 +44,20 @@ export function Header() {
 				.children(
 					signerAddress.derive((signerAddress) => {
 						if (signerAddress) {
-							return a()
-								.ariaCurrent(
-									currentPathname.derive((pathname) =>
-										pathname === `/${signerAddress}` ? "page" : null,
-									),
-								)
-								.href(`#/${signerAddress}`)
-								.title("My Wallet")
-								.children(WalletAvatarSvg(signerAddress));
+							return div({ class: "content" }).children(
+								a()
+									.ariaCurrent(
+										currentPathname.derive((pathname) =>
+											pathname === `/${signerAddress}` ? "page" : null,
+										),
+									)
+									.href(`#/${signerAddress}`)
+									.title("My Wallet")
+									.children(WalletAvatarSvg(signerAddress)),
+								WalletAddress(signerAddress),
+							);
 						} else {
-							return a({ class: "button" }).href(connectWalletShowModalHref).children("Conect Wallet");
+							return a({ class: "button" }).href(connectWalletShowModalHref).children("Connect Wallet");
 						}
 					}),
 				),
@@ -78,19 +83,25 @@ const HeaderCss = css`
 		grid-area: profile;
 
 		display: block grid;
-		padding-block: 0.5em;
+		padding-block: 1em;
 		padding-inline: 1em;
 		background-color: color-mix(in srgb, var(--base), var(--accent) 10%);
 
 		a:has(svg) {
 			display: block grid;
-			inline-size: 2.5em;
 		}
 
 		a[aria-current] {
 			border: solid currentColor 0.2em;
 			padding: 0.15em;
 			border-radius: 50%;
+		}
+
+		.content {
+			display: block grid;
+			grid-template-columns: 2.5em 1fr;
+			gap: 0.5em;
+			align-items: center;
 		}
 	}
 

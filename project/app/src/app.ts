@@ -1,6 +1,7 @@
 import "./styles";
 
 import { tags } from "purify-js";
+import { PostForm } from "~/features/post/PostForm";
 import { Header } from "~/Header";
 import { SearchParamsSignal } from "./features/router/url";
 import { css, scopeCss } from "./utils/style";
@@ -60,7 +61,7 @@ function App() {
 				element.removeEventListener("scrollend", scrollEndHandler);
 			};
 		})
-		.children(Header(), (mainElement = main().children(new Array(1024).fill("content ")).element));
+		.children(Header(), (mainElement = main().children(PostForm(), new Array(1024).fill("content ")).element));
 }
 
 const AppCss = css`
@@ -75,12 +76,12 @@ const AppCss = css`
 			[header-end]
 			2fr
 			[main-start]
-			minmax(0, 50em)
+			minmax(0, 40em)
 			[main-end]
 			4fr;
 		grid-template-rows: auto;
 
-		@container (inline-size < 55em) {
+		@container (inline-size < 45em) {
 			grid-template-columns:
 				[header-start]
 				100%
@@ -133,6 +134,9 @@ const AppCss = css`
 	main {
 		grid-row: 1;
 		grid-column: main;
+
+		padding-inline: 1em;
+		padding-block: 1em;
 
 		background-color: var(--base);
 	}
