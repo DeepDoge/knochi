@@ -7,7 +7,7 @@ import { currentPathname } from "../router/url";
 import { WalletAvatarSvg } from "../wallet/WalletAvatarSvg";
 import { connectWalletSearchParam, connectWalletShowModalHref } from "../wallet/modal";
 
-const { header, button, a, nav, ul, li, section } = tags;
+const { header, a, nav, ul, li, section } = tags;
 
 export function Header() {
 	const signerAddress = computed((add) => {

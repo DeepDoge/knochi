@@ -23,7 +23,7 @@ contract KnochiDefaultIndexer is IKnochiIndexer {
 		for (uint256 i = 0; i < feedIds.length; i++) {
 			bytes32 feedId = feedIds[i];
 
-			if (bytes12(feedId << 20) == bytes12(0) && bytes20(feedId) != bytes20(tx.origin)) {
+			if (feedId[0] == 0x00 && bytes20(feedId << 8) != bytes20(tx.origin)) {
 				continue;
 			}
 
