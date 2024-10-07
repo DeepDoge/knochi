@@ -1,7 +1,9 @@
 import "./styles";
 
-import { tags } from "purify-js";
+import { fragment, tags } from "purify-js";
 import { PostForm } from "~/features/post/PostForm";
+import { progressListElement } from "~/features/progress/utils";
+import { connectWalletPopoverElement } from "~/features/wallet/popover";
 import { Header } from "~/Header";
 import { SearchParamsSignal } from "./features/router/url";
 import { css, scopeCss } from "./utils/style";
@@ -165,4 +167,4 @@ const AppCss = css`
 	}
 `;
 
-document.body.append(App().element);
+document.body.append(fragment(App(), connectWalletPopoverElement, progressListElement));

@@ -3,7 +3,7 @@ import { zeroPadBytes } from "ethers";
 import { awaited, computed, ref, tags } from "purify-js";
 import { currentConfig } from "~/features/config/state";
 import { PostContent } from "~/features/post/utils";
-import { connectWalletShowModalHref } from "~/features/wallet/modal";
+import { connectWalletShowPopoverHref } from "~/features/wallet/popover";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { bind } from "~/utils/actions/bind";
 import { css, scopeCss } from "~/utils/style";
@@ -80,7 +80,7 @@ export function PostForm() {
 				const signer = detail ? add(detail.signer).val : null;
 
 				if (!signer) {
-					return a({ class: "button" }).href(connectWalletShowModalHref).textContent("Connect Wallet");
+					return a({ class: "button" }).href(connectWalletShowPopoverHref).textContent("Connect Wallet");
 				}
 
 				return button({ form: postForm.id, class: "button" })

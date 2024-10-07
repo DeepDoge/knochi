@@ -5,29 +5,8 @@ import { WalletList } from "./WalletList";
 
 const { div, strong } = tags;
 
-const styleCss = css`
-	:scope {
-		display: block grid;
-		align-content: start;
+const host = div().id("connect-wallet").popover("auto");
 
-		inline-size: min(100%, 40em);
-		padding: 4em;
-		gap: 1em;
-
-		background-color: var(--base);
-		color: var(--accent);
-		border: solid color-mix(in srgb, var(--base), var(--accent) 10%);
-	}
-
-	strong {
-		font-size: 2em;
-		&::after {
-			content: ":";
-		}
-	}
-`;
-
-const host = div().use(scopeCss(styleCss)).popover("");
 host.children(strong().textContent("Connect Wallet"), WalletList({ onFinally: () => host.element.hidePopover() }));
 
 const searchParam = new SearchParamsSignal<"open">("connect");
@@ -45,6 +24,29 @@ host.ontoggle((event) => {
 	searchParam.val = event.newState === "open" ? "open" : null;
 });
 
-document.body.append(host.element);
+export const connectWalletPopoverElement = host.element;
+export const connectWalletShowPopoverHref = searchParam.toHref("open");
 
-export const connectWalletShowModalHref = searchParam.toHref("open");
+host.use(
+	scopeCss(css`
+		:scope:popover-open {
+			display: block grid;
+			align-content: start;
+
+			inline-size: min(100%, 40em);
+			padding: 4em;
+			gap: 1em;
+
+			background-color: var(--base);
+			color: var(--accent);
+			border: solid color-mix(in srgb, var(--base), var(--accent) 10%);
+		}
+
+		strong {
+			font-size: 2em;
+			&::after {
+				content: ":";
+			}
+		}
+	`),
+);

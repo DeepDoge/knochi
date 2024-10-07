@@ -6,12 +6,10 @@ import { css, scopeCss } from "~/utils/style";
 
 const DELETE_TIMEOUT_MS = 5 * 1000;
 
-const { div, ul, li, strong, small } = tags;
+const { ul, li, strong, small } = tags;
 
-const host = div();
-document.body.append(host.element);
-const list = ul().id("progress-list");
-host.children(list);
+const host = ul().id("progress-list");
+export const progressListElement = host.element;
 
 export function trackPromise<T extends Promise<unknown>>(
 	strongMembers: MemberOf<HTMLElement>,
@@ -74,14 +72,14 @@ export function trackPromise<T extends Promise<unknown>>(
 			strong().children(strongMembers),
 			smallMembers ? small().children(smallMembers) : null,
 		);
-	list.element.prepend(progressItem.element);
+	host.element.prepend(progressItem.element);
 
 	return promise;
 }
 
 host.use(
 	scopeCss(css`
-		ul {
+		:scope {
 			display: block grid;
 			padding: 0;
 
