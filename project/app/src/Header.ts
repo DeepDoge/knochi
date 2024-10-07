@@ -85,7 +85,7 @@ const HeaderCss = css`
 		display: block grid;
 		padding-block: 1em;
 		padding-inline: 1em;
-		background-color: color-mix(in srgb, var(--base), var(--accent) 10%);
+		background-color: color-mix(in srgb, var(--base), var(--pop) 10%);
 
 		a:has(svg) {
 			display: block grid;
@@ -116,7 +116,7 @@ const HeaderCss = css`
 		padding-inline: 0.5em;
 		padding-block: 1em;
 
-		background-color: color-mix(in srgb, var(--base), var(--accent) 5%);
+		background-color: color-mix(in srgb, var(--base), var(--pop) 5%);
 
 		[role="tab"] {
 			display: block grid;
@@ -125,12 +125,12 @@ const HeaderCss = css`
 			border-radius: 50%;
 			overflow: clip;
 
-			background-color: color-mix(in srgb, var(--base), var(--accent) 20%);
+			background-color: color-mix(in srgb, var(--base), var(--pop) 20%);
 			padding: 0.75em;
 		}
 
 		[role="tab"][aria-selected="true"] {
-			background-color: var(--accent);
+			background-color: var(--pop);
 			color: var(--base);
 		}
 	}
@@ -141,6 +141,6 @@ const HeaderCss = css`
 		padding-inline: 1em;
 		padding-block: 1em;
 
-		background-color: color-mix(in srgb, var(--base), var(--accent) 7.5%);
+		background-color: color-mix(in srgb, var(--base), var(--pop) 7.5%);
 	}
 `;

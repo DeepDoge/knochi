@@ -38,8 +38,8 @@ host.use(
 			gap: 1em;
 
 			background-color: var(--base);
-			color: var(--accent);
-			border: solid color-mix(in srgb, var(--base), var(--accent) 10%);
+			color: var(--pop);
+			border: solid color-mix(in srgb, var(--base), var(--pop) 10%);
 		}
 
 		strong {

@@ -8,8 +8,8 @@ document.adoptedStyleSheets.push(
 			color-scheme: dark light;
 
 			--base: #000;
-			--accent: #fff;
-			accent-color: var(--accent);
+			--pop: #fff;
+			accent-color: var(--pop);
 
 			--success: #388e3c;
 			--fail: #d32f2f;
@@ -18,7 +18,7 @@ document.adoptedStyleSheets.push(
 		@media (prefers-color-scheme: light) {
 			:root {
 				--base: #fff;
-				--accent: #000;
+				--pop: #000;
 
 				--success: #4caf50;
 				--fail: #f44336;
@@ -38,7 +38,7 @@ document.adoptedStyleSheets.push(
 		body {
 			container-type: inline-size;
 			background-color: var(--base);
-			color: var(--accent);
+			color: var(--pop);
 			margin: 0;
 		}
 
@@ -82,7 +82,7 @@ document.adoptedStyleSheets.push(
 		}
 
 		select option {
-			color: var(--accent);
+			color: var(--pop);
 			background-color: var(--base);
 		}
 
@@ -107,7 +107,7 @@ document.adoptedStyleSheets.push(
 			display: block flow;
 			padding-block: 0.5em;
 			padding-inline: 1em;
-			background-color: color-mix(in srgb, var(--accent) 95%, var(--base));
+			background-color: color-mix(in srgb, var(--pop) 95%, var(--base));
 			color: var(--base);
 			text-align: center;
 		}
@@ -119,8 +119,8 @@ document.adoptedStyleSheets.push(
 
 		.input {
 			border: 0;
-			background-color: color-mix(in srgb, var(--accent) 10%, var(--base));
-			color: var(--accent);
+			background-color: color-mix(in srgb, var(--pop) 10%, var(--base));
+			color: var(--pop);
 			padding-block: 0.5em;
 			padding-inline: 0.5em;
 		}

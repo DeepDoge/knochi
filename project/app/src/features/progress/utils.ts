@@ -39,7 +39,7 @@ export function trackPromise<T extends Promise<unknown>>(
 			case "progress":
 				return {
 					icon: LoadingSvg(),
-					background: "var(--accent)",
+					background: "var(--pop)",
 					color: "var(--base)",
 					busy: true,
 				};
@@ -47,14 +47,14 @@ export function trackPromise<T extends Promise<unknown>>(
 				return {
 					icon: SuccessSvg(),
 					background: "var(--success)",
-					color: "var(--accent)",
+					color: "var(--pop)",
 					busy: false,
 				};
 			case "fail":
 				return {
 					icon: ErrorSvg(),
 					background: "var(--fail)",
-					color: "var(--accent)",
+					color: "var(--pop)",
 					busy: false,
 				};
 		}
@@ -122,7 +122,7 @@ host.use(
 			padding-inline: 1em;
 			padding-block: 0.75em;
 
-			background-color: var(--accent);
+			background-color: var(--pop);
 			color: var(--base);
 			border-radius: var(--radius);
 		}

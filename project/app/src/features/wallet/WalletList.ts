@@ -87,7 +87,7 @@ const WalletListCss = css`
 			grid-template-columns: minmax(0, 5em);
 			place-content: center;
 
-			background-color: color-mix(in srgb, var(--base), var(--accent) 5%);
+			background-color: color-mix(in srgb, var(--base), var(--pop) 5%);
 			overflow: clip;
 			padding: min(1.5em, 25%);
 		}
