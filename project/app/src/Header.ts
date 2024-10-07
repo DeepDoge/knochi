@@ -111,7 +111,7 @@ const HeaderCss = css`
 		display: block grid;
 		align-content: start;
 		gap: 0.5em;
-		overflow: auto;
+		overflow: overlay;
 
 		padding-inline: 0.5em;
 		padding-block: 1em;

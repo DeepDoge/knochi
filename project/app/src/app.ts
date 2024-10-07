@@ -122,7 +122,7 @@ const AppCss = css`
 				100%
 				[main-end];
 
-			overflow: auto;
+			overflow: overlay;
 			&::-webkit-scrollbar {
 				display: none;
 			}
@@ -138,8 +138,7 @@ const AppCss = css`
 	@keyframes hide-header-scroll {
 		to {
 			scale: 0.95;
-			translate: calc(100% + 1em) 0;
-			/* opacity: 0; */
+			translate: 100% 0;
 		}
 	}
 
