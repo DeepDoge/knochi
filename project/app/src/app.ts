@@ -10,7 +10,8 @@ const { div, main } = tags;
 
 const documentScroller = document.scrollingElement ?? document.body;
 
-export const menuSearchParam = new SearchParamsSignal("menu");
+export type MenuSearchParam = typeof menuSearchParam.val;
+export const menuSearchParam = new SearchParamsSignal<"open">("menu");
 
 function App() {
 	let mainElement: HTMLElement;
@@ -19,12 +20,17 @@ function App() {
 		.id("app")
 		.use(scopeCss(AppCss))
 		.use((element) => {
-			scroll(Boolean(menuSearchParam.val), "instant");
-			const unfollow = menuSearchParam.follow((param) => scroll(Boolean(param), "smooth"));
+			// On element connect
+			{
+				const isOpen = getIsOpen();
+				scroll(isOpen, "instant");
+			}
+
+			const unfollowMenuSearchParam = menuSearchParam.follow((param) => scroll(getIsOpen(param), "smooth"));
 
 			window.addEventListener("resize", handleResize);
 			function handleResize() {
-				const isOpen = updateIsOpen();
+				const isOpen = getIsOpen();
 				scroll(isOpen, "instant");
 			}
 
@@ -46,6 +52,10 @@ function App() {
 
 			function getScrollProgress() {
 				return Math.max(0, Math.min(1, element.scrollLeft / (element.scrollWidth - element.clientWidth)));
+			}
+
+			function getIsOpen(searchParam: MenuSearchParam = menuSearchParam.val) {
+				return Boolean(searchParam);
 			}
 
 			function updateIsOpen() {
@@ -81,7 +91,7 @@ function App() {
 			}
 
 			return () => {
-				unfollow();
+				unfollowMenuSearchParam();
 				window.removeEventListener("resize", handleResize);
 				element.removeEventListener("scrollend", handleScrollEnd);
 				element.removeEventListener("scroll", handleScroll);
@@ -117,20 +127,10 @@ const AppCss = css`
 
 			overflow: auto;
 			&::-webkit-scrollbar {
-				display: none; /* Safari and Chrome */
-			}
-			/* 
-				snap breaks randomly if stuff changes at the middle of scrolling.
-				also it would be better if i store the scrolling state on the url anyway
-			*/
-			/* scroll-snap-type: x mandatory; */
-
-			main {
-				/* scroll-snap-align: end; */
+				display: none;
 			}
 
 			header {
-				/* scroll-snap-align: start; */
 				animation: hide-header-scroll linear;
 				animation-timeline: scroll(x);
 				z-index: -1;
