@@ -7,8 +7,8 @@ document.adoptedStyleSheets.push(
 			font-size: 1.25em;
 			color-scheme: dark light;
 
-			--base: #000;
-			--pop: #fff;
+			--base: #030614;
+			--pop: #cad1f5;
 			accent-color: var(--pop);
 
 			--success: #388e3c;
@@ -17,8 +17,8 @@ document.adoptedStyleSheets.push(
 
 		@media (prefers-color-scheme: light) {
 			:root {
-				--base: #fff;
-				--pop: #000;
+				--base: #cad1f5;
+				--pop: #030614;
 
 				--success: #4caf50;
 				--fail: #f44336;
