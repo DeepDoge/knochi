@@ -42,9 +42,9 @@ host.onclose((event) => {
 
 document.body.append(host.element);
 
-const searchParam = new SearchParamsSignal<"true">("connect");
+const searchParam = new SearchParamsSignal<"open">("connect");
 searchParam.follow((value) => {
-	if (value === "true") {
+	if (value === "open") {
 		host.element.showModal();
 	} else {
 		host.element.close();
@@ -52,4 +52,4 @@ searchParam.follow((value) => {
 }, true);
 
 export { searchParam as connectWalletSearchParam };
-export const connectWalletShowModalHref = searchParam.toHref("true");
+export const connectWalletShowModalHref = searchParam.toHref("open");
