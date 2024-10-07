@@ -20,30 +20,6 @@ function App() {
 		.id("app")
 		.use(scopeCss(AppCss))
 		.use((element) => {
-			{
-				const isOpen = getIsOpen();
-				scroll(isOpen, "instant");
-			}
-
-			const unfollowMenuSearchParam = menuSearchParam.follow((param) => scroll(getIsOpen(param), "smooth"));
-
-			window.addEventListener("resize", handleResize);
-			function handleResize() {
-				const isOpen = getIsOpen();
-				scroll(isOpen, "instant");
-			}
-
-			element.addEventListener("scrollend", handleScrollEnd);
-			function handleScrollEnd() {
-				const isOpen = updateIsOpen();
-				scroll(isOpen, "smooth");
-			}
-
-			element.addEventListener("scroll", handleScroll);
-			function handleScroll() {
-				updateStaticState();
-			}
-
 			function scroll(isOpen: boolean, behavior: ScrollBehavior) {
 				const left = isOpen ? 0 : Number.MAX_SAFE_INTEGER;
 				element.scrollTo({ left, behavior });
@@ -70,7 +46,7 @@ function App() {
 				const scrollProgress = getScrollProgress();
 				const isStatic = scrollProgress === 1 || element.scrollWidth === element.clientWidth;
 
-				if (isStatic === isStaticCache) return;
+				if (isStatic === isStaticCache) return isStatic;
 
 				if (isStatic) {
 					const scrollY = mainElement.scrollTop;
@@ -87,6 +63,26 @@ function App() {
 				}
 
 				return isStatic;
+			}
+
+			handleResize();
+			const unfollowMenuSearchParam = menuSearchParam.follow((param) => scroll(getIsOpen(param), "smooth"));
+
+			window.addEventListener("resize", handleResize);
+			function handleResize() {
+				const isOpen = updateStaticState() ? updateIsOpen() : getIsOpen();
+				scroll(isOpen, "instant");
+			}
+
+			element.addEventListener("scrollend", handleScrollEnd);
+			function handleScrollEnd() {
+				const isOpen = updateIsOpen();
+				scroll(isOpen, "smooth");
+			}
+
+			element.addEventListener("scroll", handleScroll);
+			function handleScroll() {
+				updateStaticState();
 			}
 
 			return () => {
@@ -159,6 +155,8 @@ const AppCss = css`
 	main {
 		grid-row: 1;
 		grid-column: main;
+
+		min-block-size: 100dvh;
 
 		padding-inline: 1em;
 		padding-block: 1em;
