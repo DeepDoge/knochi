@@ -93,6 +93,10 @@ document.adoptedStyleSheets.push(
 			cursor: pointer;
 		}
 
+		[popover] {
+			max-block-size: 100dvh;
+		}
+
 		a {
 			text-decoration: none;
 		}
