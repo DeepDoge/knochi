@@ -20,7 +20,6 @@ function App() {
 		.id("app")
 		.use(scopeCss(AppCss))
 		.use((element) => {
-			// On element connect
 			{
 				const isOpen = getIsOpen();
 				scroll(isOpen, "instant");
