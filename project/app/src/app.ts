@@ -13,52 +13,78 @@ const documentScroller = document.scrollingElement ?? document.body;
 export const menuSearchParam = new SearchParamsSignal("menu");
 
 function App() {
-	let mainScrollActive = true;
-
 	let mainElement: HTMLElement;
 
 	return div()
 		.id("app")
 		.use(scopeCss(AppCss))
 		.use((element) => {
-			scroll(menuSearchParam.val, "instant");
-			element.addEventListener("scrollend", scrollEndHandler);
-			function scrollEndHandler() {
-				const scrollProgress = Math.min(1, element.scrollLeft / (element.scrollWidth - element.clientWidth));
+			scroll(Boolean(menuSearchParam.val), "instant");
+			const unfollow = menuSearchParam.follow((param) => scroll(Boolean(param), "smooth"));
 
-				scroll((menuSearchParam.val = scrollProgress < 0.5 ? "open" : null));
+			window.addEventListener("resize", handleResize);
+			function handleResize() {
+				const isOpen = updateIsOpen();
+				scroll(isOpen, "instant");
+			}
 
-				const atActivationFrame = scrollProgress === 1;
-				if (atActivationFrame) {
-					if (mainScrollActive) return;
+			element.addEventListener("scrollend", handleScrollEnd);
+			function handleScrollEnd() {
+				const isOpen = updateIsOpen();
+				scroll(isOpen, "smooth");
+			}
+
+			element.addEventListener("scroll", handleScroll);
+			function handleScroll() {
+				updateStaticState();
+			}
+
+			function scroll(isOpen: boolean, behavior: ScrollBehavior) {
+				const left = isOpen ? 0 : Number.MAX_SAFE_INTEGER;
+				element.scrollTo({ left, behavior });
+			}
+
+			function getScrollProgress() {
+				return Math.max(0, Math.min(1, element.scrollLeft / (element.scrollWidth - element.clientWidth)));
+			}
+
+			function updateIsOpen() {
+				const isStatic = updateStaticState();
+				const scrollProgress = getScrollProgress();
+				const isOpen = !isStatic && scrollProgress < 0.5;
+				menuSearchParam.val = isOpen ? "open" : null;
+				return isOpen;
+			}
+
+			let isStaticCache = true;
+			function updateStaticState() {
+				const scrollProgress = getScrollProgress();
+				const isStatic = scrollProgress === 1 || element.scrollWidth === element.clientWidth;
+
+				if (isStatic === isStaticCache) return;
+
+				if (isStatic) {
 					const scrollY = mainElement.scrollTop;
 					mainElement.style.overflow = "visible";
 					mainElement.style.blockSize = "";
 					documentScroller.scrollTop = scrollY;
-					mainScrollActive = true;
-				}
-
-				if (!atActivationFrame) {
-					if (!mainScrollActive) return;
+					isStaticCache = true;
+				} else {
 					const scrollY = documentScroller.scrollTop;
 					mainElement.style.overflow = "hidden";
 					mainElement.style.blockSize = "100dvh";
 					mainElement.scrollTop = scrollY;
-					mainScrollActive = false;
+					isStaticCache = false;
 				}
-			}
 
-			function scroll(menuSearchParam: string | null, behavior: ScrollBehavior = "smooth") {
-				const left = menuSearchParam ? 0 : element.scrollWidth - element.clientWidth;
-				if (left === element.scrollLeft) return;
-				element.scrollTo({ left, behavior });
+				return isStatic;
 			}
-
-			const unfollow = menuSearchParam.follow(scroll);
 
 			return () => {
 				unfollow();
-				element.removeEventListener("scrollend", scrollEndHandler);
+				window.removeEventListener("resize", handleResize);
+				element.removeEventListener("scrollend", handleScrollEnd);
+				element.removeEventListener("scroll", handleScroll);
 			};
 		})
 		.children(Header(), (mainElement = main().children(PostForm(), new Array(1024).fill("content ")).element));
