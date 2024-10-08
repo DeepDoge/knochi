@@ -1,16 +1,13 @@
--   [ ] I'm not gonna worry about it atm, but using `tx.origin` is kinda bad, and might cause spam on your profile. So we actually gotta sign messages.
+-   [ ] PostForm should have parts, not just text like on X or Facebook or Instagram. It should be more like a page builder.
+-   [ ] Instead of using tx.origin, Sender contract should give the sender address to the Indexer contract, and there should be permissions on the indexer contract that allows or disallows Sender contracts to index post in behalf of you.
+-   [ ] On the left side of header we should have feed list similar to X lists, at the top there is the default home list for your home feed.
+-   [ ] Users can have multiple feeds they can control, they have one main feed and they can also have different feeds to highlight different content.
+-   [ ] Indexers can also hold random metadata per user/account/wallet. Which can be used for avatars and more.
+-   [ ] Also we take feedId with end padded wallet address, is inbox for that wallet, this feed can be used to mention and notify the a wallet owner. For example while replying someone if you dont add your reply to the index feed of the user you are replying to they dont get notified of your reply. This can be used for many purposes suchs as mentions and more.
+-   [ ] Anyone can follow any feed, including someone else's inbox.
+-   [ ] Also we should mix same feedId from different chains on the same feed on the client side.
+-   [ ] Config page should be done.
 
-# Thinking
+Let's do all these first then, look for new stuff.
 
--   Right now, on the front end we might decide to do different things based on `msg.sender` so if the `msg.sender` is a unique kind of contract for example a tipping contract. We might also ask the contract for tipping information, like how much tip sent to who?. If front-end doesnt know the sender we treat it as a normal post. So the question now is should we use `msg.sender` which is cheap and easily understandable or makes some different signnature based thing? Well I think right it's good. So yeah I thinking using `msg.sender` is the best approach here. Not just easier or cheaper but also better less complex etc.
-
--   But we shouldn't use `tx.origin` because some contracts might decide to spam on our behalf which would be bad. We should have signature. But we shouldn't store the signature on the SSTORE that would be expensive. Instead, we should just verify it on the indexer and store the signer address only. After all all trust is on the indexer contract. Usually only one indexer contract should be enough per chain, and its not something dynamic like proxies. It can only be changed from the settings.
-
--   Knochi in the future can also support other decenterlized social media protocols, but real decenterlized ones. Not the ones that are called "decenterlized" but requires a whole brand and server to run. And that server stores stuff centerally.
-
-# Reminder to self
-
-Ok so im gonna change PostForm, it should be made out of parts. if same parts next to each other
-they can combine based on their logic, for example multiple pictures can create gallery look
-but everything should be a part.
-even text. so when creating a new post you select to add a part.
+After finishing everything, we can add support for different decenterlized protocols, and they can be mixed into feeds similar to how we mix different chains and networks on a single feed.
