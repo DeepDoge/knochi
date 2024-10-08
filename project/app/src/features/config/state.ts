@@ -1,4 +1,5 @@
 import { ref, Signal } from "purify-js";
+import logoSrc from "~/assets/svgs/chains/bitcoin.svg?url";
 import { db } from "~/utils/db/client";
 import { AddressHex } from "~/utils/hex";
 
@@ -8,7 +9,7 @@ export type Config = {
 export namespace Config {
 	export type Network = {
 		readonly name: string;
-		readonly logoSrc?: string | null;
+		readonly logoSrc: string;
 		readonly chainId: bigint;
 		readonly blockExplorer: string;
 		readonly nativeCurrency: {
@@ -27,6 +28,7 @@ const DEFAULT_CONFIG: Config = {
 	networks: [
 		{
 			name: "Local Dev",
+			logoSrc,
 			chainId: 1337n,
 			providers: ["http://localhost:7545"],
 			nativeCurrency: {
@@ -43,6 +45,7 @@ const DEFAULT_CONFIG: Config = {
 		},
 		{
 			name: "Local Dev 2",
+			logoSrc,
 			chainId: 1337n,
 			providers: ["http://localhost:7546"],
 			nativeCurrency: {

@@ -2,5 +2,8 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[solidity]": {
 		"editor.defaultFormatter": "JuanBlanco.solidity"
+	},
+	"[svg]": {
+		"editor.defaultFormatter": "jock.svg"
 	}
 }
