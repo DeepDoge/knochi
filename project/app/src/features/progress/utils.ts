@@ -81,6 +81,7 @@ host.use(
 	scopeCss(css`
 		:scope {
 			display: block grid;
+			justify-items: end;
 			padding: 0;
 
 			--margin: 0.5em;
@@ -89,7 +90,8 @@ host.use(
 			inset-block-end: var(--margin);
 			inset-inline-end: var(--margin);
 
-			inline-size: min(100%, 15em);
+			inline-size: fit-content;
+			max-inline-size: 20em;
 			gap: 0.4em;
 
 			z-index: 1;

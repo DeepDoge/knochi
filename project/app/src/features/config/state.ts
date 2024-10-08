@@ -35,9 +35,9 @@ const DEFAULT_CONFIG: Config = {
 			},
 			blockExplorer: "",
 			contracts: {
-				KnochiIndexer: "0xd296A483c1252308d419E66d6da5a814dcF06276",
+				KnochiIndexer: "0x2a41bb6D55813D84bfabB0f93f08A8788B439646",
 				KnochiProxies: {
-					SSTORE: "0x5d38d0AD2CB1a0f876056Fa4C18D5d66Aa8598db",
+					SSTORE: "0x2B338e9dC4306c34290980Cf1Fb8880A3BDBC28B",
 				},
 			},
 		},

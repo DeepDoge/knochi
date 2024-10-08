@@ -1,5 +1,5 @@
 -   [ ] PostForm should have parts, not just text like on X or Facebook or Instagram. It should be more like a page builder.
--   [ ] Instead of using tx.origin, Sender contract should give the sender address to the Indexer contract, and there should be permissions on the indexer contract that allows or disallows Sender contracts to index post in behalf of you.
+-   [x] Instead of using tx.origin, Sender contract should give the sender address to the Indexer contract, and there should be permissions on the indexer contract that allows or disallows Sender contracts to index post in behalf of you.
 -   [ ] On the left side of header we should have feed list similar to X lists, at the top there is the default home list for your home feed.
 -   [ ] Users can have multiple feeds they can control, they have one main feed and they can also have different feeds to highlight different content.
 -   [ ] Indexers can also hold random metadata per user/account/wallet. Which can be used for avatars and more.

@@ -16,6 +16,7 @@
 		"contracts:compile": "npm run compile --prefix ./project/contracts"
 	},
 	"devDependencies": {
+		"@openzeppelin/contracts": "^5.0.2",
 		"@total-typescript/ts-reset": "^0.5.1",
 		"console-log-colors": "^0.4.0",
 		"npm-run-all": "^4.1.5",

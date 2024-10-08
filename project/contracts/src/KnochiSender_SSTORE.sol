@@ -10,7 +10,7 @@ contract KnochiSender_SSTORE is IKnochiSender {
 	function post(IKnochiIndexer indexer, bytes32[] calldata feedIds, bytes memory postData) external {
 		uint96 postId = counter++;
 		store[postId] = postData;
-		indexer.index(feedIds, postId);
+		indexer.index(feedIds, postId, msg.sender);
 	}
 
 	function get(uint96 postId) external view returns (bytes memory postData) {

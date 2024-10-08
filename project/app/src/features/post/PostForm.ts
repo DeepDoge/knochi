@@ -1,11 +1,11 @@
-import { IKnochiSender } from "@root/contracts/connect";
-import { zeroPadBytes } from "ethers";
+import { IKnochiIndexer, IKnochiSender } from "@root/contracts/connect";
 import { awaited, computed, ref, tags } from "purify-js";
 import { currentConfig } from "~/features/config/state";
 import { PostContent } from "~/features/post/utils";
 import { trackPromise } from "~/features/progress/utils";
 import { connectWalletSearchParam } from "~/features/wallet/popover";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
+import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { bind } from "~/utils/actions/bind";
 import { css, scopeCss } from "~/utils/style";
 import { uniqueId } from "~/utils/unique";
@@ -48,8 +48,8 @@ export function PostForm() {
 				const indexerAddress = network.contracts.KnochiIndexer;
 				if (!indexerAddress) return;
 
-				const proxyAddress = currentProxy.val;
-				if (!proxyAddress) return;
+				const senderAddress = currentProxy.val;
+				if (!senderAddress) return;
 
 				const wallet = currentWalletDetail.val;
 				if (!wallet) {
@@ -62,11 +62,21 @@ export function PostForm() {
 					alert("Something went wrong");
 					return;
 				}
-				const proxyContract = IKnochiSender.connect(signer, proxyAddress);
 
-				const tx = await proxyContract.post(
+				const indexerContract = IKnochiIndexer.connect(signer, indexerAddress);
+				const senderContract = IKnochiSender.connect(signer, senderAddress);
+
+				if (!(await indexerContract.checkPermission(signer.address, senderAddress))) {
+					await trackPromise(
+						"Grant Permission",
+						["Index posts in behalf of you", WalletAddress(senderAddress)],
+						indexerContract.grantPermission(senderAddress),
+					);
+				}
+
+				const tx = await senderContract.post(
 					indexerAddress,
-					[zeroPadBytes(signer.address, 32)],
+					[`0x00${signer.address.slice(2)}${"00".repeat(32 - 1 - 20)}`],
 					textEncoded.val,
 				);
 			})();
