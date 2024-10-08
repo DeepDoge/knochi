@@ -28,11 +28,11 @@ export function PostForm() {
 	const proxyContractEntries = proxyContracts.derive((proxyContracts) =>
 		proxyContracts ? Object.entries(proxyContracts) : null,
 	);
-	const currentProxyKey = ref("");
+	const currentSenderKey = ref("");
 	host.element.onConnect(() =>
-		proxyContractEntries.follow((entries) => (currentProxyKey.val = entries?.[0]?.[0] ?? ""), true),
+		proxyContractEntries.follow((entries) => (currentSenderKey.val = entries?.[0]?.[0] ?? ""), true),
 	);
-	const currentProxy = computed((add) => add(proxyContracts).val?.[add(currentProxyKey).val] ?? null);
+	const currentSender = computed((add) => add(proxyContracts).val?.[add(currentSenderKey).val] ?? null);
 
 	const postForm = form()
 		.id(uniqueId("post-form"))
@@ -48,7 +48,7 @@ export function PostForm() {
 				const indexerAddress = network.contracts.KnochiIndexer;
 				if (!indexerAddress) return;
 
-				const senderAddress = currentProxy.val;
+				const senderAddress = currentSender.val;
 				if (!senderAddress) return;
 
 				const wallet = currentWalletDetail.val;
@@ -134,7 +134,7 @@ export function PostForm() {
 
 				return button({ form: postForm.id, class: "button" })
 					.type("submit")
-					.disabled(currentProxy.derive((currentProxy) => !currentProxy))
+					.disabled(currentSender.derive((currentProxy) => !currentProxy))
 					.children("Publish");
 			}),
 		),
