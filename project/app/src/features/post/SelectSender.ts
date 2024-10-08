@@ -54,7 +54,7 @@ export function SelectSender(params: { onChange: <T extends Config.Network>(sele
 					return "Select Sender";
 				}
 
-				return [sender.network.logoSrc ? img().src(sender.network.logoSrc) : null, sender.key];
+				return [img().src(sender.network.logoSrc), sender.key];
 			}),
 		);
 
