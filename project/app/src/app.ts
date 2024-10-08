@@ -3,7 +3,7 @@ import "./styles";
 import { fragment, tags } from "purify-js";
 import { PostForm } from "~/features/post/PostForm";
 import { progressListElement } from "~/features/progress/utils";
-import { connectWalletPopoverElement } from "~/features/wallet/popover";
+import { connectWalletPopoverElement } from "~/features/wallet/connectPopover";
 import { Header } from "~/Header";
 import { manifest } from "~/manifest";
 import { SearchParamsSignal } from "./features/router/url";

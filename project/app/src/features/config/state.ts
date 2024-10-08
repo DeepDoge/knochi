@@ -18,7 +18,7 @@ export namespace Config {
 		readonly providers: readonly [string, ...string[]];
 		readonly contracts: {
 			KnochiIndexer: AddressHex;
-			readonly KnochiProxies: Readonly<Record<string, AddressHex>>;
+			readonly KnochiSenders: Readonly<Record<string, AddressHex>>;
 		};
 	};
 }
@@ -36,7 +36,23 @@ const DEFAULT_CONFIG: Config = {
 			blockExplorer: "",
 			contracts: {
 				KnochiIndexer: "0x2a41bb6D55813D84bfabB0f93f08A8788B439646",
-				KnochiProxies: {
+				KnochiSenders: {
+					SSTORE: "0x2B338e9dC4306c34290980Cf1Fb8880A3BDBC28B",
+				},
+			},
+		},
+		{
+			name: "Local Dev 2",
+			chainId: 1337n,
+			providers: ["http://localhost:7546"],
+			nativeCurrency: {
+				symbol: "ETH",
+				decimals: 18,
+			},
+			blockExplorer: "",
+			contracts: {
+				KnochiIndexer: "0x2a41bb6D55813D84bfabB0f93f08A8788B439646",
+				KnochiSenders: {
 					SSTORE: "0x2B338e9dC4306c34290980Cf1Fb8880A3BDBC28B",
 				},
 			},

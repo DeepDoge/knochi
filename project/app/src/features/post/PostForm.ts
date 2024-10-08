@@ -1,9 +1,10 @@
 import { IKnochiIndexer, IKnochiSender } from "@root/contracts/connect";
 import { awaited, computed, ref, tags } from "purify-js";
 import { currentConfig } from "~/features/config/state";
+import { SelectSender } from "~/features/post/SelectSender";
 import { PostContent } from "~/features/post/utils";
 import { trackPromise } from "~/features/progress/utils";
-import { connectWalletSearchParam } from "~/features/wallet/popover";
+import { connectWalletSearchParam } from "~/features/wallet/connectPopover";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { bind } from "~/utils/actions/bind";
@@ -24,7 +25,7 @@ export function PostForm() {
 	const configAwaited = currentConfig.derive((config) => awaited(config));
 	const config = computed((add) => add(add(configAwaited).val).val);
 
-	const proxyContracts = config.derive((config) => config?.networks[0].contracts.KnochiProxies ?? null);
+	const proxyContracts = config.derive((config) => config?.networks[0].contracts.KnochiSenders ?? null);
 	const proxyContractEntries = proxyContracts.derive((proxyContracts) =>
 		proxyContracts ? Object.entries(proxyContracts) : null,
 	);
@@ -111,6 +112,7 @@ export function PostForm() {
 		div({ class: "actions" }).children(
 			small().children(textByteLength, " bytes"),
 			hr(),
+			SelectSender({ onChange: () => {} }),
 			computed((add) => {
 				const wallet = add(currentWalletDetail).val;
 				const signer = wallet ? add(wallet.signer).val : null;
