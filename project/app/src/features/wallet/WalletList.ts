@@ -1,19 +1,24 @@
 import { tags } from "purify-js";
+import { Config } from "~/features/config/state";
 import { trackPromise } from "~/features/progress/utils";
 import { css, scopeCss } from "~/utils/style";
 import { getOrRequestSigner, walletDetails } from "./utils";
 
 const { div, span, button, img, picture, ul, li } = tags;
 
-export function WalletList(params?: { onFinally?: () => unknown }) {
+export function WalletList(params: {
+	network: Config.Network | null;
+	onDone?: () => unknown;
+	onFinally?: () => unknown;
+}) {
 	return div()
 		.use(scopeCss(WalletListCss))
 		.children(
 			walletDetails.derive((walletDetails) =>
 				ul().children(
-					walletDetails.map((walletDetail) => {
+					walletDetails.map((wallet) => {
 						return li().children(
-							button({ style: `--icon: url(${walletDetail.info.icon})` })
+							button({ style: `--icon: url(${wallet.info.icon})` })
 								.onclick(() => {
 									trackPromise(
 										["Connect Wallet"],
@@ -33,19 +38,17 @@ export function WalletList(params?: { onFinally?: () => unknown }) {
 													"aspect-ratio:1",
 													"display:inline flow",
 												].join(";"),
-											}).src(walletDetail.info.icon),
-											span().textContent(walletDetail.info.name),
+											}).src(wallet.info.icon),
+											span().textContent(wallet.info.name),
 										),
-										getOrRequestSigner(walletDetail).finally(() => params?.onFinally?.()),
+										getOrRequestSigner({ wallet, network: params.network })
+											.then(() => params.onDone?.())
+											.finally(() => params.onFinally?.()),
 									);
 								})
 								.children(
-									div({ class: "box" }).children(
-										picture().children(img().src(walletDetail.info.icon)),
-									),
-									span({ class: "name" })
-										.title(walletDetail.info.name)
-										.children(walletDetail.info.name),
+									div({ class: "box" }).children(picture().children(img().src(wallet.info.icon))),
+									span({ class: "name" }).title(wallet.info.name).children(wallet.info.name),
 								),
 						);
 					}),

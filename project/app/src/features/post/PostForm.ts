@@ -3,7 +3,7 @@ import { zeroPadBytes } from "ethers";
 import { awaited, computed, ref, tags } from "purify-js";
 import { currentConfig } from "~/features/config/state";
 import { PostContent } from "~/features/post/utils";
-import { connectWalletShowPopoverHref } from "~/features/wallet/popover";
+import { connectWalletSearchParam } from "~/features/wallet/popover";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { bind } from "~/utils/actions/bind";
 import { css, scopeCss } from "~/utils/style";
@@ -39,13 +39,23 @@ export function PostForm() {
 		.onsubmit(async (event) => {
 			event.preventDefault();
 
-			const indexerAddress = config.val?.networks[0].contracts.KnochiIndexer;
+			const config = await currentConfig.val;
+
+			const network = config.networks[0];
+
+			const indexerAddress = network.contracts.KnochiIndexer;
 			if (!indexerAddress) return;
 
 			const proxyAddress = currentProxy.val;
 			if (!proxyAddress) return;
 
-			const signer = await getOrRequestSigner();
+			const wallet = currentWalletDetail.val;
+			if (!wallet) {
+				alert("Please connect your wallet");
+				return;
+			}
+
+			const signer = await getOrRequestSigner({ wallet, network });
 			if (!signer) {
 				alert("Something went wrong");
 				return;
@@ -76,12 +86,25 @@ export function PostForm() {
 			small().children(textByteLength, " bytes"),
 			hr(),
 			computed((add) => {
-				const detail = add(currentWalletDetail).val;
-				const signer = detail ? add(detail.signer).val : null;
+				const wallet = add(currentWalletDetail).val;
+				const signer = wallet ? add(wallet.signer).val : null;
 
-				if (!signer) {
-					return a({ class: "button" }).href(connectWalletShowPopoverHref).textContent("Connect Wallet");
+				const targetNetworkIndex = 0;
+				const targetNetwork = add(config).val?.networks[targetNetworkIndex] ?? null;
+
+				if (!signer || !wallet) {
+					return a({ class: "button" })
+						.href(connectWalletSearchParam.toHref(`${targetNetworkIndex}`))
+						.textContent("Connect Wallet");
 				}
+
+				/* 	const network = wallet ? add(wallet.network).val : null;
+
+				if (network?.chainId !== targetNetwork?.chainId) {
+					return button({ class: "button" })
+						.onclick(() => getOrRequestSigner({ wallet, network: targetNetwork }))
+						.textContent("Switch Network");
+				} */
 
 				return button({ form: postForm.id, class: "button" })
 					.type("submit")

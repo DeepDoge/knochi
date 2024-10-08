@@ -1,4 +1,5 @@
-import { tags } from "purify-js";
+import { awaited, computed, tags } from "purify-js";
+import { currentConfig } from "~/features/config/state";
 import { SearchParamsSignal } from "~/features/router/url";
 import { css, scopeCss } from "~/utils/style";
 import { WalletList } from "./WalletList";
@@ -6,13 +7,32 @@ import { WalletList } from "./WalletList";
 const { div, strong } = tags;
 
 const host = div().id("connect-wallet").popover("auto");
+export const connectWalletPopoverElement = host.element;
 
-host.children(strong().textContent("Connect Wallet"), WalletList({ onFinally: () => host.element.hidePopover() }));
+export const connectWalletSearchParam = new SearchParamsSignal<`${number}` | "auto">("connect");
+const searchParamNetwork = computed(async (add) => {
+	const indexOrNaN = Number(add(connectWalletSearchParam).val);
+	if (isNaN(indexOrNaN)) return null;
 
-const searchParam = new SearchParamsSignal<"open">("connect");
+	const config = await add(currentConfig).val;
+	return config.networks[indexOrNaN] ?? null;
+});
+
+host.children(
+	strong().textContent("Connect Wallet"),
+	searchParamNetwork.derive((network) =>
+		awaited(
+			network.then((network) => {
+				return WalletList({ network, onDone: () => host.element.hidePopover() });
+			}),
+			"Loading...",
+		),
+	),
+);
+
 host.use(() =>
-	searchParam.follow((value) => {
-		if (value === "open") {
+	connectWalletSearchParam.follow((value) => {
+		if (value) {
 			host.element.showPopover();
 		} else {
 			host.element.hidePopover();
@@ -21,11 +41,14 @@ host.use(() =>
 );
 host.ontoggle((event) => {
 	if (!(event instanceof ToggleEvent)) return;
-	searchParam.val = event.newState === "open" ? "open" : null;
-});
 
-export const connectWalletPopoverElement = host.element;
-export const connectWalletShowPopoverHref = searchParam.toHref("open");
+	if (event.newState === "open") {
+		if (connectWalletSearchParam.val) return;
+		connectWalletSearchParam.val = "auto";
+	} else {
+		connectWalletSearchParam.val = null;
+	}
+});
 
 host.use(
 	scopeCss(css`
