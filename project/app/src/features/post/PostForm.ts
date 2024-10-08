@@ -3,6 +3,7 @@ import { zeroPadBytes } from "ethers";
 import { awaited, computed, ref, tags } from "purify-js";
 import { currentConfig } from "~/features/config/state";
 import { PostContent } from "~/features/post/utils";
+import { trackPromise } from "~/features/progress/utils";
 import { connectWalletSearchParam } from "~/features/wallet/popover";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { bind } from "~/utils/actions/bind";
@@ -36,33 +37,48 @@ export function PostForm() {
 	const postForm = form()
 		.id(uniqueId("post-form"))
 		.hidden(true)
-		.onsubmit(async (event) => {
+		.onsubmit((event) => {
 			event.preventDefault();
 
-			const config = await currentConfig.val;
+			const promise = (async () => {
+				const config = await currentConfig.val;
 
-			const network = config.networks[0];
+				const network = config.networks[0];
 
-			const indexerAddress = network.contracts.KnochiIndexer;
-			if (!indexerAddress) return;
+				const indexerAddress = network.contracts.KnochiIndexer;
+				if (!indexerAddress) return;
 
-			const proxyAddress = currentProxy.val;
-			if (!proxyAddress) return;
+				const proxyAddress = currentProxy.val;
+				if (!proxyAddress) return;
 
-			const wallet = currentWalletDetail.val;
-			if (!wallet) {
-				alert("Please connect your wallet");
-				return;
-			}
+				const wallet = currentWalletDetail.val;
+				if (!wallet) {
+					alert("Please connect your wallet");
+					return;
+				}
 
-			const signer = await getOrRequestSigner({ wallet, network });
-			if (!signer) {
-				alert("Something went wrong");
-				return;
-			}
-			const proxyContract = IKnochiSender.connect(signer, proxyAddress);
+				const signer = await getOrRequestSigner({ wallet, network });
+				if (!signer) {
+					alert("Something went wrong");
+					return;
+				}
+				const proxyContract = IKnochiSender.connect(signer, proxyAddress);
 
-			const tx = await proxyContract.post(indexerAddress, [zeroPadBytes(signer.address, 32)], textEncoded.val);
+				const tx = await proxyContract.post(
+					indexerAddress,
+					[zeroPadBytes(signer.address, 32)],
+					textEncoded.val,
+				);
+			})();
+
+			trackPromise(
+				awaited(
+					promise.then(() => "Posted Content"),
+					"Posting Content...",
+				),
+				null,
+				promise,
+			);
 		}).element;
 
 	host.children(

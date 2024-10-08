@@ -86,7 +86,7 @@ host.use(
 			--margin: 0.5em;
 
 			position: fixed;
-			inset-block-start: var(--margin);
+			inset-block-end: var(--margin);
 			inset-inline-end: var(--margin);
 
 			inline-size: min(100%, 15em);
