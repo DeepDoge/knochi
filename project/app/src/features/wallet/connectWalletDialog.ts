@@ -81,7 +81,6 @@ const ConnectWalletDialogCss = css`
 
 		background-color: var(--base);
 		color: var(--pop);
-		border: solid color-mix(in srgb, var(--base), var(--pop) 10%);
 	}
 
 	strong {

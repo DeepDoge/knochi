@@ -9,7 +9,7 @@ export type SelectedSender = {
 };
 
 export function SelectSenderPopover(params: { onChange: (selectedSender: SelectedSender) => unknown }) {
-	return div()
+	const popover = div()
 		.popover("auto")
 		.children(
 			"Select Sender",
@@ -21,12 +21,15 @@ export function SelectSenderPopover(params: { onChange: (selectedSender: Selecte
 			li().children(
 				network.name,
 				ul().children(
-					Object.entries(network.contracts.KnochiSenders).map(([key, address]) => {
+					Object.entries(network.contracts.PostStores.Plain).map(([key, address]) => {
 						return li().children(
 							button()
 								.type("button")
 								.ariaDescription("Sender Option")
-								.onclick(() => params.onChange({ network, key }))
+								.onclick(() => {
+									popover.element.hidePopover();
+									params.onChange({ network, key });
+								})
 								.children(key, address),
 						);
 					}),
@@ -34,4 +37,6 @@ export function SelectSenderPopover(params: { onChange: (selectedSender: Selecte
 			),
 		);
 	}
+
+	return popover;
 }

@@ -114,6 +114,28 @@ document.adoptedStyleSheets.push(
 			max-block-size: 100dvh;
 		}
 
+		[role="group"] {
+			display: block grid;
+			grid-auto-flow: column;
+			gap: 0.5em;
+
+			&.input :focus {
+				outline: none;
+			}
+
+			&.input:has(:focus-visible) {
+				outline: solid 0.2em currentColor;
+			}
+		}
+
+		dialog::backdrop {
+			backdrop-filter: blur(2px)
+		}
+
+		dialog {
+			border-color: color-mix(in srgb, var(--base), var(--pop) 10%);
+		}
+
 		hr {
 			border-color: color-mix(in srgb, currentColor, transparent 75%);
 			margin-inline: 16%;
@@ -144,20 +166,6 @@ document.adoptedStyleSheets.push(
 		.visually-hidden {
 			position: absolute;
             scale: 0;
-		}
-
-		[role="group"] {
-			display: block grid;
-			grid-auto-flow: column;
-			gap: 0.5em;
-
-			&.input :focus {
-				outline: none;
-			}
-
-			&.input:has(:focus-visible) {
-				outline: solid 0.2em currentColor;
-			}
 		}
 	`),
 );

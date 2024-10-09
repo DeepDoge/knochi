@@ -1,4 +1,4 @@
-import { IKnochiIndexer, IKnochiSender } from "@root/contracts/connect";
+import { PostIndexer, PostStore_Plain } from "@root/contracts/connect";
 import { awaited, computed, ref, tags } from "purify-js";
 import { connectWalletDialog } from "~/app";
 import { SelectSenderButton } from "~/features/post/SelectSenderButton";
@@ -21,7 +21,7 @@ export function PostForm() {
 
 	const selectedSender = ref<SelectedSender | null>(null);
 	const currentSender = selectedSender.derive(
-		(sender) => sender?.network.contracts.KnochiSenders[sender.key] ?? null,
+		(sender) => sender?.network.contracts.PostStores.Plain[sender.key] ?? null,
 	);
 
 	const host = form()
@@ -33,7 +33,7 @@ export function PostForm() {
 				const network = selectedSender.val?.network ?? null;
 				if (!network) return;
 
-				const indexerAddress = network.contracts.KnochiIndexer;
+				const indexerAddress = network.contracts.PostIndexer;
 				if (!indexerAddress) return;
 
 				const senderAddress = currentSender.val;
@@ -51,8 +51,8 @@ export function PostForm() {
 					return;
 				}
 
-				const indexerContract = IKnochiIndexer.connect(signer, indexerAddress);
-				const senderContract = IKnochiSender.connect(signer, senderAddress);
+				const indexerContract = PostIndexer.connect(signer, indexerAddress);
+				const postStoreContract = PostStore_Plain.connect(signer, senderAddress);
 
 				if (!(await indexerContract.checkPermission(signer.address, senderAddress))) {
 					await trackPromise(
@@ -62,7 +62,7 @@ export function PostForm() {
 					);
 				}
 
-				const tx = await senderContract.post(
+				const tx = await postStoreContract.post(
 					indexerAddress,
 					[`0x00${signer.address.slice(2)}${"00".repeat(32 - 1 - 20)}`],
 					textEncoded.val,

@@ -20,8 +20,10 @@ export namespace Config {
 		};
 		readonly providers: readonly [string, ...string[]];
 		readonly contracts: {
-			KnochiIndexer: AddressHex;
-			readonly KnochiSenders: Readonly<Record<string, AddressHex>>;
+			readonly PostIndexer: AddressHex;
+			readonly PostStores: {
+				readonly Plain: Readonly<Record<string, AddressHex>>;
+			};
 		};
 	};
 	export namespace Network {
@@ -42,9 +44,11 @@ const DEFAULT_CONFIG = {
 			},
 			blockExplorer: "",
 			contracts: {
-				KnochiIndexer: "0x2a41bb6D55813D84bfabB0f93f08A8788B439646",
-				KnochiSenders: {
-					SSTORE: "0x2B338e9dC4306c34290980Cf1Fb8880A3BDBC28B",
+				PostIndexer: "0x2a41bb6D55813D84bfabB0f93f08A8788B439646",
+				PostStores: {
+					Plain: {
+						SSTORE: "0x2B338e9dC4306c34290980Cf1Fb8880A3BDBC28B",
+					},
 				},
 			},
 		},

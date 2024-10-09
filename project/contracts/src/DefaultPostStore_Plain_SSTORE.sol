@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "./IKnochiSender.sol";
-import "./IKnochiIndexer.sol";
+import "./PostStore_Plain.sol";
+import "./PostIndexer.sol";
 
-contract KnochiSender_SSTORE is IKnochiSender {
+contract DefaultPostStore_Plain_SSTORE is PostStore_Plain {
 	mapping(uint96 => bytes) public store;
 	uint96 public counter;
 
-	function post(IKnochiIndexer indexer, bytes32[] calldata feedIds, bytes memory postData) external {
+	function post(PostIndexer indexer, bytes32[] calldata feedIds, bytes memory postData) external {
 		uint96 postId = counter++;
 		store[postId] = postData;
-		indexer.index(feedIds, postId, msg.sender);
+		indexer.index(feedIds, this, postId, msg.sender);
 	}
 
 	function get(uint96 postId) external view returns (bytes memory postData) {

@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "./IKnochiIndexer.sol";
 
-contract KnochiDefaultIndexer is IKnochiIndexer {
+import "./PostIndexer.sol";
+import "./PostStore.sol";
+
+contract DefaultPostIndexer is PostIndexer {
 	mapping(address => mapping(address => bool)) public allowedSenders;
 
 	function grantPermission(address sender) external {
@@ -20,16 +22,21 @@ contract KnochiDefaultIndexer is IKnochiIndexer {
 	struct Post {
 		address author;
 		uint96 postId;
-		address sender;
+		PostStore postStore;
 		uint96 time;
 	}
 
 	mapping(bytes32 => Post[]) public feeds;
 
-	function index(bytes32[] memory feedIds, uint96 postId, address author) external {
+	function index(bytes32[] memory feedIds, PostStore postStore, uint96 postId, address author) external {
 		require(allowedSenders[author][msg.sender] == true, "Sender not allowed to index for this author");
 
-		Post memory post = Post({ author: author, postId: postId, sender: msg.sender, time: uint96(block.timestamp) });
+		Post memory post = Post({
+			author: author,
+			postId: postId,
+			postStore: postStore,
+			time: uint96(block.timestamp)
+		});
 
 		for (uint256 i = 0; i < feedIds.length; i++) {
 			bytes32 feedId = feedIds[i];
@@ -39,7 +46,7 @@ contract KnochiDefaultIndexer is IKnochiIndexer {
 			}
 
 			feeds[feedId].push(post);
-			emit KnochiPost(feedId, postId);
+			emit NewPostIndex(feedId, postId);
 		}
 	}
 
@@ -50,8 +57,8 @@ contract KnochiDefaultIndexer is IKnochiIndexer {
 	function get(
 		bytes32 feedId,
 		uint256 postIndex
-	) external view returns (address author, uint96 postId, address sender, uint96 time) {
+	) external view returns (address author, uint96 postId, PostStore postStore, uint96 time) {
 		Post memory post = feeds[feedId][postIndex];
-		return (post.author, post.postId, post.sender, post.time);
+		return (post.author, post.postId, postStore, post.time);
 	}
 }

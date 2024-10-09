@@ -1,4 +1,4 @@
-import { IKnochiIndexer, IKnochiSender } from "@root/contracts/connect";
+import { PostIndexer, PostStore } from "@root/contracts/connect";
 import { JsonRpcProvider, toBeHex } from "ethers";
 import { currentConfig } from "~/features/config/state";
 import { db } from "~/utils/db/client";
@@ -22,8 +22,14 @@ export type FeedPost = {
 
 export async function getFeed({ feedId, cursor, direction, limit }: GetFeedParameters): Promise<FeedPost[]> {
 	const config = await currentConfig.val;
-	const provider = new JsonRpcProvider(config.networks[0].providers[0]);
-	const indexerContract = IKnochiIndexer.connect(provider, config.networks[0].contracts.KnochiIndexer);
+	const network = Object.values(config.networks)[0];
+
+	if (!network) {
+		return [];
+	}
+
+	const provider = new JsonRpcProvider(network.providers[0]);
+	const indexerContract = PostIndexer.connect(provider, network.contracts.PostIndexer);
 
 	const postPromises: Promise<FeedPost>[] = [];
 	const length = await indexerContract.length(feedId);
@@ -41,7 +47,7 @@ export async function getFeed({ feedId, cursor, direction, limit }: GetFeedParam
 				let dbPost = await db.find("Post").byKey([sender, postIdHex]);
 
 				if (!dbPost) {
-					const proxyContract = IKnochiSender.connect(provider, sender);
+					const proxyContract = PostStore.connect(provider, sender);
 					dbPost = {
 						proxyContractAddress: sender,
 						postIdHex,

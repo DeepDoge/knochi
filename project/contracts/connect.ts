@@ -1,26 +1,26 @@
 import { Contract, ContractRunner } from "ethers";
 import type { TypedContract } from "typify-contracts/types/ethers6/typedContract";
-import { IKnochiIndexer_ABI } from "./artifacts/IKnochiIndexer";
-import { IKnochiSender_ABI } from "./artifacts/IKnochiSender";
-import { IKnochiStore_ABI } from "./artifacts/IKnochiStore";
+import { PostIndexer_ABI } from "./artifacts/PostIndexer";
+import { PostStore_ABI } from "./artifacts/PostStore";
+import { PostStore_Plain_ABI } from "./artifacts/PostStore_Plain";
 
-export namespace IKnochiSender {
-	export type Contract = TypedContract<IKnochiSender_ABI>;
+export namespace PostStore {
+	export type Contract = TypedContract<PostStore_ABI>;
 	export function connect(runner: ContractRunner, address: string) {
-		return new Contract(address, IKnochiSender_ABI).connect(runner) as Contract;
+		return new Contract(address, PostStore_ABI).connect(runner) as Contract;
 	}
 }
 
-export namespace IKnochiStore {
-	export type Contract = TypedContract<IKnochiStore_ABI>;
+export namespace PostStore_Plain {
+	export type Contract = TypedContract<PostStore_Plain_ABI>;
 	export function connect(runner: ContractRunner, address: string) {
-		return new Contract(address, IKnochiStore_ABI).connect(runner) as Contract;
+		return new Contract(address, PostStore_Plain_ABI).connect(runner) as Contract;
 	}
 }
 
-export namespace IKnochiIndexer {
-	export type Contract = TypedContract<IKnochiIndexer_ABI>;
+export namespace PostIndexer {
+	export type Contract = TypedContract<PostIndexer_ABI>;
 	export function connect(runner: ContractRunner, address: string) {
-		return new Contract(address, IKnochiIndexer_ABI).connect(runner) as Contract;
+		return new Contract(address, PostIndexer_ABI).connect(runner) as Contract;
 	}
 }
