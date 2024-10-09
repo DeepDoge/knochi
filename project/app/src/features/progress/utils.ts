@@ -90,8 +90,7 @@ host.use(
 			inset-block-end: var(--margin);
 			inset-inline-end: var(--margin);
 
-			inline-size: fit-content;
-			max-inline-size: 20em;
+			inline-size: min(max-content, 20em, 100%);
 			gap: 0.4em;
 
 			z-index: 1;
