@@ -8,7 +8,7 @@ import { trackPromise } from "~/features/progress/utils";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { bind } from "~/utils/actions/bind";
-import { css, scopeCss } from "~/utils/style";
+import { css, scope } from "~/utils/style";
 
 const { form, div, textarea, button, small, hr, a } = tags;
 
@@ -25,7 +25,7 @@ export function PostForm() {
 	);
 
 	const host = form()
-		.use(scopeCss(PostFormCss))
+		.use(scope(PostFormCss))
 		.onsubmit((event) => {
 			event.preventDefault();
 

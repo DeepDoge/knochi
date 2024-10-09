@@ -7,7 +7,7 @@ import { createConnectWalletDialog } from "~/features/wallet/connectWalletDialog
 import { Header } from "~/Header";
 import { manifest } from "~/manifest";
 import { SearchParamsSignal } from "./features/router/url";
-import { css, scopeCss } from "./utils/style";
+import { css, scope } from "./utils/style";
 
 const { div, main, link } = tags;
 
@@ -23,7 +23,7 @@ function App() {
 
 	return div()
 		.id("app")
-		.use(scopeCss(AppCss))
+		.use(scope(AppCss))
 		.use(connectWalletDialog.connect)
 		.use((element) => {
 			function scroll(isOpen: boolean, behavior: ScrollBehavior) {

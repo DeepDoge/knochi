@@ -2,7 +2,7 @@ import { awaited, computed, tags } from "purify-js";
 import { Config, currentConfig } from "~/features/config/state";
 import { SearchParamsSignal } from "~/features/router/url";
 import { WalletList } from "~/features/wallet/WalletList";
-import { css, scopeCss } from "~/utils/style";
+import { css, scope } from "~/utils/style";
 
 const { dialog, form, strong } = tags;
 
@@ -25,7 +25,7 @@ export function createConnectWalletDialog(searchParamName: string) {
 	});
 
 	const connectWalletDialog = dialog()
-		.use(scopeCss(ConnectWalletDialogCss))
+		.use(scope(ConnectWalletDialogCss))
 		.use((element) =>
 			searchParam.follow((value) => {
 				if (value) {

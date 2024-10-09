@@ -2,7 +2,7 @@ import { JsonRpcSigner } from "ethers";
 import { tags } from "purify-js";
 import { Config } from "~/features/config/state";
 import { trackPromise } from "~/features/progress/utils";
-import { css, scopeCss } from "~/utils/style";
+import { css, scope } from "~/utils/style";
 import { getOrRequestSigner, walletDetails } from "./utils";
 
 const { div, span, button, img, picture, ul, li } = tags;
@@ -13,7 +13,7 @@ export function WalletList(params: {
 	onFinally?: () => unknown;
 }) {
 	return div()
-		.use(scopeCss(WalletListCss))
+		.use(scope(WalletListCss))
 		.children(
 			walletDetails.derive((walletDetails) =>
 				ul().children(

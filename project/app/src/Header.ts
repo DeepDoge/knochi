@@ -5,7 +5,7 @@ import { currentPathname } from "~/features/router/url";
 import { currentWalletDetail } from "~/features/wallet/utils";
 import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { WalletAvatarSvg } from "~/features/wallet/WalletAvatarSvg";
-import { css, scopeCss } from "~/utils/style";
+import { css, scope } from "~/utils/style";
 
 const { div, header, a, hr, nav, ul, li, section } = tags;
 
@@ -18,7 +18,7 @@ export function Header() {
 	});
 
 	return header()
-		.use(scopeCss(HeaderCss))
+		.use(scope(HeaderCss))
 		.children(
 			div()
 				.role("tablist")

@@ -2,7 +2,7 @@ import { MemberOf, ref, tags } from "purify-js";
 import { ErrorSvg } from "~/assets/svgs/ErrorSvg";
 import { LoadingSvg } from "~/assets/svgs/LoadingSvg";
 import { SuccessSvg } from "~/assets/svgs/SuccessSvg";
-import { css, scopeCss } from "~/utils/style";
+import { css, scope } from "~/utils/style";
 
 const DELETE_TIMEOUT_MS = 5 * 1000;
 
@@ -78,7 +78,7 @@ export function trackPromise<T extends Promise<unknown>>(
 }
 
 host.use(
-	scopeCss(css`
+	scope(css`
 		:scope {
 			display: block grid;
 			justify-items: end;

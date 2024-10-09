@@ -1,7 +1,7 @@
 import { getAddress } from "ethers";
 import { tags } from "purify-js";
 import { AddressHex } from "~/utils/hex";
-import { css, scopeCss } from "~/utils/style";
+import { css, scope } from "~/utils/style";
 
 const { span } = tags;
 
@@ -12,7 +12,7 @@ export function WalletAddress(address: AddressHex, suffixLength = 3) {
 	const suffix = address.slice(-suffixLength);
 
 	return span()
-		.use(scopeCss(AddressTextCss))
+		.use(scope(AddressTextCss))
 		.children(span({ class: "prefix" }).textContent(prefix), span({ class: "suffix" }).textContent(suffix));
 }
 
