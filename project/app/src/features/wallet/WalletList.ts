@@ -1,3 +1,4 @@
+import { JsonRpcSigner } from "ethers";
 import { tags } from "purify-js";
 import { Config } from "~/features/config/state";
 import { trackPromise } from "~/features/progress/utils";
@@ -8,7 +9,7 @@ const { div, span, button, img, picture, ul, li } = tags;
 
 export function WalletList(params: {
 	network: Config.Network | null;
-	onDone?: () => unknown;
+	onDone?: (signer: JsonRpcSigner) => unknown;
 	onFinally?: () => unknown;
 }) {
 	return div()
@@ -19,6 +20,7 @@ export function WalletList(params: {
 					walletDetails.map((wallet) => {
 						return li().children(
 							button({ style: `--icon: url(${wallet.info.icon})` })
+								.type("button")
 								.onclick(() => {
 									trackPromise(
 										["Connect Wallet"],
@@ -42,7 +44,7 @@ export function WalletList(params: {
 											span().textContent(wallet.info.name),
 										),
 										getOrRequestSigner({ wallet, network: params.network })
-											.then(() => params.onDone?.())
+											.then((signer) => params.onDone?.(signer))
 											.finally(() => params.onFinally?.()),
 									);
 								})

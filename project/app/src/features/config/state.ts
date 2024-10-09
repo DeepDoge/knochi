@@ -4,13 +4,15 @@ import { db } from "~/utils/db/client";
 import { AddressHex } from "~/utils/hex";
 
 export type Config = {
-	readonly networks: readonly [Config.Network, ...Config.Network[]];
+	readonly networks: {
+		readonly [K in `${Config.Network.ChainId}`]: Config.Network;
+	};
 };
 export namespace Config {
 	export type Network = {
 		readonly name: string;
-		readonly logoSrc: string;
-		readonly chainId: bigint;
+		readonly iconSrc: string;
+		readonly chainId: Network.ChainId;
 		readonly blockExplorer: string;
 		readonly nativeCurrency: {
 			readonly symbol: string;
@@ -22,13 +24,16 @@ export namespace Config {
 			readonly KnochiSenders: Readonly<Record<string, AddressHex>>;
 		};
 	};
+	export namespace Network {
+		export type ChainId = bigint;
+	}
 }
 
-const DEFAULT_CONFIG: Config = {
-	networks: [
-		{
+const DEFAULT_CONFIG = {
+	networks: {
+		"1337": {
 			name: "Local Dev",
-			logoSrc,
+			iconSrc: logoSrc,
 			chainId: 1337n,
 			providers: ["http://localhost:7545"],
 			nativeCurrency: {
@@ -43,25 +48,8 @@ const DEFAULT_CONFIG: Config = {
 				},
 			},
 		},
-		{
-			name: "Local Dev 2",
-			logoSrc,
-			chainId: 1337n,
-			providers: ["http://localhost:7546"],
-			nativeCurrency: {
-				symbol: "ETH",
-				decimals: 18,
-			},
-			blockExplorer: "",
-			contracts: {
-				KnochiIndexer: "0x2a41bb6D55813D84bfabB0f93f08A8788B439646",
-				KnochiSenders: {
-					SSTORE: "0x2B338e9dC4306c34290980Cf1Fb8880A3BDBC28B",
-				},
-			},
-		},
-	],
-};
+	},
+} as const satisfies Config;
 
 const configState = ref<Promise<Config>>(
 	db

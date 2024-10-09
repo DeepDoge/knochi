@@ -86,18 +86,32 @@ document.adoptedStyleSheets.push(
 		}
 
 		button {
-			all: unset;
+			appearance: none;
+			border: none;
+			background: unset;
 			font: inherit;
 			color: inherit;
 			cursor: pointer;
+			padding: 0,
+			margin: 0;
 		}
 
-		[popover] {
-			max-block-size: 100dvh;
+		button:disabled {
+			cursor: not-allowed;
+			opacity: 0.5;
 		}
 
 		a {
 			text-decoration: none;
+		}
+
+		:is(.button, button, a):focus-visible {
+			outline: solid 0.2em currentColor;
+			outline-offset: -0.25em;
+		}
+
+		[popover] {
+			max-block-size: 100dvh;
 		}
 
 		hr {
@@ -113,11 +127,6 @@ document.adoptedStyleSheets.push(
 			background-color: color-mix(in srgb, var(--pop) 95%, var(--base));
 			color: var(--base);
 			text-align: center;
-		}
-
-		.button:focus-visible {
-			outline: solid 0.2em currentColor;
-			outline-offset: -0.25em;
 		}
 
 		.input {

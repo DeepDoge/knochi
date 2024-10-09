@@ -1,50 +1,37 @@
 import { IKnochiIndexer, IKnochiSender } from "@root/contracts/connect";
 import { awaited, computed, ref, tags } from "purify-js";
-import { currentConfig } from "~/features/config/state";
-import { SelectSender } from "~/features/post/SelectSender";
+import { connectWalletDialog } from "~/app";
+import { SelectSenderButton } from "~/features/post/SelectSenderButton";
+import { SelectedSender } from "~/features/post/SelectSenderPopover";
 import { PostContent } from "~/features/post/utils";
 import { trackPromise } from "~/features/progress/utils";
-import { connectWalletSearchParam } from "~/features/wallet/connectPopover";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { bind } from "~/utils/actions/bind";
 import { css, scopeCss } from "~/utils/style";
-import { uniqueId } from "~/utils/unique";
 
-const { form, div, textarea, button, small, hr, a, input, details, summary, ul, li, label } = tags;
+const { form, div, textarea, button, small, hr, a } = tags;
 
 export function PostForm() {
-	const host = div({ role: "form" }).use(scopeCss(PostFormCss));
-
 	const text = ref("");
 	const textEncoded = text.derive((text) =>
 		PostContent.toBytes([{ type: PostContent.Part.TypeMap.Text, value: text }]),
 	);
 	const textByteLength = textEncoded.derive((textEncoded) => textEncoded.byteLength);
 
-	const configAwaited = currentConfig.derive((config) => awaited(config));
-	const config = computed((add) => add(add(configAwaited).val).val);
-
-	const proxyContracts = config.derive((config) => config?.networks[0].contracts.KnochiSenders ?? null);
-	const proxyContractEntries = proxyContracts.derive((proxyContracts) =>
-		proxyContracts ? Object.entries(proxyContracts) : null,
+	const selectedSender = ref<SelectedSender | null>(null);
+	const currentSender = selectedSender.derive(
+		(sender) => sender?.network.contracts.KnochiSenders[sender.key] ?? null,
 	);
-	const currentSenderKey = ref("");
-	host.element.onConnect(() =>
-		proxyContractEntries.follow((entries) => (currentSenderKey.val = entries?.[0]?.[0] ?? ""), true),
-	);
-	const currentSender = computed((add) => add(proxyContracts).val?.[add(currentSenderKey).val] ?? null);
 
-	const postForm = form()
-		.id(uniqueId("post-form"))
-		.hidden(true)
+	const host = form()
+		.use(scopeCss(PostFormCss))
 		.onsubmit((event) => {
 			event.preventDefault();
 
 			const promise = (async () => {
-				const config = await currentConfig.val;
-
-				const network = config.networks[0];
+				const network = selectedSender.val?.network ?? null;
+				if (!network) return;
 
 				const indexerAddress = network.contracts.KnochiIndexer;
 				if (!indexerAddress) return;
@@ -90,57 +77,49 @@ export function PostForm() {
 				null,
 				promise,
 			);
-		}).element;
-
-	host.children(
-		postForm,
-		div({ class: "fields" }).children(
-			div({ class: "field input" }).children(
-				textarea({ form: postForm.id })
-					.name("content")
-					.required(true)
-					.ariaLabel("Post content")
-					.placeholder("Just say it...")
-					.use(bind(text, "value", "input"))
-					.oninput((event) => {
-						const textarea = event.currentTarget;
-						textarea.style.height = "auto";
-						textarea.style.height = `${textarea.scrollHeight}px`;
-					}),
+		})
+		.children(
+			div({ class: "fields" }).children(
+				div({ class: "field input" }).children(
+					textarea()
+						.name("content")
+						.required(true)
+						.ariaLabel("Post content")
+						.placeholder("Just say it...")
+						.use(bind(text, "value", "input"))
+						.oninput((event) => {
+							const textarea = event.currentTarget;
+							textarea.style.height = "auto";
+							textarea.style.height = `${textarea.scrollHeight}px`;
+						}),
+				),
 			),
-		),
-		div({ class: "actions" }).children(
-			small().children(textByteLength, " bytes"),
-			hr(),
-			SelectSender({ onChange: () => {} }),
-			computed((add) => {
-				const wallet = add(currentWalletDetail).val;
-				const signer = wallet ? add(wallet.signer).val : null;
+			div({ class: "actions" }).children(
+				small().children(textByteLength, " bytes"),
+				hr(),
+				SelectSenderButton({ selectedSender }),
+				computed((add) => {
+					const wallet = add(currentWalletDetail).val;
+					const signer = wallet ? add(wallet.signer).val : null;
 
-				const targetNetworkIndex = 0;
-				const targetNetwork = add(config).val?.networks[targetNetworkIndex] ?? null;
+					if (!signer || !wallet) {
+						return a({ class: "button" })
+							.href(
+								computed((add) => {
+									const value = add(selectedSender).val?.network.chainId ?? "open";
+									return add(connectWalletDialog.searchParam.toHref(`${value}`)).val;
+								}),
+							)
+							.textContent("Connect Wallet");
+					}
 
-				if (!signer || !wallet) {
-					return a({ class: "button" })
-						.href(connectWalletSearchParam.toHref(`${targetNetworkIndex}`))
-						.textContent("Connect Wallet");
-				}
-
-				/* 	const network = wallet ? add(wallet.network).val : null;
-
-				if (network?.chainId !== targetNetwork?.chainId) {
 					return button({ class: "button" })
-						.onclick(() => getOrRequestSigner({ wallet, network: targetNetwork }))
-						.textContent("Switch Network");
-				} */
-
-				return button({ form: postForm.id, class: "button" })
-					.type("submit")
-					.disabled(currentSender.derive((currentProxy) => !currentProxy))
-					.children("Publish");
-			}),
-		),
-	);
+						.type("submit")
+						.disabled(currentSender.derive((sender) => !sender))
+						.children("Publish");
+				}),
+			),
+		);
 
 	return host;
 }

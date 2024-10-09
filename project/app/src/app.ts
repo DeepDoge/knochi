@@ -3,7 +3,7 @@ import "./styles";
 import { fragment, tags } from "purify-js";
 import { PostForm } from "~/features/post/PostForm";
 import { progressListElement } from "~/features/progress/utils";
-import { connectWalletPopoverElement } from "~/features/wallet/connectPopover";
+import { createConnectWalletDialog } from "~/features/wallet/connectWalletDialog";
 import { Header } from "~/Header";
 import { manifest } from "~/manifest";
 import { SearchParamsSignal } from "./features/router/url";
@@ -16,12 +16,15 @@ const documentScroller = document.scrollingElement ?? document.body;
 export type MenuSearchParam = typeof menuSearchParam.val;
 export const menuSearchParam = new SearchParamsSignal<"open">("menu");
 
+export const connectWalletDialog = createConnectWalletDialog("connect");
+
 function App() {
 	let mainElement: HTMLElement;
 
 	return div()
 		.id("app")
 		.use(scopeCss(AppCss))
+		.use(connectWalletDialog.connect)
 		.use((element) => {
 			function scroll(isOpen: boolean, behavior: ScrollBehavior) {
 				const left = isOpen ? 0 : Number.MAX_SAFE_INTEGER;
@@ -174,4 +177,4 @@ document.head.append(
 			.href(`data:application/json,${encodeURIComponent(JSON.stringify(manifest))}`),
 	),
 );
-document.body.append(fragment(App(), connectWalletPopoverElement, progressListElement));
+document.body.append(fragment(App(), progressListElement));

@@ -1,7 +1,7 @@
 import { computed, tags } from "purify-js";
+import { connectWalletDialog } from "~/app";
 import { RssSvg } from "~/assets/svgs/RssSvg";
 import { currentPathname } from "~/features/router/url";
-import { connectWalletSearchParam } from "~/features/wallet/connectPopover";
 import { currentWalletDetail } from "~/features/wallet/utils";
 import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { WalletAvatarSvg } from "~/features/wallet/WalletAvatarSvg";
@@ -58,7 +58,7 @@ export function Header() {
 							);
 						} else {
 							return a({ class: "button" })
-								.href(connectWalletSearchParam.toHref("auto"))
+								.href(connectWalletDialog.searchParam.toHref("auto"))
 								.children("Connect Wallet");
 						}
 					}),
