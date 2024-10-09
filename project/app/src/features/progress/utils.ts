@@ -1,4 +1,4 @@
-import { MemberOf, ref, tags } from "purify-js";
+import { fragment, MemberOf, ref, tags } from "purify-js";
 import { ErrorSvg } from "~/assets/svgs/ErrorSvg";
 import { LoadingSvg } from "~/assets/svgs/LoadingSvg";
 import { SuccessSvg } from "~/assets/svgs/SuccessSvg";
@@ -6,7 +6,7 @@ import { css, scope } from "~/utils/style";
 
 const DELETE_TIMEOUT_MS = 5 * 1000;
 
-const { ul, li, strong, small } = tags;
+const { ul, li, strong, small, progress } = tags;
 
 const host = ul().id("progress-list");
 export const progressListElement = host.element;
@@ -30,7 +30,7 @@ export function trackPromise<T extends Promise<unknown>>(
 	});
 
 	const dynamic = status.derive<{
-		icon: SVGSVGElement | null;
+		icon: MemberOf<HTMLElement>;
 		background: string;
 		color: string;
 		busy: boolean;
@@ -38,21 +38,24 @@ export function trackPromise<T extends Promise<unknown>>(
 		switch (status) {
 			case "progress":
 				return {
-					icon: LoadingSvg(),
+					icon: fragment(progress({ class: "visually-hidden" }).ariaLabel("Loading..."), LoadingSvg()),
 					background: "var(--pop)",
 					color: "var(--base)",
 					busy: true,
 				};
 			case "success":
 				return {
-					icon: SuccessSvg(),
+					icon: fragment(
+						progress({ class: "visually-hidden" }).value(1).max(1).ariaLabel("Completed"),
+						SuccessSvg(),
+					),
 					background: "var(--success)",
 					color: "var(--pop)",
 					busy: false,
 				};
 			case "fail":
 				return {
-					icon: ErrorSvg(),
+					icon: fragment(progress({ class: "visually-hidden" }).ariaLabel("Failed"), ErrorSvg()),
 					background: "var(--fail)",
 					color: "var(--pop)",
 					busy: false,
@@ -66,7 +69,9 @@ export function trackPromise<T extends Promise<unknown>>(
 			[`background-color:${dynamic.background}`, `color:${dynamic.color}`].join(";"),
 		),
 	})
-		.ariaBusy(dynamic.derive((dynamic) => String(dynamic.busy)))
+		.role("status")
+		.ariaLive("assertive")
+		.ariaAtomic("true")
 		.children(
 			dynamic.derive((dynamic) => dynamic.icon),
 			strong().children(strongMembers),

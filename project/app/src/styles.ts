@@ -141,6 +141,11 @@ document.adoptedStyleSheets.push(
 			outline: solid 0.2em currentColor;
 		}
 
+		.visually-hidden {
+			position: absolute;
+            scale: 0;
+		}
+
 		[role="group"] {
 			display: block grid;
 			grid-auto-flow: column;
