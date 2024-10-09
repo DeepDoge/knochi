@@ -7,6 +7,8 @@
 -   [ ] Anyone can follow any feed, including someone else's inbox.
 -   [ ] Also we should mix same feedId from different chains on the same feed on the client side.
 -   [ ] Config page should be done.
+-   [ ] Make currentConfig non promise, also broadcast changes between tabs and stuff.
+-   [ ] remember wallet state, tbh for this and config i can just use local storage. makes more sense. why did i make a KV table anyway...
 
 Let's do all these first then, look for new stuff.
 
