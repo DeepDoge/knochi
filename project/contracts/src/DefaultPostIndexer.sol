@@ -19,6 +19,20 @@ contract DefaultPostIndexer is PostIndexer {
 		return allowedSenders[author][sender] == true;
 	}
 
+	mapping(address => mapping(bytes32 => bytes)) public metadata;
+
+	function setMetadata(address author, bytes32 key, bytes memory value) external {
+		require(
+			allowedSenders[author][msg.sender] == true || author == msg.sender,
+			"Sender not allowed to set metadata for this author"
+		);
+		metadata[author][key] = value;
+	}
+
+	function getMetadata(address author, bytes32 key) external view returns (bytes memory value) {
+		return metadata[author][key];
+	}
+
 	struct Post {
 		address author;
 		uint96 postId;
@@ -29,7 +43,10 @@ contract DefaultPostIndexer is PostIndexer {
 	mapping(bytes32 => Post[]) public feeds;
 
 	function index(bytes32[] memory feedIds, PostStore postStore, uint96 postId, address author) external {
-		require(allowedSenders[author][msg.sender] == true, "Sender not allowed to index for this author");
+		require(
+			allowedSenders[author][msg.sender] == true || author == msg.sender,
+			"Sender not allowed to index for this author"
+		);
 
 		Post memory post = Post({
 			author: author,

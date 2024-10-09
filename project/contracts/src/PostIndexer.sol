@@ -10,6 +10,9 @@ interface PostIndexer {
 	function revokePermission(address sender) external;
 	function checkPermission(address author, address sender) external view returns (bool);
 
+	function setMetadata(address author, bytes32 key, bytes memory value) external;
+	function getMetadata(address author, bytes32 key) external view returns (bytes memory value);
+
 	function index(bytes32[] calldata feedIds, PostStore postStore, uint96 postId, address author) external;
 	function length(bytes32 feedId) external view returns (uint256);
 	function get(
