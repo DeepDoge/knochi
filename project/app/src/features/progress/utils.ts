@@ -96,7 +96,7 @@ host.use(
 			inset-inline-end: var(--margin);
 
 			inline-size: max-content;
-			max-inline-size: min(20em, 100%)
+			max-inline-size: min(20em, 100%);
 			gap: 0.4em;
 
 			z-index: 1;
