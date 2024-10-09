@@ -175,7 +175,7 @@ const PostFormCss = css`
 
 	textarea {
 		resize: none;
-		min-height: 2em;
+		min-block-size: 2em;
 		font-size: 1.25em;
 		overflow-x: hidden;
 		overflow-wrap: break-word;

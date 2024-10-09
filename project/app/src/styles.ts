@@ -50,8 +50,7 @@ document.adoptedStyleSheets.push(
 		h6,
 		input,
 		select,
-		textarea,
-		hr {
+		textarea {
 			margin: 0;
 			padding: 0;
 		}
