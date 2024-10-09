@@ -135,7 +135,7 @@ document.adoptedStyleSheets.push(
 
 		[role="group"] {
 			display: block grid;
-			grid-template-columns: auto 1fr;
+			grid-auto-flow: column;
 			gap: 0.5em;
 
 			&.input :focus {
