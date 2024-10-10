@@ -63,7 +63,7 @@ function App() {
 				} else {
 					const scrollY = documentScroller.scrollTop;
 					mainElement.style.overflow = "hidden";
-					mainElement.style.blockSize = "100dvh";
+					mainElement.style.blockSize = "100dvb";
 					mainElement.scrollTop = scrollY;
 					isStaticCache = false;
 				}
@@ -152,7 +152,7 @@ const AppCss = css`
 
 		position: sticky;
 		inset-block-start: 0;
-		block-size: 100dvh;
+		block-size: 100dvb;
 
 		overflow: clip;
 	}
@@ -161,7 +161,7 @@ const AppCss = css`
 		grid-row: 1;
 		grid-column: main;
 
-		min-block-size: 100dvh;
+		min-block-size: 100dvb;
 
 		padding-inline: 1em;
 		padding-block: 1em;

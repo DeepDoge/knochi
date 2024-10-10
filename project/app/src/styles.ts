@@ -92,7 +92,7 @@ document.adoptedStyleSheets.push(
 			font: inherit;
 			color: inherit;
 			cursor: pointer;
-			padding: 0,
+			padding: 0;
 			margin: 0;
 		}
 
@@ -111,25 +111,25 @@ document.adoptedStyleSheets.push(
 		}
 
 		[popover] {
-			max-block-size: 100dvh;
+			max-block-size: 100dvb;
 		}
 
-		[role="group"] {
-			display: block grid;
-			grid-auto-flow: column;
-			gap: 0.5em;
+		[popover][anchor] {
+			margin: 0;
+			inset: 0;
 
-			&.input :focus {
-				outline: none;
-			}
+			position-area: span-inline-start block-end;
+			position-try:
+				flip-inline,
+				flip-block,
+				flip-block flip-inline;
 
-			&.input:has(:focus-visible) {
-				outline: solid 0.2em currentColor;
-			}
+			inline-size: max-content;
+			max-inline-size: 100dvi;
 		}
 
 		dialog::backdrop {
-			backdrop-filter: blur(2px)
+			background-color: color-mix(in srgb, var(--base), transparent 50%);
 		}
 
 		dialog {
@@ -165,7 +165,7 @@ document.adoptedStyleSheets.push(
 
 		.visually-hidden {
 			position: absolute;
-            scale: 0;
+			scale: 0;
 		}
 	`),
 );
