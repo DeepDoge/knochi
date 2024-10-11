@@ -1,5 +1,5 @@
+import { tags } from "@purifyjs/core";
 import { getAddress } from "ethers";
-import { tags } from "purify-js";
 import { AddressHex } from "~/utils/hex";
 import { css, scope } from "~/utils/style";
 

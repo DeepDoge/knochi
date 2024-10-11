@@ -1,4 +1,4 @@
-import { computed, ref, Signal } from "purify-js";
+import { computed, ref, Signal } from "@purifyjs/core";
 
 const hashSignal = ref(getHash());
 setInterval(() => (hashSignal.val = getHash()), 100);
@@ -29,8 +29,8 @@ const currentSearch = hashSignal.derive(getSearch);
 const currentSearchParams = currentSearch.derive(getSearchParams);
 
 export function hrefFromPath(pathname: string) {
-	return computed((add) => {
-		return `#${pathname}?${add(currentSearchParams).val}`;
+	return computed(() => {
+		return `#${pathname}?${currentSearchParams.val}`;
 	});
 }
 
@@ -53,8 +53,7 @@ export class SearchParamsSignal<T extends string> extends Signal.State<T | (stri
 	}
 
 	public toHref(value: T | (string & {}) | null) {
-		return computed((add) => {
-			add(hashSignal);
+		return hashSignal.derive(() => {
 			const pathname = currentPathname.val;
 			const searchParams = new URLSearchParams(currentSearchParams.val);
 			if (value === null) {

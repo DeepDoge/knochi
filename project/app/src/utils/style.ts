@@ -1,4 +1,4 @@
-import { Enhanced } from "purify-js";
+import { Enhanced } from "@purifyjs/core";
 import { uniqueId } from "~/utils/unique";
 
 declare global {

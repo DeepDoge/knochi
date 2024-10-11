@@ -1,4 +1,4 @@
-import { awaited, tags } from "purify-js";
+import { awaited, tags } from "@purifyjs/core";
 import { Config, currentConfig } from "~/features/config/state";
 
 const { div, button, ul, li } = tags;

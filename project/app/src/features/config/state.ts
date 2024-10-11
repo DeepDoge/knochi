@@ -1,4 +1,4 @@
-import { ref, Signal } from "purify-js";
+import { ref, Signal } from "@purifyjs/core";
 import logoSrc from "~/assets/svgs/chains/bitcoin.svg?url";
 import { db } from "~/utils/db/client";
 import { AddressHex } from "~/utils/hex";

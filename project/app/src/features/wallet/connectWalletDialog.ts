@@ -1,4 +1,4 @@
-import { awaited, computed, tags } from "purify-js";
+import { awaited, computed, tags } from "@purifyjs/core";
 import { Config, currentConfig } from "~/features/config/state";
 import { SearchParamsSignal } from "~/features/router/url";
 import { WalletList } from "~/features/wallet/WalletList";
@@ -11,15 +11,15 @@ export function createConnectWalletDialog(searchParamName: string) {
 	const searchParam = new SearchParamsSignal<`${Config.Network.ChainId}` | "open">(searchParamName);
 
 	const configAwaited = currentConfig.derive((config) => awaited(config));
-	const config = computed((add) => add(add(configAwaited).val).val);
+	const config = computed(() => configAwaited.val.val);
 
-	const searchParamNetwork = computed((add) => {
-		const searchParamValue = add(searchParam).val;
+	const searchParamNetwork = computed(() => {
+		const searchParamValue = searchParam.val;
 		if (!searchParamValue) return null;
 
 		try {
 			const chainId = BigInt(searchParamValue);
-			return add(config).val?.networks[`${chainId}`] ?? null;
+			return config.val?.networks[`${chainId}`] ?? null;
 		} catch {
 			return null;
 		}
@@ -73,8 +73,7 @@ export function createConnectWalletDialog(searchParamName: string) {
 }
 
 const ConnectWalletDialogCss = css`
-	:scope[open] {
-		display: block grid;
+	:scope {
 		align-content: start;
 
 		inline-size: min(100%, 40em);
@@ -83,6 +82,9 @@ const ConnectWalletDialogCss = css`
 
 		background-color: var(--base);
 		color: var(--pop);
+		&[open] {
+			display: block grid;
+		}
 	}
 
 	strong {

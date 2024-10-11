@@ -1,4 +1,4 @@
-import { fragment, ref, Signal, tags } from "purify-js";
+import { fragment, ref, Signal, tags } from "@purifyjs/core";
 import { SelectedSender, SelectSenderPopover } from "~/features/post/SelectSenderPopover";
 import { css, scope } from "~/utils/style";
 
@@ -20,6 +20,9 @@ export function SelectSenderButton(params?: {
 	return button()
 		.type("button")
 		.use(scope(SelectSenderButtonCss))
+		.use((element) => {
+			// selectSenderPopover.anchorElement = element;
+		})
 		.ariaDescription("Currently selected sender contract, click to change.")
 		.popoverTargetElement(selectSenderPopover)
 		.use((element) => {

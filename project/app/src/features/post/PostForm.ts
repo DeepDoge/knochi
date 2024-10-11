@@ -1,5 +1,5 @@
+import { awaited, computed, ref, tags } from "@purifyjs/core";
 import { PostIndexer, PostStore_Plain } from "@root/contracts/connect";
-import { awaited, computed, ref, tags } from "purify-js";
 import { connectWalletDialog } from "~/app";
 import { SelectSenderButton } from "~/features/post/SelectSenderButton";
 import { SelectedSender } from "~/features/post/SelectSenderPopover";
@@ -98,16 +98,16 @@ export function PostForm() {
 				small().children(textByteLength, " bytes"),
 				hr(),
 				SelectSenderButton({ selectedSender }),
-				computed((add) => {
-					const wallet = add(currentWalletDetail).val;
-					const signer = wallet ? add(wallet.signer).val : null;
+				computed(() => {
+					const wallet = currentWalletDetail.val;
+					const signer = wallet ? wallet.signer.val : null;
 
 					if (!signer || !wallet) {
 						return a({ class: "button" })
 							.href(
-								computed((add) => {
-									const value = add(selectedSender).val?.network.chainId ?? "open";
-									return add(connectWalletDialog.searchParam.toHref(`${value}`)).val;
+								computed(() => {
+									const value = selectedSender.val?.network.chainId ?? "open";
+									return connectWalletDialog.searchParam.toHref(`${value}`).val;
 								}),
 							)
 							.textContent("Connect Wallet");

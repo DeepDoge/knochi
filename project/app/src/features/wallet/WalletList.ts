@@ -1,5 +1,5 @@
+import { tags } from "@purifyjs/core";
 import { JsonRpcSigner } from "ethers";
-import { tags } from "purify-js";
 import { Config } from "~/features/config/state";
 import { trackPromise } from "~/features/progress/utils";
 import { css, scope } from "~/utils/style";

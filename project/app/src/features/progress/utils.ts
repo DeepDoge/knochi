@@ -1,4 +1,4 @@
-import { fragment, MemberOf, ref, tags } from "purify-js";
+import { fragment, MemberOf, ref, tags } from "@purifyjs/core";
 import { ErrorSvg } from "~/assets/svgs/ErrorSvg";
 import { LoadingSvg } from "~/assets/svgs/LoadingSvg";
 import { SuccessSvg } from "~/assets/svgs/SuccessSvg";
@@ -86,14 +86,15 @@ host.use(
 	scope(css`
 		:scope {
 			display: block grid;
-			justify-items: end;
+			justify-items: center;
 			padding: 0;
 
-			--margin: 0.5em;
+			--margin: 0.25em;
 
 			position: fixed;
-			inset-block-end: var(--margin);
-			inset-inline-end: var(--margin);
+			inset-block-start: var(--margin);
+			inset-inline: var(--margin);
+			margin-inline: auto;
 
 			inline-size: max-content;
 			max-inline-size: min(20em, 100%);

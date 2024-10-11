@@ -1,4 +1,4 @@
-import { Enhanced, Signal } from "purify-js";
+import { Enhanced, Signal } from "@purifyjs/core";
 
 export function bind<T, P extends keyof HTMLElement | (string & {})>(
 	signal: Signal.State<T>,

@@ -1,4 +1,4 @@
-import { tags } from "purify-js";
+import { tags } from "@purifyjs/core";
 import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { html } from "~/utils/html";
 import { instancesOf } from "~/utils/instanceOf";

@@ -1,4 +1,4 @@
-import { computed, tags } from "purify-js";
+import { computed, tags } from "@purifyjs/core";
 import { connectWalletDialog } from "~/app";
 import { RssSvg } from "~/assets/svgs/RssSvg";
 import { currentPathname } from "~/features/router/url";
@@ -10,10 +10,10 @@ import { css, scope } from "~/utils/style";
 const { div, header, a, hr, nav, ul, li, section } = tags;
 
 export function Header() {
-	const signerAddress = computed((add) => {
-		const detail = add(currentWalletDetail).val;
+	const signerAddress = computed(() => {
+		const detail = currentWalletDetail.val;
 		if (!detail) return null;
-		const signer = add(detail.signer).val;
+		const signer = detail.signer.val;
 		return signer?.address ?? null;
 	});
 

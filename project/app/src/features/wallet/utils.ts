@@ -1,5 +1,5 @@
+import { ref, Signal } from "@purifyjs/core";
 import { BrowserProvider, JsonRpcSigner, Network } from "ethers";
-import { ref, Signal } from "purify-js";
 import walletSrc from "~/assets/svgs/wallet.svg?url";
 import { Config } from "~/features/config/state";
 interface Eip1193Provider {

@@ -1,4 +1,4 @@
-import { Enhanced } from "purify-js";
+import { Enhanced } from "@purifyjs/core";
 
 export function clickClose(): Enhanced.OnConnected<HTMLDialogElement> {
 	return function (element) {

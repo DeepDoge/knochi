@@ -29,10 +29,10 @@
 		"vite-plugin-singlefile": "^2.0.2"
 	},
 	"dependencies": {
+		"@purifyjs/core": "npm:@jsr/purifyjs__core@^0.0.302",
 		"ethers": "^6.9.1",
 		"extra-bigint": "^1.1.18",
 		"jazzicon-ts": "^4.0.0",
-		"purify-js": "github:DeepDoge/purify.js#0.0.228",
 		"zod": "^3.22.4"
 	}
 }

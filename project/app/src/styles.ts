@@ -136,6 +136,57 @@ document.adoptedStyleSheets.push(
 			border-color: color-mix(in srgb, var(--base), var(--pop) 10%);
 		}
 
+		dialog {
+			transition:
+				display allow-discrete,
+				overlay allow-discrete,
+				scale ease-in-out,
+				opacity ease-in-out;
+			transition-duration: 0.15s;
+
+			scale: 0.75;
+			opacity: 0;
+		}
+
+		dialog[open] {
+			transition:
+				display allow-discrete,
+				overlay allow-discrete,
+				scale cubic-bezier(0.34, 1.2, 0.64, 1),
+				opacity ease-in-out;
+			transition-duration: 0.25s;
+
+			scale: 1;
+			opacity: 1;
+		}
+
+		@starting-style {
+			dialog[open] {
+				scale: 0;
+				opacity: 0.75;
+			}
+		}
+
+		dialog::backdrop {
+			transition:
+				display allow-discrete,
+				overlay allow-discrete,
+				opacity linear;
+			transition-duration: inherit;
+
+			opacity: 0;
+		}
+
+		dialog[open]::backdrop {
+			opacity: 1;
+		}
+
+		@starting-style {
+			dialog[open]::backdrop {
+				opacity: 0;
+			}
+		}
+
 		hr {
 			border-color: color-mix(in srgb, currentColor, transparent 75%);
 			margin-inline: 16%;

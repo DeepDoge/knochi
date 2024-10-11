@@ -1,6 +1,6 @@
 import "./styles";
 
-import { fragment, tags } from "purify-js";
+import { fragment, tags } from "@purifyjs/core";
 import { PostForm } from "~/features/post/PostForm";
 import { progressListElement } from "~/features/progress/utils";
 import { createConnectWalletDialog } from "~/features/wallet/connectWalletDialog";

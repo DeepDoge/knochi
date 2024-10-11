@@ -1,4 +1,4 @@
-import { tags } from "purify-js";
+import { tags } from "@purifyjs/core";
 import { Bytes32Hex } from "~/utils/hex";
 import { scope } from "~/utils/style";
 import { PostViewer } from "./PostViewer";
