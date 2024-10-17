@@ -1,6 +1,6 @@
-import { Enhanced } from "@purifyjs/core";
+import { Lifecycle } from "@purifyjs/core";
 
-export function clickClose(): Enhanced.OnConnected<HTMLDialogElement> {
+export function clickClose(): Lifecycle.OnConnected<HTMLDialogElement> {
 	return function (element) {
 		function dialogClickHandler(event: MouseEvent) {
 			if (event.target !== element) return;

@@ -86,14 +86,14 @@ host.use(
 	scope(css`
 		:scope {
 			display: block grid;
-			justify-items: center;
+			justify-items: end;
 			padding: 0;
 
 			--margin: 0.25em;
 
 			position: fixed;
-			inset-block-start: var(--margin);
-			inset-inline: var(--margin);
+			inset-block-end: var(--margin);
+			inset-inline-end: var(--margin);
 			margin-inline: auto;
 
 			inline-size: max-content;

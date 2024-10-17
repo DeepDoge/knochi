@@ -1,9 +1,9 @@
-import { Enhanced } from "@purifyjs/core";
+import { Lifecycle } from "@purifyjs/core";
 
 export function onVisible(
 	start: () => void | (() => void),
 	options: IntersectionObserverInit = { threshold: 0 },
-): Enhanced.OnConnected {
+): Lifecycle.OnConnected {
 	return (element) => {
 		let visibleCache = false;
 		let end: (() => void) | void | undefined;

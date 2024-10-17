@@ -1,5 +1,5 @@
+import type { TypedContract } from "@nomadshiba/typed-contracts/ethers6";
 import { Contract, ContractRunner } from "ethers";
-import type { TypedContract } from "typify-contracts/types/ethers6/typedContract";
 import { PostIndexer_ABI } from "./artifacts/PostIndexer";
 import { PostStore_ABI } from "./artifacts/PostStore";
 import { PostStore_Plain_ABI } from "./artifacts/PostStore_Plain";

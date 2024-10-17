@@ -24,12 +24,12 @@
 		"prettier-plugin-organize-imports": "^4.1.0",
 		"solc-typed-ast": "^18.1.0",
 		"tsx": "^4.15.7",
-		"typify-contracts": "github:DeepDoge/typed-contracts#0.2.2",
 		"vite": "^5.0.11",
 		"vite-plugin-singlefile": "^2.0.2"
 	},
 	"dependencies": {
-		"@purifyjs/core": "npm:@jsr/purifyjs__core@^0.0.302",
+		"@nomadshiba/typed-contracts": "npm:@jsr/nomadshiba__typed-contracts@^0.2.10",
+		"@purifyjs/core": "npm:@jsr/purifyjs__core@^0.0.308",
 		"ethers": "^6.9.1",
 		"extra-bigint": "^1.1.18",
 		"jazzicon-ts": "^4.0.0",

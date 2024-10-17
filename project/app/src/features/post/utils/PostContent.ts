@@ -38,7 +38,7 @@ export namespace PostContent {
 		return new Uint8Array(postBytes);
 	}
 
-	export function fromBytes(bytesLike: BytesLike): PostContent | Error {
+	export function fromBytes(bytesLike: BytesLike): PostContent {
 		const bytes = bytesLike instanceof Uint8Array ? bytesLike : toBeArray(bytesLike);
 		const content: PostContent = [];
 		let offset = 0;
@@ -46,18 +46,18 @@ export namespace PostContent {
 		while (offset < bytes.length) {
 			// Extract the type
 			const typeEnd = bytes.indexOf(0, offset);
-			if (typeEnd === -1) return new Error("Invalid byte sequence");
+			if (typeEnd === -1) throw new Error("Invalid byte sequence");
 			const typeBytes = bytes.slice(offset, typeEnd);
 			const type = new TextDecoder().decode(typeBytes);
 			offset = typeEnd + 1;
 
 			// Extract the value length
-			if (offset + 2 > bytes.length) return new Error("Invalid byte sequence");
+			if (offset + 2 > bytes.length) throw new Error("Invalid byte sequence");
 			const valueLength = new DataView(bytes.buffer).getUint16(offset, true);
 			offset += 2;
 
 			// Extract the value
-			if (offset + valueLength > bytes.length) return new Error("Invalid byte sequence");
+			if (offset + valueLength > bytes.length) throw new Error("Invalid byte sequence");
 			const valueBytes = bytes.slice(offset, offset + valueLength);
 			const value = new TextDecoder().decode(valueBytes);
 			offset += valueLength;

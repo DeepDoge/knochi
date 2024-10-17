@@ -1,5 +1,4 @@
-import { Enhanced } from "@purifyjs/core";
-import { uniqueId } from "~/utils/unique";
+import { Lifecycle } from "@purifyjs/core";
 
 declare global {
 	interface DOMStringMap {
@@ -15,11 +14,11 @@ export function sheet(css: string) {
 	return sheet;
 }
 
-export function scope(css: string): Enhanced.OnConnected {
+export function scope(css: string): Lifecycle.OnConnected {
 	return (element) => {
 		if (element.dataset.scope) return;
 
-		const scopeId = uniqueId();
+		const scopeId = Math.random().toString(36).slice(2);
 		document.adoptedStyleSheets.push(
 			sheet(`@scope ([data-scope="${scopeId}"]) to ([data-scope]:not([data-scope="${scopeId}"]) > *) {${css}}`),
 		);

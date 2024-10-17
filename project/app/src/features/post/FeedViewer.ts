@@ -2,7 +2,7 @@ import { tags } from "@purifyjs/core";
 import { Bytes32Hex } from "~/utils/hex";
 import { scope } from "~/utils/style";
 import { PostViewer } from "./PostViewer";
-import { FeedPost, getFeed } from "./feed";
+import { FeedPost, getFeed } from "./utils/Feed";
 
 const { div, ul, li } = tags;
 
@@ -47,7 +47,7 @@ export function FeedViewer(feedId: Bytes32Hex, startIndexInclusive: bigint = 0n)
 				direction: 1n,
 				limit: 256n,
 			});
-			response.sort((a, b) => b.time - a.time);
+			response.sort((a, b) => Number(b.time - a.time));
 			posts.element.prepend(...response.map((post) => li().children(PostViewer(post)).element));
 
 			const newest = response.at(0);
