@@ -1,12 +1,16 @@
 import "./styles";
 
 import { fragment, tags } from "@purifyjs/core";
+import { currentConfig } from "~/features/config/state";
+import { FeedViewer } from "~/features/post/FeedViewer";
 import { PostForm } from "~/features/post/PostForm";
+import { Feed } from "~/features/post/utils/Feed";
 import { progressListElement } from "~/features/progress/utils";
 import { createConnectWalletDialog } from "~/features/wallet/connectWalletDialog";
 import { Header } from "~/Header";
 import { manifest } from "~/manifest";
-import { SearchParamsSignal } from "./features/router/url";
+import { Address } from "~/utils/solidity/primatives";
+import { currentPathname, SearchParamsSignal } from "./features/router/url";
 import { css, scope } from "./utils/style";
 
 const { div, main, link } = tags;
@@ -98,7 +102,25 @@ function App() {
 				element.removeEventListener("scroll", handleScroll);
 			};
 		})
-		.children(Header(), (mainElement = main().children(PostForm(), new Array(1024).fill("content ")).element));
+		.children(
+			Header(),
+			(mainElement = main().children(
+				PostForm(),
+				currentPathname.derive((pathname) => {
+					const address = Address().safeParse(pathname.slice(1));
+					if (!address.success) return null;
+					return FeedViewer(
+						new Feed({
+							id: `0x00${address.data.slice(2)}${"00".repeat(32 - 1 - 20)}` as const,
+							direction: -1n,
+							limit: 1,
+							chainIds: Object.values(currentConfig.val.networks).map((network) => network.chainId),
+						}),
+					);
+				}),
+				new Array(1024).fill("content "),
+			).element),
+		);
 }
 
 const AppCss = css`

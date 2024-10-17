@@ -1,7 +1,6 @@
 import { ref, Signal } from "@purifyjs/core";
 import logoSrc from "~/assets/svgs/chains/bitcoin.svg?url";
-import { db } from "~/utils/db/client";
-import { AddressHex } from "~/utils/hex";
+import { Address } from "~/utils/solidity/primatives";
 
 export type Config = {
 	readonly networks: {
@@ -20,9 +19,9 @@ export namespace Config {
 		};
 		readonly providers: readonly [string, ...string[]];
 		readonly contracts: {
-			readonly PostIndexer: AddressHex;
+			readonly PostIndexer: Address;
 			readonly PostStores: {
-				readonly Plain: Readonly<Record<string, AddressHex>>;
+				readonly Plain: Readonly<Record<string, Address>>;
 			};
 		};
 	};
@@ -55,18 +54,11 @@ const DEFAULT_CONFIG = {
 	},
 } as const satisfies Config;
 
-const configState = ref<Promise<Config>>(
-	db
-		.find("KV")
-		.byKey("config")
-		.then((config) => (config?.value as Config | undefined) ?? structuredClone(DEFAULT_CONFIG)),
-);
-export const currentConfig = configState as Signal<Promise<Config>>;
+const configJson = localStorage.getItem("knochi/config");
+const configState = ref<Config>(configJson ? (JSON.parse(configJson) as Config) : structuredClone(DEFAULT_CONFIG));
+export const currentConfig = configState as Signal<Config>;
 
-export async function setConfig(value: Config) {
-	await (configState.val = db
-		.set("KV")
-		.byKey("config", { key: "config", value })
-		.execute()
-		.then(() => structuredClone(value)));
+export function setConfig(value: Config) {
+	localStorage.setItem("knochi/config", JSON.stringify(value));
+	configState.val = structuredClone(value);
 }

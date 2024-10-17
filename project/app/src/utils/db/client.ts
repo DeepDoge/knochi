@@ -1,5 +1,5 @@
-import { object } from "zod";
-import { Address, BytesHex, Uint } from "~/utils/solidity/primatives";
+import { bigint, object } from "zod";
+import { Address, Hex } from "~/utils/solidity/primatives";
 import { DB } from "./module";
 
 export const db = DB.create("knochi.posts")
@@ -8,8 +8,8 @@ export const db = DB.create("knochi.posts")
 			.parser(
 				object({
 					indexerAddress: Address(),
-					feedId: BytesHex(32),
-					length: Uint("256"),
+					feedId: Hex(),
+					length: bigint(),
 				}).strict().parse,
 			)
 			.key({ keyPath: ["indexerAddress", "feedId"] })
@@ -19,12 +19,12 @@ export const db = DB.create("knochi.posts")
 			.parser(
 				object({
 					indexerAddress: Address(),
-					feedId: BytesHex(32),
-					indexHex: BytesHex(32),
-					postIdHex: BytesHex(12),
+					feedId: Hex(),
+					indexHex: Hex(),
+					postIdHex: Hex(),
 					storeAddress: Address(),
 					authorAddress: Address(),
-					time_seconds: Uint("256"),
+					time_seconds: bigint(),
 				}).strict().parse,
 			)
 			.key({ keyPath: ["indexerAddress", "feedId", "indexHex"] })
@@ -36,8 +36,8 @@ export const db = DB.create("knochi.posts")
 			.parser(
 				object({
 					storeAddress: Address(),
-					postIdHex: BytesHex(12),
-					content: BytesHex(),
+					postIdHex: Hex(),
+					content: Hex(),
 				}).strict().parse,
 			)
 			.key({ keyPath: ["storeAddress", "postIdHex"] })

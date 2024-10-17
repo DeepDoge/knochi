@@ -3,7 +3,7 @@ import { PostIndexer, PostStore_Plain } from "@root/contracts/connect";
 import { connectWalletDialog } from "~/app";
 import { SelectSenderButton } from "~/features/post/SelectSenderButton";
 import { SelectedSender } from "~/features/post/SelectSenderPopover";
-import { PostContent } from "~/features/post/utils";
+import { PostContent } from "~/features/post/utils/PostContent";
 import { trackPromise } from "~/features/progress/utils";
 import { currentWalletDetail, getOrRequestSigner } from "~/features/wallet/utils";
 import { WalletAddress } from "~/features/wallet/WalletAddress";

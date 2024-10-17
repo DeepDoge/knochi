@@ -1,12 +1,12 @@
 import { tags } from "@purifyjs/core";
+import { Post } from "~/features/post/utils/Post";
+import { PostContent } from "~/features/post/utils/PostContent";
 import { WalletAddress } from "~/features/wallet/WalletAddress";
-import { PostContent } from "./utils";
-import { FeedPost } from "./utils/Feed";
 
 const { article, header, address, time, div, a, template } = tags;
 
-export function PostViewer(post: FeedPost) {
-	const date = new Date(Number(post.time) * 1000);
+export function PostViewer(post: Post) {
+	const date = new Date(Number(post.createdAt) * 1000);
 
 	return article().children(
 		header().children(

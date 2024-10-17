@@ -1,4 +1,4 @@
-import { awaited, computed, tags } from "@purifyjs/core";
+import { computed, tags } from "@purifyjs/core";
 import { Config, currentConfig } from "~/features/config/state";
 import { SearchParamsSignal } from "~/features/router/url";
 import { WalletList } from "~/features/wallet/WalletList";
@@ -10,16 +10,13 @@ const { dialog, form, strong } = tags;
 export function createConnectWalletDialog(searchParamName: string) {
 	const searchParam = new SearchParamsSignal<`${Config.Network.ChainId}` | "open">(searchParamName);
 
-	const configAwaited = currentConfig.derive((config) => awaited(config));
-	const config = computed(() => configAwaited.val.val);
-
 	const searchParamNetwork = computed(() => {
 		const searchParamValue = searchParam.val;
 		if (!searchParamValue) return null;
 
 		try {
 			const chainId = BigInt(searchParamValue);
-			return config.val?.networks[`${chainId}`] ?? null;
+			return currentConfig.val.networks[`${chainId}`] ?? null;
 		} catch {
 			return null;
 		}

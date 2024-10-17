@@ -1,4 +1,4 @@
-import { awaited, tags } from "@purifyjs/core";
+import { tags } from "@purifyjs/core";
 import { Config, currentConfig } from "~/features/config/state";
 
 const { div, button, ul, li } = tags;
@@ -11,10 +11,7 @@ export type SelectedSender = {
 export function SelectSenderPopover(params: { onChange: (selectedSender: SelectedSender) => unknown }) {
 	const popover = div()
 		.popover("auto")
-		.children(
-			"Select Sender",
-			ul().children(currentConfig.derive((config) => awaited(config.then(renderOptions), "Loading..."))),
-		);
+		.children("Select Sender", ul().children(currentConfig.derive(renderOptions)));
 
 	function renderOptions(config: Config) {
 		return Object.values(config.networks).map((network) =>
