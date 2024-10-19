@@ -1,25 +1,38 @@
-import { bigint, object } from "zod";
+import { bigint, object, string } from "zod";
+import { Feed } from "~/features/post/utils/Feed";
 import { Address, Hex } from "~/utils/solidity/primatives";
 import { DB } from "./module";
 
 export const db = DB.create("knochi.posts")
 	.version(1, {
+		FeedGroup: DB.ModelBuilder()
+			.parser(
+				object({
+					groupId: string(),
+					name: string(),
+				}).parse,
+			)
+			.key({ keyPath: ["groupId"] })
+			.build(),
 		Feed: DB.ModelBuilder()
 			.parser(
 				object({
 					indexerAddress: Address(),
-					feedId: Hex(),
+					feedId: Feed.Id(),
 					length: bigint(),
+					groupId: string(),
 				}).strict().parse,
 			)
 			.key({ keyPath: ["indexerAddress", "feedId"] })
 			.index({ field: "feedId", options: {} })
+			.index({ field: ["feedId", "groupId"], options: { unique: true } })
+			.index({ field: "groupId", options: {} })
 			.build(),
 		PostIndex: DB.ModelBuilder()
 			.parser(
 				object({
 					indexerAddress: Address(),
-					feedId: Hex(),
+					feedId: Feed.Id(),
 					indexHex: Hex(),
 					postIdHex: Hex(),
 					storeAddress: Address(),
