@@ -20,7 +20,7 @@ export const db = DB.create("knochi.posts")
 					indexerAddress: Address(),
 					feedId: Feed.Id(),
 					length: bigint(),
-					groupId: string(),
+					groupId: string().optional().default(""),
 				}).strict().parse,
 			)
 			.key({ keyPath: ["indexerAddress", "feedId"] })
