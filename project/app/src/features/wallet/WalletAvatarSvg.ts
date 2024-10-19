@@ -1,10 +1,7 @@
-import { getAddress } from "ethers";
 import jazzicon from "jazzicon-ts";
-import { AddressHex } from "~/utils/hex";
+import { Address } from "~/utils/solidity/primatives";
 
-export function WalletAvatarSvg(address: AddressHex) {
-	address = getAddress(address); // Format address
-
+export function WalletAvatarSvg(address: Address) {
 	const iconWrapper = jazzicon(64, parseInt(address.slice(2, 10), 16));
 	const iconSvg = iconWrapper.firstElementChild as SVGSVGElement;
 	iconSvg.setAttribute("viewBox", `0 0 64 64`);

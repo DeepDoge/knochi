@@ -1,13 +1,10 @@
 import { tags } from "@purifyjs/core";
-import { getAddress } from "ethers";
-import { AddressHex } from "~/utils/hex";
+import { Address } from "~/utils/solidity/primatives";
 import { css, scope } from "~/utils/style";
 
 const { span } = tags;
 
-export function WalletAddress(address: AddressHex, suffixLength = 3) {
-	address = getAddress(address); // Format address
-
+export function WalletAddress(address: Address, suffixLength = 3) {
 	const prefix = address.slice(0, -suffixLength);
 	const suffix = address.slice(-suffixLength);
 

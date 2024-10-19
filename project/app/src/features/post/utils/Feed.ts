@@ -2,20 +2,10 @@ import { PostIndexer } from "@root/contracts/connect";
 import { JsonRpcProvider } from "ethers";
 import { currentConfig } from "~/features/config/state";
 import { Post } from "~/features/post/utils/Post";
-import { Hex } from "~/utils/solidity/primatives";
-
-export namespace Feed {
-	export type Init = {
-		id: Hex;
-		direction: Feed.Direction;
-		limit: number;
-		chainIds: bigint[];
-	};
-	export type Direction = 1n | -1n;
-}
+import { Address, Hex } from "~/utils/solidity/primatives";
 
 export class Feed {
-	public readonly id: Hex;
+	public readonly id: Feed.Id;
 	public readonly direction: Feed.Direction;
 	public readonly chainIds: bigint[];
 	public readonly limit: number;
@@ -108,6 +98,26 @@ export class Feed {
 
 			if (!result.length) break;
 			yield result;
+		}
+	}
+}
+
+export namespace Feed {
+	export type Init = {
+		id: Feed.Id;
+		direction: Feed.Direction;
+		limit: number;
+		chainIds: bigint[];
+	};
+	export type Direction = 1n | -1n;
+
+	export type Id = ReturnType<typeof Id>["_output"];
+	export function Id() {
+		return Hex();
+	}
+	export namespace Id {
+		export function fromAddress(address: Address): Id {
+			return Id().parse(`0x00${address.slice(2)}${"00".repeat(32 - 1 - 20)}`);
 		}
 	}
 }

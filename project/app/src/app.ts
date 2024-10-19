@@ -6,11 +6,10 @@ import { FeedViewer } from "~/features/post/FeedViewer";
 import { PostForm } from "~/features/post/PostForm";
 import { Feed } from "~/features/post/utils/Feed";
 import { progressListElement } from "~/features/progress/utils";
+import { Router } from "~/features/router/url";
 import { createConnectWalletDialog } from "~/features/wallet/connectWalletDialog";
 import { Header } from "~/Header";
 import { manifest } from "~/manifest";
-import { Address } from "~/utils/solidity/primatives";
-import { currentPathname, SearchParamsSignal } from "./features/router/url";
 import { css, scope } from "./utils/style";
 
 const { div, main, link } = tags;
@@ -18,7 +17,7 @@ const { div, main, link } = tags;
 const documentScroller = document.scrollingElement ?? document.body;
 
 export type MenuSearchParam = typeof menuSearchParam.val;
-export const menuSearchParam = new SearchParamsSignal<"open">("menu");
+export const menuSearchParam = new Router.SearchParam<"open">("menu");
 
 export const connectWalletDialog = createConnectWalletDialog("connect");
 
@@ -106,12 +105,11 @@ function App() {
 			Header(),
 			(mainElement = main().children(
 				PostForm(),
-				currentPathname.derive((pathname) => {
-					const address = Address().safeParse(pathname.slice(1));
-					if (!address.success) return null;
+				Router.route.derive((route) => {
+					if (route?.name !== "profile") return null;
 					return FeedViewer(
 						new Feed({
-							id: `0x00${address.data.slice(2)}${"00".repeat(32 - 1 - 20)}` as const,
+							id: Feed.Id.fromAddress(route.data.address),
 							direction: -1n,
 							limit: 1,
 							chainIds: Object.values(currentConfig.val.networks).map((network) => network.chainId),

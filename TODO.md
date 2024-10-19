@@ -5,9 +5,9 @@
 -   [x] Indexers can also hold random metadata per user/account/wallet. Which can be used for avatars and more.
 -   [ ] Also we take feedId with end padded wallet address, is inbox for that wallet, this feed can be used to mention and notify the a wallet owner. For example while replying someone if you dont add your reply to the index feed of the user you are replying to they dont get notified of your reply. This can be used for many purposes suchs as mentions and more.
 -   [ ] Anyone can follow any feed, including someone else's inbox.
--   [ ] Also we should mix same feedId from different chains on the same feed on the client side.
+-   [x] Also we should mix same feedId from different chains on the same feed on the client side.
 -   [ ] Config page should be done.
--   [ ] Make currentConfig non promise, also broadcast changes between tabs and stuff.
+-   [x] Make currentConfig non promise, also broadcast changes between tabs and stuff.
 -   [ ] remember wallet state, tbh for this and config i can just use local storage. makes more sense. why did i make a KV table anyway...
 
 Let's do all these first then, look for new stuff.

@@ -1,6 +1,6 @@
 import { computed, tags } from "@purifyjs/core";
 import { Config, currentConfig } from "~/features/config/state";
-import { SearchParamsSignal } from "~/features/router/url";
+import { Router } from "~/features/router/url";
 import { WalletList } from "~/features/wallet/WalletList";
 import { clickClose } from "~/utils/actions/clickClose";
 import { css, scope } from "~/utils/style";
@@ -8,7 +8,7 @@ import { css, scope } from "~/utils/style";
 const { dialog, form, strong } = tags;
 
 export function createConnectWalletDialog(searchParamName: string) {
-	const searchParam = new SearchParamsSignal<`${Config.Network.ChainId}` | "open">(searchParamName);
+	const searchParam = new Router.SearchParam<`${Config.Network.ChainId}` | "open">(searchParamName);
 
 	const searchParamNetwork = computed(() => {
 		const searchParamValue = searchParam.val;

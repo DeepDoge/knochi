@@ -1,10 +1,11 @@
 import { computed, tags } from "@purifyjs/core";
 import { connectWalletDialog } from "~/app";
 import { RssSvg } from "~/assets/svgs/RssSvg";
-import { currentPathname } from "~/features/router/url";
+import { Router } from "~/features/router/url";
 import { currentWalletDetail } from "~/features/wallet/utils";
 import { WalletAddress } from "~/features/wallet/WalletAddress";
 import { WalletAvatarSvg } from "~/features/wallet/WalletAvatarSvg";
+import { Address } from "~/utils/solidity/primatives";
 import { css, scope } from "~/utils/style";
 
 const { div, header, a, hr, nav, ul, li, section } = tags;
@@ -14,7 +15,7 @@ export function Header() {
 		const detail = currentWalletDetail.val;
 		if (!detail) return null;
 		const signer = detail.signer.val;
-		return signer?.address ?? null;
+		return signer?.address ? Address().parse(signer.address) : null;
 	});
 
 	return header()
@@ -28,8 +29,8 @@ export function Header() {
 						.href("#/")
 						.title("Home Feed")
 						.attributes({ "aria-controls": "header-tabpanel-home" })
-						.ariaSelected(currentPathname.derive((pathname) => (pathname === "/" ? "true" : "false")))
-						.tabIndex(currentPathname.derive((pathname) => (pathname === "/" ? 0 : -1)))
+						.ariaSelected(Router.pathname.derive((pathname) => (pathname === "/" ? "true" : "false")))
+						.tabIndex(Router.pathname.derive((pathname) => (pathname === "/" ? 0 : -1)))
 						.children(RssSvg()),
 					hr(),
 				),
@@ -47,11 +48,13 @@ export function Header() {
 							return div({ class: "content" }).children(
 								a()
 									.ariaCurrent(
-										currentPathname.derive((pathname) =>
-											pathname === `/${signerAddress}` ? "page" : null,
+										Router.route.derive((route) =>
+											route?.name === "profile" && route.data.address === signerAddress ?
+												"page"
+											:	null,
 										),
 									)
-									.href(`#/${signerAddress}`)
+									.href(Router.routes.profile.toHref({ address: signerAddress }))
 									.title("My Wallet")
 									.children(WalletAvatarSvg(signerAddress)),
 								WalletAddress(signerAddress),
