@@ -4,7 +4,7 @@ import projectStructurePlugin, { createIndependentModules } from "eslint-plugin-
 import tseslint from "typescript-eslint";
 
 const patterns = {
-	features: ["src/features/**"],
+	features: ["src/features/*/**"],
 	shared: ["src/assets/**", "src/lib/**"],
 	app: ["src/app/**", "src/app.ts"],
 };
