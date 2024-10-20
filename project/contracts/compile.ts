@@ -48,7 +48,7 @@ for (const [dirPath, solidityFiles] of Object.entries(solidityFilesByDir)) {
 		});
 
 		const abi: unknown = result.data["contracts"][filePath][name]["abi"];
-		const bin: string = result.data["contracts"][filePath][name]["evm"]["bytecode"]["object"];
+		// const bin: string = result.data["contracts"][filePath][name]["evm"]["bytecode"]["object"];
 
 		await fs.writeFile(
 			path.join(ARTIFACTS_DIR, `${name}.ts`),

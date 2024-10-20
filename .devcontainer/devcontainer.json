@@ -3,7 +3,13 @@
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
 	"customizations": {
 		"vscode": {
-			"extensions": ["esbenp.prettier-vscode", "JuanBlanco.solidity", "pushqrdx.inline-html", "jock.svg"]
+			"extensions": [
+				"esbenp.prettier-vscode",
+				"dbaeumer.vscode-eslint",
+				"JuanBlanco.solidity",
+				"pushqrdx.inline-html",
+				"jock.svg"
+			]
 		}
 	},
 

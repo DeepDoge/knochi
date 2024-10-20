@@ -1,4 +1,4 @@
-import { html } from "~/utils/html";
+import { html } from "~/lib/html";
 
 export function SuccessSvg() {
 	return html`

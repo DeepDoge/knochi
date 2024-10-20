@@ -2,8 +2,8 @@
 	"type": "module",
 	"name": "@root/contracts",
 	"scripts": {
-		"compile": "tsx ./compile.ts",
-		"dev": "tsx --watch-path ./src ./compile.ts"
+		"dev": "tsx --watch-path ./src ./compile.ts",
+		"build": "tsx ./compile.ts"
 	},
 	"exports": {
 		"./connect": "./connect.ts"
