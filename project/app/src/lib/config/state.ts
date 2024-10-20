@@ -1,6 +1,7 @@
 import { ref } from "@purifyjs/core";
 import { bigint, number, object, record, string, tuple } from "zod";
 import logoSrc from "~/assets/svgs/chains/bitcoin.svg?url";
+import { catchError } from "~/lib/catch";
 import { Address } from "~/lib/solidity/primatives";
 
 export type Config = {
@@ -73,47 +74,46 @@ const configBroadcast = new BroadcastChannel(configKey);
 const configSchema = Config();
 
 configBroadcast.onmessage = (event) => (config.val = configSchema.parse(event.data));
-export const config = ref<Config>(parseJson(localStorage.getItem(configKey) ?? ""), (set) => {
-	configBroadcast.addEventListener("message", broadcastListener);
-	function broadcastListener(event: MessageEvent) {
-		const newConfig = configSchema.safeParse(event.data);
-		if (!newConfig.success) return;
-		if (toJson(newConfig.data) === toJson(config.val)) return;
-		set(newConfig.data);
-	}
-	return () => {
-		configBroadcast.removeEventListener("message", broadcastListener);
-	};
-});
+export const config = ref<Config>(
+	catchError(() => parseJson(localStorage.getItem(configKey) ?? ""), [Error]).data ?? structuredClone(DEFAULT_CONFIG),
+	(set) => {
+		configBroadcast.addEventListener("message", broadcastListener);
+		function broadcastListener(event: MessageEvent) {
+			const newConfig = configSchema.safeParse(event.data);
+			if (!newConfig.success) return;
+			if (toJson(newConfig.data) === toJson(config.val)) return;
+			set(newConfig.data);
+		}
+		return () => {
+			configBroadcast.removeEventListener("message", broadcastListener);
+		};
+	},
+);
 config.follow((config) => {
 	localStorage.setItem(configKey, toJson(config));
 	configBroadcast.postMessage(config);
 }, true);
 
 function parseJson(json: string) {
-	try {
-		return configSchema.parse(
-			JSON.parse(json, (_, value) => {
-				if (typeof value === "string") {
-					const index = value.indexOf(":");
-					if (index < 0) return value;
-					const type = value.slice(0, index);
-					const val = value.slice(index + 1);
-					switch (type) {
-						case "string":
-							return val;
-						case "bigint":
-							return BigInt(val);
-						default:
-							return value;
-					}
+	return configSchema.parse(
+		JSON.parse(json, (_, value) => {
+			if (typeof value === "string") {
+				const index = value.indexOf(":");
+				if (index < 0) return value;
+				const type = value.slice(0, index);
+				const val = value.slice(index + 1);
+				switch (type) {
+					case "string":
+						return val;
+					case "bigint":
+						return BigInt(val);
+					default:
+						return value;
 				}
-				return value;
-			}),
-		);
-	} catch {
-		return structuredClone(DEFAULT_CONFIG);
-	}
+			}
+			return value;
+		}),
+	);
 }
 
 function toJson(config: Config): string {
