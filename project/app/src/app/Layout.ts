@@ -6,7 +6,7 @@ import { router } from "~/app/router";
 import { FeedViewer } from "~/features/post/components/FeedViewer";
 import { PostForm } from "~/features/post/components/PostForm";
 import { Feed } from "~/features/post/lib/Feed";
-import { config } from "~/lib/config/state";
+import { config } from "~/lib/config";
 import { Router } from "~/lib/router/mod";
 import { css, scope } from "../lib/css";
 

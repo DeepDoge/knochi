@@ -1,6 +1,6 @@
 import { tags } from "@purifyjs/core";
 import { JsonRpcSigner } from "ethers";
-import { Config } from "~/lib/config/state";
+import { Config } from "~/lib/config";
 import { css, scope } from "~/lib/css";
 import { trackPromise } from "~/lib/progress/utils";
 import { getOrRequestSigner, walletDetails } from "../utils";

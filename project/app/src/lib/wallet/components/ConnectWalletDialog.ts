@@ -1,6 +1,6 @@
 import { Signal, tags } from "@purifyjs/core";
 import { clickClose } from "~/lib/actions/clickClose";
-import { Config } from "~/lib/config/state";
+import { Config } from "~/lib/config";
 import { css, scope } from "~/lib/css";
 import { WalletList } from "~/lib/wallet/components/WalletList";
 

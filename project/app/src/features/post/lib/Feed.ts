@@ -1,6 +1,6 @@
 import { PostIndexer } from "@root/contracts/connect";
 import { JsonRpcProvider } from "ethers";
-import { config } from "~/lib/config/state";
+import { config } from "~/lib/config";
 import { Address, Hex } from "~/lib/solidity/primatives";
 import { Post } from "./Post";
 

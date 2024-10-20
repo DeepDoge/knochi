@@ -1,6 +1,6 @@
 import { computed } from "@purifyjs/core";
 import { catchError } from "~/lib/catch";
-import { config, Config } from "~/lib/config/state";
+import { config, Config } from "~/lib/config";
 import { Router } from "~/lib/router/mod";
 import { ConnectWalletDialog } from "~/lib/wallet/components/ConnectWalletDialog";
 

@@ -1,5 +1,5 @@
 import { tags } from "@purifyjs/core";
-import { Config, config } from "~/lib/config/state";
+import { Config, config } from "~/lib/config";
 
 const { div, button, ul, li } = tags;
 
