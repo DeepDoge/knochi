@@ -1,5 +1,6 @@
 import { fragment } from "@purifyjs/core";
 import { FeedViewer } from "~/features/post/components/FeedViewer";
+import { PostForm } from "~/features/post/components/PostForm";
 import { Feed } from "~/features/post/lib/Feed";
 import { postRoutes } from "~/features/post/routes";
 import { config } from "~/lib/config";
@@ -18,12 +19,12 @@ export const router = new Router({
 		},
 		render(data) {
 			return fragment(
-				"Hello",
+				PostForm(),
 				FeedViewer(
 					new Feed({
 						id: Feed.Id.fromAddress(data.address),
 						direction: -1n,
-						limit: 1,
+						limit: 2,
 						chainIds: Object.values(config.val.networks).map((network) => network.chainId),
 					}),
 				),
