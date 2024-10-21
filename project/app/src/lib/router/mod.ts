@@ -33,7 +33,7 @@ export class Router<const TRoutes extends { readonly [key: string]: Router.Route
 			if (typeof data === "undefined") return;
 			return {
 				render() {
-					route.render(data);
+					return route.render(data);
 				},
 			};
 		}

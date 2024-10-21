@@ -7,6 +7,8 @@ const { main } = tags;
 export function Main() {
 	return main().children(
 		PostForm(),
-		router.route.derive((route) => route?.render() ?? null),
+		router.route.derive((route) => {
+			return route?.render() ?? null;
+		}),
 	);
 }
