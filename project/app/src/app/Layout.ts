@@ -2,15 +2,11 @@ import "./styles";
 
 import { tags } from "@purifyjs/core";
 import { Header } from "~/app/Header";
-import { router } from "~/app/router";
-import { FeedViewer } from "~/features/post/components/FeedViewer";
-import { PostForm } from "~/features/post/components/PostForm";
-import { Feed } from "~/features/post/lib/Feed";
-import { config } from "~/lib/config";
+import { Main } from "~/app/Main";
 import { Router } from "~/lib/router/mod";
 import { css, scope } from "../lib/css";
 
-const { div, main } = tags;
+const { div } = tags;
 
 const documentScroller = document.scrollingElement ?? document.body;
 const menuSearchParam = new Router.SearchParam<"open">("menu");
@@ -94,24 +90,7 @@ export function Layout() {
 				element.removeEventListener("scroll", handleScroll);
 			};
 		})
-		.children(
-			Header(),
-			(mainElement = main().children(
-				PostForm(),
-				router.route.derive((route) => {
-					if (route?.name !== "profile") return null;
-					return FeedViewer(
-						new Feed({
-							id: Feed.Id.fromAddress(route.data.address),
-							direction: -1n,
-							limit: 1,
-							chainIds: Object.values(config.val.networks).map((network) => network.chainId),
-						}),
-					);
-				}),
-				new Array(1024).fill("content "),
-			).element),
-		);
+		.children(Header(), Main());
 }
 
 const LayoutCss = css`

@@ -1,4 +1,4 @@
-import { ref, Signal } from "@purifyjs/core";
+import { MemberOf, ref, Signal } from "@purifyjs/core";
 import { catchError } from "~/lib/catch";
 
 const hashSignal = ref(getHash());
@@ -28,18 +28,14 @@ function getSearchParams(search = getSearch()) {
 export class Router<const TRoutes extends { readonly [key: string]: Router.Route<unknown> }> {
 	public readonly routes: TRoutes;
 	public readonly route = Router.pathname.derive((pathname) => {
-		for (const [name, route] of Object.entries(this.routes)) {
+		for (const [, route] of Object.entries(this.routes)) {
 			const data = route.fromPathname(pathname);
 			if (typeof data === "undefined") return;
 			return {
-				name,
-				data,
-			} as {
-				[K in keyof TRoutes]: {
-					readonly name: K;
-					readonly data: Exclude<ReturnType<TRoutes[K]["fromPathname"]>, undefined>;
-				};
-			}[keyof TRoutes];
+				render() {
+					route.render(data);
+				},
+			};
 		}
 
 		return null;
@@ -59,43 +55,47 @@ export namespace Router {
 		return `#${pathname}${searchParams?.size ? `?${searchParams}` : ""}`;
 	}
 
-	export declare class Route<TData = unknown> {
-		constructor(init: Route.Init<TData>);
-
-		public fromPathname(pathname: string): TData | undefined;
-
-		public toPathname(data: TData): string;
-
-		public toHref(data: TData): string;
+	export declare namespace Route {
+		type Init<TData, TRender extends MemberOf<DocumentFragment>> = {
+			toPathname(data: TData): string;
+			fromPathname(pathname: string): TData;
+			render(data: TData): TRender;
+		};
 	}
-	Router.Route = class<TData = unknown> {
-		#fromPathname: (pathname: string) => TData;
-		#toPathname: (data: TData) => string;
+	export declare class Route<
+		TData = unknown,
+		TRender extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
+	> {
+		constructor(init: Route.Init<TData, TRender>);
 
-		constructor(init: Route.Init<TData>) {
-			this.#fromPathname = init.fromPathname;
-			this.#toPathname = init.toPathname;
+		fromPathname(pathname: string): TData | undefined;
+		toPathname(data: TData): string;
+		toHref(data: TData): string;
+		render(data: TData): TRender;
+	}
+	Router.Route = class<TData = unknown, TRender extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>> {
+		readonly #init: Route.Init<TData, TRender>;
+
+		constructor(init: Route.Init<TData, TRender>) {
+			this.#init = init;
 		}
 
 		public fromPathname(pathname: string): TData | undefined {
-			return catchError(() => this.#fromPathname(pathname), [Error]).data;
+			return catchError(() => this.#init.fromPathname(pathname), [Error]).data;
 		}
 
 		public toPathname(data: TData): string {
-			return this.#toPathname(data);
+			return this.#init.toPathname(data);
 		}
 
 		public toHref(data: TData): string {
-			return hrefFrom(this.#toPathname(data));
+			return hrefFrom(this.toPathname(data));
+		}
+
+		public render(data: TData): TRender {
+			return this.#init.render(data);
 		}
 	};
-
-	export namespace Route {
-		export type Init<TData> = {
-			toPathname(data: TData): string;
-			fromPathname(pathname: string): TData;
-		};
-	}
 
 	export class SearchParam<T extends string> extends Signal.State<T | (string & {}) | null> {
 		public readonly name: string;

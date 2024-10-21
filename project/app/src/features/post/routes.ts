@@ -11,5 +11,8 @@ export const postRoutes = {
 		toPathname(data) {
 			return `/${data.id}`;
 		},
+		render() {
+			return null;
+		},
 	}),
 };
