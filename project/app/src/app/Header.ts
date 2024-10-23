@@ -1,8 +1,11 @@
-import { computed, tags } from "@purifyjs/core";
+import { awaited, computed, fragment, tags } from "@purifyjs/core";
 import { router } from "~/app/router";
+import { CreateFolderSvg } from "~/assets/svgs/CreateFolderSvg";
 import { RssSvg } from "~/assets/svgs/RssSvg";
+import { SingleLetterSvg } from "~/assets/svgs/SingleLetterSvg";
+import { feedGroupFormDialogSearchParam } from "~/features/post/components/FeedGroupForm";
+import { postDb } from "~/features/post/database/client";
 import { css, scope } from "~/lib/css";
-import { Router } from "~/lib/router/mod";
 import { Address } from "~/lib/solidity/primatives";
 import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
 import { WalletAvatarSvg } from "~/lib/wallet/components/WalletAvatarSvg";
@@ -19,28 +22,90 @@ export function Header() {
 		return signer?.address ? Address().parse(signer.address) : null;
 	});
 
+	const groupsPromise = feedGroupFormDialogSearchParam.derive(Boolean).derive(() => postDb.find("FeedGroup").many());
+
 	return header()
 		.use(scope(HeaderCss))
 		.children(
 			div()
 				.role("tablist")
 				.children(
-					a()
-						.role("tab")
-						.href("#/")
-						.title("Home Feed")
-						.attributes({ "aria-controls": "header-tabpanel-home" })
-						.ariaSelected(Router.pathname.derive((pathname) => (pathname === "/" ? "true" : "false")))
-						.tabIndex(Router.pathname.derive((pathname) => (pathname === "/" ? 0 : -1)))
-						.children(RssSvg()),
+					(() => {
+						const id = "";
+						const href = router.routes.group.toHref({ groupId: id });
+						const current = router.route.derive(
+							(route) => route?.name === "group" && route.data.groupId === id,
+						);
+						return a()
+							.role("tab")
+							.href(href)
+							.title("Home Feed")
+							.attributes({ "aria-controls": "header-tabpanel-home" })
+							.ariaSelected(current.derive(String))
+							.tabIndex(current.derive((current) => (current ? 0 : -1)))
+							.children(RssSvg());
+					})(),
 					hr(),
+					a({ class: "add" })
+						.href(feedGroupFormDialogSearchParam.toHref("create"))
+						.ariaLabel("Create Feed Group")
+						.title("Create Group")
+						.children(CreateFolderSvg()),
+					groupsPromise
+						.derive(async (groupsPromise) => {
+							const groups = await groupsPromise;
+
+							return groups.map((group) => {
+								const href = router.routes.group.toHref({ groupId: group.groupId });
+								const current = router.route.derive(
+									(route) => route?.name === "group" && route.data.groupId === group.groupId,
+								);
+								return a()
+									.role("tab")
+									.href(href)
+									.title(group.name)
+									.attributes({ "aria-controls": "header-tabpanel-home" })
+									.ariaSelected(current.derive(String))
+									.tabIndex(current.derive((current) => (current ? 0 : -1)))
+									.children(SingleLetterSvg(group.name.at(0)?.toUpperCase() ?? "X"));
+							});
+						})
+						.derive(awaited),
 				),
 			div()
 				.role("tabpanel")
 				.id("header-tabpanel-home")
 				.tabIndex(0)
 				.ariaLabel("Home Feed")
-				.children("Feed List Here"),
+				.children(
+					groupsPromise
+						.derive(async (groupsPromise) => {
+							const groups = await groupsPromise;
+							const group = router.route.derive((route) =>
+								route?.name === "group" ?
+									(groups.find((group) => group.groupId === route.data.groupId) ?? null)
+								:	null,
+							);
+
+							return group.derive((group) => {
+								if (!group) {
+									return "Not Found";
+								}
+
+								const feeds = postDb
+									.find("Feed")
+									.byIndex("groupId", "=", group.groupId, Infinity)
+									.then((feeds) => {
+										return feeds.map((feed) => {
+											return div().textContent(feed.feedId);
+										});
+									});
+
+								return fragment(group.name, awaited(feeds));
+							});
+						})
+						.derive(awaited),
+				),
 			section({ class: "profile" })
 				.ariaLabel("Profile")
 				.children(
@@ -124,20 +189,28 @@ const HeaderCss = css`
 
 		background-color: color-mix(in srgb, var(--base), var(--pop) 5%);
 
-		[role="tab"] {
+		:is([role="tab"], a) {
 			display: block grid;
 			inline-size: 3em;
+			aspect-ratio: 1;
+			padding: 0.75em;
 
 			border-radius: 50%;
 			overflow: clip;
 
 			background-color: color-mix(in srgb, var(--base), var(--pop) 20%);
-			padding: 0.75em;
-		}
 
-		[role="tab"][aria-selected="true"] {
-			background-color: var(--pop);
-			color: var(--base);
+			&[aria-selected="true"] {
+				background-color: var(--pop);
+				color: var(--base);
+			}
+
+			&.add {
+				background-color: transparent;
+				color: var(--pop);
+				padding: 0.5em;
+				border: dashed color-mix(in srgb, currentColor, transparent 75%) 0.25em;
+			}
 		}
 	}
 

@@ -51,7 +51,7 @@ export class Feed {
 						const index = chain.index + i * this.direction;
 						if (index < 0) break;
 						if (index >= length) break;
-						console.log(index);
+
 						posts.push(Post.load({ network, feedId: this.id, index }));
 					}
 					chain.index += BigInt(posts.length) * this.direction;

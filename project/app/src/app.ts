@@ -3,6 +3,7 @@ import "~/features/post/database/client";
 import { fragment, tags } from "@purifyjs/core";
 import { Layout } from "~/app/Layout";
 import { manifest } from "~/app/manifest";
+import { feedGroupFormDialog } from "~/features/post/components/FeedGroupForm";
 import { progressListElement } from "~/lib/progress/utils";
 import { connectWallet } from "~/lib/wallet/connectDialog";
 
@@ -16,4 +17,4 @@ document.head.append(
 	),
 );
 
-document.body.append(fragment(Layout(), connectWallet.dialog, progressListElement));
+document.body.append(fragment(Layout(), feedGroupFormDialog, connectWallet.dialog, progressListElement));

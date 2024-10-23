@@ -242,6 +242,9 @@ export namespace DB {
 							type Model = LastVersion["models"][TModelName];
 							type Values = ReturnType<Model["parser"]>;
 							type KeyPath = Model["parameters"]["keyPath"];
+							type Key =
+								KeyPath extends readonly string[] ? GetValuesOf<KeyPath>
+								:	Values[`${KeyPath extends string ? KeyPath : ""}`];
 							type Indexes = Model["indexes"][number];
 							type IndexedField = Indexes["field"];
 							type UniqueIndexes = Model["indexes"][number] & { options: { unique: true } };
@@ -263,6 +266,18 @@ export namespace DB {
 							type Operands = "=" | "<" | ">";
 
 							const self = {
+								async manyKeys(limit?: number) {
+									await promise;
+									const db = await IDB.toPromise(indexedDB.open(databaseName));
+									const store = db.transaction(modelName, "readonly").objectStore(modelName);
+									return (await IDB.toPromise(store.getAllKeys(null, limit))) as Key[];
+								},
+								async many(limit?: number) {
+									await promise;
+									const db = await IDB.toPromise(indexedDB.open(databaseName));
+									const store = db.transaction(modelName, "readonly").objectStore(modelName);
+									return (await IDB.toPromise(store.getAll(null, limit))) as Values[];
+								},
 								async byIndex<TFieldName extends IndexedField>(
 									field: TFieldName,
 									operand: Operands,
@@ -300,10 +315,7 @@ export namespace DB {
 								) {
 									return (await self.byIndex(field, "=", value, 1)).at(0) ?? null;
 								},
-								async byKey(
-									key: KeyPath extends readonly string[] ? GetValuesOf<KeyPath>
-									:	Values[`${KeyPath extends string ? KeyPath : ""}`],
-								) {
+								async byKey(key: Key) {
 									await promise;
 									const db = await IDB.toPromise(indexedDB.open(databaseName));
 									const store = db.transaction(modelName, "readonly").objectStore(modelName);

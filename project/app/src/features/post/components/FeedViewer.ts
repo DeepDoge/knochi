@@ -19,7 +19,7 @@ export function FeedViewer(feed: Feed) {
 		busy = true;
 		try {
 			const result = await next.next();
-			console.log(result);
+
 			posts.element.append(...(result.value?.map((post) => li().children(PostViewer(post)).element) ?? []));
 		} finally {
 			busy = false;

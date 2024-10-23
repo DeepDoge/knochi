@@ -4,7 +4,7 @@
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
 		"noPropertyAccessFromIndexSignature": true,
-		"exactOptionalPropertyTypes": true,
+		/* "exactOptionalPropertyTypes": true, */
 		"noImplicitOverride": true,
 		"useUnknownInCatchVariables": true,
 		"checkJs": true

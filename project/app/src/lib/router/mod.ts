@@ -28,14 +28,22 @@ function getSearchParams(search = getSearch()) {
 export class Router<const TRoutes extends { readonly [key: string]: Router.Route<unknown> }> {
 	public readonly routes: TRoutes;
 	public readonly route = Router.pathname.derive((pathname) => {
-		for (const [, route] of Object.entries(this.routes)) {
-			const data = route.fromPathname(pathname);
-			if (typeof data === "undefined") return;
+		for (const [name, route] of Object.entries(this.routes)) {
+			const data = catchError(() => route.fromPathname(pathname), [Error]).data;
+			if (typeof data === "undefined") continue;
 			return {
+				name,
+				data,
 				render() {
 					return route.render(data);
 				},
-			};
+			} as {
+				[K in keyof TRoutes]: {
+					name: K;
+					data: Exclude<ReturnType<TRoutes[K]["fromPathname"]>, undefined>;
+					render(): ReturnType<TRoutes[K]["render"]>;
+				};
+			}[keyof TRoutes];
 		}
 
 		return null;
