@@ -51,7 +51,11 @@ export default tseslint.config(
 						{
 							name: "app",
 							pattern: patterns.app,
-							allowImportsFrom: [...patterns.shared, ...patterns.app, ...patterns.features],
+							allowImportsFrom: [
+								...patterns.shared,
+								...patterns.app,
+								...patterns.features,
+							],
 						},
 						{
 							name: "unknown",

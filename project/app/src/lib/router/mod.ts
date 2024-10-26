@@ -81,7 +81,10 @@ export namespace Router {
 		toHref(data: TData): string;
 		render(data: TData): TRender;
 	}
-	Router.Route = class<TData = unknown, TRender extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>> {
+	Router.Route = class<
+		TData = unknown,
+		TRender extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
+	> {
 		readonly #init: Route.Init<TData, TRender>;
 
 		constructor(init: Route.Init<TData, TRender>) {

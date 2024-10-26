@@ -24,7 +24,10 @@ export function Layout() {
 			}
 
 			function getScrollProgress() {
-				return Math.max(0, Math.min(1, element.scrollLeft / (element.scrollWidth - element.clientWidth)));
+				return Math.max(
+					0,
+					Math.min(1, element.scrollLeft / (element.scrollWidth - element.clientWidth)),
+				);
 			}
 
 			function getIsOpen(searchParam = menuSearchParam.val) {
@@ -42,7 +45,8 @@ export function Layout() {
 			let isStaticCache = true;
 			function updateStaticState() {
 				const scrollProgress = getScrollProgress();
-				const isStatic = scrollProgress === 1 || element.scrollWidth === element.clientWidth;
+				const isStatic =
+					scrollProgress === 1 || element.scrollWidth === element.clientWidth;
 
 				if (isStatic === isStaticCache) return isStatic;
 
@@ -64,7 +68,9 @@ export function Layout() {
 			}
 
 			handleResize();
-			const unfollowMenuSearchParam = menuSearchParam.follow((param) => scroll(getIsOpen(param), "smooth"));
+			const unfollowMenuSearchParam = menuSearchParam.follow((param) =>
+				scroll(getIsOpen(param), "smooth"),
+			);
 
 			window.addEventListener("resize", handleResize);
 			function handleResize() {

@@ -2,7 +2,12 @@ import { html } from "~/lib/html";
 
 export function PolygonSvg(size = "100%") {
 	return html`
-		<svg width="${size}" height="${size}" viewBox="0 0 40 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<svg
+			width="${size}"
+			height="${size}"
+			viewBox="0 0 40 34"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg">
 			<path
 				fill-rule="evenodd"
 				clip-rule="evenodd"

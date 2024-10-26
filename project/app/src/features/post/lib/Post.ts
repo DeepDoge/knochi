@@ -38,7 +38,9 @@ export class Post {
 		const indexerContract = PostIndexer.connect(provider, params.indexerAddress);
 		const indexHex = Hex.from(index);
 
-		let dbPostIndex = await postDb.find("PostIndex").byKey([chainIdHex, params.indexerAddress, feedId, indexHex]);
+		let dbPostIndex = await postDb
+			.find("PostIndex")
+			.byKey([chainIdHex, params.indexerAddress, feedId, indexHex]);
 
 		const postIndex = await indexerContract.get(feedId, index);
 		const [author, postId, postStore, time_seconds] = postIndex;

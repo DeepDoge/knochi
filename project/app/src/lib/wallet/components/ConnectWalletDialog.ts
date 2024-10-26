@@ -1,5 +1,6 @@
 import { Signal, tags } from "@purifyjs/core";
 import { clickClose } from "~/lib/actions/clickClose";
+import { closeOnDisconnect } from "~/lib/actions/closeOnDisconnect";
 import { Config } from "~/lib/config";
 import { css, scope } from "~/lib/css";
 import { WalletList } from "~/lib/wallet/components/WalletList";
@@ -16,7 +17,7 @@ export function ConnectWalletDialog(params: {
 	return dialog()
 		.use(scope(ConnectWalletDialogCss))
 		.use(clickClose())
-		.use((element) => () => element.close())
+		.use(closeOnDisconnect())
 		.use((element) =>
 			isOpen.follow((isOpen) => {
 				if (isOpen) {

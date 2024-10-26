@@ -1,5 +1,8 @@
 import { fragment, ref, Signal, tags } from "@purifyjs/core";
-import { SelectedSender, SelectSenderPopover } from "~/features/post/components/SelectSenderPopover";
+import {
+	SelectedSender,
+	SelectSenderPopover,
+} from "~/features/post/components/SelectSenderPopover";
 import { css, scope } from "~/lib/css";
 
 const { button, img } = tags;

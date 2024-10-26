@@ -113,7 +113,10 @@ window.dispatchEvent(new Event("eip6963:requestProvider"));
 
 export const currentWalletDetail = ref<WalletDetail | null>(null);
 
-export async function getOrRequestSigner(params: { wallet: WalletDetail; network: Config.Network | null }) {
+export async function getOrRequestSigner(params: {
+	wallet: WalletDetail;
+	network: Config.Network | null;
+}) {
 	const { wallet, network } = params;
 
 	if (network) {
@@ -156,7 +159,10 @@ export async function getOrRequestSigner(params: { wallet: WalletDetail; network
 					});
 
 				await wallet.ethereum
-					.request({ method: "wallet_switchEthereumChain", params: [{ chainId: chainIdHex }] })
+					.request({
+						method: "wallet_switchEthereumChain",
+						params: [{ chainId: chainIdHex }],
+					})
 					.catch((switchError) => {
 						const message = "Failed to switch to the network after adding";
 						console.error(message, switchError);

@@ -64,7 +64,12 @@ export class Feed {
 						if (index >= length) break;
 
 						posts.push(
-							Post.load({ network, indexerAddress: source.indexer.address, feedId: this.id, index }),
+							Post.load({
+								network,
+								indexerAddress: source.indexer.address,
+								feedId: this.id,
+								index,
+							}),
 						);
 					}
 					source.index += BigInt(posts.length) * this.direction;

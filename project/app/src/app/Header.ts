@@ -1,8 +1,8 @@
 import { awaited, computed, fragment, tags } from "@purifyjs/core";
+import { feedGroupFormDialogSearchParam } from "~/app/master";
 import { router } from "~/app/router";
 import { CreateFolderSvg } from "~/assets/svgs/CreateFolderSvg";
 import { RssSvg } from "~/assets/svgs/RssSvg";
-import { feedGroupFormDialogSearchParam } from "~/features/post/components/FeedGroupForm";
 import { FeedGroupIcon } from "~/features/post/components/FeedGroupIcon";
 import { postDb } from "~/features/post/database/client";
 import { css, scope } from "~/lib/css";
@@ -12,7 +12,7 @@ import { WalletAvatarSvg } from "~/lib/wallet/components/WalletAvatarSvg";
 import { connectWallet } from "~/lib/wallet/connectDialog";
 import { currentWalletDetail } from "~/lib/wallet/utils";
 
-const { div, header, a, hr, section } = tags;
+const { div, header, a, hr, section, strong } = tags;
 
 export function Header() {
 	const signerAddress = computed(() => {
@@ -59,7 +59,9 @@ export function Header() {
 							return groups.map((group) => {
 								const href = router.routes.feed.toHref({ groupId: group.groupId });
 								const current = router.route.derive(
-									(route) => route?.name === "feed" && route.data.groupId === group.groupId,
+									(route) =>
+										route?.name === "feed" &&
+										route.data.groupId === group.groupId,
 								);
 								return a({ class: "full" })
 									.role("tab")
@@ -84,7 +86,8 @@ export function Header() {
 							const groups = await groupsPromise;
 							const group = router.route.derive((route) =>
 								route?.name === "feed" ?
-									(groups.find((group) => group.groupId === route.data.groupId) ?? null)
+									(groups.find((group) => group.groupId === route.data.groupId) ??
+									null)
 								:	null,
 							);
 
@@ -98,7 +101,7 @@ export function Header() {
 									.byIndex("groupId", "=", group.groupId)
 									.then((feeds) => {
 										return feeds.map((feed) => {
-											return div().textContent(feed.feedId);
+											return strong().textContent(feed.label);
 										});
 									});
 
@@ -116,7 +119,10 @@ export function Header() {
 								a()
 									.ariaCurrent(
 										router.route.derive((route) =>
-											route?.name === "profile" && route.data.address === signerAddress ?
+											(
+												route?.name === "profile" &&
+												route.data.address === signerAddress
+											) ?
 												"page"
 											:	null,
 										),
@@ -221,9 +227,18 @@ const HeaderCss = css`
 	[role="tabpanel"] {
 		grid-area: tabpanel;
 
+		display: block grid;
+		align-content: start;
+
 		padding-inline: 1em;
 		padding-block: 1em;
 
 		background-color: color-mix(in srgb, var(--base), var(--pop) 7.5%);
+
+		strong {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
 	}
 `;

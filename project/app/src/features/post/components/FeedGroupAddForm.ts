@@ -2,27 +2,43 @@ import { awaited, ref, tags } from "@purifyjs/core";
 import { FeedGroupIcon } from "~/features/post/components/FeedGroupIcon";
 import { postDb } from "~/features/post/database/client";
 import { Feed } from "~/features/post/lib/Feed";
+import { css, scope } from "~/lib/css";
+import { PromiseOrValue } from "~/lib/types/promise";
 
 const { form, button, strong } = tags;
 
-export function FeedGroupAddForm(params: { feedId: Feed.Id; label: string; icon: string; onDone?: () => void }) {
+type FeedGroup = ReturnType<(typeof postDb.lastVersion.models.FeedGroup)["parser"]>;
+
+export function FeedGroupAddForm(params: {
+	values: { feedId: Feed.Id; label: string; icon: string };
+	groups: PromiseOrValue<FeedGroup[]>;
+	onDone?: () => void;
+}) {
 	async function add(groupId: string) {
 		await postDb
 			.add("FeedGroupItem")
 			.values({
 				groupId,
-				feedId: params.feedId,
-				label: params.label,
-				icon: params.icon,
+				feedId: params.values.feedId,
+				label: params.values.label,
+				icon: params.values.icon,
 			})
 			.execute();
 	}
 
 	const busy = ref(false);
 
-	const groupsPromise = postDb.find("FeedGroup").many();
+	function renderGroups(groups: FeedGroup[]) {
+		return groups.map((group) => {
+			return button()
+				.name("group")
+				.value(group.groupId)
+				.children(FeedGroupIcon(group.name), strong().textContent(group.name));
+		});
+	}
 
 	return form()
+		.use(scope(FeedGroupAddFormCss))
 		.onsubmit(async (event) => {
 			event.preventDefault();
 			busy.val = true;
@@ -37,17 +53,26 @@ export function FeedGroupAddForm(params: { feedId: Feed.Id; label: string; icon:
 			}
 		})
 		.children(
-			awaited(groupsPromise).derive((groups) => {
-				if (!groups) {
-					return null; // loading
-				}
-
-				return groups.map((group) => {
-					return button()
-						.name("group")
-						.value(group.groupId)
-						.children(FeedGroupIcon(group.name), strong().textContent(group.name));
-				});
-			}),
+			params.groups instanceof Promise ?
+				awaited(params.groups.then(renderGroups))
+			:	renderGroups(params.groups),
 		);
 }
+
+const FeedGroupAddFormCss = css`
+	:scope {
+		display: block grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 4em), 1fr));
+		gap: 1em;
+	}
+
+	button[name="group"] {
+		display: block grid;
+
+		strong {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+	}
+`;

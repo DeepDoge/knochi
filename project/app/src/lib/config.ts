@@ -75,7 +75,8 @@ const configSchema = Config();
 
 configBroadcast.onmessage = (event) => (config.val = configSchema.parse(event.data));
 export const config = ref<Config>(
-	catchError(() => parseJson(localStorage.getItem(configKey) ?? ""), [Error]).data ?? structuredClone(DEFAULT_CONFIG),
+	catchError(() => parseJson(localStorage.getItem(configKey) ?? ""), [Error]).data ??
+		structuredClone(DEFAULT_CONFIG),
 	(set) => {
 		configBroadcast.addEventListener("message", broadcastListener);
 		function broadcastListener(event: MessageEvent) {

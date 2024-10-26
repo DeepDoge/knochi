@@ -28,14 +28,20 @@ export namespace DB {
 
 	export type ModelKeyParameters<
 		T extends Fields,
-		Keys extends string = Extract<keyof { [K in keyof T as T[K] extends IDBValidKey ? K : never]: 0 }, string>,
+		Keys extends string = Extract<
+			keyof { [K in keyof T as T[K] extends IDBValidKey ? K : never]: 0 },
+			string
+		>,
 	> = Omit<IDBObjectStoreParameters, Keys> & {
 		keyPath?: Keys | Keys[];
 	};
 
 	export type ModalIndexParameters<
 		T extends Fields,
-		Keys extends string = Extract<keyof { [K in keyof T as T[K] extends IDBValidKey ? K : never]: 0 }, string>,
+		Keys extends string = Extract<
+			keyof { [K in keyof T as T[K] extends IDBValidKey ? K : never]: 0 },
+			string
+		>,
 	> = {
 		field: Keys | Keys[];
 		options: IDBIndexParameters;
@@ -44,7 +50,8 @@ export namespace DB {
 	export type Model<
 		TFields extends Fields = Fields,
 		TParams extends ModelKeyParameters<TFields> = ModelKeyParameters<TFields>,
-		TIndexes extends readonly ModalIndexParameters<TFields>[] = readonly ModalIndexParameters<TFields>[],
+		TIndexes extends
+			readonly ModalIndexParameters<TFields>[] = readonly ModalIndexParameters<TFields>[],
 	> = {
 		parser(fields: unknown): TFields;
 		parameters: TParams;
@@ -57,11 +64,13 @@ export namespace DB {
 			parser<TFields extends Fields>(parser: (fields: TFields) => TFields) {
 				return {
 					key<const TParams extends ModelKeyParameters<TFields>>(parameters: TParams) {
-						function innerBuilder<const TIndexes extends readonly ModalIndexParameters<TFields>[]>(
-							indexes: TIndexes,
-						) {
+						function innerBuilder<
+							const TIndexes extends readonly ModalIndexParameters<TFields>[],
+						>(indexes: TIndexes) {
 							return {
-								index<const TIndex extends ModalIndexParameters<TFields>>(newIndex: TIndex) {
+								index<const TIndex extends ModalIndexParameters<TFields>>(
+									newIndex: TIndex,
+								) {
 									return innerBuilder([...indexes, newIndex]);
 								},
 								build(): Model<TFields, TParams, TIndexes> {
@@ -122,7 +131,9 @@ export namespace DB {
 								// Handle index updates and deletions
 								const existingIndexes = Array.from(store.indexNames);
 								const newIndexes = model.indexes.map((index) =>
-									Array.isArray(index.field) ? index.field.join("_") : (index.field as string),
+									Array.isArray(index.field) ?
+										index.field.join("_")
+									:	(index.field as string),
 								);
 
 								// Delete obsolete indexes
@@ -135,7 +146,9 @@ export namespace DB {
 								// Create or update indexes
 								for (const index of model.indexes) {
 									const indexName =
-										Array.isArray(index.field) ? index.field.join("_") : (index.field as string);
+										Array.isArray(index.field) ?
+											index.field.join("_")
+										:	(index.field as string);
 									if (!store.indexNames.contains(indexName)) {
 										store.createIndex(indexName, index.field, index.options);
 									} else {
@@ -153,7 +166,10 @@ export namespace DB {
 									try {
 										model.parser(value); // This will throw if data does not match parser schema
 									} catch (error) {
-										console.error(`Validation error in ${modelName} store: `, String(error));
+										console.error(
+											`Validation error in ${modelName} store: `,
+											String(error),
+										);
 										throw error;
 									}
 								}
@@ -165,17 +181,24 @@ export namespace DB {
 							console.log(`Migration to version ${lastVersion.version} complete`);
 						};
 						tx.onerror = () => {
-							console.error(`Migration to version ${lastVersion.version} failed`, tx.error);
+							console.error(
+								`Migration to version ${lastVersion.version} failed`,
+								tx.error,
+							);
 						};
 					};
 
 					const promise = IDB.toPromise(openRequest);
 
-					type LastVersion = TVersions extends readonly [...Version[], infer U extends Version] ? U : never;
+					type LastVersion =
+						TVersions extends readonly [...Version[], infer U extends Version] ? U
+						:	never;
 
 					return {
 						lastVersion: lastVersion as LastVersion,
-						add<TModelName extends Extract<keyof LastVersion["models"], string>>(modelName: TModelName) {
+						add<TModelName extends Extract<keyof LastVersion["models"], string>>(
+							modelName: TModelName,
+						) {
 							const model = lastVersion.models[modelName];
 							if (!model) {
 								throw new Error(`Model ${modelName} not found`);
@@ -188,7 +211,9 @@ export namespace DB {
 									return {
 										async execute() {
 											await promise;
-											const db = await IDB.toPromise(indexedDB.open(databaseName));
+											const db = await IDB.toPromise(
+												indexedDB.open(databaseName),
+											);
 											await IDB.toPromise(
 												db
 													.transaction(modelName, "readwrite")
@@ -200,7 +225,9 @@ export namespace DB {
 								},
 							};
 						},
-						set<TModelName extends Extract<keyof LastVersion["models"], string>>(modelName: TModelName) {
+						set<TModelName extends Extract<keyof LastVersion["models"], string>>(
+							modelName: TModelName,
+						) {
 							const model = lastVersion.models[modelName];
 							if (!model) {
 								throw new Error(`Model ${modelName} not found`);
@@ -214,7 +241,10 @@ export namespace DB {
 								R extends readonly unknown[] = readonly [],
 							> =
 								TFields extends (
-									readonly [infer First extends keyof Values, ...infer Rest extends (keyof Values)[]]
+									readonly [
+										infer First extends keyof Values,
+										...infer Rest extends (keyof Values)[],
+									]
 								) ?
 									GetValuesOf<Rest, readonly [...R, Values[First]]>
 								:	R;
@@ -228,7 +258,9 @@ export namespace DB {
 									return {
 										async execute() {
 											await promise;
-											const db = await IDB.toPromise(indexedDB.open(databaseName));
+											const db = await IDB.toPromise(
+												indexedDB.open(databaseName),
+											);
 											await IDB.toPromise(
 												db
 													.transaction(modelName, "readwrite")
@@ -240,7 +272,9 @@ export namespace DB {
 								},
 							};
 						},
-						find<TModelName extends Extract<keyof LastVersion["models"], string>>(modelName: TModelName) {
+						find<TModelName extends Extract<keyof LastVersion["models"], string>>(
+							modelName: TModelName,
+						) {
 							const model = lastVersion.models[modelName];
 							if (!model) {
 								throw new Error(`Model ${modelName} not found`);
@@ -253,7 +287,9 @@ export namespace DB {
 								:	Values[`${KeyPath extends string ? KeyPath : ""}`];
 							type Indexes = Model["indexes"][number];
 							type IndexedField = Indexes["field"];
-							type UniqueIndexes = Model["indexes"][number] & { options: { unique: true } };
+							type UniqueIndexes = Model["indexes"][number] & {
+								options: { unique: true };
+							};
 							type UniqueIndexedField = UniqueIndexes["field"];
 
 							type GetValuesOf<
@@ -275,49 +311,76 @@ export namespace DB {
 								async manyKeys(limit?: number) {
 									await promise;
 									const db = await IDB.toPromise(indexedDB.open(databaseName));
-									const store = db.transaction(modelName, "readonly").objectStore(modelName);
-									return (await IDB.toPromise(store.getAllKeys(null, limit))) as Key[];
+									const store = db
+										.transaction(modelName, "readonly")
+										.objectStore(modelName);
+									return (await IDB.toPromise(
+										store.getAllKeys(null, limit),
+									)) as Key[];
 								},
 								async many(
-									sort?: { by: Extract<IndexedField, string>; order: IDBCursorDirection } | null,
+									sort?: {
+										by: Extract<IndexedField, string>;
+										order: IDBCursorDirection;
+									} | null,
 									limit?: number,
 								) {
 									console.log(sort);
 									await promise;
 									const db = await IDB.toPromise(indexedDB.open(databaseName));
-									const store = db.transaction(modelName, "readonly").objectStore(modelName);
+									const store = db
+										.transaction(modelName, "readonly")
+										.objectStore(modelName);
 
 									if (sort) {
 										return (await Array.fromAsync(
-											IDB.toIterPromise(store.index(sort.by).openCursor(null, sort.order), limit),
+											IDB.toIterPromise(
+												store.index(sort.by).openCursor(null, sort.order),
+												limit,
+											),
 										)) as Values[];
 									}
 
-									return (await IDB.toPromise(store.getAll(null, limit))) as Values[];
+									return (await IDB.toPromise(
+										store.getAll(null, limit),
+									)) as Values[];
 								},
 								async byIndex<TFieldName extends IndexedField>(
 									field: TFieldName,
 									operand: Operands,
-									value: TFieldName extends readonly string[] ? GetValuesOf<TFieldName>
+									value: TFieldName extends readonly string[] ?
+										GetValuesOf<TFieldName>
 									:	Values[`${TFieldName extends string ? TFieldName : ""}`],
 									limit: number = 100_000,
 								) {
 									await promise;
 									const db = await IDB.toPromise(indexedDB.open(databaseName));
-									const store = db.transaction(modelName, "readonly").objectStore(modelName);
-									const index = store.index(Array.isArray(field) ? field.join("_") : field);
+									const store = db
+										.transaction(modelName, "readonly")
+										.objectStore(modelName);
+									const index = store.index(
+										Array.isArray(field) ? field.join("_") : field,
+									);
 
 									if (operand === "=") {
-										const result = await IDB.toPromise(index.getAll(value as never, limit));
+										const result = await IDB.toPromise(
+											index.getAll(value as never, limit),
+										);
 										return result as Values[];
 									} else if (operand === "<") {
 										const result = await IDB.toPromise(
-											index.getAll(IDBKeyRange.lowerBound(value as never), limit),
+											index.getAll(
+												IDBKeyRange.lowerBound(value as never),
+												limit,
+											),
 										);
 										return result as Values[];
 									} else if (operand === ">") {
 										const result = await IDB.toPromise(
-											index.getAll(IDBKeyRange.upperBound(value as never), limit),
+											index.getAll(
+												IDBKeyRange.upperBound(value as never),
+												limit,
+											),
 										);
 										return result as Values[];
 									} else {
@@ -327,7 +390,8 @@ export namespace DB {
 								},
 								async byUniqueIndex<TFieldName extends UniqueIndexedField>(
 									field: TFieldName,
-									value: TFieldName extends readonly string[] ? GetValuesOf<TFieldName>
+									value: TFieldName extends readonly string[] ?
+										GetValuesOf<TFieldName>
 									:	Values[`${TFieldName extends string ? TFieldName : ""}`],
 								) {
 									return (await self.byIndex(field, "=", value, 1)).at(0) ?? null;
@@ -335,7 +399,9 @@ export namespace DB {
 								async byKey(key: Key) {
 									await promise;
 									const db = await IDB.toPromise(indexedDB.open(databaseName));
-									const store = db.transaction(modelName, "readonly").objectStore(modelName);
+									const store = db
+										.transaction(modelName, "readonly")
+										.objectStore(modelName);
 									const result = await IDB.toPromise(store.get(key as never));
 
 									return result as Values | null;

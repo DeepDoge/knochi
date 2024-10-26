@@ -10,7 +10,10 @@ export function WalletAddress(address: Address, suffixLength = 3) {
 
 	return span()
 		.use(scope(AddressTextCss))
-		.children(span({ class: "prefix" }).textContent(prefix), span({ class: "suffix" }).textContent(suffix));
+		.children(
+			span({ class: "prefix" }).textContent(prefix),
+			span({ class: "suffix" }).textContent(suffix),
+		);
 }
 
 const AddressTextCss = css`

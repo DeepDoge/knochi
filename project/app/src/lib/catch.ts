@@ -22,7 +22,10 @@ export function catchError<T, TError extends ErrorConstructor>(
 	source: Promise<T>,
 	errors: TError[],
 ): Promise<Result<T, TError>>;
-export function catchError<T, TError extends ErrorConstructor>(source: () => T, errors: TError[]): Result<T, TError>;
+export function catchError<T, TError extends ErrorConstructor>(
+	source: () => T,
+	errors: TError[],
+): Result<T, TError>;
 export function catchError(
 	source: (() => unknown) | Promise<unknown>,
 	errors: ErrorConstructor[],
@@ -31,7 +34,8 @@ export function catchError(
 		return source
 			.then((data) => Result({ success: true, data }))
 			.catch((throwed) => {
-				const throwedError = throwed instanceof Error ? throwed : new Error(String(throwed));
+				const throwedError =
+					throwed instanceof Error ? throwed : new Error(String(throwed));
 				for (const error of errors) {
 					if (throwedError instanceof error) {
 						return Result({ success: false, error: throwedError });

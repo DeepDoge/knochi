@@ -20,7 +20,9 @@ export function FeedScroller(feed: Feed) {
 		try {
 			const result = await next.next();
 
-			posts.element.append(...(result.value?.map((post) => li().children(PostArticle(post)).element) ?? []));
+			posts.element.append(
+				...(result.value?.map((post) => li().children(PostArticle(post)).element) ?? []),
+			);
 		} finally {
 			busy = false;
 		}

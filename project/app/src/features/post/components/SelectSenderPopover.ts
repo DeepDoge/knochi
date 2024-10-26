@@ -8,7 +8,9 @@ export type SelectedSender = {
 	key: string;
 };
 
-export function SelectSenderPopover(params: { onChange: (selectedSender: SelectedSender) => unknown }) {
+export function SelectSenderPopover(params: {
+	onChange: (selectedSender: SelectedSender) => unknown;
+}) {
 	const popover = div()
 		.popover("auto")
 		.children("Select Sender", ul().children(config.derive(renderOptions)));

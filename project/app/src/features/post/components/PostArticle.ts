@@ -11,7 +11,12 @@ export function PostArticle(post: Post) {
 	return article().children(
 		header().children(
 			["By ", address().children(a().rel("author").children(WalletAddress(post.author)))],
-			["on ", time({ pubdate: "pubdate" }).dateTime(date.toISOString()).children(date.toLocaleString())],
+			[
+				"on ",
+				time({ pubdate: "pubdate" })
+					.dateTime(date.toISOString())
+					.children(date.toLocaleString()),
+			],
 		),
 		div().children(
 			post.content.map((part) => {

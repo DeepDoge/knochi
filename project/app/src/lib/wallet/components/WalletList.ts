@@ -49,8 +49,12 @@ export function WalletList(params: {
 									);
 								})
 								.children(
-									div({ class: "box" }).children(picture().children(img().src(wallet.info.icon))),
-									span({ class: "name" }).title(wallet.info.name).children(wallet.info.name),
+									div({ class: "box" }).children(
+										picture().children(img().src(wallet.info.icon)),
+									),
+									span({ class: "name" })
+										.title(wallet.info.name)
+										.children(wallet.info.name),
 								),
 						);
 					}),

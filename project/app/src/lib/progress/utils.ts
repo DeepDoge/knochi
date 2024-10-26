@@ -38,7 +38,10 @@ export function trackPromise<T extends Promise<unknown>>(
 		switch (status) {
 			case "progress":
 				return {
-					icon: fragment(progress({ class: "visually-hidden" }).ariaLabel("Loading..."), LoadingSvg()),
+					icon: fragment(
+						progress({ class: "visually-hidden" }).ariaLabel("Loading..."),
+						LoadingSvg(),
+					),
 					background: "var(--pop)",
 					color: "var(--base)",
 					busy: true,
@@ -46,7 +49,10 @@ export function trackPromise<T extends Promise<unknown>>(
 			case "success":
 				return {
 					icon: fragment(
-						progress({ class: "visually-hidden" }).value(1).max(1).ariaLabel("Completed"),
+						progress({ class: "visually-hidden" })
+							.value(1)
+							.max(1)
+							.ariaLabel("Completed"),
 						SuccessSvg(),
 					),
 					background: "var(--success)",
@@ -55,7 +61,10 @@ export function trackPromise<T extends Promise<unknown>>(
 				};
 			case "fail":
 				return {
-					icon: fragment(progress({ class: "visually-hidden" }).ariaLabel("Failed"), ErrorSvg()),
+					icon: fragment(
+						progress({ class: "visually-hidden" }).ariaLabel("Failed"),
+						ErrorSvg(),
+					),
 					background: "var(--fail)",
 					color: "var(--pop)",
 					busy: false,

@@ -6,7 +6,10 @@ declare const HEX: unique symbol;
 export type Hex = `0x${string}` & { [HEX]?: true };
 export function Hex() {
 	return string()
-		.refine((value) => isHexString(value), `Value must be a valid hex string, prefixed with '0x'.`)
+		.refine(
+			(value) => isHexString(value),
+			`Value must be a valid hex string, prefixed with '0x'.`,
+		)
 		.transform((value) => value as Hex);
 }
 export namespace Hex {
