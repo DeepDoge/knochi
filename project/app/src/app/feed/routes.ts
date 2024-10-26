@@ -72,9 +72,15 @@ export const feedRoutes = {
 					}));
 
 			return div().children(
-				FeedGroupAddFormPopoverButton({ feedId: data.feedId, icon: "", label: data.feedId })
-					.textContent("Add To Group")
-					.use((element) => element.click()),
+				FeedGroupAddFormPopoverButton({
+					values: {
+						type: "feed",
+						feedId: data.feedId,
+						label: "",
+					},
+				})
+					.attributes({ class: "button" })
+					.textContent("add to group"),
 				FeedScroller(
 					new Feed({
 						id: data.feedId,

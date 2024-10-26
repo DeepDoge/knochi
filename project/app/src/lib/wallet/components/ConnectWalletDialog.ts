@@ -32,7 +32,7 @@ export function ConnectWalletDialog(params: {
 			close();
 		})
 		.children(
-			strong().children("Connect Wallet"),
+			strong().children("connect wallet"),
 			form()
 				.method("dialog")
 				.children(network.derive((network) => WalletList({ network, onConnect: close }))),

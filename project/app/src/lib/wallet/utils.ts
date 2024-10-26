@@ -95,7 +95,7 @@ function addWalletDetail(ethereum: Eip1193Provider, info: WalletDetail["info"]) 
 if (window.ethereum) {
 	addWalletDetail(window.ethereum, {
 		key: "eip1193",
-		name: "Browser Eip1193",
+		name: "browser eip1193",
 		icon: walletSrc,
 	});
 }

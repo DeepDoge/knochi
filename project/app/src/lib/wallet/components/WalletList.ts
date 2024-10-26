@@ -23,7 +23,7 @@ export function WalletList(params: {
 								.type("button")
 								.onclick(() => {
 									trackPromise(
-										["Connect Wallet"],
+										["connect wallet"],
 
 										span({
 											style: [

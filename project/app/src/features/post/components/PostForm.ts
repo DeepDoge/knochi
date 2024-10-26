@@ -110,7 +110,7 @@ export function PostForm() {
 									return connectWallet.searchParam.toHref(`${value}`).val;
 								}),
 							)
-							.textContent("Connect Wallet");
+							.textContent("connect wallet");
 					}
 
 					return button({ class: "button" })

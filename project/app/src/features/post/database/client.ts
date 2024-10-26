@@ -29,7 +29,7 @@ export const postDb = DB.create("knochi.posts")
 					groupId: string(),
 					feedId: Feed.Id(),
 					label: string(),
-					icon: string(),
+					type: string(),
 				}).parse,
 			)
 			.key({ keyPath: ["groupId", "feedId"] })

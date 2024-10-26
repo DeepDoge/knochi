@@ -84,24 +84,30 @@ export function Header() {
 					groupsPromise
 						.derive(async (groupsPromise) => {
 							const groups = await groupsPromise;
-							const group = router.route.derive((route) =>
-								route?.name === "feed" ?
-									(groups.find((group) => group.groupId === route.data.groupId) ??
-									null)
-								:	null,
-							);
+
+							const group = router.route.derive((route) => {
+								return route?.name === "feed" ?
+										(groups.find(
+											(group) => group.groupId === route.data.groupId,
+										) ?? null)
+									:	null;
+							});
 
 							return group.derive((group) => {
-								if (!group) {
-									return "Not Found";
-								}
+								group ??= {
+									name: "home",
+									groupId: "~",
+									index: -1,
+								};
 
 								const feeds = postDb
 									.find("FeedGroupItem")
 									.byIndex("groupId", "=", group.groupId)
 									.then((feeds) => {
 										return feeds.map((feed) => {
-											return strong().textContent(feed.label);
+											return strong()
+												.title(feed.label)
+												.textContent(feed.label);
 										});
 									});
 
@@ -135,7 +141,7 @@ export function Header() {
 						} else {
 							return a({ class: "button" })
 								.href(connectWallet.searchParam.toHref("auto"))
-								.children("Connect Wallet");
+								.children("connect wallet");
 						}
 					}),
 				),

@@ -4,12 +4,14 @@ import { postDb } from "~/features/post/database/client";
 import { Feed } from "~/features/post/lib/Feed";
 import { css, scope } from "~/lib/css";
 
-const { div, button } = tags;
+const { div, button, strong } = tags;
 
-export function FeedGroupAddFormPopoverButton(values: {
-	feedId: Feed.Id;
-	label: string;
-	icon: string;
+export function FeedGroupAddFormPopoverButton(params: {
+	values: {
+		type: string;
+		feedId: Feed.Id;
+		label?: string;
+	};
 }) {
 	const open = ref(false);
 
@@ -21,11 +23,12 @@ export function FeedGroupAddFormPopoverButton(values: {
 			open.val = event.newState === "open";
 		})
 		.children(
+			strong().textContent("add to group"),
 			open.derive((open) => {
 				if (!open) return null;
 
 				return FeedGroupAddForm({
-					values,
+					values: params.values,
 					groups: postDb.find("FeedGroup").many({ by: "index", order: "prev" }),
 					onDone() {
 						popover.element.hidePopover();
@@ -45,11 +48,17 @@ export function FeedGroupAddFormPopoverButton(values: {
 }
 
 const PopoverCss = css`
-	:scope {
+	:scope:popover-open {
+		display: block grid;
 		inline-size: min(100%, 30em);
+		gap: 2em;
 		padding: 4em;
 
 		background-color: var(--base);
 		color: var(--pop);
+	}
+
+	strong {
+		font-size: 2em;
 	}
 `;
