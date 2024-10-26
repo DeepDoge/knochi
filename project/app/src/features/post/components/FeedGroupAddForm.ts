@@ -82,12 +82,12 @@ export function FeedGroupAddForm(params: {
 
 const FeedGroupAddFormCss = css`
 	.fields {
-		display: grid;
+		display: block grid;
 		gap: 1.5em;
 	}
 
 	label {
-		display: grid;
+		display: block grid;
 		gap: 0.5em;
 	}
 
