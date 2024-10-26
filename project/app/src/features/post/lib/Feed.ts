@@ -4,25 +4,36 @@ import { config } from "~/lib/config";
 import { Address, Hex } from "~/lib/solidity/primatives";
 import { Post } from "./Post";
 
+export namespace Feed {
+	export type Init = {
+		id: Feed.Id;
+		direction: Feed.Direction;
+		limit: number;
+		indexers: Feed.Indexer[];
+	};
+	export type Direction = 1n | -1n;
+	export type Indexer = { chainId: bigint; address: Address };
+}
+
 export class Feed {
 	public readonly id: Feed.Id;
 	public readonly direction: Feed.Direction;
-	public readonly chainIds: bigint[];
+	public readonly indexers: Feed.Indexer[];
 	public readonly limit: number;
 
 	constructor(init: Feed.Init) {
 		this.id = init.id;
 		this.direction = init.direction;
 		this.limit = init.limit;
-		this.chainIds = init.chainIds;
+		this.indexers = init.indexers;
 	}
 
 	public async *previousGenerator(): AsyncGenerator<Post[]> {}
 
 	public async *nextGenerator() {
-		const chains = this.chainIds.map((chainId) => {
+		const sources = this.indexers.map((indexer) => {
 			return {
-				chainId,
+				indexer,
 				index: this.direction > 0 ? 0n : null,
 				queue: [] as Post[],
 			};
@@ -30,33 +41,35 @@ export class Feed {
 
 		while (true) {
 			await Promise.allSettled(
-				chains.map(async (chain) => {
-					const take = Math.max(0, this.limit - chain.queue.length);
+				sources.map(async (source) => {
+					const take = Math.max(0, this.limit - source.queue.length);
 					if (!take) return;
 
-					const network = config.val.networks[`${chain.chainId}`];
+					const network = config.val.networks[`${source.indexer.chainId}`];
 					if (!network) {
 						return [];
 					}
 
 					const provider = new JsonRpcProvider(network.providers[0]);
-					const indexerContract = PostIndexer.connect(provider, network.contracts.PostIndexer);
+					const indexerContract = PostIndexer.connect(provider, source.indexer.address);
 
 					const length = await indexerContract.length(this.id);
-					chain.index ??= length - 1n;
+					source.index ??= length - 1n;
 
 					const posts: Promise<Post>[] = [];
 
 					for (let i = 0n; i < take; i++) {
-						const index = chain.index + i * this.direction;
+						const index = source.index + i * this.direction;
 						if (index < 0) break;
 						if (index >= length) break;
 
-						posts.push(Post.load({ network, feedId: this.id, index }));
+						posts.push(
+							Post.load({ network, indexerAddress: source.indexer.address, feedId: this.id, index }),
+						);
 					}
-					chain.index += BigInt(posts.length) * this.direction;
+					source.index += BigInt(posts.length) * this.direction;
 
-					chain.queue.push(
+					source.queue.push(
 						...(await Promise.allSettled(posts))
 							.filter((result) => result.status === "fulfilled")
 							.map((result) => result.value),
@@ -67,9 +80,9 @@ export class Feed {
 			const result: Post[] = [];
 
 			while (result.length < this.limit) {
-				let nextChain: (typeof chains)[number] | null = null;
+				let nextChain: (typeof sources)[number] | null = null;
 
-				for (const chain of chains) {
+				for (const chain of sources) {
 					const firstPost = chain.queue.at(0);
 					const nextPost = nextChain?.queue.at(0);
 
@@ -103,14 +116,6 @@ export class Feed {
 }
 
 export namespace Feed {
-	export type Init = {
-		id: Feed.Id;
-		direction: Feed.Direction;
-		limit: number;
-		chainIds: bigint[];
-	};
-	export type Direction = 1n | -1n;
-
 	export type Id = ReturnType<typeof Id>["_output"];
 	export function Id() {
 		return Hex();

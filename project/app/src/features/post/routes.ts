@@ -5,25 +5,15 @@ import { Router } from "~/lib/router/mod";
 export const postRoutes = {
 	feed: new Router.Route({
 		fromPathname(pathname) {
-			return Feed.Id()
-				.transform((id) => ({ id }))
-				.parse(pathname.slice(1));
+			return union([tuple([string()]), tuple([string(), Feed.Id()])])
+				.transform(([groupId, feedId]) => {
+					groupId ||= "~";
+					return feedId ? { groupId, feedId } : { groupId };
+				})
+				.parse(pathname.split("/"));
 		},
 		toPathname(data) {
-			return `/${data.id}`;
-		},
-		render() {
-			return null;
-		},
-	}),
-	group: new Router.Route({
-		fromPathname(pathname) {
-			return union([tuple([string(), Feed.Id()]), tuple([string()])])
-				.transform(([groupId, feedId]) => (feedId ? { groupId, feedId } : { groupId }))
-				.parse(pathname.slice(1).split("/"));
-		},
-		toPathname(data) {
-			return data.feedId ? `/${data.groupId}/${data.feedId}` : `/${data.groupId}`;
+			return [data.groupId, data.feedId].filter(Boolean).join("/");
 		},
 		render() {
 			return null;

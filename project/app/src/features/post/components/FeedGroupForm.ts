@@ -7,12 +7,14 @@ import { Router } from "~/lib/router/mod";
 const { dialog, div, form, label, strong, input, button } = tags;
 
 async function save(params: { id?: string | null; name: string }): Promise<{ id: string }> {
+	const index = ((await postDb.find("FeedGroup").many({ by: "index", order: "prev" }, 1)).at(0)?.index ?? -1) + 1;
+
 	if (params.id) {
-		await postDb.set("FeedGroup").byKey([params.id], { groupId: params.id, name: params.name }).execute();
+		await postDb.set("FeedGroup").byKey([params.id], { groupId: params.id, name: params.name, index }).execute();
 		return { id: params.id };
 	} else {
 		const id = crypto.randomUUID();
-		await postDb.add("FeedGroup").values({ groupId: id, name: params.name }).execute();
+		await postDb.add("FeedGroup").values({ groupId: id, name: params.name, index }).execute();
 		return { id };
 	}
 }

@@ -5,7 +5,7 @@ import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
 
 const { article, header, address, time, div, a } = tags;
 
-export function PostViewer(post: Post) {
+export function PostArticle(post: Post) {
 	const date = new Date(Number(post.createdAt) * 1000);
 
 	return article().children(

@@ -34,8 +34,8 @@
 		"vite-plugin-singlefile": "^2.0.2"
 	},
 	"dependencies": {
-		"@nomadshiba/typed-contracts": "npm:@jsr/nomadshiba__typed-contracts@^0.2.10",
-		"@purifyjs/core": "npm:@jsr/purifyjs__core@^0.0.308",
+		"@nomadshiba/typed-contracts": "npm:@jsr/nomadshiba__typed-contracts@^0.2.12",
+		"@purifyjs/core": "npm:@jsr/purifyjs__core@^0.0.318",
 		"ethers": "^6.9.1",
 		"extra-bigint": "^1.1.18",
 		"jazzicon-ts": "^4.0.0",

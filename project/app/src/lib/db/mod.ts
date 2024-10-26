@@ -9,11 +9,17 @@ export namespace DB {
 			});
 		}
 
-		export async function* toIterPromise<T extends IDBCursorWithValue | null>(request: IDBRequest<T>) {
-			const cursor = await toPromise(request);
-			if (!cursor) return;
-			yield cursor;
-			cursor.continue();
+		export async function* toIterPromise<T extends IDBCursorWithValue | null>(
+			request: IDBRequest<T>,
+			limit?: number,
+		) {
+			for (let i = 0; !limit || i < limit; i++) {
+				const cursor = await toPromise(request);
+				console.log(cursor?.value);
+				if (!cursor) return;
+				yield cursor.value as unknown;
+				cursor.continue();
+			}
 		}
 	}
 
@@ -143,9 +149,9 @@ export namespace DB {
 
 								// Validate data against parser before committing
 								const cursorRequest = store.openCursor();
-								for await (const cursor of IDB.toIterPromise(cursorRequest)) {
+								for await (const value of IDB.toIterPromise(cursorRequest)) {
 									try {
-										model.parser(cursor.value); // This will throw if data does not match parser schema
+										model.parser(value); // This will throw if data does not match parser schema
 									} catch (error) {
 										console.error(`Validation error in ${modelName} store: `, String(error));
 										throw error;
@@ -272,10 +278,21 @@ export namespace DB {
 									const store = db.transaction(modelName, "readonly").objectStore(modelName);
 									return (await IDB.toPromise(store.getAllKeys(null, limit))) as Key[];
 								},
-								async many(limit?: number) {
+								async many(
+									sort?: { by: Extract<IndexedField, string>; order: IDBCursorDirection } | null,
+									limit?: number,
+								) {
+									console.log(sort);
 									await promise;
 									const db = await IDB.toPromise(indexedDB.open(databaseName));
 									const store = db.transaction(modelName, "readonly").objectStore(modelName);
+
+									if (sort) {
+										return (await Array.fromAsync(
+											IDB.toIterPromise(store.index(sort.by).openCursor(null, sort.order), limit),
+										)) as Values[];
+									}
+
 									return (await IDB.toPromise(store.getAll(null, limit))) as Values[];
 								},
 								async byIndex<TFieldName extends IndexedField>(
@@ -283,7 +300,7 @@ export namespace DB {
 									operand: Operands,
 									value: TFieldName extends readonly string[] ? GetValuesOf<TFieldName>
 									:	Values[`${TFieldName extends string ? TFieldName : ""}`],
-									limit: number,
+									limit: number = 100_000,
 								) {
 									await promise;
 									const db = await IDB.toPromise(indexedDB.open(databaseName));

@@ -2,8 +2,8 @@ import { awaited, computed, fragment, tags } from "@purifyjs/core";
 import { router } from "~/app/router";
 import { CreateFolderSvg } from "~/assets/svgs/CreateFolderSvg";
 import { RssSvg } from "~/assets/svgs/RssSvg";
-import { SingleLetterSvg } from "~/assets/svgs/SingleLetterSvg";
 import { feedGroupFormDialogSearchParam } from "~/features/post/components/FeedGroupForm";
+import { FeedGroupIcon } from "~/features/post/components/FeedGroupIcon";
 import { postDb } from "~/features/post/database/client";
 import { css, scope } from "~/lib/css";
 import { Address } from "~/lib/solidity/primatives";
@@ -22,7 +22,9 @@ export function Header() {
 		return signer?.address ? Address().parse(signer.address) : null;
 	});
 
-	const groupsPromise = feedGroupFormDialogSearchParam.derive(Boolean).derive(() => postDb.find("FeedGroup").many());
+	const groupsPromise = feedGroupFormDialogSearchParam.derive(Boolean).derive(() => {
+		return postDb.find("FeedGroup").many({ by: "index", order: "prev" });
+	});
 
 	return header()
 		.use(scope(HeaderCss))
@@ -31,14 +33,13 @@ export function Header() {
 				.role("tablist")
 				.children(
 					(() => {
-						const id = "";
-						const href = router.routes.group.toHref({ groupId: id });
+						const id = "~";
 						const current = router.route.derive(
-							(route) => route?.name === "group" && route.data.groupId === id,
+							(route) => route?.name === "feed" && route.data.groupId === id,
 						);
 						return a()
 							.role("tab")
-							.href(href)
+							.href("#/")
 							.title("Home Feed")
 							.attributes({ "aria-controls": "header-tabpanel-home" })
 							.ariaSelected(current.derive(String))
@@ -56,18 +57,18 @@ export function Header() {
 							const groups = await groupsPromise;
 
 							return groups.map((group) => {
-								const href = router.routes.group.toHref({ groupId: group.groupId });
+								const href = router.routes.feed.toHref({ groupId: group.groupId });
 								const current = router.route.derive(
-									(route) => route?.name === "group" && route.data.groupId === group.groupId,
+									(route) => route?.name === "feed" && route.data.groupId === group.groupId,
 								);
-								return a()
+								return a({ class: "full" })
 									.role("tab")
 									.href(href)
 									.title(group.name)
 									.attributes({ "aria-controls": "header-tabpanel-home" })
 									.ariaSelected(current.derive(String))
 									.tabIndex(current.derive((current) => (current ? 0 : -1)))
-									.children(SingleLetterSvg(group.name.at(0)?.toUpperCase() ?? "X"));
+									.children(FeedGroupIcon(group.name));
 							});
 						})
 						.derive(awaited),
@@ -82,7 +83,7 @@ export function Header() {
 						.derive(async (groupsPromise) => {
 							const groups = await groupsPromise;
 							const group = router.route.derive((route) =>
-								route?.name === "group" ?
+								route?.name === "feed" ?
 									(groups.find((group) => group.groupId === route.data.groupId) ?? null)
 								:	null,
 							);
@@ -93,8 +94,8 @@ export function Header() {
 								}
 
 								const feeds = postDb
-									.find("Feed")
-									.byIndex("groupId", "=", group.groupId, Infinity)
+									.find("FeedGroupItem")
+									.byIndex("groupId", "=", group.groupId)
 									.then((feeds) => {
 										return feeds.map((feed) => {
 											return div().textContent(feed.feedId);
@@ -194,6 +195,9 @@ const HeaderCss = css`
 			inline-size: 3em;
 			aspect-ratio: 1;
 			padding: 0.75em;
+			&.full {
+				padding: 0.2em;
+			}
 
 			border-radius: 50%;
 			overflow: clip;

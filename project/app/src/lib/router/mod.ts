@@ -12,7 +12,7 @@ function getHash() {
 function getPathname(hash = getHash()) {
 	const index = hash.indexOf("?");
 	const pathname = index > -1 ? hash.slice(1, index) : hash.slice(1);
-	return pathname.startsWith("/") ? pathname : `/`;
+	return pathname.startsWith("/") ? pathname.slice(1) : ``;
 }
 
 function getSearch(hash = getHash()) {
@@ -60,7 +60,7 @@ export namespace Router {
 	export const searchParams = search.derive(getSearchParams);
 
 	function hrefFrom(pathname: string, searchParams?: URLSearchParams) {
-		return `#${pathname}${searchParams?.size ? `?${searchParams}` : ""}`;
+		return `#/${pathname}${searchParams?.size ? `?${searchParams}` : ""}`;
 	}
 
 	export declare namespace Route {

@@ -1,11 +1,11 @@
 import { tags } from "@purifyjs/core";
 import { scope } from "~/lib/css";
 import { Feed } from "../lib/Feed";
-import { PostViewer } from "./PostViewer";
+import { PostArticle } from "./PostArticle";
 
 const { div, ul, li, button } = tags;
 
-export function FeedViewer(feed: Feed) {
+export function FeedScroller(feed: Feed) {
 	const host = div().use(scope(""));
 
 	const posts = ul();
@@ -20,7 +20,7 @@ export function FeedViewer(feed: Feed) {
 		try {
 			const result = await next.next();
 
-			posts.element.append(...(result.value?.map((post) => li().children(PostViewer(post)).element) ?? []));
+			posts.element.append(...(result.value?.map((post) => li().children(PostArticle(post)).element) ?? []));
 		} finally {
 			busy = false;
 		}

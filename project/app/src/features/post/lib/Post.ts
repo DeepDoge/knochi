@@ -5,6 +5,20 @@ import { PostContent } from "~/features/post/lib/PostContent";
 import { Config } from "~/lib/config";
 import { Address, Hex } from "~/lib/solidity/primatives";
 
+export namespace Post {
+	export type Init = {
+		author: Address;
+		contentBytes: BytesLike;
+		time_seconds: bigint;
+	};
+	export type LoadParams = {
+		network: Config.Network;
+		indexerAddress: Address;
+		feedId: Hex;
+		index: bigint;
+	};
+}
+
 export class Post {
 	public readonly author: Address;
 	public readonly createdAt: Date;
@@ -18,13 +32,13 @@ export class Post {
 
 	public static async load(params: Post.LoadParams) {
 		const { network, feedId, index } = params;
-
+		const chainIdHex = Hex.from(network.chainId);
 		const provider = new JsonRpcProvider(network.providers[0]);
-		const indexerContract = PostIndexer.connect(provider, network.contracts.PostIndexer);
 
+		const indexerContract = PostIndexer.connect(provider, params.indexerAddress);
 		const indexHex = Hex.from(index);
 
-		let dbPostIndex = await postDb.find("PostIndex").byKey([network.contracts.PostIndexer, feedId, indexHex]);
+		let dbPostIndex = await postDb.find("PostIndex").byKey([chainIdHex, params.indexerAddress, feedId, indexHex]);
 
 		const postIndex = await indexerContract.get(feedId, index);
 		const [author, postId, postStore, time_seconds] = postIndex;
@@ -35,7 +49,8 @@ export class Post {
 			dbPostIndex = {
 				feedId,
 				authorAddress: author,
-				indexerAddress: network.contracts.PostIndexer,
+				chainIdHex,
+				indexerAddress: params.indexerAddress,
 				indexHex,
 				postIdHex,
 				storeAddress: postStore,
@@ -47,7 +62,6 @@ export class Post {
 		let dbPost = await postDb.find("Post").byKey([postStore, postIdHex]);
 
 		if (!dbPost) {
-			const provider = new JsonRpcProvider(network.providers[0]);
 			const storeContract = PostStore.connect(provider, postStore);
 			dbPost = {
 				storeAddress: postStore,
@@ -59,16 +73,4 @@ export class Post {
 
 		return new Post({ author, contentBytes: dbPost.content, time_seconds });
 	}
-}
-export namespace Post {
-	export type Init = {
-		author: Address;
-		contentBytes: BytesLike;
-		time_seconds: bigint;
-	};
-	export type LoadParams = {
-		network: Config.Network;
-		feedId: Hex;
-		index: bigint;
-	};
 }
