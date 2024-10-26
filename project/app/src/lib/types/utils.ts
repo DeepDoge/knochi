@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export namespace Utils {
+	export type FixedOmit<T, K extends keyof T> = Omit<T, K>;
+
 	export type UnionToIntersection<U> =
 		(U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 	export type LastOf<T> =

@@ -1,6 +1,5 @@
 import { tags } from "@purifyjs/core";
 import { string, tuple, union } from "zod";
-import { FeedGroupAddFormPopoverButton } from "~/features/post/components/FeedGroupAddFormPopoverButton";
 import { FeedScroller } from "~/features/post/components/FeedScroller";
 import { Feed } from "~/features/post/lib/Feed";
 import { config } from "~/lib/config";
@@ -72,15 +71,6 @@ export const feedRoutes = {
 					}));
 
 			return div().children(
-				FeedGroupAddFormPopoverButton({
-					values: {
-						type: "feed",
-						feedId: data.feedId,
-						label: "",
-					},
-				})
-					.attributes({ class: "button" })
-					.textContent("add to group"),
 				FeedScroller(
 					new Feed({
 						id: data.feedId,

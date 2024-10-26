@@ -1,17 +1,12 @@
 import { ref, tags } from "@purifyjs/core";
 import { FeedGroupAddForm } from "~/features/post/components/FeedGroupAddForm";
 import { postDb } from "~/features/post/database/client";
-import { Feed } from "~/features/post/lib/Feed";
 import { css, scope } from "~/lib/css";
 
 const { div, button, strong } = tags;
 
 export function FeedGroupAddFormPopoverButton(params: {
-	values: {
-		type: string;
-		feedId: Feed.Id;
-		label?: string;
-	};
+	values: Parameters<typeof FeedGroupAddForm>[0]["values"];
 }) {
 	const open = ref(false);
 

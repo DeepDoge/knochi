@@ -1,5 +1,6 @@
 import { tags } from "@purifyjs/core";
 import { feedRoutes } from "~/app/feed/routes";
+import { FeedGroupAddFormPopoverButton } from "~/features/post/components/FeedGroupAddFormPopoverButton";
 import { FeedScroller } from "~/features/post/components/FeedScroller";
 import { PostForm } from "~/features/post/components/PostForm";
 import { Feed } from "~/features/post/lib/Feed";
@@ -16,6 +17,15 @@ export function Profile(address: Address) {
 			.href(feedRoutes.feed.toHref({ groupId: "~", feedId: profileFeedId }))
 			.textContent("My Feed"),
 		PostForm(),
+		FeedGroupAddFormPopoverButton({
+			values: {
+				feedId: profileFeedId,
+				label: `post ${address}`,
+				address,
+			},
+		})
+			.attributes({ class: "button" })
+			.textContent("add to group"),
 		FeedScroller(
 			new Feed({
 				id: profileFeedId,

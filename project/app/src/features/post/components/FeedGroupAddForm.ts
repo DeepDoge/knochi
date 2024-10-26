@@ -1,17 +1,18 @@
 import { awaited, ref, tags } from "@purifyjs/core";
 import { FeedGroupIcon } from "~/features/post/components/FeedGroupIcon";
 import { postDb } from "~/features/post/database/client";
-import { Feed } from "~/features/post/lib/Feed";
 import { bind } from "~/lib/actions/bind";
 import { css, scope } from "~/lib/css";
 import { PromiseOrValue } from "~/lib/types/promise";
+import { Utils } from "~/lib/types/utils";
 
 const { form, button, strong, label, div, input } = tags;
 
 type FeedGroup = ReturnType<(typeof postDb.lastVersion.models.FeedGroup)["parser"]>;
+type FeedGroupItem = ReturnType<(typeof postDb.lastVersion.models.FeedGroupItem)["parser"]>;
 
 export function FeedGroupAddForm(params: {
-	values: { type: string; feedId: Feed.Id; label?: string };
+	values: Utils.FixedOmit<FeedGroupItem, "groupId">;
 	groups: PromiseOrValue<FeedGroup[]>;
 	onDone?: () => void;
 }) {
@@ -22,7 +23,7 @@ export function FeedGroupAddForm(params: {
 				groupId,
 				feedId: params.values.feedId,
 				label: feedLabel.val,
-				type: params.values.type,
+				address: params.values.address,
 			})
 			.execute();
 	}
@@ -93,7 +94,8 @@ const FeedGroupAddFormCss = css`
 
 	.groups {
 		display: block grid;
-		grid-template-columns: repeat(auto-fit, minmax(min(100%, 4em), 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(0, 5em));
+		justify-content: center;
 		gap: 1em;
 	}
 
