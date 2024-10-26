@@ -106,8 +106,8 @@ export function Header() {
 									.then((feeds) => {
 										return feeds.map((feed) => {
 											return strong()
-												.title(feed.label)
-												.textContent(feed.label);
+												.title(feed.style.label)
+												.textContent(feed.style.label);
 										});
 									});
 

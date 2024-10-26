@@ -21,14 +21,16 @@ export function FeedGroupAddForm(params: {
 			.add("FeedGroupItem")
 			.values({
 				groupId,
-				feedId: params.values.feedId,
-				label: feedLabel.val,
-				address: params.values.address,
+				...params.values,
+				style: {
+					...params.values.style,
+					label: feedLabel.val,
+				},
 			})
 			.execute();
 	}
 
-	const feedLabel = ref(params.values.label ?? "");
+	const feedLabel = ref(params.values.style.label ?? "");
 	const busy = ref(false);
 
 	function renderGroups(groups: FeedGroup[]) {
@@ -68,7 +70,7 @@ export function FeedGroupAddForm(params: {
 						.required(true)
 						.type("text")
 						.use(bind(feedLabel, "value", "input"))
-						.defaultValue(params.values.label ?? "")
+						.defaultValue(params.values.style.label ?? "")
 						.placeholder("..."),
 				),
 				label().children(

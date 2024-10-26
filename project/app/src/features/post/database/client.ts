@@ -1,10 +1,10 @@
-import { bigint, number, object, string } from "zod";
+import { bigint, literal, number, object, string, union } from "zod";
 import { Feed } from "~/features/post/lib/Feed";
 import { DB } from "~/lib/db/mod";
 import { Address, Hex } from "~/lib/solidity/primatives";
 
 const indexedDbVersionKey = "indexed-db-version:knochi.posts";
-const version = "1";
+const version = "2";
 if (localStorage.getItem(indexedDbVersionKey) !== version) {
 	await DB.IDB.toPromise(indexedDB.deleteDatabase("knochi.posts"));
 	localStorage.setItem(indexedDbVersionKey, version);
@@ -27,12 +27,23 @@ export const postDb = DB.create("knochi.posts")
 			.parser(
 				object({
 					groupId: string(),
+					chainIdHex: union([Hex(), literal("")]),
+					indexerAddress: union([Address(), literal("")]),
 					feedId: Feed.Id(),
-					label: string(),
-					address: Address().optional(),
+					style: union([
+						object({
+							type: literal("profile"),
+							address: Address(),
+							label: string(),
+						}),
+						object({
+							type: literal("feed"),
+							label: string(),
+						}),
+					]),
 				}).parse,
 			)
-			.key({ keyPath: ["groupId", "feedId"] })
+			.key({ keyPath: ["groupId", "chainIdHex", "indexerAddress", "feedId"] })
 			.index({ field: "groupId", options: {} })
 			.build(),
 		Feed: DB.ModelBuilder()
