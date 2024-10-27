@@ -16,8 +16,7 @@
 -   [ ] feeds on certain chains can be targeted by chainId, if chainId doesnt exists on the configs, there should be a button to open a modal that lets you add one.
 -   [ ] endpoints
     -   [ ] /~/{feedId}
-    -   [ ] /~/{feedId}/{chainId}
-    -   [ ] /~/{feedId}/{chainId}/{indexerAddress}
+    -   [ ] /{groupId}/{feedId}
     -   [ ] ?post={chainIdHex0xOmitted}-{indexerAddress0xOmitted}-{indexHex0xOmitted}
     -   [ ] /0x{account}
     -   [ ] /0x{account}/inbox
