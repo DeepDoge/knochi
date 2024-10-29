@@ -1,3 +1,5 @@
+# TODO
+
 -   [ ] PostForm should have parts, not just text like on X or Facebook or Instagram. It should be more like a page builder.
 -   [x] Instead of using tx.origin, Sender contract should give the sender address to the Indexer contract, and there should be permissions on the indexer contract that allows or disallows Sender contracts to index post in behalf of you.
 -   [x] On the left side of header we should have feed list similar to X lists, at the top there is the default home list for your home feed.
@@ -19,7 +21,13 @@
     -   [ ] /{account}
     -   [ ] ?group={groupId}
     -   [ ] ?post={chainIdHex0xOmitted}-{indexerAddress0xOmitted}-{indexHex0xOmitted}
+-   [ ] Offline real time video captions (https://github.com/msqr1/Vosklet)
 
-Let's do all these first then, look for new stuff.
+# Ideas
 
-After finishing everything, we can add support for different decenterlized protocols, and they can be mixed into feeds similar to how we mix different chains and networks on a single feed.
+-   Comment on video time (tricky to index with feeds, and also a post can have multiple medias so thats also tricky), we should have reply to media, not just post. when we combine contract address and postId, we get a bytes32 feedid for the replies, so there is no other space left for anything else. but we can just hash stuff to get feedId which also works, so yeah. in this case we dont have to keep stuff small?
+-   also if a post has multiple media we can treat each as a different post on the frontend, at least for videos. that way we can comment on the media itself because if a post has multiple medias and we have to comment on time for videos shit gets tricky. we dont want people accidently commenting without time on videos, which would be hard to find. gonna think about this a bit more. maybe we show a modal to view the video and that modal can have comments on the side.
+-   hmm, once we enter the video mode, we can swipe up to skip non video content, and just watch videos like shorts maybe?
+-   even though we stopped this on the contract level we should still ignore posts from other people one a profile feed. because indexers doesnt have to ignore those, and also later when we add other protocols such as ipfs pubsub, or linked ipfs array with ipns head or tail and etc for feeds we can have such logic anyway. so skip them on frontend also by now
+-   i might add support for other social media protocols, but they have to be topic based, accounts are still evm based.
+-   I should have support on video/movie/series/episodes/shorts, and music/audio
