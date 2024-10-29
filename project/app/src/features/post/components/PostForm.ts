@@ -5,7 +5,7 @@ import { SelectedSender } from "~/features/post/components/SelectSenderPopover";
 import { PostContent } from "~/features/post/lib/PostContent";
 import { bind } from "~/lib/actions/bind";
 import { css, scope } from "~/lib/css";
-import { trackPromise } from "~/lib/progress/utils";
+import { trackPromise } from "~/lib/progress/mod";
 import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
 import { connectWallet } from "~/lib/wallet/connectDialog";
 import { currentWalletDetail, getOrRequestSigner } from "~/lib/wallet/utils";

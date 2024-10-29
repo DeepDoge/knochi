@@ -2,7 +2,7 @@ import { tags } from "@purifyjs/core";
 import { JsonRpcSigner } from "ethers";
 import { Config } from "~/lib/config";
 import { css, scope } from "~/lib/css";
-import { trackPromise } from "~/lib/progress/utils";
+import { trackPromise } from "~/lib/progress/mod";
 import { getOrRequestSigner, walletDetails } from "../utils";
 
 const { div, span, button, img, picture, ul, li } = tags;
