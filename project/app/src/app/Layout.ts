@@ -1,7 +1,7 @@
 import "./styles";
 
 import { tags } from "@purifyjs/core";
-import { Header } from "~/app/Header";
+import { Header } from "~/app/header/Header";
 import { Main } from "~/app/Main";
 import { Router } from "~/lib/router/mod";
 import { css, scope } from "../lib/css";
@@ -96,7 +96,7 @@ export function Layout() {
 				element.removeEventListener("scroll", handleScroll);
 			};
 		})
-		.children(Header(), Main());
+		.children(Header(), (mainElement = Main().element));
 }
 
 const LayoutCss = css`

@@ -27,8 +27,6 @@ export const postDb = DB.create("knochi.posts")
 			.parser(
 				object({
 					groupId: string(),
-					chainIdHex: union([Hex(), literal("")]),
-					indexerAddress: union([Address(), literal("")]),
 					feedId: Feed.Id(),
 					style: union([
 						object({
@@ -43,7 +41,7 @@ export const postDb = DB.create("knochi.posts")
 					]),
 				}).parse,
 			)
-			.key({ keyPath: ["groupId", "chainIdHex", "indexerAddress", "feedId"] })
+			.key({ keyPath: ["groupId", "feedId"] })
 			.index({ field: "groupId", options: {} })
 			.build(),
 		Feed: DB.ModelBuilder()

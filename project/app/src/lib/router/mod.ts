@@ -24,43 +24,42 @@ function getSearch(hash = getHash()) {
 function getSearchParams(search = getSearch()) {
 	return new URLSearchParams(search ?? []);
 }
-
-export class Router<const TRoutes extends { readonly [key: string]: Router.Route<unknown> }> {
-	public readonly routes: TRoutes;
-	public readonly route = Router.pathname.derive((pathname) => {
-		for (const [name, route] of Object.entries(this.routes)) {
-			const data = catchError(() => route.fromPathname(pathname), [Error]).data;
-			if (typeof data === "undefined") continue;
-			return {
-				name,
-				data,
-				render() {
-					return route.render(data);
-				},
-			} as {
-				[K in keyof TRoutes]: {
-					name: K;
-					data: Exclude<ReturnType<TRoutes[K]["fromPathname"]>, undefined>;
-					render(): ReturnType<TRoutes[K]["render"]>;
-				};
-			}[keyof TRoutes];
-		}
-
-		return null;
-	});
-
-	constructor(routes: TRoutes) {
-		this.routes = routes;
-	}
-}
-
 export namespace Router {
 	export const pathname = hashSignal.derive(getPathname);
 	export const search = hashSignal.derive(getSearch);
 	export const searchParams = search.derive(getSearchParams);
 
-	function hrefFrom(pathname: string, searchParams?: URLSearchParams) {
+	export function hrefFrom(pathname: string, searchParams?: URLSearchParams) {
 		return `#/${pathname}${searchParams?.size ? `?${searchParams}` : ""}`;
+	}
+
+	export class Client<const TRoutes extends { readonly [key: string]: Router.Route<unknown> }> {
+		public readonly routes: TRoutes;
+		public readonly route = pathname.derive((pathname) => {
+			for (const [name, route] of Object.entries(this.routes)) {
+				const data = catchError(() => route.fromPathname(pathname), [Error]).data;
+				if (typeof data === "undefined") continue;
+				return {
+					name,
+					data,
+					render() {
+						return route.render(data);
+					},
+				} as {
+					[K in keyof TRoutes]: {
+						name: K;
+						data: Exclude<ReturnType<TRoutes[K]["fromPathname"]>, undefined>;
+						render(): ReturnType<TRoutes[K]["render"]>;
+					};
+				}[keyof TRoutes];
+			}
+
+			return null;
+		});
+
+		constructor(routes: TRoutes) {
+			this.routes = routes;
+		}
 	}
 
 	export declare namespace Route {

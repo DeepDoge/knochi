@@ -15,8 +15,6 @@ export function Profile(address: Address) {
 		PostForm(),
 		FeedGroupAddFormPopoverButton({
 			values: {
-				chainIdHex: "",
-				indexerAddress: "",
 				feedId: profileFeedId,
 				style: {
 					type: "profile",

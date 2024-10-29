@@ -1,24 +1,10 @@
-import "~/features/post/database/client";
-
-import { fragment, tags } from "@purifyjs/core";
-import { Layout } from "~/app/Layout";
-import { manifest } from "~/app/manifest";
+import { tags } from "@purifyjs/core";
 import { FeedGroupForm } from "~/features/post/components/FeedGroupForm";
 import { clickClose } from "~/lib/actions/clickClose";
 import { closeOnDisconnect } from "~/lib/actions/closeOnDisconnect";
-import { progressListElement } from "~/lib/progress/utils";
 import { Router } from "~/lib/router/mod";
-import { connectWallet } from "~/lib/wallet/connectDialog";
 
-const { link, dialog } = tags;
-
-document.head.append(
-	fragment(
-		link()
-			.rel("manifest")
-			.href(`data:application/json,${encodeURIComponent(JSON.stringify(manifest))}`),
-	),
-);
+const { dialog } = tags;
 
 export const feedGroupFormDialogSearchParam = new Router.SearchParam<"create" | `update:${string}`>(
 	"group-form",
@@ -54,7 +40,3 @@ export const feedGroupFormDialog = dialog()
 				}),
 			),
 	);
-
-document.body.append(
-	fragment(Layout(), feedGroupFormDialog, connectWallet.dialog, progressListElement),
-);

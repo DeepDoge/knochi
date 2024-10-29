@@ -15,13 +15,10 @@
 -   [ ] We should be able to continue scrolling from where we left of when page refreshed, this one is kinda tricky, by the nature of being multichain and contract. might require a really long url. in that case i might rethink the whole contracts
 -   [ ] feeds on certain chains can be targeted by chainId, if chainId doesnt exists on the configs, there should be a button to open a modal that lets you add one.
 -   [ ] endpoints
-    -   [ ] /~/{feedId}
-    -   [ ] /{groupId}/{feedId}
+    -   [ ] /{feedId}
+    -   [ ] /{account}
+    -   [ ] ?group={groupId}
     -   [ ] ?post={chainIdHex0xOmitted}-{indexerAddress0xOmitted}-{indexHex0xOmitted}
-    -   [ ] /0x{account}
-    -   [ ] /0x{account}/inbox
-    -   [ ] /0x{account}/feeds
-    -   [ ] /0x{account}/feeds/{customFeedKey}
 
 Let's do all these first then, look for new stuff.
 

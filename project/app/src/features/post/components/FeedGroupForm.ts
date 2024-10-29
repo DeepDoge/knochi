@@ -16,7 +16,7 @@ async function save(params: { id?: string | null; name: string }): Promise<{ id:
 			.execute();
 		return { id: params.id };
 	} else {
-		const id = crypto.randomUUID();
+		const id = crypto.randomUUID().split("-").at(0)!;
 		await postDb.add("FeedGroup").values({ groupId: id, name: params.name, index }).execute();
 		return { id };
 	}

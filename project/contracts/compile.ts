@@ -6,6 +6,7 @@ import { compileSol } from "solc-typed-ast";
 const CONTRACTS_DIR = path.resolve("./src");
 const NODE_MODULES_DIR = path.resolve("../../node_modules");
 const ARTIFACTS_DIR = path.resolve("./artifacts");
+const ARTIFACTS_TEMP_DIR = path.resolve("./artifacts.temp");
 
 async function findSolidityFilesRecursive(dir: string): Promise<string[]> {
 	const files = await fs.readdir(dir, { withFileTypes: true });
@@ -35,9 +36,10 @@ const solidityFilesByDir = solidityFiles.reduce(
 	{} as Record<string, string[]>,
 );
 
+await fs.rm(ARTIFACTS_TEMP_DIR, { recursive: true }).catch(() => {});
+await fs.mkdir(ARTIFACTS_TEMP_DIR).catch(() => {});
+
 for (const [dirPath, solidityFiles] of Object.entries(solidityFilesByDir)) {
-	await fs.rm(ARTIFACTS_DIR, { recursive: true }).catch(() => {});
-	await fs.mkdir(ARTIFACTS_DIR, { recursive: true });
 	for (const filePath of solidityFiles) {
 		const name = path.basename(filePath, ".sol");
 		console.log(`> Compiling ${bold(name)} in ${bold(dirPath)}`);
@@ -51,7 +53,7 @@ for (const [dirPath, solidityFiles] of Object.entries(solidityFilesByDir)) {
 		// const bin: string = result.data["contracts"][filePath][name]["evm"]["bytecode"]["object"];
 
 		await fs.writeFile(
-			path.join(ARTIFACTS_DIR, `${name}.ts`),
+			path.join(ARTIFACTS_TEMP_DIR, `${name}.ts`),
 			[
 				`export type ${name}_ABI = typeof ${name}_ABI;`,
 				`export const ${name}_ABI = ${JSON.stringify(abi)} as const;`,
@@ -59,8 +61,11 @@ for (const [dirPath, solidityFiles] of Object.entries(solidityFilesByDir)) {
 			].join("\n"),
 		);
 
-		await fs.writeFile(path.join(ARTIFACTS_DIR, `${name}.abi.json`), JSON.stringify(abi));
+		await fs.writeFile(path.join(ARTIFACTS_TEMP_DIR, `${name}.abi.json`), JSON.stringify(abi));
 
 		console.log(green(`>> ${bold(name)} compiled successfully!`));
 	}
 }
+
+await fs.rm(ARTIFACTS_DIR, { recursive: true }).catch(() => {});
+await fs.rename(ARTIFACTS_TEMP_DIR, ARTIFACTS_DIR);
