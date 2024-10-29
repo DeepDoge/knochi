@@ -105,6 +105,7 @@ document.adoptedStyleSheets.push(
 
 		a {
 			text-decoration: none;
+			color: inherit;
 		}
 
 		:is(.button, button, a):focus-visible {

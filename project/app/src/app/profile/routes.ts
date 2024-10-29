@@ -15,5 +15,8 @@ export const profileRoutes = {
 		render(data) {
 			return Profile(data.address);
 		},
+		title() {
+			return "Profile";
+		},
 	}),
 };

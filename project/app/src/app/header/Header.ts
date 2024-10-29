@@ -77,10 +77,6 @@ export function Header() {
 }
 
 const HeaderCss = css`
-	a {
-		color: inherit;
-	}
-
 	:scope {
 		display: block grid;
 		grid-template-areas:

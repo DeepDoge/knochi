@@ -15,5 +15,8 @@ export const feedRoutes = {
 		render(data) {
 			return data.feedId ? FeedPage(data) : null;
 		},
+		title() {
+			return "Feed";
+		},
 	}),
 };

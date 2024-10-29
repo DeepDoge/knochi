@@ -45,9 +45,13 @@ export namespace Router {
 					render() {
 						return route.render(data);
 					},
+					title() {
+						return route.title(data);
+					},
 				} as {
 					[K in keyof TRoutes]: {
 						name: K;
+						title(): ReturnType<TRoutes[K]["title"]>;
 						data: Exclude<ReturnType<TRoutes[K]["fromPathname"]>, undefined>;
 						render(): ReturnType<TRoutes[K]["render"]>;
 					};
@@ -63,30 +67,38 @@ export namespace Router {
 	}
 
 	export declare namespace Route {
-		type Init<TData, TRender extends MemberOf<DocumentFragment>> = {
+		type Init<
+			TData,
+			TRender extends MemberOf<DocumentFragment>,
+			TTitle extends MemberOf<DocumentFragment>,
+		> = {
 			toPathname(data: TData): string;
 			fromPathname(pathname: string): TData;
 			render(data: TData): TRender;
+			title(data: TData): TTitle;
 		};
 	}
 	export declare class Route<
 		TData = unknown,
 		TRender extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
+		TTitle extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
 	> {
-		constructor(init: Route.Init<TData, TRender>);
+		constructor(init: Route.Init<TData, TRender, TTitle>);
 
 		fromPathname(pathname: string): TData | undefined;
 		toPathname(data: TData): string;
 		toHref(data: TData): string;
 		render(data: TData): TRender;
+		title(data: TData): TTitle;
 	}
 	Router.Route = class<
 		TData = unknown,
 		TRender extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
+		TTitle extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
 	> {
-		readonly #init: Route.Init<TData, TRender>;
+		readonly #init: Route.Init<TData, TRender, TTitle>;
 
-		constructor(init: Route.Init<TData, TRender>) {
+		constructor(init: Route.Init<TData, TRender, TTitle>) {
 			this.#init = init;
 		}
 
@@ -104,6 +116,10 @@ export namespace Router {
 
 		public render(data: TData): TRender {
 			return this.#init.render(data);
+		}
+
+		public title(data: TData): TTitle {
+			return this.#init.title(data);
 		}
 	};
 

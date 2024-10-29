@@ -2,17 +2,34 @@ import "./styles";
 
 import { tags } from "@purifyjs/core";
 import { Header } from "~/app/header/Header";
-import { Main } from "~/app/Main";
+import { router } from "~/app/router";
+import { BackSvg } from "~/assets/svgs/BackSvg";
 import { Router } from "~/lib/router/mod";
 import { css, scope } from "../lib/css";
 
-const { div } = tags;
+const { div, main, header, a, strong } = tags;
 
 const documentScroller = document.scrollingElement ?? document.body;
 const menuSearchParam = new Router.SearchParam<"open">("menu");
 
 export function Layout() {
-	let mainElement: HTMLElement;
+	const mainBuilder = main().children(
+		header().children(
+			a({ class: "back" })
+				.ariaHidden("true")
+				.href(menuSearchParam.toHref("open"))
+				.children(BackSvg()),
+			router.route.derive((route) => {
+				if (!route) return null;
+				return strong().textContent(route.title());
+			}),
+		),
+		div({ class: "route" }).children(
+			router.route.derive((route) => {
+				return route?.render() ?? null;
+			}),
+		),
+	);
 
 	return div()
 		.id("app")
@@ -51,16 +68,16 @@ export function Layout() {
 				if (isStatic === isStaticCache) return isStatic;
 
 				if (isStatic) {
-					const scrollY = mainElement.scrollTop;
-					mainElement.style.overflow = "visible";
-					mainElement.style.blockSize = "";
+					const scrollY = mainBuilder.element.scrollTop;
+					mainBuilder.element.style.overflow = "visible";
+					mainBuilder.element.style.blockSize = "";
 					documentScroller.scrollTop = scrollY;
 					isStaticCache = true;
 				} else {
 					const scrollY = documentScroller.scrollTop;
-					mainElement.style.overflow = "hidden";
-					mainElement.style.blockSize = "100dvb";
-					mainElement.scrollTop = scrollY;
+					mainBuilder.element.style.overflow = "hidden";
+					mainBuilder.element.style.blockSize = "100dvb";
+					mainBuilder.element.scrollTop = scrollY;
 					isStaticCache = false;
 				}
 
@@ -96,8 +113,11 @@ export function Layout() {
 				element.removeEventListener("scroll", handleScroll);
 			};
 		})
-		.children(Header(), (mainElement = Main().element));
+
+		.children(Header(), mainBuilder);
 }
+
+const breakPoint = "45em";
 
 const LayoutCss = css`
 	:scope {
@@ -116,7 +136,8 @@ const LayoutCss = css`
 			4fr;
 		grid-template-rows: auto;
 
-		@container (inline-size < 45em) {
+		@container (inline-size < ${breakPoint}) {
+			overflow: overlay;
 			grid-template-columns:
 				[header-start]
 				100%
@@ -124,27 +145,26 @@ const LayoutCss = css`
 				100%
 				[main-end];
 
-			overflow: overlay;
 			&::-webkit-scrollbar {
 				display: none;
 			}
 
-			header {
+			& > header {
 				animation: hide-header-scroll linear;
 				animation-timeline: scroll(x);
 				z-index: -1;
 			}
+
+			@keyframes hide-header-scroll {
+				to {
+					scale: 0.95;
+					translate: 100% 0;
+				}
+			}
 		}
 	}
 
-	@keyframes hide-header-scroll {
-		to {
-			scale: 0.95;
-			translate: 100% 0;
-		}
-	}
-
-	header {
+	:scope > header {
 		grid-row: 1;
 		grid-column: header;
 
@@ -155,15 +175,42 @@ const LayoutCss = css`
 		overflow: clip;
 	}
 
-	main {
+	:scope > main {
 		grid-row: 1;
 		grid-column: main;
-
-		min-block-size: 100dvb;
-
-		padding-inline: 1em;
-		padding-block: 1em;
-
 		background-color: var(--base);
+		padding-inline: 0.75em;
+	}
+
+	:scope > main > .route {
+		min-block-size: 100dvb;
+		padding-block: 1em;
+	}
+
+	:scope > main > header {
+		display: grid;
+		grid-template-columns: 1.5em auto;
+		align-items: center;
+		gap: 1em;
+		padding-block: 1em;
+		border-block-end: solid 1px color-mix(in srgb, var(--base), var(--pop) 10%);
+
+		@container (inline-size >= ${breakPoint}) {
+			grid-template-columns: auto;
+		}
+
+		.back {
+			border-radius: 50%;
+			aspect-ratio: 1;
+			color: color-mix(in srgb, var(--base), var(--pop) 50%);
+
+			@container (inline-size >= ${breakPoint}) {
+				display: none;
+			}
+		}
+
+		strong {
+			font-size: 1.1em;
+		}
 	}
 `;

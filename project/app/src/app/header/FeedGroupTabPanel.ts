@@ -6,7 +6,7 @@ import { postDb } from "~/features/post/database/client";
 import { css, scope } from "~/lib/css";
 import { Router } from "~/lib/router/mod";
 
-const { div, strong, button, a } = tags;
+const { div, strong, button, a, header } = tags;
 
 export function FeedGroupTabPanel(
 	group: ReturnType<typeof postDb.lastVersion.models.FeedGroup.parser>,
@@ -20,11 +20,13 @@ export function FeedGroupTabPanel(
 		.tabIndex(0)
 		.ariaLabel("Home Feed")
 		.children(
-			strong().textContent(group.name),
-			button({ style: "color:var(--fail)" })
-				.ariaLabel("Delete Group")
-				.title("Delete")
-				.children(TrashcanSvg()),
+			header().children(
+				strong().textContent(group.name),
+				button({ style: "color:var(--fail)" })
+					.ariaLabel("Delete Group")
+					.title("Delete")
+					.children(TrashcanSvg()),
+			),
 			awaited(
 				items.then((items) => {
 					return items.map((item) => {
@@ -45,16 +47,12 @@ export function FeedGroupTabPanel(
 }
 
 const FeedGroupTabPanelCss = css`
-	a {
-		color: inherit;
-	}
-
 	:scope {
 		display: block grid;
 		align-content: start;
 
 		padding-inline: 1em;
-		padding-block: 1em;
+		gap: 1em;
 
 		background-color: color-mix(in srgb, var(--base), var(--pop) 7.5%);
 	}
@@ -63,5 +61,15 @@ const FeedGroupTabPanelCss = css`
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
+	}
+
+	header {
+		display: grid;
+		grid-template-columns: 1fr 1.5em;
+		gap: 0.5em;
+		align-items: center;
+
+		padding-block: 1em;
+		border-block-end: solid 1px color-mix(in srgb, var(--base), var(--pop) 10%);
 	}
 `;

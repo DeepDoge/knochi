@@ -50,10 +50,6 @@ export function FeedGroupTabList(
 }
 
 const FeedGroupTabListCss = css`
-	a {
-		color: inherit;
-	}
-
 	:scope {
 		display: block grid;
 		align-content: start;
