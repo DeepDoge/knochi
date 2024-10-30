@@ -3,7 +3,7 @@ import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
 import { router } from "~/app/router";
 import { TrashcanSvg } from "~/assets/svgs/TrashcanSvg";
 import { postDb } from "~/features/post/database/client";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
 import { Router } from "~/lib/router/mod";
 
 const { div, strong, button, a, header } = tags;
@@ -14,7 +14,7 @@ export function FeedGroupTabPanel(
 	const items = postDb.find("FeedGroupItem").byIndex("groupId", "=", group.groupId);
 
 	return div()
-		.use(scope(FeedGroupTabPanelCss))
+		.effect(useScope(FeedGroupTabPanelCss))
 		.role("tabpanel")
 		.id("header-tabpanel-home")
 		.tabIndex(0)

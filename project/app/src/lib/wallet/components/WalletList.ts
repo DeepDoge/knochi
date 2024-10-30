@@ -1,7 +1,7 @@
 import { tags } from "@purifyjs/core";
 import { JsonRpcSigner } from "ethers";
 import { Config } from "~/lib/config";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
 import { trackPromise } from "~/lib/progress/mod";
 import { getOrRequestSigner, walletDetails } from "../utils";
 
@@ -13,7 +13,7 @@ export function WalletList(params: {
 	onFinally?: () => unknown;
 }) {
 	return div()
-		.use(scope(WalletListCss))
+		.effect(useScope(WalletListCss))
 		.children(
 			walletDetails.derive((walletDetails) =>
 				ul().children(

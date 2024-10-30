@@ -1,7 +1,7 @@
 import { tags } from "@purifyjs/core";
 import { FeedGroupForm } from "~/features/post/components/FeedGroupForm";
-import { clickClose } from "~/lib/actions/clickClose";
-import { closeOnDisconnect } from "~/lib/actions/closeOnDisconnect";
+import { useClickClose } from "~/lib/effects/useClickClose";
+import { useCloseOnDisconnect } from "~/lib/effects/useCloseOnDisconnect";
 import { Router } from "~/lib/router/mod";
 
 const { dialog } = tags;
@@ -11,7 +11,7 @@ export const feedGroupFormDialogSearchParam = new Router.SearchParam<"create" | 
 );
 
 export const feedGroupFormDialog = dialog()
-	.use((element) => {
+	.effect((element) => {
 		return feedGroupFormDialogSearchParam.follow((value) => {
 			if (value) {
 				element.showModal();
@@ -20,8 +20,8 @@ export const feedGroupFormDialog = dialog()
 			}
 		}, true);
 	})
-	.use(closeOnDisconnect())
-	.use(clickClose())
+	.effect(useCloseOnDisconnect())
+	.effect(useClickClose())
 	.onclose((event) => {
 		event.preventDefault();
 		feedGroupFormDialogSearchParam.val = null;

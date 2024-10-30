@@ -1,12 +1,12 @@
 import { tags } from "@purifyjs/core";
-import { scope } from "~/lib/css";
+import { useScope } from "~/lib/css";
 import { Feed } from "../lib/Feed";
 import { PostArticle } from "./PostArticle";
 
 const { div, ul, li, button } = tags;
 
 export function FeedScroller(feed: Feed) {
-	const host = div().use(scope(""));
+	const host = div().effect(useScope(""));
 
 	const posts = ul();
 

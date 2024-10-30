@@ -1,6 +1,6 @@
 import { Lifecycle } from "@purifyjs/core";
 
-export function onVisible(
+export function useOnVisible(
 	start: () => void | (() => void),
 	options: IntersectionObserverInit = { threshold: 0 },
 ): Lifecycle.OnConnected {

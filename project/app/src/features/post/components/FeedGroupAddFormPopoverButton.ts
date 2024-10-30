@@ -1,7 +1,7 @@
 import { ref, tags } from "@purifyjs/core";
 import { FeedGroupAddForm } from "~/features/post/components/FeedGroupAddForm";
 import { postDb } from "~/features/post/database/client";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
 
 const { div, button, strong } = tags;
 
@@ -11,7 +11,7 @@ export function FeedGroupAddFormPopoverButton(params: {
 	const open = ref(false);
 
 	const popover = div()
-		.use(scope(PopoverCss))
+		.effect(useScope(PopoverCss))
 		.popover("auto")
 		.ontoggle((event) => {
 			if (!(event instanceof ToggleEvent)) return;
@@ -33,7 +33,7 @@ export function FeedGroupAddFormPopoverButton(params: {
 		);
 
 	return button()
-		.use(() => {
+		.effect(() => {
 			document.body.append(popover.element);
 			return () => {
 				popover.element.remove();

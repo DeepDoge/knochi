@@ -3,8 +3,8 @@ import { PostIndexer, PostStore_Plain } from "@root/contracts/connect";
 import { SelectSenderButton } from "~/features/post/components/SelectSenderButton";
 import { SelectedSender } from "~/features/post/components/SelectSenderPopover";
 import { PostContent } from "~/features/post/lib/PostContent";
-import { bind } from "~/lib/actions/bind";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
+import { useBind } from "~/lib/effects/useBind";
 import { trackPromise } from "~/lib/progress/mod";
 import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
 import { connectWallet } from "~/lib/wallet/connectDialog";
@@ -25,7 +25,7 @@ export function PostForm() {
 	);
 
 	const host = form()
-		.use(scope(PostFormCss))
+		.effect(useScope(PostFormCss))
 		.onsubmit((event) => {
 			event.preventDefault();
 
@@ -86,7 +86,7 @@ export function PostForm() {
 						.required(true)
 						.ariaLabel("Post content")
 						.placeholder("Just say it...")
-						.use(bind(text, "value", "input"))
+						.effect(useBind(text, "value", "input"))
 						.oninput((event) => {
 							const textarea = event.currentTarget;
 							textarea.style.height = "auto";

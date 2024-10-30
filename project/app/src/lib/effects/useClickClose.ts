@@ -1,6 +1,6 @@
 import { Lifecycle } from "@purifyjs/core";
 
-export function clickClose(): Lifecycle.OnConnected<HTMLDialogElement> {
+export function useClickClose(): Lifecycle.OnConnected<HTMLDialogElement> {
 	return function (element) {
 		function dialogClickHandler(event: MouseEvent) {
 			if (event.target !== element) return;

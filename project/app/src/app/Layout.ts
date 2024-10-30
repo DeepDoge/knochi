@@ -5,7 +5,7 @@ import { Header } from "~/app/header/Header";
 import { router } from "~/app/router";
 import { BackSvg } from "~/assets/svgs/BackSvg";
 import { Router } from "~/lib/router/mod";
-import { css, scope } from "../lib/css";
+import { css, useScope } from "../lib/css";
 
 const { div, main, header, a, strong } = tags;
 
@@ -33,8 +33,8 @@ export function Layout() {
 
 	return div()
 		.id("app")
-		.use(scope(LayoutCss))
-		.use((element) => {
+		.effect(useScope(LayoutCss))
+		.effect((element) => {
 			function scroll(isOpen: boolean, behavior: ScrollBehavior) {
 				const left = isOpen ? 0 : Number.MAX_SAFE_INTEGER;
 				element.scrollTo({ left, behavior });

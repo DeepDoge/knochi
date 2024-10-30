@@ -1,8 +1,8 @@
 import { Signal, tags } from "@purifyjs/core";
-import { clickClose } from "~/lib/actions/clickClose";
-import { closeOnDisconnect } from "~/lib/actions/closeOnDisconnect";
 import { Config } from "~/lib/config";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
+import { useClickClose } from "~/lib/effects/useClickClose";
+import { useCloseOnDisconnect } from "~/lib/effects/useCloseOnDisconnect";
 import { WalletList } from "~/lib/wallet/components/WalletList";
 
 const { dialog, form, strong } = tags;
@@ -15,10 +15,10 @@ export function ConnectWalletDialog(params: {
 	const { network, isOpen, close } = params;
 
 	return dialog()
-		.use(scope(ConnectWalletDialogCss))
-		.use(clickClose())
-		.use(closeOnDisconnect())
-		.use((element) =>
+		.effect(useScope(ConnectWalletDialogCss))
+		.effect(useClickClose())
+		.effect(useCloseOnDisconnect())
+		.effect((element) =>
 			isOpen.follow((isOpen) => {
 				if (isOpen) {
 					element.showModal();

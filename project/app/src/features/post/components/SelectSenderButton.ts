@@ -3,7 +3,7 @@ import {
 	SelectedSender,
 	SelectSenderPopover,
 } from "~/features/post/components/SelectSenderPopover";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
 
 const { button, img } = tags;
 
@@ -23,13 +23,13 @@ export function SelectSenderButton(params?: {
 	return (
 		button()
 			.type("button")
-			.use(scope(SelectSenderButtonCss))
-			/* .use((element) => {
+			.effect(useScope(SelectSenderButtonCss))
+			/* .effect((element) => {
 			selectSenderPopover.anchorElement = element;
 		}) */
 			.ariaDescription("Currently selected sender contract, click to change.")
 			.popoverTargetElement(selectSenderPopover)
-			.use((element) => {
+			.effect((element) => {
 				element.after(selectSenderPopover);
 				return () => {
 					selectSenderPopover.remove();

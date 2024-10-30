@@ -5,7 +5,7 @@ import { FeedGroupTabList } from "~/app/header/FeedGroupTabList";
 import { FeedGroupTabPanel } from "~/app/header/FeedGroupTabPanel";
 import { router } from "~/app/router";
 import { postDb } from "~/features/post/database/client";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
 import { Address } from "~/lib/solidity/primatives";
 import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
 import { WalletAvatarSvg } from "~/lib/wallet/components/WalletAvatarSvg";
@@ -27,7 +27,7 @@ export function Header() {
 	});
 
 	return header()
-		.use(scope(HeaderCss))
+		.effect(useScope(HeaderCss))
 		.children(
 			groupsPromise
 				.derive((groups) =>

@@ -1,5 +1,5 @@
 import { tags } from "@purifyjs/core";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
 import { Address } from "~/lib/solidity/primatives";
 
 const { span } = tags;
@@ -9,7 +9,7 @@ export function WalletAddress(address: Address, suffixLength = 3) {
 	const suffix = address.slice(-suffixLength);
 
 	return span()
-		.use(scope(AddressTextCss))
+		.effect(useScope(AddressTextCss))
 		.children(
 			span({ class: "prefix" }).textContent(prefix),
 			span({ class: "suffix" }).textContent(suffix),

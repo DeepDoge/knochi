@@ -1,8 +1,8 @@
 import { awaited, ref, tags } from "@purifyjs/core";
 import { FeedGroupIcon } from "~/features/post/components/FeedGroupIcon";
 import { postDb } from "~/features/post/database/client";
-import { bind } from "~/lib/actions/bind";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
+import { useBind } from "~/lib/effects/useBind";
 import { PromiseOrValue } from "~/lib/types/promise";
 import { Utils } from "~/lib/types/utils";
 
@@ -48,7 +48,7 @@ export function FeedGroupAddForm(params: {
 	}
 
 	return form()
-		.use(scope(FeedGroupAddFormCss))
+		.effect(useScope(FeedGroupAddFormCss))
 		.onsubmit(async (event) => {
 			event.preventDefault();
 			busy.val = true;
@@ -69,7 +69,7 @@ export function FeedGroupAddForm(params: {
 					input({ class: "input" })
 						.required(true)
 						.type("text")
-						.use(bind(feedLabel, "value", "input"))
+						.effect(useBind(feedLabel, "value", "input"))
 						.defaultValue(params.values.style.label ?? "")
 						.placeholder("..."),
 				),

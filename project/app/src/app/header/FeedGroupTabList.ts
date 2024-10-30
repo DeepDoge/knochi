@@ -5,7 +5,7 @@ import { CreateFolderSvg } from "~/assets/svgs/CreateFolderSvg";
 import { RssSvg } from "~/assets/svgs/RssSvg";
 import { FeedGroupIcon } from "~/features/post/components/FeedGroupIcon";
 import { postDb } from "~/features/post/database/client";
-import { css, scope } from "~/lib/css";
+import { css, useScope } from "~/lib/css";
 
 const { div, hr, a } = tags;
 
@@ -13,7 +13,7 @@ export function FeedGroupTabList(
 	groups: ReturnType<typeof postDb.lastVersion.models.FeedGroup.parser>[],
 ) {
 	return div()
-		.use(scope(FeedGroupTabListCss))
+		.effect(useScope(FeedGroupTabListCss))
 		.role("tablist")
 		.children(
 			(() => {

@@ -1,6 +1,6 @@
 import { ref, tags } from "@purifyjs/core";
 import { postDb } from "~/features/post/database/client";
-import { bind } from "~/lib/actions/bind";
+import { useBind } from "~/lib/effects/useBind";
 
 const { div, form, label, strong, input, button } = tags;
 
@@ -44,7 +44,7 @@ export function FeedGroupForm(params: { id?: string | null; onDone?: () => void 
 						.type("text")
 						.minLength(1)
 						.required(true)
-						.use(bind(name, "value", "input"))
+						.effect(useBind(name, "value", "input"))
 						.placeholder("group name"),
 				),
 			),
