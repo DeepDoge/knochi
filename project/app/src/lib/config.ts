@@ -8,13 +8,15 @@ export type Config = {
 	readonly networks: {
 		readonly [K in `${Config.Network.ChainId}`]: Config.Network;
 	};
+	readonly language?: string;
 };
 export function Config() {
 	return object({
 		networks: record(string(), Config.Network()).readonly(),
+		language: string().readonly().optional(),
 	})
 		.readonly()
-		.transform((config): Config => config);
+		.transform((config): Config => config satisfies Config);
 }
 export namespace Config {
 	export type Network = ReturnType<typeof Network>["_output"];

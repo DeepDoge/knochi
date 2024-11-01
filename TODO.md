@@ -22,7 +22,7 @@
     -   [ ] ?post={chainIdHex0xOmitted}-{indexerAddress0xOmitted}-{indexHex0xOmitted}
 -   [ ] Offline real time video captions (https://github.com/msqr1/Vosklet)
 -   [ ] Design profile page
--   [ ] Design posts
+-   [x] Design posts
 -   [ ] Show combined feeds feed for one group
 
 # Ideas

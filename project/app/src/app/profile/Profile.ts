@@ -1,6 +1,6 @@
 import { tags } from "@purifyjs/core";
+import { FeedScroller } from "~/app/feed/FeedScroller";
 import { FeedGroupAddFormPopoverButton } from "~/features/post/components/FeedGroupAddFormPopoverButton";
-import { FeedScroller } from "~/features/post/components/FeedScroller";
 import { PostForm } from "~/features/post/components/PostForm";
 import { Feed } from "~/features/post/lib/Feed";
 import { config } from "~/lib/config";

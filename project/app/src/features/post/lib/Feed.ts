@@ -28,7 +28,10 @@ export class Feed {
 		this.indexers = init.indexers;
 	}
 
-	public async *previousGenerator(): AsyncGenerator<Post[]> {}
+	public async *previousGenerator(): AsyncGenerator<Post[]> {
+		throw new Error("Not Implemented");
+		yield [];
+	}
 
 	public async *nextGenerator() {
 		const sources = this.indexers.map((indexer) => {

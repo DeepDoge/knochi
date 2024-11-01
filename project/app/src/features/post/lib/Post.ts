@@ -9,7 +9,7 @@ export namespace Post {
 	export type Init = {
 		author: Address;
 		contentBytes: BytesLike;
-		time_seconds: bigint;
+		time_ms: bigint;
 	};
 	export type LoadParams = {
 		network: Config.Network;
@@ -27,7 +27,7 @@ export class Post {
 	constructor(init: Post.Init) {
 		this.author = init.author;
 		this.content = PostContent.fromBytes(init.contentBytes);
-		this.createdAt = new Date(Number(init.time_seconds * 1000n));
+		this.createdAt = new Date(Number(init.time_ms));
 	}
 
 	public static async load(params: Post.LoadParams) {
@@ -73,6 +73,6 @@ export class Post {
 			await postDb.add("Post").values(dbPost).execute();
 		}
 
-		return new Post({ author, contentBytes: dbPost.content, time_seconds });
+		return new Post({ author, contentBytes: dbPost.content, time_ms: time_seconds });
 	}
 }

@@ -1,5 +1,5 @@
 import { tags } from "@purifyjs/core";
-import { FeedScroller } from "~/features/post/components/FeedScroller";
+import { FeedScroller } from "~/app/feed/FeedScroller";
 import { Feed } from "~/features/post/lib/Feed";
 import { Config, config } from "~/lib/config";
 import { Address } from "~/lib/solidity/primatives";
