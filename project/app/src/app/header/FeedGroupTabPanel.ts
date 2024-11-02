@@ -2,7 +2,7 @@ import { awaited, tags } from "@purifyjs/core";
 import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
 import { router } from "~/app/router";
 import { TrashcanSvg } from "~/assets/svgs/TrashcanSvg";
-import { postDb } from "~/features/post/database/client";
+import { postDb } from "~/features/feed/database/client";
 import { css, useScope } from "~/lib/css";
 import { Router } from "~/lib/router/mod";
 

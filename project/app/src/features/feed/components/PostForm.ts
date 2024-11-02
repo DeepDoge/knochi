@@ -1,8 +1,8 @@
 import { awaited, computed, ref, tags } from "@purifyjs/core";
 import { PostIndexer, PostStore_Plain } from "@root/contracts/connect";
-import { SelectSenderButton } from "~/features/post/components/SelectSenderButton";
-import { SelectedSender } from "~/features/post/components/SelectSenderPopover";
-import { PostContent } from "~/features/post/lib/PostContent";
+import { SelectSenderButton } from "~/features/feed/components/SelectSenderButton";
+import { SelectedSender } from "~/features/feed/components/SelectSenderPopover";
+import { PostContent } from "~/features/feed/lib/PostContent";
 import { css, useScope } from "~/lib/css";
 import { useBind } from "~/lib/effects/useBind";
 import { trackPromise } from "~/lib/progress/mod";

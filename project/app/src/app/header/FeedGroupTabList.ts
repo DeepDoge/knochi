@@ -3,8 +3,8 @@ import { feedGroupFormDialogSearchParam } from "~/app/feed/feedGroupFormDialog";
 import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
 import { CreateFolderSvg } from "~/assets/svgs/CreateFolderSvg";
 import { RssSvg } from "~/assets/svgs/RssSvg";
-import { FeedGroupIcon } from "~/features/post/components/FeedGroupIcon";
-import { postDb } from "~/features/post/database/client";
+import { FeedGroupIcon } from "~/features/feed/components/FeedGroupIcon";
+import { postDb } from "~/features/feed/database/client";
 import { css, useScope } from "~/lib/css";
 
 const { div, hr, a } = tags;

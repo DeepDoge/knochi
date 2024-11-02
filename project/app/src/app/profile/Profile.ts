@@ -1,8 +1,8 @@
 import { tags } from "@purifyjs/core";
 import { FeedScroller } from "~/app/feed/FeedScroller";
-import { FeedGroupAddFormPopoverButton } from "~/features/post/components/FeedGroupAddFormPopoverButton";
-import { PostForm } from "~/features/post/components/PostForm";
-import { Feed } from "~/features/post/lib/Feed";
+import { FeedGroupAddFormPopoverButton } from "~/features/feed/components/FeedGroupAddFormPopoverButton";
+import { PostForm } from "~/features/feed/components/PostForm";
+import { Feed } from "~/features/feed/lib/Feed";
 import { config } from "~/lib/config";
 import { Address } from "~/lib/solidity/primatives";
 

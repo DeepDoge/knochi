@@ -1,6 +1,6 @@
 import { ref, tags } from "@purifyjs/core";
-import { FeedGroupAddForm } from "~/features/post/components/FeedGroupAddForm";
-import { postDb } from "~/features/post/database/client";
+import { FeedGroupAddForm } from "~/features/feed/components/FeedGroupAddForm";
+import { postDb } from "~/features/feed/database/client";
 import { css, useScope } from "~/lib/css";
 
 const { div, button, strong } = tags;

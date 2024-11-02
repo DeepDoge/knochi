@@ -1,5 +1,5 @@
 import { FeedPage } from "~/app/feed/FeedPage";
-import { Feed } from "~/features/post/lib/Feed";
+import { Feed } from "~/features/feed/lib/Feed";
 import { Router } from "~/lib/router/mod";
 
 export const feedRoutes = {

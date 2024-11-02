@@ -1,6 +1,6 @@
 import { tags } from "@purifyjs/core";
 import { FeedScroller } from "~/app/feed/FeedScroller";
-import { Feed } from "~/features/post/lib/Feed";
+import { Feed } from "~/features/feed/lib/Feed";
 import { Config, config } from "~/lib/config";
 import { Address } from "~/lib/solidity/primatives";
 

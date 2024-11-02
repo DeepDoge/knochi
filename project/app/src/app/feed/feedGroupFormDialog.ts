@@ -1,5 +1,5 @@
 import { tags } from "@purifyjs/core";
-import { FeedGroupForm } from "~/features/post/components/FeedGroupForm";
+import { FeedGroupForm } from "~/features/feed/components/FeedGroupForm";
 import { useClickClose } from "~/lib/effects/useClickClose";
 import { useCloseOnDisconnect } from "~/lib/effects/useCloseOnDisconnect";
 import { Router } from "~/lib/router/mod";

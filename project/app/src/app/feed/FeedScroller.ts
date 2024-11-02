@@ -3,7 +3,7 @@ import { FeedItem } from "~/app/feed/FeedItem";
 import { ArrowDownSvg } from "~/assets/svgs/ArrowDownSvg";
 import { ReloadSvg } from "~/assets/svgs/ReloadSvg";
 import { css, useScope } from "~/lib/css";
-import { Feed } from "../../features/post/lib/Feed";
+import { Feed } from "../../features/feed/lib/Feed";
 
 const { div, section, button } = tags;
 

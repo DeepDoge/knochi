@@ -1,6 +1,6 @@
 import { tags } from "@purifyjs/core";
-import { Post } from "~/features/post/lib/Post";
-import { PostContent } from "~/features/post/lib/PostContent";
+import { Post } from "~/features/feed/lib/Post";
+import { PostContent } from "~/features/feed/lib/PostContent";
 import { css, useScope } from "~/lib/css";
 import { getRelativeTimeSignal } from "~/lib/time";
 import { WalletAddress } from "~/lib/wallet/components/WalletAddress";

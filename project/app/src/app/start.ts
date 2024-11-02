@@ -1,4 +1,4 @@
-import "~/features/post/database/client";
+import "~/features/feed/database/client";
 
 import { fragment, tags } from "@purifyjs/core";
 import { feedGroupFormDialog } from "~/app/feed/feedGroupFormDialog";

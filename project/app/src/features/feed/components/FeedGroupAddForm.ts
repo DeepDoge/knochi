@@ -1,6 +1,6 @@
 import { awaited, ref, tags } from "@purifyjs/core";
-import { FeedGroupIcon } from "~/features/post/components/FeedGroupIcon";
-import { postDb } from "~/features/post/database/client";
+import { FeedGroupIcon } from "~/features/feed/components/FeedGroupIcon";
+import { postDb } from "~/features/feed/database/client";
 import { css, useScope } from "~/lib/css";
 import { useBind } from "~/lib/effects/useBind";
 import { PromiseOrValue } from "~/lib/types/promise";

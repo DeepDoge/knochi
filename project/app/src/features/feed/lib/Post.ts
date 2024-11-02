@@ -1,7 +1,7 @@
 import { PostIndexer, PostStore } from "@root/contracts/connect";
 import { BytesLike, JsonRpcProvider } from "ethers";
-import { postDb } from "~/features/post/database/client";
-import { PostContent } from "~/features/post/lib/PostContent";
+import { postDb } from "~/features/feed/database/client";
+import { PostContent } from "~/features/feed/lib/PostContent";
 import { Config } from "~/lib/config";
 import { Address, Hex } from "~/lib/solidity/primatives";
 

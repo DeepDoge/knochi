@@ -1,5 +1,5 @@
 import { bigint, literal, number, object, string, union } from "zod";
-import { Feed } from "~/features/post/lib/Feed";
+import { Feed } from "~/features/feed/lib/Feed";
 import { DB } from "~/lib/db/mod";
 import { Address, Hex } from "~/lib/solidity/primatives";
 

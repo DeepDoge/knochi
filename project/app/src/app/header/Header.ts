@@ -4,7 +4,7 @@ import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
 import { FeedGroupTabList } from "~/app/header/FeedGroupTabList";
 import { FeedGroupTabPanel } from "~/app/header/FeedGroupTabPanel";
 import { router } from "~/app/router";
-import { postDb } from "~/features/post/database/client";
+import { postDb } from "~/features/feed/database/client";
 import { css, useScope } from "~/lib/css";
 import { Address } from "~/lib/solidity/primatives";
 import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
