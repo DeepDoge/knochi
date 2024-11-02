@@ -25,6 +25,18 @@ document.adoptedStyleSheets.push(
 			}
 		}
 
+		:root {
+			--dir: 1;
+		}
+		@container style(writing-mode: rtl) {
+			:root {
+				--dir: -1;
+			}
+		}
+		[dir="rtl"] {
+			--dir: -1;
+		}
+
 		*,
 		*::before,
 		*::after {
@@ -191,8 +203,11 @@ document.adoptedStyleSheets.push(
 		}
 
 		hr {
-			border-color: color-mix(in srgb, currentColor, transparent 75%);
-			margin-inline: 16%;
+			border: none;
+			min-block-size: 0.1em;
+			min-inline-size: 0.1em;
+			background-color: color-mix(in srgb, currentColor, transparent 75%);
+			margin-inline: 15%;
 			margin-block: 0.5em;
 		}
 

@@ -44,7 +44,7 @@ export function FeedGroupTabList(
 					.attributes({ "aria-controls": "header-tabpanel-home" })
 					.ariaSelected(current.derive(String))
 					.tabIndex(current.derive((current) => (current ? 0 : -1)))
-					.children(FeedGroupIcon(group.name));
+					.children(FeedGroupIcon(group));
 			}),
 		);
 }
@@ -54,7 +54,8 @@ const FeedGroupTabListCss = css`
 		display: block grid;
 		align-content: start;
 		gap: 0.5em;
-		overflow: overlay;
+		overflow-y: auto;
+		scrollbar-width: none;
 
 		padding-inline: 0.5em;
 		padding-block: 1em;
@@ -80,12 +81,12 @@ const FeedGroupTabListCss = css`
 			background-color: var(--pop);
 			color: var(--base);
 		}
+	}
 
-		&.add {
-			background-color: transparent;
-			color: var(--pop);
-			padding: 0.5em;
-			border: dashed color-mix(in srgb, currentColor, transparent 75%) 0.25em;
-		}
+	.add {
+		background-color: transparent;
+		color: var(--pop);
+		padding: 0.5em;
+		border: dashed color-mix(in srgb, currentColor, transparent 75%) 0.25em;
 	}
 `;

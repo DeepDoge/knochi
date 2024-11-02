@@ -141,7 +141,6 @@ host.effect(
 
 			background-color: var(--pop);
 			color: var(--base);
-			border-radius: var(--radius);
 		}
 	`),
 );

@@ -6,7 +6,7 @@ import { getRelativeTimeSignal } from "~/lib/time";
 import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
 import { WalletAvatarSvg } from "~/lib/wallet/components/WalletAvatarSvg";
 
-const { article, header, address, time, div, a } = tags;
+const { article, footer, address, time, div, a } = tags;
 
 export function FeedItem(post: Post) {
 	const date = new Date(Number(post.createdAt) * 1000);
@@ -24,7 +24,7 @@ export function FeedItem(post: Post) {
 					}
 				}),
 			),
-			header().children(
+			footer().children(
 				time({ pubdate: "pubdate" })
 					.dateTime(date.toISOString())
 					.children(getRelativeTimeSignal(date)),
@@ -42,11 +42,19 @@ const FeedItemCss = css`
 	:scope {
 		display: grid;
 		gap: 0.5em;
+
+		border-inline-start: solid;
+		border-width: 0.15em;
+		border-color: color-mix(in srgb, transparent, currentColor 85%);
+
+		padding: 0.5em;
 	}
 
-	header {
+	footer {
 		display: grid;
-		gap: 0.25em;
+		gap: 0.5em;
+
+		color: color-mix(in srgb, transparent, currentColor 75%);
 	}
 
 	a[rel="author"] {
@@ -54,10 +62,10 @@ const FeedItemCss = css`
 		align-items: center;
 		grid-template-columns: 1em minmax(0, 10em);
 		gap: 0.5em;
-		font-size: 0.85em;
+		font-size: 0.8em;
 	}
 
 	time {
-		font-size: 0.75em;
+		font-size: 0.7em;
 	}
 `;

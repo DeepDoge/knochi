@@ -38,6 +38,7 @@ export function FeedScroller(feed: Feed) {
 			posts.element.append(newFragment);
 		}
 	}
+
 	async function loadMore() {
 		try {
 			if (busy.val) return;
@@ -83,13 +84,7 @@ const FeedScrollerCss = css`
 
 	.posts {
 		display: grid;
-		--gap: 1em;
-		gap: var(--gap);
-
-		& > * + * {
-			border-block-start: solid 0.1em color-mix(in srgb, var(--base), var(--pop) 25%);
-			padding-block-start: var(--gap);
-		}
+		gap: 1em;
 	}
 
 	button.load {

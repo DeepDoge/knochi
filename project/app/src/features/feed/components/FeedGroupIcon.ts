@@ -1,9 +1,12 @@
 import { sha256, toUtf8Bytes } from "ethers";
 import jazzicon from "jazzicon-ts";
+import { postDb } from "~/features/feed/database/client";
 import { html } from "~/lib/html";
 
-export function FeedGroupIcon(name: string) {
-	const iconWrapper = jazzicon(64, parseInt(sha256(toUtf8Bytes(name)).slice(2, 10), 16));
+export function FeedGroupIcon(
+	group: ReturnType<(typeof postDb.lastVersion.models.FeedGroup)["parser"]>,
+) {
+	const iconWrapper = jazzicon(64, parseInt(sha256(toUtf8Bytes(group.groupId)).slice(2, 10), 16));
 	const svg = iconWrapper.firstElementChild as SVGSVGElement;
 	svg.setAttribute("viewBox", `0 0 64 64`);
 	svg.setAttribute("width", "100%");
@@ -24,7 +27,7 @@ export function FeedGroupIcon(name: string) {
 					text-anchor="middle"
 					dominant-baseline="central"
 					central>
-					${name.at(0)?.toLocaleUpperCase() ?? "?"}
+					${group.name.at(0)?.toLocaleUpperCase() ?? "?"}
 				</text>
 			</svg>
 		`.querySelector("text")!,

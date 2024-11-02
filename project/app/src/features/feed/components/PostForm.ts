@@ -169,7 +169,6 @@ const PostFormCss = css`
 			background-color: var(--front);
 			list-style: none;
 			padding: 0.4em;
-			border-radius: var(--radius);
 		}
 	}
 `;

@@ -40,7 +40,7 @@ export function FeedGroupAddForm(params: {
 					.name("group")
 					.value(group.groupId)
 					.children(
-						FeedGroupIcon(group.name),
+						FeedGroupIcon(group),
 						strong().title(group.name).textContent(group.name),
 					);
 			}),
