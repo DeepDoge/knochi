@@ -2,7 +2,7 @@ import { html } from "~/lib/html";
 
 export function LoadingSvg() {
 	return html`
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%">
 			<rect
 				fill="currentColor"
 				stroke="currentColor"

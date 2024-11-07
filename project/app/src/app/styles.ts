@@ -75,6 +75,7 @@ document.adoptedStyleSheets.push(
 		video {
 			display: block flow;
 			max-inline-size: 100%;
+			height: auto;
 		}
 
 		strong {

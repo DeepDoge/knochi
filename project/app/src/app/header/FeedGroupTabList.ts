@@ -3,7 +3,7 @@ import { feedGroupFormDialogSearchParam } from "~/app/feed/feedGroupFormDialog";
 import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
 import { CreateFolderSvg } from "~/assets/svgs/CreateFolderSvg";
 import { RssSvg } from "~/assets/svgs/RssSvg";
-import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIcon";
+import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIconSvg";
 import { postDb } from "~/features/feed/database/client";
 import { css, useScope } from "~/lib/css";
 

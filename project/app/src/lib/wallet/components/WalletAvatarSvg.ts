@@ -6,7 +6,6 @@ export function WalletAvatarSvg(address: Address) {
 	const svg = iconWrapper.firstElementChild as SVGSVGElement;
 	svg.setAttribute("viewBox", `0 0 64 64`);
 	svg.setAttribute("width", "100%");
-	svg.setAttribute("height", "100%");
 	svg.style.backgroundColor = iconWrapper.style.backgroundColor;
 	svg.style.borderRadius = "50%";
 

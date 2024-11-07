@@ -10,7 +10,6 @@ export function FeedGroupIconSvg(
 	const svg = iconWrapper.firstElementChild as SVGSVGElement;
 	svg.setAttribute("viewBox", `0 0 64 64`);
 	svg.setAttribute("width", "100%");
-	svg.setAttribute("height", "100%");
 	svg.style.backgroundColor = `color-mix(in srgb, ${iconWrapper.style.backgroundColor}, #000 25%)`;
 	svg.style.borderRadius = "50%";
 

@@ -2,14 +2,15 @@ import { awaited, tags } from "@purifyjs/core";
 import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
 import { router } from "~/app/router";
 import { TrashcanSvg } from "~/assets/svgs/TrashcanSvg";
-import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIcon";
+import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIconSvg";
 import { postDb } from "~/features/feed/database/client";
 import { css, useScope } from "~/lib/css";
+import { useClass } from "~/lib/effects/useClass";
 import { Router } from "~/lib/router/mod";
 import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
 import { WalletAvatarSvg } from "~/lib/wallet/components/WalletAvatarSvg";
 
-const { div, strong, button, a, header } = tags;
+const { div, strong, small, button, a, header } = tags;
 
 export function FeedGroupTabPanel(
 	group: ReturnType<typeof postDb.lastVersion.models.FeedGroup.parser>,
@@ -26,7 +27,7 @@ export function FeedGroupTabPanel(
 			searchParams,
 		);
 
-		const itemAnchor = a().href(href).title(item.style.label);
+		const itemAnchor = a({ class: "item" }).href(href).title(item.style.label);
 
 		if (item.style.type === "profile") {
 			const itemStyle = item.style;
@@ -36,9 +37,13 @@ export function FeedGroupTabPanel(
 				:	"false",
 			);
 			return itemAnchor
-				.effect(useScope(FeedGroupTabPanelItemCss))
+				.effect(useClass("profile"))
 				.ariaCurrent(ariaCurrent)
-				.children(WalletAvatarSvg(itemStyle.address), WalletAddress(itemStyle.address));
+				.children(
+					WalletAvatarSvg(itemStyle.address),
+					strong().children(itemStyle.label),
+					small().children(WalletAddress(itemStyle.address)),
+				);
 		}
 
 		if (item.style.type === "feed") {
@@ -47,7 +52,7 @@ export function FeedGroupTabPanel(
 			);
 
 			return itemAnchor
-				.effect(useScope(FeedGroupTabPanelItemCss))
+				.effect(useClass("feed"))
 				.ariaCurrent(ariaCurrent)
 				.children(FeedGroupIconSvg(group), item.style.label);
 		}
@@ -74,19 +79,6 @@ export function FeedGroupTabPanel(
 		);
 }
 
-const FeedGroupTabPanelItemCss = css`
-	:scope {
-		display: grid;
-		grid-template-columns: 1.5em auto;
-		gap: 0.5em;
-		padding: 1em;
-	}
-
-	:scope[aria-current="page"] {
-		background-color: color-mix(in srgb, transparent, currentColor 5%);
-	}
-`;
-
 const FeedGroupTabPanelCss = css`
 	:scope {
 		display: block grid;
@@ -110,5 +102,35 @@ const FeedGroupTabPanelCss = css`
 		padding-block: 1em;
 		padding-inline: 1em;
 		border-block-end: solid 1px color-mix(in srgb, var(--base), var(--pop) 10%);
+	}
+
+	.item {
+		display: grid;
+		grid-template-columns: 1.5em auto;
+		gap: 0.5em;
+		padding: 1em;
+
+		&[aria-current="page"] {
+			background-color: color-mix(in srgb, transparent, currentColor 5%);
+		}
+
+		&.profile {
+			grid-template-columns: 1.5em auto;
+			grid-template-areas:
+				"icon strong"
+				"icon small";
+
+			svg {
+				grid-area: icon;
+			}
+
+			strong {
+				grid-area: strong;
+			}
+
+			small {
+				grid-area: small;
+			}
+		}
 	}
 `;
