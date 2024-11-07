@@ -49,18 +49,15 @@ export function Header() {
 				.children(
 					signerAddress.derive((signerAddress) => {
 						if (signerAddress) {
+							const ariaCurrent = router.route.derive((route) =>
+								route?.name === "profile" && route.data.address === signerAddress ?
+									"page"
+								:	"false",
+							);
+
 							return div({ class: "content" }).children(
 								a()
-									.ariaCurrent(
-										router.route.derive((route) =>
-											(
-												route?.name === "profile" &&
-												route.data.address === signerAddress
-											) ?
-												"page"
-											:	null,
-										),
-									)
+									.ariaCurrent(ariaCurrent)
 									.href(router.routes.profile.toHref({ address: signerAddress }))
 									.title("My Wallet")
 									.children(WalletAvatarSvg(signerAddress)),
@@ -99,7 +96,7 @@ const HeaderCss = css`
 			display: block grid;
 		}
 
-		a[aria-current] {
+		a[aria-current="page"] {
 			border: solid currentColor 0.2em;
 			padding: 0.15em;
 			border-radius: 50%;

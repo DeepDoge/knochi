@@ -3,7 +3,7 @@ import { feedGroupFormDialogSearchParam } from "~/app/feed/feedGroupFormDialog";
 import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
 import { CreateFolderSvg } from "~/assets/svgs/CreateFolderSvg";
 import { RssSvg } from "~/assets/svgs/RssSvg";
-import { FeedGroupIcon } from "~/features/feed/components/FeedGroupIcon";
+import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIcon";
 import { postDb } from "~/features/feed/database/client";
 import { css, useScope } from "~/lib/css";
 
@@ -44,7 +44,7 @@ export function FeedGroupTabList(
 					.attributes({ "aria-controls": "header-tabpanel-home" })
 					.ariaSelected(current.derive(String))
 					.tabIndex(current.derive((current) => (current ? 0 : -1)))
-					.children(FeedGroupIcon(group));
+					.children(FeedGroupIconSvg(group));
 			}),
 		);
 }

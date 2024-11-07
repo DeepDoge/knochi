@@ -3,7 +3,7 @@ import jazzicon from "jazzicon-ts";
 import { postDb } from "~/features/feed/database/client";
 import { html } from "~/lib/html";
 
-export function FeedGroupIcon(
+export function FeedGroupIconSvg(
 	group: ReturnType<(typeof postDb.lastVersion.models.FeedGroup)["parser"]>,
 ) {
 	const iconWrapper = jazzicon(64, parseInt(sha256(toUtf8Bytes(group.groupId)).slice(2, 10), 16));
