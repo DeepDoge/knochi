@@ -24,7 +24,13 @@ export function FeedGroupAddFormPopoverButton(params: {
 
 				return FeedGroupAddForm({
 					values: params.values,
-					groups: postDb.find("FeedGroup").many({ by: "index", order: "prev" }),
+					groups: postDb
+						.find("FeedGroup")
+						.many({ by: "index", order: "prev" })
+						.then((feeds): typeof feeds => [
+							{ groupId: "~", index: -1, name: "Home Feed" },
+							...feeds,
+						]),
 					onDone() {
 						popover.element.hidePopover();
 					},
