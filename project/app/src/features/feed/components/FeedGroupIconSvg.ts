@@ -1,11 +1,16 @@
 import { sha256, toUtf8Bytes } from "ethers";
 import jazzicon from "jazzicon-ts";
+import { RssSvg } from "~/assets/svgs/RssSvg";
 import { postDb } from "~/features/feed/database/client";
 import { html } from "~/lib/html";
 
 export function FeedGroupIconSvg(
 	group: ReturnType<(typeof postDb.lastVersion.models.FeedGroup)["parser"]>,
 ) {
+	if (group.groupId === "~") {
+		return RssSvg();
+	}
+
 	const iconWrapper = jazzicon(64, parseInt(sha256(toUtf8Bytes(group.groupId)).slice(2, 10), 16));
 	const svg = iconWrapper.firstElementChild as SVGSVGElement;
 	svg.setAttribute("viewBox", `0 0 64 64`);
