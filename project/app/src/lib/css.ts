@@ -6,7 +6,7 @@ declare global {
 	}
 }
 
-export const css = String.raw;
+export const css = (...params: Parameters<typeof String.raw>) => new String(String.raw(...params));
 
 export function sheet(css: string) {
 	const sheet = new CSSStyleSheet();
@@ -14,16 +14,22 @@ export function sheet(css: string) {
 	return sheet;
 }
 
-export function useScope(css: string): Lifecycle.OnConnected {
+const scopedCssCache = new WeakMap<String, { styleSheet: CSSStyleSheet; id: string }>();
+export function useScope(css: String): Lifecycle.OnConnected {
 	return (element) => {
 		if (element.dataset.scope) return;
 
-		const scopeId = Math.random().toString(36).slice(2);
-		document.adoptedStyleSheets.push(
-			sheet(
-				`@scope ([data-scope="${scopeId}"]) to ([data-scope]:not([data-scope="${scopeId}"]) > *) {${css}}`,
-			),
-		);
-		element.dataset.scope = scopeId;
+		let cache = scopedCssCache.get(css);
+		if (!cache) {
+			const id = Math.random().toString(36).slice(2);
+			const styleSheet = sheet(
+				`@scope ([data-scope="${id}"]) to ([data-scope]:not([data-scope="${id}"]) > *) {${css}}`,
+			);
+			cache = { id, styleSheet };
+			scopedCssCache.set(css, cache);
+		}
+
+		element.dataset.scope = cache.id;
+		document.adoptedStyleSheets.push(cache.styleSheet);
 	};
 }

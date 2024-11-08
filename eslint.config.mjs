@@ -23,6 +23,7 @@ export default tseslint.config(
 		rules: {
 			"@typescript-eslint/no-namespace": "off",
 			"@typescript-eslint/no-this-alias": "off",
+			"@typescript-eslint/no-wrapper-object-types": "off",
 		},
 	},
 	{
