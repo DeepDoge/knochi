@@ -6,30 +6,36 @@ declare global {
 	}
 }
 
-export const css = (...params: Parameters<typeof String.raw>) => new String(String.raw(...params));
+export function css(...params: Parameters<typeof String.raw>) {
+	return new String(String.raw(...params));
+}
 
-export function sheet(css: string) {
-	const sheet = new CSSStyleSheet();
-	sheet.replaceSync(css);
+const sheetCache = new WeakMap<String, CSSStyleSheet>();
+export function sheet(cssRef: String) {
+	let sheet = sheetCache.get(cssRef);
+	if (!sheet) {
+		sheet = new CSSStyleSheet();
+		sheet.replaceSync(cssRef.toString());
+		sheetCache.set(cssRef, sheet);
+	}
 	return sheet;
 }
 
-const scopedCssCache = new WeakMap<String, { styleSheet: CSSStyleSheet; id: string }>();
-export function useScope(css: String): Lifecycle.OnConnected {
+const scopeIdCache = new WeakMap<String, string>();
+export function useScope(cssRef: String): Lifecycle.OnConnected {
 	return (element) => {
-		if (element.dataset.scope) return;
-
-		let cache = scopedCssCache.get(css);
-		if (!cache) {
-			const id = Math.random().toString(36).slice(2);
-			const styleSheet = sheet(
-				`@scope ([data-scope="${id}"]) to ([data-scope]:not([data-scope="${id}"]) > *) {${css}}`,
+		let scopeId = scopeIdCache.get(cssRef);
+		if (!scopeId) {
+			scopeId = Math.random().toString(36).slice(2);
+			scopeIdCache.set(cssRef, scopeId);
+			document.adoptedStyleSheets.push(
+				sheet(css`
+					@scope ([data-scope="${scopeId}"]) to ([data-scope] > *) {
+						${cssRef}
+					}
+				`),
 			);
-			cache = { id, styleSheet };
-			scopedCssCache.set(css, cache);
 		}
-
-		element.dataset.scope = cache.id;
-		document.adoptedStyleSheets.push(cache.styleSheet);
+		element.dataset.scope = scopeId;
 	};
 }

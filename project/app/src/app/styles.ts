@@ -9,6 +9,8 @@ document.adoptedStyleSheets.push(
 
 			--base: #000;
 			--pop: #fff;
+			/* --base: #1c1e27; */
+			/* --pop: #a1b1e1; */
 			accent-color: var(--pop);
 
 			--success: #388e3c;
