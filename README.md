@@ -40,3 +40,10 @@ And users can even double click on html file and they are in a social media, no 
 ## Why am i doing this?
 
 I'm not satisfied with existing solutions...
+
+-   "Decentralized" platform can ban you.
+-   "Decentralized" platform asks for email.
+-   "Decentralized" platform asks for kyc.
+-   "Decentralized" platform has their own servers that you connect to.
+-   "Decentralized" platform is profitable and makes money from your content and is a bussiness not a protocol.
+-   "Decentralized" platform is hard to participate in as a node.
