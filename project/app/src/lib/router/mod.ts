@@ -142,15 +142,16 @@ export namespace Router {
 		}
 
 		public toHref(value: T | (string & {}) | null) {
-			return hashSignal.derive(() => {
-				const searchParamsValue = new URLSearchParams(searchParams.val);
+			return hashSignal.derive((hash) => {
+				const pathname = getPathname(hash);
+				const searchParams = new URLSearchParams(getSearch(hash) ?? "");
 				if (value === null) {
-					searchParamsValue.delete(this.name);
+					searchParams.delete(this.name);
 				} else {
-					searchParamsValue.set(this.name, value);
+					searchParams.set(this.name, value);
 				}
 
-				const href = hrefFrom(pathname.val, searchParamsValue);
+				const href = hrefFrom(pathname, searchParams);
 				return href;
 			});
 		}
