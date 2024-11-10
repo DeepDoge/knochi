@@ -36,3 +36,7 @@ So for now im not focusing on multi protocol aspect, but its certainly a plan.
 I don't want users to go to a "decenterlized" webapp but then connect to bunch of centerlized services that they didnt list on their settings.
 I wanna compile the whole app into a single index.html, file that i can publish on ipfs.
 And users can even double click on html file and they are in a social media, no servers, nothing, just a single html file webapp.
+
+## Why am i doing this?
+
+I'm not satisfied with existing solutions...
