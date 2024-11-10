@@ -13,11 +13,11 @@
 		"lint": "eslint ./",
 		"test": "npm run check && npm run lint",
 		"___": "___",
+		"contracts:dev": "npm run dev --prefix ./project/contracts",
+		"contracts:build": "npm run build --prefix ./project/contracts",
 		"app:dev": "npm run dev --prefix ./project/app",
 		"app:build": "npm run build --prefix ./project/app",
-		"app:check": "npm run check --prefix ./project/app",
-		"contracts:dev": "npm run dev --prefix ./project/contracts",
-		"contracts:build": "npm run build --prefix ./project/contracts"
+		"app:check": "npm run check --prefix ./project/app"
 	},
 	"devDependencies": {
 		"@openzeppelin/contracts": "^5.0.2",
