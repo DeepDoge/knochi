@@ -128,12 +128,10 @@ const LayoutCss = css`
 		grid-template-columns:
 			[header-start]
 			minmax(0, 20em)
-			[header-end]
-			2fr
-			[main-start]
+			[header-end main-start]
 			minmax(0, 40em)
 			[main-end]
-			4fr;
+			1fr;
 		grid-template-rows: auto;
 
 		@container (inline-size < ${breakPoint}) {

@@ -14,7 +14,8 @@ export function FeedItem(post: Post) {
 	return article()
 		.effect(useScope(FeedItemCss))
 		.children(
-			div().children(
+			div({ class: "avatar" }).ariaHidden("true").children(WalletAvatarSvg(post.author)),
+			div({ class: "content" }).children(
 				post.content.map((part) => {
 					switch (part.type) {
 						case PostContent.Part.TypeMap.Text:
@@ -25,15 +26,12 @@ export function FeedItem(post: Post) {
 				}),
 			),
 			footer().children(
+				a()
+					.rel("author")
+					.children(address().children(WalletAddress(post.author))),
 				time({ pubdate: "pubdate" })
 					.dateTime(date.toISOString())
 					.children(getRelativeTimeSignal(date)),
-				a()
-					.rel("author")
-					.children(
-						WalletAvatarSvg(post.author),
-						address().children(WalletAddress(post.author)),
-					),
 			),
 		);
 }
@@ -41,31 +39,40 @@ export function FeedItem(post: Post) {
 const FeedItemCss = css`
 	:scope {
 		display: grid;
-		gap: 0.5em;
-
-		border-inline-start: solid;
-		border-width: 0.15em;
-		border-color: color-mix(in srgb, transparent, currentColor 85%);
+		grid-template-areas:
+			"avatar . content"
+			"avatar . ."
+			"avatar . footer";
+		grid-template-columns: 1.25em 0.25em 1fr;
+		grid-template-rows: auto 0.5em auto;
 
 		padding: 0.5em;
 	}
 
+	.avatar {
+		grid-area: avatar;
+		align-self: end;
+	}
+
+	.content {
+		grid-area: content;
+		color: color-mix(in srgb, transparent, currentColor 95%);
+	}
+
 	footer {
+		grid-area: footer;
 		display: grid;
 		gap: 0.5em;
-
-		color: color-mix(in srgb, transparent, currentColor 75%);
+		grid-template-columns: minmax(0, 16ch) auto;
+		align-items: center;
 	}
 
 	a[rel="author"] {
-		display: grid;
-		align-items: center;
-		grid-template-columns: 1em minmax(0, 10em);
-		gap: 0.5em;
-		font-size: 0.8em;
+		font-weight: bold;
 	}
 
 	time {
-		font-size: 0.7em;
+		font-size: 0.6em;
+		color: color-mix(in srgb, transparent, currentColor 75%);
 	}
 `;
