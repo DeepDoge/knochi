@@ -1,5 +1,5 @@
 import { PostIndexer, PostStore } from "@root/contracts/connect";
-import { BytesLike, JsonRpcProvider } from "ethers";
+import { BytesLike, JsonRpcProvider, toBigInt } from "ethers";
 import { postDb } from "~/features/feed/database/client";
 import { PostContent } from "~/features/feed/lib/PostContent";
 import { Config } from "~/shared/config";
@@ -35,19 +35,17 @@ export class Post {
 		const chainIdHex = Hex.from(network.chainId);
 		const provider = new JsonRpcProvider(network.providers[0]);
 
-		const indexerContract = PostIndexer.connect(provider, params.indexerAddress);
 		const indexHex = Hex.from(index);
 
 		let dbPostIndex = await postDb
 			.find("PostIndex")
 			.byKey([chainIdHex, params.indexerAddress, feedId, indexHex]);
 
-		const postIndex = await indexerContract.get(feedId, index);
-		const [author, postId, postStore, time_seconds] = postIndex;
-
-		const postIdHex = Hex.from(postId);
-
 		if (!dbPostIndex) {
+			const indexerContract = PostIndexer.connect(provider, params.indexerAddress);
+			const postIndex = await indexerContract.get(feedId, index);
+			const [author, postId, postStore, time_seconds] = postIndex;
+			const postIdHex = Hex.from(postId);
 			dbPostIndex = {
 				feedId,
 				authorAddress: author,
@@ -61,18 +59,24 @@ export class Post {
 			await postDb.add("PostIndex").values(dbPostIndex).execute();
 		}
 
-		let dbPost = await postDb.find("Post").byKey([postStore, postIdHex]);
+		let dbPost = await postDb
+			.find("Post")
+			.byKey([dbPostIndex.storeAddress, dbPostIndex.postIdHex]);
 
 		if (!dbPost) {
-			const storeContract = PostStore.connect(provider, postStore);
+			const storeContract = PostStore.connect(provider, dbPostIndex.storeAddress);
 			dbPost = {
-				storeAddress: postStore,
-				postIdHex,
-				content: await storeContract.get(postId),
+				storeAddress: dbPostIndex.storeAddress,
+				postIdHex: dbPostIndex.postIdHex,
+				content: await storeContract.get(toBigInt(dbPostIndex.postIdHex)),
 			};
 			await postDb.add("Post").values(dbPost).execute();
 		}
 
-		return new Post({ author, contentBytes: dbPost.content, time_ms: time_seconds });
+		return new Post({
+			author: dbPostIndex.authorAddress,
+			contentBytes: dbPost.content,
+			time_ms: dbPostIndex.time_seconds, // TODO: Rename this, its ms
+		});
 	}
 }

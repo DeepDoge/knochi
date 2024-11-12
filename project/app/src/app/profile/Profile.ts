@@ -29,7 +29,7 @@ export function Profile(address: Address) {
 			new Feed({
 				id: profileFeedId,
 				direction: -1n,
-				limit: 2,
+				limit: 64,
 				indexers: Object.values(config.val.networks).map((network) => ({
 					chainId: network.chainId,
 					address: network.contracts.PostIndexer,

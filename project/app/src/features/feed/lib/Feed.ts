@@ -56,6 +56,8 @@ export class Feed {
 					const provider = new JsonRpcProvider(network.providers[0]);
 					const indexerContract = PostIndexer.connect(provider, source.indexer.address);
 
+					// TODO: Use cached length and load optimisticly, and dont give `done` until remote length is fetched.
+					// TODO: After getting remote length fetch the rest on the next call.
 					const length = await indexerContract.length(this.id);
 					source.index ??= length - 1n;
 

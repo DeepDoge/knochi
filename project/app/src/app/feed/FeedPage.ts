@@ -45,7 +45,7 @@ export function FeedPage(params: {
 				new Feed({
 					id: params.feedId,
 					direction: -1n,
-					limit: 2,
+					limit: 64,
 					indexers,
 				}),
 			),
