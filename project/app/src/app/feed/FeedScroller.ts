@@ -3,6 +3,7 @@ import { FeedItem } from "~/app/feed/FeedItem";
 import { ArrowDownSvg } from "~/assets/svgs/ArrowDownSvg";
 import { ReloadSvg } from "~/assets/svgs/ReloadSvg";
 import { css, useScope } from "~/lib/css";
+import { useOnVisible } from "~/lib/effects/useOnVisible";
 import { Feed } from "../../features/feed/lib/Feed";
 
 const { div, section, button } = tags;
@@ -17,16 +18,23 @@ export function FeedScroller(feed: Feed) {
 
 	const posts = div({ class: "posts" });
 
-	let nextGenerator = feed.nextGenerator();
+	let nextGenerator: ReturnType<typeof feed.nextGenerator> | undefined;
 
 	const loadingMore = ref(false);
 	const refresing = ref(false);
+	const done = ref(false);
 	const busy = computed(() => loadingMore.val || refresing.val);
+	const loadMoreDisabled = computed(() => busy.val || done.val);
 
 	async function loadNext({ clear = false } = {}) {
+		if (!nextGenerator) return;
+
 		const start = Date.now();
 		const result = await nextGenerator.next();
 		const passed = Date.now() - start;
+
+		done.val = Boolean(result.done);
+
 		// Give animation time to play.
 		await new Promise((resolve) => setTimeout(resolve, Math.max(0, 1000 - passed)));
 
@@ -40,20 +48,27 @@ export function FeedScroller(feed: Feed) {
 	}
 
 	async function loadMore() {
+		if (loadMoreDisabled.val) return;
+
 		try {
-			if (busy.val) return;
 			loadingMore.val = true;
 			await loadNext();
+		} catch (error) {
+			console.error(error);
 		} finally {
 			loadingMore.val = false;
 		}
 	}
+
 	async function refresh() {
+		if (busy.val) return;
+
 		try {
-			if (busy.val) return;
 			refresing.val = true;
 			nextGenerator = feed.nextGenerator();
 			await loadNext({ clear: true });
+		} catch (error) {
+			console.error(error);
 		} finally {
 			refresing.val = false;
 		}
@@ -68,8 +83,20 @@ export function FeedScroller(feed: Feed) {
 			.children(ReloadSvg()),
 		posts,
 		button({ class: "load more" })
+			.effect(
+				useOnVisible(() => {
+					let visible = true;
+					Promise.resolve().then(async () => {
+						while (visible) {
+							await new Promise((resolve) => setTimeout(resolve, 100));
+							await loadMore();
+						}
+					});
+					return () => (visible = false);
+				}),
+			)
 			.ariaBusy(loadingMore.derive(String))
-			.disabled(busy)
+			.disabled(loadMoreDisabled)
 			.ariaLabel("Load More")
 			.onclick(loadMore)
 			.children(ArrowDownSvg()),
