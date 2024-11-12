@@ -1,10 +1,10 @@
 import { tags } from "@purifyjs/core";
 import { Post } from "~/features/feed/lib/Post";
 import { PostContent } from "~/features/feed/lib/PostContent";
-import { css, useScope } from "~/lib/css";
-import { getRelativeTimeSignal } from "~/lib/time";
-import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
-import { WalletAvatarSvg } from "~/lib/wallet/components/WalletAvatarSvg";
+import { css, useScope } from "~/shared/css";
+import { getRelativeTimeSignal } from "~/shared/time";
+import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
+import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
 
 const { article, footer, address, time, div, a } = tags;
 

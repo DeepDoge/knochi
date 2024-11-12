@@ -1,8 +1,8 @@
 import { tags } from "@purifyjs/core";
 import { JsonRpcSigner } from "ethers";
-import { Config } from "~/lib/config";
-import { css, useScope } from "~/lib/css";
-import { trackPromise } from "~/lib/progress/mod";
+import { Config } from "~/shared/config";
+import { css, useScope } from "~/shared/css";
+import { trackPromise } from "~/shared/progress/mod";
 import { getOrRequestSigner, walletDetails } from "../utils";
 
 const { div, span, button, img, picture, ul, li } = tags;

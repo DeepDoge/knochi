@@ -3,7 +3,7 @@ import {
 	SelectedSender,
 	SelectSenderPopover,
 } from "~/features/feed/components/SelectSenderPopover";
-import { css, useScope } from "~/lib/css";
+import { css, useScope } from "~/shared/css";
 
 const { button, img } = tags;
 

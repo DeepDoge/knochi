@@ -1,6 +1,6 @@
 import { FeedPage } from "~/app/feed/FeedPage";
 import { Feed } from "~/features/feed/lib/Feed";
-import { Router } from "~/lib/router/mod";
+import { Router } from "~/shared/router/mod";
 
 export const feedRoutes = {
 	feed: new Router.Route({

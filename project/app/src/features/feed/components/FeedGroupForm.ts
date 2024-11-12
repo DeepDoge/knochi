@@ -1,6 +1,6 @@
 import { ref, tags } from "@purifyjs/core";
 import { postDb } from "~/features/feed/database/client";
-import { useBind } from "~/lib/effects/useBind";
+import { useBind } from "~/shared/effects/useBind";
 
 const { div, form, label, strong, input, button } = tags;
 

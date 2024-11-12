@@ -1,5 +1,5 @@
 import { MemberOf, ref, Signal } from "@purifyjs/core";
-import { catchError } from "~/lib/catch";
+import { catchError } from "~/shared/catch";
 
 const hashSignal = ref(getHash());
 setInterval(() => (hashSignal.val = getHash()), 100);

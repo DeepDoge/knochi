@@ -1,5 +1,5 @@
 import jazzicon from "jazzicon-ts";
-import { Address } from "~/lib/solidity/primatives";
+import { Address } from "~/shared/solidity/primatives";
 
 export function WalletAvatarSvg(address: Address) {
 	const iconWrapper = jazzicon(64, parseInt(address.slice(2, 10), 16));

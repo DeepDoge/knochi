@@ -1,6 +1,6 @@
 import { ref, Signal } from "@purifyjs/core";
 import { BrowserProvider, JsonRpcSigner, Network } from "ethers";
-import { Config } from "~/lib/config";
+import { Config } from "~/shared/config";
 import eip1193IconSrc from "./assets/eip1193.svg?url";
 interface Eip1193Provider {
 	isStatus?: boolean; // Optional: Indicates the status of the provider

@@ -1,6 +1,6 @@
 import { Profile } from "~/app/profile/Profile";
-import { Router } from "~/lib/router/mod";
-import { Address } from "~/lib/solidity/primatives";
+import { Router } from "~/shared/router/mod";
+import { Address } from "~/shared/solidity/primatives";
 
 export const profileRoutes = {
 	profile: new Router.Route({

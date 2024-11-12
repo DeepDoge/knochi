@@ -1,4 +1,4 @@
-import { language } from "~/lib/language";
+import { language } from "~/shared/language";
 
 const intervals = [
 	[60, "second"], // seconds to minutes

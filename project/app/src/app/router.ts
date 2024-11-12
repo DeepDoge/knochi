@@ -1,6 +1,6 @@
 import { feedRoutes } from "~/app/feed/routes";
 import { profileRoutes } from "~/app/profile/routes";
-import { Router } from "~/lib/router/mod";
+import { Router } from "~/shared/router/mod";
 
 export const router = new Router.Client({
 	...profileRoutes,

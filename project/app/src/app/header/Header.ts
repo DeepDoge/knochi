@@ -5,12 +5,12 @@ import { FeedGroupTabList } from "~/app/header/FeedGroupTabList";
 import { FeedGroupTabPanel } from "~/app/header/FeedGroupTabPanel";
 import { router } from "~/app/router";
 import { postDb } from "~/features/feed/database/client";
-import { css, useScope } from "~/lib/css";
-import { Address } from "~/lib/solidity/primatives";
-import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
-import { WalletAvatarSvg } from "~/lib/wallet/components/WalletAvatarSvg";
-import { connectWallet } from "~/lib/wallet/connectDialog";
-import { currentWalletDetail } from "~/lib/wallet/utils";
+import { css, useScope } from "~/shared/css";
+import { Address } from "~/shared/solidity/primatives";
+import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
+import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
+import { connectWallet } from "~/shared/wallet/connectDialog";
+import { currentWalletDetail } from "~/shared/wallet/utils";
 
 const { div, header, a, section } = tags;
 

@@ -2,8 +2,8 @@ import { PostIndexer, PostStore } from "@root/contracts/connect";
 import { BytesLike, JsonRpcProvider } from "ethers";
 import { postDb } from "~/features/feed/database/client";
 import { PostContent } from "~/features/feed/lib/PostContent";
-import { Config } from "~/lib/config";
-import { Address, Hex } from "~/lib/solidity/primatives";
+import { Config } from "~/shared/config";
+import { Address, Hex } from "~/shared/solidity/primatives";
 
 export namespace Post {
 	export type Init = {

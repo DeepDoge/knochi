@@ -1,4 +1,4 @@
-import { css, sheet } from "~/lib/css";
+import { css, sheet } from "~/shared/css";
 
 document.adoptedStyleSheets.push(
 	sheet(css`

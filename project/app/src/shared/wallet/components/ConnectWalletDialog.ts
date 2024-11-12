@@ -1,9 +1,9 @@
 import { Signal, tags } from "@purifyjs/core";
-import { Config } from "~/lib/config";
-import { css, useScope } from "~/lib/css";
-import { useClickClose } from "~/lib/effects/useClickClose";
-import { useCloseOnDisconnect } from "~/lib/effects/useCloseOnDisconnect";
-import { WalletList } from "~/lib/wallet/components/WalletList";
+import { Config } from "~/shared/config";
+import { css, useScope } from "~/shared/css";
+import { useClickClose } from "~/shared/effects/useClickClose";
+import { useCloseOnDisconnect } from "~/shared/effects/useCloseOnDisconnect";
+import { WalletList } from "~/shared/wallet/components/WalletList";
 
 const { dialog, form, strong } = tags;
 

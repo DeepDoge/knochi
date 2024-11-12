@@ -4,8 +4,8 @@ import { fragment, tags } from "@purifyjs/core";
 import { feedGroupFormDialog } from "~/app/feed/feedGroupFormDialog";
 import { Layout } from "~/app/Layout";
 import { manifest } from "~/app/manifest";
-import { progressListElement } from "~/lib/progress/mod";
-import { connectWallet } from "~/lib/wallet/connectDialog";
+import { progressListElement } from "~/shared/progress/mod";
+import { connectWallet } from "~/shared/wallet/connectDialog";
 
 const { link } = tags;
 

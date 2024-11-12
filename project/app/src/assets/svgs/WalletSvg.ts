@@ -1,4 +1,4 @@
-import { html } from "~/lib/html";
+import { html } from "~/shared/html";
 
 export function WalletSvg() {
 	return html`

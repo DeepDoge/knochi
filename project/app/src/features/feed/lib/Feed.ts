@@ -1,7 +1,7 @@
 import { PostIndexer } from "@root/contracts/connect";
 import { JsonRpcProvider } from "ethers";
-import { config } from "~/lib/config";
-import { Address, Hex } from "~/lib/solidity/primatives";
+import { config } from "~/shared/config";
+import { Address, Hex } from "~/shared/solidity/primatives";
 import { Post } from "./Post";
 
 export namespace Feed {

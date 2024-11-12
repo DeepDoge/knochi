@@ -3,12 +3,12 @@ import { PostIndexer, PostStore_Plain } from "@root/contracts/connect";
 import { SelectSenderButton } from "~/features/feed/components/SelectSenderButton";
 import { SelectedSender } from "~/features/feed/components/SelectSenderPopover";
 import { PostContent } from "~/features/feed/lib/PostContent";
-import { css, useScope } from "~/lib/css";
-import { useBind } from "~/lib/effects/useBind";
-import { trackPromise } from "~/lib/progress/mod";
-import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
-import { connectWallet } from "~/lib/wallet/connectDialog";
-import { currentWalletDetail, getOrRequestSigner } from "~/lib/wallet/utils";
+import { css, useScope } from "~/shared/css";
+import { useBind } from "~/shared/effects/useBind";
+import { trackPromise } from "~/shared/progress/mod";
+import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
+import { connectWallet } from "~/shared/wallet/connectDialog";
+import { currentWalletDetail, getOrRequestSigner } from "~/shared/wallet/utils";
 
 const { form, div, textarea, button, small, hr, a } = tags;
 

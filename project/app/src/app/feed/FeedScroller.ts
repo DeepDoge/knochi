@@ -2,8 +2,8 @@ import { computed, fragment, ref, tags } from "@purifyjs/core";
 import { FeedItem } from "~/app/feed/FeedItem";
 import { ArrowDownSvg } from "~/assets/svgs/ArrowDownSvg";
 import { ReloadSvg } from "~/assets/svgs/ReloadSvg";
-import { css, useScope } from "~/lib/css";
-import { useOnVisible } from "~/lib/effects/useOnVisible";
+import { css, useScope } from "~/shared/css";
+import { useOnVisible } from "~/shared/effects/useOnVisible";
 import { Feed } from "../../features/feed/lib/Feed";
 
 const { div, section, button } = tags;

@@ -1,6 +1,6 @@
 import type { TypedContract } from "@nomadshiba/typed-contracts/ethers6";
 import { BytesLike, Contract, ContractRunner } from "ethers";
-import { Address, Hex } from "~/lib/solidity/primatives";
+import { Address, Hex } from "~/shared/solidity/primatives";
 import { PostIndexer_ABI } from "./artifacts/PostIndexer";
 import { PostStore_ABI } from "./artifacts/PostStore";
 import { PostStore_Plain_ABI } from "./artifacts/PostStore_Plain";

@@ -1,8 +1,8 @@
 import { ref } from "@purifyjs/core";
 import { bigint, number, object, record, string, tuple } from "zod";
 import logoSrc from "~/assets/svgs/chains/bitcoin.svg?url";
-import { catchError } from "~/lib/catch";
-import { Address } from "~/lib/solidity/primatives";
+import { catchError } from "~/shared/catch";
+import { Address } from "~/shared/solidity/primatives";
 
 export type Config = {
 	readonly networks: {

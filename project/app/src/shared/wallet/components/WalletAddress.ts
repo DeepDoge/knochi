@@ -1,6 +1,6 @@
 import { tags } from "@purifyjs/core";
-import { css, useScope } from "~/lib/css";
-import { Address } from "~/lib/solidity/primatives";
+import { css, useScope } from "~/shared/css";
+import { Address } from "~/shared/solidity/primatives";
 
 const { span } = tags;
 

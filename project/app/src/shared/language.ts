@@ -1,4 +1,4 @@
-import { config } from "~/lib/config";
+import { config } from "~/shared/config";
 
 type AcceptedLanguage = (typeof ACCEPTED_LANGUAGES)[number];
 const ACCEPTED_LANGUAGES = ["en-US"] as const;

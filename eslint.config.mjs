@@ -5,7 +5,7 @@ import tseslint from "typescript-eslint";
 
 const patterns = {
 	features: ["src/features/*/**"],
-	shared: ["src/assets/**", "src/lib/**"],
+	shared: ["src/assets/**", "src/shared/**"],
 	app: ["src/app/**", "src/app.ts"],
 };
 

@@ -1,5 +1,5 @@
 import { BytesLike, toBeArray, toUtf8Bytes } from "ethers";
-import { Utils } from "~/lib/types/utils";
+import { Utils } from "~/shared/types/utils";
 
 export type PostContent = PostContent.Part[];
 export namespace PostContent {

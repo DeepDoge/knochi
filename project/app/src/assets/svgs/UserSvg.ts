@@ -1,4 +1,4 @@
-import { html } from "~/lib/html";
+import { html } from "~/shared/html";
 
 export function UserSvg(options: { filled: boolean }) {
 	return html`

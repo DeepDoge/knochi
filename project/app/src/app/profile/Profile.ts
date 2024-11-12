@@ -3,8 +3,8 @@ import { FeedScroller } from "~/app/feed/FeedScroller";
 import { FeedGroupAddFormPopoverButton } from "~/features/feed/components/FeedGroupAddFormPopoverButton";
 import { PostForm } from "~/features/feed/components/PostForm";
 import { Feed } from "~/features/feed/lib/Feed";
-import { config } from "~/lib/config";
-import { Address } from "~/lib/solidity/primatives";
+import { config } from "~/shared/config";
+import { Address } from "~/shared/solidity/primatives";
 
 const { div } = tags;
 

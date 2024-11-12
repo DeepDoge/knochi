@@ -1,7 +1,7 @@
 import { bigint, literal, number, object, string, union } from "zod";
 import { Feed } from "~/features/feed/lib/Feed";
-import { DB } from "~/lib/db/mod";
-import { Address, Hex } from "~/lib/solidity/primatives";
+import { DB } from "~/shared/db/mod";
+import { Address, Hex } from "~/shared/solidity/primatives";
 
 const indexedDbVersionKey = "indexed-db-version:knochi.posts";
 const version = "2";

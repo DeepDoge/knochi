@@ -2,7 +2,7 @@ import { sha256, toUtf8Bytes } from "ethers";
 import jazzicon from "jazzicon-ts";
 import { RssSvg } from "~/assets/svgs/RssSvg";
 import { postDb } from "~/features/feed/database/client";
-import { html } from "~/lib/html";
+import { html } from "~/shared/html";
 
 export function FeedGroupIconSvg(
 	group: ReturnType<(typeof postDb.lastVersion.models.FeedGroup)["parser"]>,

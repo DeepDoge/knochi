@@ -1,8 +1,8 @@
 import { computed } from "@purifyjs/core";
-import { catchError } from "~/lib/catch";
-import { config, Config } from "~/lib/config";
-import { Router } from "~/lib/router/mod";
-import { ConnectWalletDialog } from "~/lib/wallet/components/ConnectWalletDialog";
+import { catchError } from "~/shared/catch";
+import { config, Config } from "~/shared/config";
+import { Router } from "~/shared/router/mod";
+import { ConnectWalletDialog } from "~/shared/wallet/components/ConnectWalletDialog";
 
 const searchParam = new Router.SearchParam<`${Config.Network.ChainId}` | "open">("connect");
 const network = computed<Config.Network | null>(() => {

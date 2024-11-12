@@ -4,8 +4,8 @@ import { tags } from "@purifyjs/core";
 import { Header } from "~/app/header/Header";
 import { router } from "~/app/router";
 import { BackSvg } from "~/assets/svgs/BackSvg";
-import { Router } from "~/lib/router/mod";
-import { css, useScope } from "../lib/css";
+import { Router } from "~/shared/router/mod";
+import { css, useScope } from "../shared/css";
 
 const { div, main, header, a, strong } = tags;
 

@@ -4,11 +4,11 @@ import { router } from "~/app/router";
 import { TrashcanSvg } from "~/assets/svgs/TrashcanSvg";
 import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIconSvg";
 import { postDb } from "~/features/feed/database/client";
-import { css, useScope } from "~/lib/css";
-import { useClass } from "~/lib/effects/useClass";
-import { Router } from "~/lib/router/mod";
-import { WalletAddress } from "~/lib/wallet/components/WalletAddress";
-import { WalletAvatarSvg } from "~/lib/wallet/components/WalletAvatarSvg";
+import { css, useScope } from "~/shared/css";
+import { useClass } from "~/shared/effects/useClass";
+import { Router } from "~/shared/router/mod";
+import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
+import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
 
 const { div, strong, small, button, a, header } = tags;
 
