@@ -2,6 +2,7 @@ import { awaited, computed, ref, tags } from "@purifyjs/core";
 import { PostIndexer, PostStore_Plain } from "@root/contracts/connect";
 import { SelectSenderButton } from "~/features/feed/components/SelectSenderButton";
 import { SelectedSender } from "~/features/feed/components/SelectSenderPopover";
+import { Feed } from "~/features/feed/lib/Feed";
 import { PostContent } from "~/features/feed/lib/PostContent";
 import { css, useScope } from "~/shared/css";
 import { useBind } from "~/shared/effects/useBind";
@@ -12,7 +13,7 @@ import { currentWalletDetail, getOrRequestSigner } from "~/shared/wallet/utils";
 
 const { form, div, textarea, button, small, hr, a } = tags;
 
-export function PostForm() {
+export function FeedForm<const T extends readonly Feed.Id[]>(feedIds: T) {
 	const text = ref("");
 	const textEncoded = text.derive((text) =>
 		PostContent.toBytes([{ type: PostContent.Part.TypeMap.Text, value: text }]),
@@ -62,11 +63,7 @@ export function PostForm() {
 					);
 				}
 
-				await postStoreContract.post(
-					indexerAddress,
-					[`0x00${signer.address.slice(2)}${"00".repeat(32 - 1 - 20)}`],
-					textEncoded.val,
-				);
+				await postStoreContract.post(indexerAddress, feedIds, textEncoded.val);
 			})();
 
 			trackPromise(

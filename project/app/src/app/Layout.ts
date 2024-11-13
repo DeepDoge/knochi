@@ -1,34 +1,97 @@
 import "./styles";
 
-import { tags } from "@purifyjs/core";
+import { awaited, tags } from "@purifyjs/core";
+import { solidityPackedKeccak256 } from "ethers";
+import { FeedItem } from "~/app/feed/FeedItem";
+import { FeedScroller } from "~/app/feed/FeedScroller";
+import { FeedItemSearchParam, feedItemSearchParam } from "~/app/feed/routes";
 import { Header } from "~/app/header/Header";
 import { router } from "~/app/router";
 import { BackSvg } from "~/assets/svgs/BackSvg";
+import { FeedForm } from "~/features/feed/components/FeedForm";
+import { Feed } from "~/features/feed/lib/Feed";
+import { Post } from "~/features/feed/lib/Post";
+import { config } from "~/shared/config";
 import { Router } from "~/shared/router/mod";
+import { Hex } from "~/shared/solidity/primatives";
 import { css, useScope } from "../shared/css";
 
-const { div, main, header, a, strong } = tags;
+const { div, section, main, header, a, strong } = tags;
 
 const documentScroller = document.scrollingElement ?? document.body;
 const menuSearchParam = new Router.SearchParam<"open">("menu");
 
 export function Layout() {
 	const mainBuilder = main().children(
-		header().children(
-			a({ class: "back" })
-				.ariaHidden("true")
-				.href(menuSearchParam.toHref("open"))
-				.children(BackSvg()),
-			router.route.derive((route) => {
-				if (!route) return null;
-				return strong().textContent(route.title());
-			}),
-		),
-		div({ class: "route" }).children(
-			router.route.derive((route) => {
-				return route?.render() ?? null;
-			}),
-		),
+		section({ class: "route" })
+			.ariaLabel(router.route.derive((route) => route?.title() ?? null))
+			.children(
+				header().children(
+					a({ class: "back" })
+						.ariaHidden("true")
+						.href(menuSearchParam.toHref("open"))
+						.children(BackSvg()),
+					router.route.derive((route) => {
+						if (!route) return null;
+						return strong().textContent(route.title());
+					}),
+				),
+				router.route.derive((route) => {
+					return route?.render() ?? null;
+				}),
+			),
+		feedItemSearchParam.derive((value) => {
+			const params = FeedItemSearchParam.fromString(value);
+			if (!params) return null;
+
+			const network = config.val.networks[`${params.chainId}`];
+			if (!network) return null;
+
+			const post = Post.load({
+				network,
+				indexerAddress: params.indexerAddress,
+				feedId: params.feedId,
+				index: params.index,
+			});
+
+			const feedId = solidityPackedKeccak256(
+				["string", "uint256", "address", "bytes32", "uint256"],
+				["replies", params.chainId, params.indexerAddress, params.feedId, params.index],
+			) as Hex<"32">;
+
+			const feed = new Feed({
+				id: feedId,
+				direction: -1n,
+				indexers: Object.values(config.val.networks).map((network) => ({
+					chainId: network.chainId,
+					address: network.contracts.PostIndexer,
+				})),
+				limit: 64,
+			});
+
+			return awaited(
+				post.then((post) =>
+					section({ class: "post" })
+						.ariaLabel("Post")
+						.children(
+							header().children(
+								a({ class: "back" })
+									.ariaHidden("true")
+									.href(feedItemSearchParam.toHref(null))
+									.children(BackSvg()),
+								router.route.derive((route) => {
+									if (!route) return null;
+									return strong().textContent("Post");
+								}),
+							),
+							FeedItem(post),
+							strong().textContent("Replies"),
+							FeedForm([feed.id]),
+							FeedScroller(feed),
+						),
+				),
+			);
+		}),
 	);
 
 	return div()
@@ -125,23 +188,12 @@ const LayoutCss = css`
 
 		display: block grid;
 		align-items: start;
-		grid-template-columns:
-			[header-start]
-			minmax(0, 20em)
-			[header-end main-start]
-			minmax(0, 40em)
-			[main-end]
-			1fr;
+		grid-template-columns: minmax(0, 20em) 1fr;
 		grid-template-rows: auto;
 
 		@container (inline-size < ${breakPoint}) {
 			overflow: overlay;
-			grid-template-columns:
-				[header-start]
-				100%
-				[header-end main-start]
-				100%
-				[main-end];
+			grid-template-columns: 100% 100%;
 
 			&::-webkit-scrollbar {
 				display: none;
@@ -163,9 +215,6 @@ const LayoutCss = css`
 	}
 
 	:scope > header {
-		grid-row: 1;
-		grid-column: header;
-
 		position: sticky;
 		inset-block-start: 0;
 		block-size: 100dvb;
@@ -173,25 +222,33 @@ const LayoutCss = css`
 		overflow: clip;
 	}
 
-	:scope > main {
-		grid-row: 1;
-		grid-column: main;
+	main {
+		display: block grid;
+		align-content: start;
+
+		grid-auto-flow: column;
+		grid-auto-columns: 1fr;
+
+		gap: 1em;
+
 		background-color: var(--base);
+		min-block-size: 100dvb;
+	}
+
+	main section {
+		display: block grid;
+		gap: 1em;
+		align-content: start;
+
+		padding-block: 1em;
 		padding-inline: 0.75em;
 	}
 
-	:scope > main > .route {
-		min-block-size: 100dvb;
-		padding-block: 1em;
-	}
-
-	:scope > main > header {
-		display: grid;
+	main section header {
+		display: block grid;
 		grid-template-columns: 1.5em auto;
 		align-items: center;
 		gap: 1em;
-		padding-block: 1em;
-		border-block-end: solid 1px color-mix(in srgb, var(--base), var(--pop) 10%);
 
 		@container (inline-size >= ${breakPoint}) {
 			grid-template-columns: auto;

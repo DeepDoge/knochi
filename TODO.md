@@ -19,7 +19,8 @@
     -   [x] /{feedId}
     -   [x] /{account}
     -   [x] ?group={groupId}
-    -   [ ] ?post={chainIdHex0xOmitted}-{indexerAddress0xOmitted}-{indexHex0xOmitted}
+    -   [x] ?post={chainIdHex0xOmitted}-{indexerAddress0xOmitted}-{feedId0xOmitted}-{indexHex0xOmitted}
+-   [ ] Make post endpoint resposive.
 -   [ ] Offline real time video captions (https://github.com/msqr1/Vosklet)
 -   [ ] Design profile page
 -   [x] Design posts
@@ -34,3 +35,4 @@
 -   i might add support for other social media protocols, but they have to be topic based, accounts are still evm based.
 -   I should have support on video/movie/series/episodes/shorts, and music/audio
 -   We should be able to continue scrolling from where we left of when page refreshed, this one is kinda tricky, by the nature of being multichain and contract. might require a really long url.
+-   maybe instead of groups/lists, i can have normal follow/subscribe system, where everything you follow appears on home, but you can tag your each follow, and filter based on tag and tags appear on the side. easier to use, more fluid, and less complicated.

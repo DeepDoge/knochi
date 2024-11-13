@@ -13,5 +13,5 @@
 		}
 	},
 
-	"postCreateCommand": "npm install && npm run contracts:compile"
+	"postCreateCommand": "npm install && npm run contracts:build"
 }

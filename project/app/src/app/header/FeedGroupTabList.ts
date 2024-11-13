@@ -1,6 +1,6 @@
 import { tags } from "@purifyjs/core";
 import { feedGroupFormDialogSearchParam } from "~/app/feed/feedGroupFormDialog";
-import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
+import { feedGroupSearchParam } from "~/app/feed/routes";
 import { CreateFolderSvg } from "~/assets/svgs/CreateFolderSvg";
 import { RssSvg } from "~/assets/svgs/RssSvg";
 import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIconSvg";

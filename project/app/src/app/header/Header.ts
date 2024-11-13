@@ -1,6 +1,6 @@
 import { awaited, computed, tags } from "@purifyjs/core";
 import { feedGroupFormDialogSearchParam } from "~/app/feed/feedGroupFormDialog";
-import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
+import { feedGroupSearchParam } from "~/app/feed/routes";
 import { FeedGroupTabList } from "~/app/header/FeedGroupTabList";
 import { FeedGroupTabPanel } from "~/app/header/FeedGroupTabPanel";
 import { router } from "~/app/router";

@@ -1,5 +1,5 @@
 import { awaited, tags } from "@purifyjs/core";
-import { feedGroupSearchParam } from "~/app/feed/feedGroupSearchParam";
+import { feedGroupSearchParam } from "~/app/feed/routes";
 import { router } from "~/app/router";
 import { TrashcanSvg } from "~/assets/svgs/TrashcanSvg";
 import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIconSvg";

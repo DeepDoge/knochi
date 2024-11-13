@@ -1,4 +1,5 @@
 import { tags } from "@purifyjs/core";
+import { FeedItemSearchParam, feedItemSearchParam } from "~/app/feed/routes";
 import { Post } from "~/features/feed/lib/Post";
 import { PostContent } from "~/features/feed/lib/PostContent";
 import { css, useScope } from "~/shared/css";
@@ -31,7 +32,20 @@ export function FeedItem(post: Post) {
 					.children(address().children(WalletAddress(post.author))),
 				time({ pubdate: "pubdate" })
 					.dateTime(date.toISOString())
-					.children(getRelativeTimeSignal(date)),
+					.children(
+						a()
+							.href(
+								feedItemSearchParam.toHref(
+									FeedItemSearchParam.toString({
+										chainId: post.network.chainId,
+										feedId: post.feedId,
+										index: post.index,
+										indexerAddress: post.indexerAddress,
+									}),
+								),
+							)
+							.children(getRelativeTimeSignal(date)),
+					),
 			),
 		);
 }
@@ -43,7 +57,7 @@ const FeedItemCss = css`
 			"avatar . content"
 			"avatar . ."
 			"avatar . footer";
-		grid-template-columns: 1.25em 0.25em 1fr;
+		grid-template-columns: 1.1em 0.25em 1fr;
 		grid-template-rows: auto 0.5em auto;
 
 		padding: 0.5em;
@@ -69,6 +83,8 @@ const FeedItemCss = css`
 
 	a[rel="author"] {
 		font-weight: bold;
+		font-size: 0.9em;
+		color: color-mix(in srgb, transparent, currentColor 85%);
 	}
 
 	time {

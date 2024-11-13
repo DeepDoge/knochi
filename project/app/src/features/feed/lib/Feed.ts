@@ -1,5 +1,5 @@
 import { PostIndexer } from "@root/contracts/connect";
-import { JsonRpcProvider } from "ethers";
+import { JsonRpcProvider, solidityPackedKeccak256 } from "ethers";
 import { config } from "~/shared/config";
 import { Address, Hex } from "~/shared/solidity/primatives";
 import { Post } from "./Post";
@@ -81,6 +81,12 @@ export class Feed {
 
 					source.queue.push(
 						...(await Promise.allSettled(posts))
+							.map((value) => {
+								if (value.status === "rejected") {
+									console.error(value.reason);
+								}
+								return value;
+							})
 							.filter((result) => result.status === "fulfilled")
 							.map((result) => result.value),
 					);
@@ -125,14 +131,27 @@ export class Feed {
 	}
 }
 
+declare const FeedId: unique symbol;
 export namespace Feed {
-	export type Id = ReturnType<typeof Id>["_output"];
+	export type Id = Hex<"32"> & { [FeedId]?: true };
 	export function Id() {
-		return Hex();
+		return Hex("32").transform((value) => value as Id);
 	}
 	export namespace Id {
-		export function fromAddress(address: Address): Id {
+		export function ofProfile(address: Address): Id {
 			return Id().parse(`0x00${address.slice(2)}${"00".repeat(32 - 1 - 20)}`);
+		}
+
+		export function ofPostReplies(params: {
+			chainId: bigint;
+			indexerAddress: Address;
+			feedId: Feed.Id;
+			index: bigint;
+		}) {
+			return solidityPackedKeccak256(
+				["string", "uint256", "address", "bytes32", "uint256"],
+				["replies", params.chainId, params.indexerAddress, params.feedId, params.index],
+			) as Feed.Id;
 		}
 	}
 }

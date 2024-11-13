@@ -1,12 +1,13 @@
 import { PostIndexer, PostStore } from "@root/contracts/connect";
-import { BytesLike, JsonRpcProvider, toBigInt } from "ethers";
+import { BytesLike, JsonRpcProvider, toBeHex, toBigInt } from "ethers";
 import { postDb } from "~/features/feed/database/client";
+import { Feed } from "~/features/feed/lib/Feed";
 import { PostContent } from "~/features/feed/lib/PostContent";
 import { Config } from "~/shared/config";
 import { Address, Hex } from "~/shared/solidity/primatives";
 
 export namespace Post {
-	export type Init = {
+	export type Init = LoadParams & {
 		author: Address;
 		contentBytes: BytesLike;
 		time_ms: bigint;
@@ -14,7 +15,7 @@ export namespace Post {
 	export type LoadParams = {
 		network: Config.Network;
 		indexerAddress: Address;
-		feedId: Hex;
+		feedId: Feed.Id;
 		index: bigint;
 	};
 }
@@ -24,18 +25,28 @@ export class Post {
 	public readonly createdAt: Date;
 	public readonly content: PostContent;
 
+	public readonly network: Config.Network;
+	public readonly indexerAddress: Address;
+	public readonly feedId: Feed.Id;
+	public readonly index: bigint;
+
 	constructor(init: Post.Init) {
 		this.author = init.author;
 		this.content = PostContent.fromBytes(init.contentBytes);
 		this.createdAt = new Date(Number(init.time_ms));
+
+		this.network = init.network;
+		this.indexerAddress = init.indexerAddress;
+		this.feedId = init.feedId;
+		this.index = init.index;
 	}
 
 	public static async load(params: Post.LoadParams) {
 		const { network, feedId, index } = params;
-		const chainIdHex = Hex.from(network.chainId);
+		const chainIdHex = Hex().parse(toBeHex(network.chainId));
 		const provider = new JsonRpcProvider(network.providers[0]);
 
-		const indexHex = Hex.from(index);
+		const indexHex = Hex().parse(toBeHex(index));
 
 		let dbPostIndex = await postDb
 			.find("PostIndex")
@@ -45,7 +56,7 @@ export class Post {
 			const indexerContract = PostIndexer.connect(provider, params.indexerAddress);
 			const postIndex = await indexerContract.get(feedId, index);
 			const [author, postId, postStore, time_seconds] = postIndex;
-			const postIdHex = Hex.from(postId);
+			const postIdHex = Hex().parse(toBeHex(postId));
 			dbPostIndex = {
 				feedId,
 				authorAddress: author,
@@ -74,6 +85,7 @@ export class Post {
 		}
 
 		return new Post({
+			...params,
 			author: dbPostIndex.authorAddress,
 			contentBytes: dbPost.content,
 			time_ms: dbPostIndex.time_seconds, // TODO: Rename this, its ms

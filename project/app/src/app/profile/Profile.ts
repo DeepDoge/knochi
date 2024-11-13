@@ -1,7 +1,7 @@
 import { tags } from "@purifyjs/core";
 import { FeedScroller } from "~/app/feed/FeedScroller";
+import { FeedForm } from "~/features/feed/components/FeedForm";
 import { FeedGroupAddFormPopoverButton } from "~/features/feed/components/FeedGroupAddFormPopoverButton";
-import { PostForm } from "~/features/feed/components/PostForm";
 import { Feed } from "~/features/feed/lib/Feed";
 import { config } from "~/shared/config";
 import { Address } from "~/shared/solidity/primatives";
@@ -9,10 +9,10 @@ import { Address } from "~/shared/solidity/primatives";
 const { div } = tags;
 
 export function Profile(address: Address) {
-	const profileFeedId = Feed.Id.fromAddress(address);
+	const profileFeedId = Feed.Id.ofProfile(address);
 
 	return div().children(
-		PostForm(),
+		FeedForm([profileFeedId]),
 		FeedGroupAddFormPopoverButton({
 			values: {
 				feedId: profileFeedId,

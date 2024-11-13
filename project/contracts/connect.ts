@@ -6,9 +6,13 @@ import { PostStore_ABI } from "./artifacts/PostStore";
 import { PostStore_Plain_ABI } from "./artifacts/PostStore_Plain";
 
 type PrimativeTypeMap = TypedContract.PrimativeTypeMap & {
-	[K in `bytes${number | ""}`]: {
+	[K in `bytes${bigint | ""}`]: {
 		input: BytesLike;
-		output: Hex;
+		output: K extends `bytes${infer TLength}` ?
+			TLength extends `${bigint}` ? Hex<TLength>
+			: TLength extends "" ? Hex<`${bigint}`>
+			: never
+		:	never;
 	};
 } & {
 	address: {
