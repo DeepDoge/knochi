@@ -1,10 +1,13 @@
 import eslint from "@eslint/js";
 import typescriptPlugin from "@typescript-eslint/eslint-plugin";
+import importPlugin from "eslint-plugin-import";
 import projectStructurePlugin, { createIndependentModules } from "eslint-plugin-project-structure";
 import tseslint from "typescript-eslint";
 
 const patterns = {
 	features: ["src/features/*/**"],
+	domains_export: ["src/domains/*/mod.ts"],
+	domains: ["src/domains/*/**"],
 	shared: ["src/assets/**", "src/shared/**"],
 	app: ["src/app/**", "src/app.ts"],
 };
@@ -16,6 +19,12 @@ export default tseslint.config(
 		rules: {
 			"no-inner-declarations": "off",
 			"no-undefined": "error",
+		},
+	},
+	{
+		plugins: { import: importPlugin },
+		rules: {
+			"import/extensions": ["error", "always", { ignorePackages: true }],
 		},
 	},
 	{
@@ -40,9 +49,22 @@ export default tseslint.config(
 					},
 					modules: [
 						{
+							name: "domains",
+							pattern: patterns.domains,
+							allowImportsFrom: [
+								...patterns.shared,
+								...patterns.domains_export,
+								"{family_3}/**",
+							],
+						},
+						{
 							name: "features",
 							pattern: patterns.features,
-							allowImportsFrom: [...patterns.shared, "{family_3}/**"],
+							allowImportsFrom: [
+								...patterns.shared,
+								...patterns.domains_export,
+								"{family_3}/**",
+							],
 						},
 						{
 							name: "shared",
@@ -56,6 +78,7 @@ export default tseslint.config(
 								...patterns.shared,
 								...patterns.app,
 								...patterns.features,
+								...patterns.domains_export,
 							],
 						},
 						{

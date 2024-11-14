@@ -1,10 +1,10 @@
 import { computed, fragment, ref, tags } from "@purifyjs/core";
-import { PostView } from "~/app/feed/PostView";
-import { ArrowDownSvg } from "~/assets/svgs/ArrowDownSvg";
-import { ReloadSvg } from "~/assets/svgs/ReloadSvg";
-import { css, useScope } from "~/shared/css";
-import { useOnVisible } from "~/shared/effects/useOnVisible";
-import { Feed } from "../../features/feed/lib/Feed";
+import { PostView } from "~/app/feed/PostView.ts";
+import { Feed } from "~/app/feed/lib/Feed.ts";
+import { ArrowDownSvg } from "~/assets/svgs/ArrowDownSvg.ts";
+import { ReloadSvg } from "~/assets/svgs/ReloadSvg.ts";
+import { css, useScope } from "~/shared/css.ts";
+import { useOnVisible } from "~/shared/effects/useOnVisible.ts";
 
 const { div, section, button } = tags;
 

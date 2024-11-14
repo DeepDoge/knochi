@@ -1,4 +1,4 @@
-import { html } from "~/shared/html";
+import { html } from "~/shared/html.ts";
 
 export function EthereumSvg(size = "100%") {
 	return html`

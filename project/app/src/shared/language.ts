@@ -1,4 +1,4 @@
-import { config } from "~/shared/config";
+import { config } from "~/shared/config.ts";
 
 type AcceptedLanguage = (typeof ACCEPTED_LANGUAGES)[number];
 const ACCEPTED_LANGUAGES = ["en-US"] as const;

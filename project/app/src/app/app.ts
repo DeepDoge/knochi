@@ -1,11 +1,11 @@
-import "~/features/feed/database/client";
+import "~/app/feed/database/client.ts";
 
 import { fragment, tags } from "@purifyjs/core";
-import { feedGroupFormDialog } from "~/app/feed/feedGroupFormDialog";
-import { Layout } from "~/app/Layout";
-import { manifest } from "~/app/manifest";
-import { progressListElement } from "~/shared/progress/mod";
-import { connectWallet } from "~/shared/wallet/connectDialog";
+import { feedGroupFormDialog } from "~/app/feed/feedGroupFormDialog.ts";
+import { Layout } from "~/app/layout/Layout.ts";
+import { manifest } from "~/app/manifest.ts";
+import { progressListElement } from "~/domains/progress/mod.ts";
+import { connectWallet } from "~/domains/wallet/mod.ts";
 
 const { link } = tags;
 

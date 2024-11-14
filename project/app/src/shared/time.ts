@@ -1,4 +1,4 @@
-import { language } from "~/shared/language";
+import { language } from "~/shared/language.ts";
 
 const intervals = [
 	[60, "second"], // seconds to minutes

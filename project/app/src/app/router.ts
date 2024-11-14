@@ -1,4 +1,8 @@
-import { appRoutes } from "~/app/routes";
-import { Router } from "~/shared/router/mod";
+import { feedRoutes } from "~/app/feed/routes.ts";
+import { profileRoutes } from "~/app/profile/routes.ts";
+import { Router } from "~/domains/router/mod.ts";
 
-export const router = new Router.Client(appRoutes);
+export const router = new Router.Client({
+	...profileRoutes,
+	...feedRoutes,
+});

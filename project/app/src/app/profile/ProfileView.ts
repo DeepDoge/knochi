@@ -1,12 +1,12 @@
 import { tags } from "@purifyjs/core";
-import { FeedScroller } from "~/app/feed/FeedScroller";
-import { FeedForm } from "~/features/feed/components/FeedForm";
-import { FeedGroupAddFormPopoverButton } from "~/features/feed/components/FeedGroupAddFormPopoverButton";
-import { Feed } from "~/features/feed/lib/Feed";
-import { config } from "~/shared/config";
-import { css, useScope } from "~/shared/css";
-import { usePart } from "~/shared/effects/userPart";
-import { Address } from "~/shared/solidity/primatives";
+import { FeedScroller } from "~/app/feed/FeedScroller.ts";
+import { FeedForm } from "~/app/feed/components/FeedForm.ts";
+import { FeedGroupAddFormPopoverButton } from "~/app/feed/components/FeedGroupAddFormPopoverButton.ts";
+import { Feed } from "~/app/feed/lib/Feed.ts";
+import { config } from "~/shared/config.ts";
+import { css, useScope } from "~/shared/css.ts";
+import { usePart } from "~/shared/effects/usePart.ts";
+import { Address } from "~/shared/solidity/primatives.ts";
 
 const { div } = tags;
 

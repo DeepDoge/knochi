@@ -1,5 +1,8 @@
 {
 	"compilerOptions": {
+		"allowImportingTsExtensions": true,
+		"allowJs": true,
+		"allowArbitraryExtensions": true,
 		"skipLibCheck": true,
 		"strict": true,
 		"noUncheckedIndexedAccess": true,

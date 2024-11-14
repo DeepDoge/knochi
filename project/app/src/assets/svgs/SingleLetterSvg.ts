@@ -1,4 +1,4 @@
-import { html } from "~/shared/html";
+import { html } from "~/shared/html.ts";
 
 export function SingleLetterSvg<const T extends string>(
 	letter: T extends `${infer L}${string}` ? L : T,

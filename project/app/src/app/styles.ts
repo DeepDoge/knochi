@@ -1,4 +1,4 @@
-import { css, sheet } from "~/shared/css";
+import { css, sheet } from "~/shared/css.ts";
 
 export const layoutBrakpoint = "45em";
 

@@ -1,8 +1,8 @@
 import { tags } from "@purifyjs/core";
-import { FeedScroller } from "~/app/feed/FeedScroller";
-import { Feed } from "~/features/feed/lib/Feed";
-import { Config, config } from "~/shared/config";
-import { Address } from "~/shared/solidity/primatives";
+import { FeedScroller } from "~/app/feed/FeedScroller.ts";
+import { Feed } from "~/app/feed/lib/Feed.ts";
+import { Config, config } from "~/shared/config.ts";
+import { Address } from "~/shared/solidity/primatives.ts";
 
 const { div } = tags;
 

@@ -1,9 +1,9 @@
 import { tags } from "@purifyjs/core";
-import { FeedScroller } from "~/app/feed/FeedScroller";
-import { PostView } from "~/app/feed/PostView";
-import { FeedForm } from "~/features/feed/components/FeedForm";
-import { Post } from "~/features/feed/lib/Post";
-import { config } from "~/shared/config";
+import { FeedForm } from "~/app/feed/components/FeedForm.ts";
+import { FeedScroller } from "~/app/feed/FeedScroller.ts";
+import { Post } from "~/app/feed/lib/Post.ts";
+import { PostView } from "~/app/feed/PostView.ts";
+import { config } from "~/shared/config.ts";
 
 const { div, strong } = tags;
 

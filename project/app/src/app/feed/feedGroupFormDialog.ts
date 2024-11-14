@@ -1,8 +1,8 @@
 import { tags } from "@purifyjs/core";
-import { FeedGroupForm } from "~/features/feed/components/FeedGroupForm";
-import { useClickClose } from "~/shared/effects/useClickClose";
-import { useCloseOnDisconnect } from "~/shared/effects/useCloseOnDisconnect";
-import { Router } from "~/shared/router/mod";
+import { FeedGroupForm } from "~/app/feed/components/FeedGroupForm.ts";
+import { Router } from "~/domains/router/mod.ts";
+import { useClickClose } from "~/shared/effects/useClickClose.ts";
+import { useCloseOnDisconnect } from "~/shared/effects/useCloseOnDisconnect.ts";
 
 const { dialog } = tags;
 

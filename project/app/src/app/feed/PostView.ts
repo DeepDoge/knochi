@@ -1,11 +1,10 @@
 import { tags } from "@purifyjs/core";
-import { postSearchParam } from "~/app/feed/routes";
-import { Post } from "~/features/feed/lib/Post";
-import { PostContent } from "~/features/feed/lib/PostContent";
-import { css, useScope } from "~/shared/css";
-import { getRelativeTimeSignal } from "~/shared/time";
-import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
-import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
+import { Post } from "~/app/feed/lib/Post.ts";
+import { PostContent } from "~/app/feed/lib/PostContent.ts";
+import { postSearchParam } from "~/app/feed/routes.ts";
+import { WalletAddress, WalletAvatarSvg } from "~/domains/wallet/mod.ts";
+import { css, useScope } from "~/shared/css.ts";
+import { getRelativeTimeSignal } from "~/shared/time.ts";
 
 const { article, footer, address, time, div, a } = tags;
 
