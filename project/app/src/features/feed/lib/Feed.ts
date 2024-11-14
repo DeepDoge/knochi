@@ -2,7 +2,7 @@ import { PostIndexer } from "@root/contracts/connect";
 import { JsonRpcProvider, solidityPackedKeccak256 } from "ethers";
 import { config } from "~/shared/config";
 import { Address, Hex } from "~/shared/solidity/primatives";
-import { Post } from "./Post";
+import { Post, PostLoadParams } from "./Post";
 
 export namespace Feed {
 	export type Init = {
@@ -142,15 +142,16 @@ export namespace Feed {
 			return Id().parse(`0x00${address.slice(2)}${"00".repeat(32 - 1 - 20)}`);
 		}
 
-		export function ofPostReplies(params: {
-			chainId: bigint;
-			indexerAddress: Address;
-			feedId: Feed.Id;
-			index: bigint;
-		}) {
+		export function ofPostReplies(params: PostLoadParams) {
 			return solidityPackedKeccak256(
 				["string", "uint256", "address", "bytes32", "uint256"],
-				["replies", params.chainId, params.indexerAddress, params.feedId, params.index],
+				[
+					"replies",
+					params.network.chainId,
+					params.indexerAddress,
+					params.feedId,
+					params.index,
+				],
 			) as Feed.Id;
 		}
 	}

@@ -1,19 +1,14 @@
 import "./styles";
 
-import { awaited, tags } from "@purifyjs/core";
-import { solidityPackedKeccak256 } from "ethers";
-import { FeedItem } from "~/app/feed/FeedItem";
-import { FeedScroller } from "~/app/feed/FeedScroller";
-import { FeedItemSearchParam, feedItemSearchParam } from "~/app/feed/routes";
+import { computed, tags } from "@purifyjs/core";
+import { FeedItemPage } from "~/app/feed/FeedItemPage";
+import { feedItemSearchParam } from "~/app/feed/routes";
 import { Header } from "~/app/header/Header";
 import { router } from "~/app/router";
 import { BackSvg } from "~/assets/svgs/BackSvg";
-import { FeedForm } from "~/features/feed/components/FeedForm";
-import { Feed } from "~/features/feed/lib/Feed";
-import { Post } from "~/features/feed/lib/Post";
+import { PostLoadParams } from "~/features/feed/lib/Post";
 import { config } from "~/shared/config";
 import { Router } from "~/shared/router/mod";
-import { Hex } from "~/shared/solidity/primatives";
 import { css, useScope } from "../shared/css";
 
 const { div, section, main, header, a, strong } = tags;
@@ -22,8 +17,16 @@ const documentScroller = document.scrollingElement ?? document.body;
 const menuSearchParam = new Router.SearchParam<"open">("menu");
 
 export function Layout() {
+	// Using derive to avoid unwanted deps that might be inside the function being called
+	const postLoadParams = computed(() => ({
+		searchParam: feedItemSearchParam.val,
+		config: config.val,
+	})).derive(({ searchParam, config }) => {
+		return PostLoadParams.fromSearchParam(searchParam, config);
+	});
+
 	const mainBuilder = main().children(
-		section({ class: "route" })
+		section()
 			.ariaLabel(router.route.derive((route) => route?.title() ?? null))
 			.children(
 				header().children(
@@ -40,58 +43,21 @@ export function Layout() {
 					return route?.render() ?? null;
 				}),
 			),
-		feedItemSearchParam.derive((value) => {
-			const params = FeedItemSearchParam.fromString(value);
-			if (!params) return null;
-
-			const network = config.val.networks[`${params.chainId}`];
-			if (!network) return null;
-
-			const post = Post.load({
-				network,
-				indexerAddress: params.indexerAddress,
-				feedId: params.feedId,
-				index: params.index,
-			});
-
-			const feedId = solidityPackedKeccak256(
-				["string", "uint256", "address", "bytes32", "uint256"],
-				["replies", params.chainId, params.indexerAddress, params.feedId, params.index],
-			) as Hex<"32">;
-
-			const feed = new Feed({
-				id: feedId,
-				direction: -1n,
-				indexers: Object.values(config.val.networks).map((network) => ({
-					chainId: network.chainId,
-					address: network.contracts.PostIndexer,
-				})),
-				limit: 64,
-			});
-
-			return awaited(
-				post.then((post) =>
-					section({ class: "post" })
-						.ariaLabel("Post")
-						.children(
-							header().children(
-								a({ class: "back" })
-									.ariaHidden("true")
-									.href(feedItemSearchParam.toHref(null))
-									.children(BackSvg()),
-								router.route.derive((route) => {
-									if (!route) return null;
-									return strong().textContent("Post");
-								}),
-							),
-							FeedItem(post),
-							strong().textContent("Replies"),
-							FeedForm([feed.id]),
-							FeedScroller(feed),
-						),
+		section()
+			.ariaLabel("Post")
+			.children(
+				header().children(
+					a({ class: "back" })
+						.ariaHidden("true")
+						.href(feedItemSearchParam.toHref(null))
+						.children(BackSvg()),
+					router.route.derive((route) => {
+						if (!route) return null;
+						return strong().textContent("Post");
+					}),
 				),
-			);
-		}),
+				postLoadParams.derive((value) => (value ? FeedItemPage(value) : null)),
+			),
 	);
 
 	return div()
@@ -226,8 +192,7 @@ const LayoutCss = css`
 		display: block grid;
 		align-content: start;
 
-		grid-auto-flow: column;
-		grid-auto-columns: 1fr;
+		grid-template-columns: 1fr;
 
 		gap: 1em;
 

@@ -1,6 +1,6 @@
 import { tags } from "@purifyjs/core";
-import { FeedItemSearchParam, feedItemSearchParam } from "~/app/feed/routes";
-import { Post } from "~/features/feed/lib/Post";
+import { feedItemSearchParam } from "~/app/feed/routes";
+import { Post, PostLoadParams } from "~/features/feed/lib/Post";
 import { PostContent } from "~/features/feed/lib/PostContent";
 import { css, useScope } from "~/shared/css";
 import { getRelativeTimeSignal } from "~/shared/time";
@@ -36,12 +36,7 @@ export function FeedItem(post: Post) {
 						a()
 							.href(
 								feedItemSearchParam.toHref(
-									FeedItemSearchParam.toString({
-										chainId: post.network.chainId,
-										feedId: post.feedId,
-										index: post.index,
-										indexerAddress: post.indexerAddress,
-									}),
+									PostLoadParams.toSearchParam(post.loadedWith ?? null),
 								),
 							)
 							.children(getRelativeTimeSignal(date)),
@@ -89,6 +84,6 @@ const FeedItemCss = css`
 
 	time {
 		font-size: 0.6em;
-		color: color-mix(in srgb, transparent, currentColor 75%);
+		color: color-mix(in srgb, transparent, currentColor 70%);
 	}
 `;

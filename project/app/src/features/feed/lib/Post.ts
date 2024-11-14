@@ -6,18 +6,51 @@ import { PostContent } from "~/features/feed/lib/PostContent";
 import { Config } from "~/shared/config";
 import { Address, Hex } from "~/shared/solidity/primatives";
 
-export namespace Post {
-	export type Init = LoadParams & {
-		author: Address;
-		contentBytes: BytesLike;
-		time_ms: bigint;
-	};
-	export type LoadParams = {
-		network: Config.Network;
-		indexerAddress: Address;
-		feedId: Feed.Id;
-		index: bigint;
-	};
+export type PostLoadParams = {
+	network: Config.Network;
+	indexerAddress: Address;
+	feedId: Feed.Id;
+	index: bigint;
+};
+
+export namespace PostLoadParams {
+	export function toSearchParam(params: PostLoadParams | null): string | null {
+		if (!params) return null;
+		return `${params.network.chainId.toString(16)}-${params.indexerAddress.slice(2)}-${params.feedId.slice(2)}-${params.index.toString(16)}` as const;
+	}
+
+	export function fromSearchParam(value: string | null, config: Config): PostLoadParams | null {
+		if (!value) return null;
+		const [
+			chainIdHex0xOmitted,
+			indexerAddressHex0xOmitted,
+			feedIdHex0xOmitted,
+			indexHex0xOmmited,
+		] = value.split("-");
+		if (!chainIdHex0xOmitted) return null;
+		if (!indexerAddressHex0xOmitted) return null;
+		if (!indexHex0xOmmited) return null;
+		if (!feedIdHex0xOmitted) return null;
+
+		const chainId = Hex().transform(BigInt).safeParse(`0x${chainIdHex0xOmitted}`);
+		if (!chainId.success) return null;
+		const indexerAddress = Address().safeParse(`0x${indexerAddressHex0xOmitted}`);
+		if (!indexerAddress.success) return null;
+		const index = Hex().transform(BigInt).safeParse(`0x${indexHex0xOmmited}`);
+		if (!index.success) return null;
+		const feedId = Feed.Id().safeParse(`0x${feedIdHex0xOmitted}`);
+		if (!feedId.success) return null;
+
+		const network = config.networks[`${chainId.data}`];
+		if (!network) return null;
+
+		return {
+			network,
+			indexerAddress: indexerAddress.data,
+			feedId: feedId.data,
+			index: index.data,
+		};
+	}
 }
 
 export class Post {
@@ -25,23 +58,18 @@ export class Post {
 	public readonly createdAt: Date;
 	public readonly content: PostContent;
 
-	public readonly network: Config.Network;
-	public readonly indexerAddress: Address;
-	public readonly feedId: Feed.Id;
-	public readonly index: bigint;
+	#loadedWith: PostLoadParams | undefined;
+	public get loadedWith() {
+		return this.#loadedWith;
+	}
 
-	constructor(init: Post.Init) {
+	constructor(init: { author: Address; contentBytes: BytesLike; time_ms: bigint }) {
 		this.author = init.author;
 		this.content = PostContent.fromBytes(init.contentBytes);
 		this.createdAt = new Date(Number(init.time_ms));
-
-		this.network = init.network;
-		this.indexerAddress = init.indexerAddress;
-		this.feedId = init.feedId;
-		this.index = init.index;
 	}
 
-	public static async load(params: Post.LoadParams) {
+	public static async load(params: PostLoadParams) {
 		const { network, feedId, index } = params;
 		const chainIdHex = Hex().parse(toBeHex(network.chainId));
 		const provider = new JsonRpcProvider(network.providers[0]);
@@ -84,11 +112,13 @@ export class Post {
 			await postDb.add("Post").values(dbPost).execute();
 		}
 
-		return new Post({
-			...params,
+		const post = new Post({
 			author: dbPostIndex.authorAddress,
 			contentBytes: dbPost.content,
 			time_ms: dbPostIndex.time_seconds, // TODO: Rename this, its ms
 		});
+		post.#loadedWith = params;
+
+		return post;
 	}
 }
