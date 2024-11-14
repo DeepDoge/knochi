@@ -52,7 +52,7 @@ document.adoptedStyleSheets.push(
 		}
 
 		body {
-			container-type: inline-size;
+			container: body / inline-size;
 			background-color: var(--base);
 			color: var(--pop);
 			margin: 0;

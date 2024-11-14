@@ -1,5 +1,5 @@
 import { awaited, computed, tags } from "@purifyjs/core";
-import { PostPage } from "~/app/feed/PostPage";
+import { PostThread } from "~/app/feed/PostThread";
 import { postSearchParam } from "~/app/feed/routes";
 import { router } from "~/app/router";
 import { menuSearchParam } from "~/app/routes";
@@ -41,6 +41,7 @@ export function Main() {
 							if (!post) return null;
 
 							return section({ class: "post" })
+								.role("complementary")
 								.ariaLabel("Post")
 								.children(
 									header().children(
@@ -53,7 +54,7 @@ export function Main() {
 											return strong().textContent("Post");
 										}),
 									),
-									PostPage(post),
+									PostThread(post),
 								);
 						}),
 					),
@@ -63,6 +64,8 @@ export function Main() {
 
 export const MainCss = css`
 	:scope {
+		container: main / inline-size;
+
 		display: block flex;
 		align-content: start;
 
@@ -84,10 +87,35 @@ export const MainCss = css`
 
 		&.route {
 			flex: 1.5;
+
+			&:has(a svg) {
+				@container body (inline-size >= ${layoutBrakpoint}) {
+					grid-template-columns: auto;
+
+					a:has(svg) {
+						display: none;
+					}
+				}
+			}
 		}
 
 		&.post {
-			flex: 1;
+			inline-size: 30em;
+
+			max-block-size: 100dvh;
+			overflow: auto;
+			scrollbar-width: thin;
+
+			position: sticky;
+			inset-block-start: 0;
+
+			@container main (inline-size < 60em) {
+				position: fixed;
+				inset-block: 0;
+				inset-inline-end: 0;
+				inline-size: min(100%, 30em);
+				box-shadow: 0 0 2em 1em color-mix(in srgb, transparent, var(--base) 65%);
+			}
 		}
 	}
 
@@ -97,22 +125,10 @@ export const MainCss = css`
 		align-items: center;
 		gap: 1em;
 
-		.icon {
+		a:has(svg) {
 			border-radius: 50%;
 			aspect-ratio: 1;
 			color: color-mix(in srgb, var(--base), var(--pop) 50%);
-		}
-
-		&:has(.back) {
-			@container (inline-size >= ${layoutBrakpoint}) {
-				grid-template-columns: auto;
-			}
-		}
-
-		.back {
-			@container (inline-size >= ${layoutBrakpoint}) {
-				display: none;
-			}
 		}
 
 		strong {

@@ -7,7 +7,7 @@ import { config } from "~/shared/config";
 
 const { div, strong } = tags;
 
-export function PostPage(post: Post) {
+export function PostThread(post: Post) {
 	const repliesFeed = config.derive((config) => post.replies(config));
 	return div().children(
 		PostView(post),

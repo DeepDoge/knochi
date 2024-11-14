@@ -20,7 +20,7 @@
     -   [x] /{account}
     -   [x] ?group={groupId}
     -   [x] ?post={chainIdHex0xOmitted}-{indexerAddress0xOmitted}-{feedId0xOmitted}-{indexHex0xOmitted}
--   [ ] Make post endpoint resposive.
+-   [x] Make post endpoint resposive.
 -   [ ] Offline real time video captions (https://github.com/msqr1/Vosklet)
 -   [ ] Design profile page
 -   [x] Design posts

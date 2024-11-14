@@ -111,7 +111,7 @@ const LayoutCss = css`
 		grid-template-columns: minmax(0, 20em) 1fr;
 		grid-template-rows: auto;
 
-		@container (inline-size < ${layoutBrakpoint}) {
+		@container body (inline-size < ${layoutBrakpoint}) {
 			overflow: overlay;
 			grid-template-columns: 100% 100%;
 
