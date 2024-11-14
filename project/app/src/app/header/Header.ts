@@ -84,6 +84,13 @@ const HeaderCss = css`
 		grid-template-rows: 1fr 0 auto;
 	}
 
+	@keyframes hide-header-scroll {
+		to {
+			scale: 0.95;
+			translate: 100% 0;
+		}
+	}
+
 	section.profile {
 		grid-area: profile;
 

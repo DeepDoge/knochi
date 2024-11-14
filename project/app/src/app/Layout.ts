@@ -4,6 +4,7 @@ import { tags } from "@purifyjs/core";
 import { Header } from "~/app/header/Header";
 import { Main } from "~/app/Main";
 import { menuSearchParam } from "~/app/routes";
+import { usePart } from "~/shared/effects/userPart";
 import { css, useScope } from "../shared/css";
 import { layoutBrakpoint } from "./styles";
 
@@ -17,7 +18,7 @@ export function Layout() {
 	return div()
 		.id("app")
 		.effect(useScope(LayoutCss))
-		.children(Header(), mainElement)
+		.children(Header().effect(usePart("header")), mainElement)
 		.effect((appElement) => {
 			function scroll(isOpen: boolean, behavior: ScrollBehavior) {
 				const left = isOpen ? 0 : Number.MAX_SAFE_INTEGER;
@@ -119,7 +120,7 @@ const LayoutCss = css`
 				display: none;
 			}
 
-			& > header {
+			[data-part="header"] {
 				animation: hide-header-scroll linear;
 				animation-timeline: scroll(x);
 				z-index: -1;
@@ -134,7 +135,7 @@ const LayoutCss = css`
 		}
 	}
 
-	:scope > header {
+	[data-part="header"] {
 		position: sticky;
 		inset-block-start: 0;
 		block-size: 100dvb;

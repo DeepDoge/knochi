@@ -43,15 +43,13 @@ export function PostView(post: Post) {
 
 const FeedItemCss = css`
 	:scope {
-		display: grid;
+		display: block grid;
 		grid-template-areas:
 			"avatar . content"
 			"avatar . ."
 			"avatar . footer";
 		grid-template-columns: 1.1em 0.25em 1fr;
 		grid-template-rows: auto 0.5em auto;
-
-		padding: 0.5em;
 	}
 
 	.avatar {
@@ -66,7 +64,7 @@ const FeedItemCss = css`
 
 	footer {
 		grid-area: footer;
-		display: grid;
+		display: block grid;
 		gap: 0.5em;
 		grid-template-columns: minmax(0, 16ch) auto;
 		align-items: center;

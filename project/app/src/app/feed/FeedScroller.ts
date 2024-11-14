@@ -105,17 +105,19 @@ export function FeedScroller(feed: Feed) {
 
 const FeedScrollerCss = css`
 	:scope {
-		display: grid;
+		display: block grid;
 		gap: 2em;
+		align-content: start;
 	}
 
 	.posts {
-		display: grid;
+		display: block grid;
 		gap: 1em;
+		align-content: start;
 	}
 
 	button.load {
-		display: grid;
+		display: block grid;
 		grid-template-columns: 1.5em;
 	}
 

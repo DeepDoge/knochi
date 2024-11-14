@@ -28,9 +28,10 @@ export function useScope(cssRef: String): Lifecycle.OnConnected {
 		if (!scopeId) {
 			scopeId = Math.random().toString(36).slice(2);
 			scopeIdCache.set(cssRef, scopeId);
+			// this still doesnt require you to use [data-part] selector and might leak, but im gonna solve this later, not a concern atm.
 			document.adoptedStyleSheets.push(
 				sheet(css`
-					@scope ([data-scope="${scopeId}"]) to ([data-scope] > *) {
+					@scope ([data-scope="${scopeId}"]) to ([data-part] > *, [data-scope]:not([data-part])) {
 						${cssRef}
 					}
 				`),

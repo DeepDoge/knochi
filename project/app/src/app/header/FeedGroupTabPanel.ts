@@ -94,7 +94,7 @@ const FeedGroupTabPanelCss = css`
 	}
 
 	header {
-		display: grid;
+		display: block grid;
 		grid-template-columns: 1fr 1.5em;
 		gap: 0.5em;
 		align-items: center;
@@ -105,7 +105,7 @@ const FeedGroupTabPanelCss = css`
 	}
 
 	.item {
-		display: grid;
+		display: block grid;
 		grid-template-columns: 1.5em auto;
 		gap: 0.5em;
 		padding: 1em;

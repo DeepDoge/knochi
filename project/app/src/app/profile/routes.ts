@@ -1,4 +1,4 @@
-import { Profile } from "~/app/profile/Profile";
+import { ProfileView } from "~/app/profile/ProfileView";
 import { Router } from "~/shared/router/mod";
 import { Address } from "~/shared/solidity/primatives";
 
@@ -13,7 +13,7 @@ export const profileRoutes = {
 			return data.address;
 		},
 		render(data) {
-			return Profile(data.address);
+			return ProfileView(data.address);
 		},
 		title() {
 			return "Profile";

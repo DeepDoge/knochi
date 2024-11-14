@@ -80,9 +80,6 @@ export const MainCss = css`
 		gap: 1em;
 		align-content: start;
 
-		padding-block: 1em;
-		padding-inline: 0.75em;
-
 		background-color: color-mix(in srgb, var(--base), var(--pop) 5%);
 
 		&.route {
@@ -102,7 +99,7 @@ export const MainCss = css`
 		&.post {
 			inline-size: 30em;
 
-			max-block-size: 100dvh;
+			max-block-size: 100dvb;
 			overflow: auto;
 			scrollbar-width: thin;
 
