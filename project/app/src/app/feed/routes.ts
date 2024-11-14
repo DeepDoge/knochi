@@ -22,4 +22,4 @@ export const feedRoutes = {
 };
 
 export const feedGroupSearchParam = new Router.SearchParam("group");
-export const feedItemSearchParam = new Router.SearchParam("post");
+export const postSearchParam = new Router.SearchParam("post");

@@ -1,5 +1,5 @@
 import { computed, fragment, ref, tags } from "@purifyjs/core";
-import { FeedItem } from "~/app/feed/FeedItem";
+import { PostView } from "~/app/feed/PostView";
 import { ArrowDownSvg } from "~/assets/svgs/ArrowDownSvg";
 import { ReloadSvg } from "~/assets/svgs/ReloadSvg";
 import { css, useScope } from "~/shared/css";
@@ -38,7 +38,7 @@ export function FeedScroller(feed: Feed) {
 		// Give animation time to play.
 		await new Promise((resolve) => setTimeout(resolve, Math.max(0, 1000 - passed)));
 
-		const newFragment = fragment(result.value?.map((post) => FeedItem(post)) ?? null);
+		const newFragment = fragment(result.value?.map((post) => PostView(post)) ?? null);
 
 		if (clear) {
 			posts.element.replaceChildren(newFragment);

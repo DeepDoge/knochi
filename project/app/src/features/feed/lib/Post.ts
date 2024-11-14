@@ -1,5 +1,5 @@
 import { PostIndexer, PostStore } from "@root/contracts/connect";
-import { BytesLike, JsonRpcProvider, toBeHex, toBigInt } from "ethers";
+import { BytesLike, JsonRpcProvider, solidityPackedKeccak256, toBeHex, toBigInt } from "ethers";
 import { postDb } from "~/features/feed/database/client";
 import { Feed } from "~/features/feed/lib/Feed";
 import { PostContent } from "~/features/feed/lib/PostContent";
@@ -13,13 +13,59 @@ export type PostLoadParams = {
 	index: bigint;
 };
 
-export namespace PostLoadParams {
-	export function toSearchParam(params: PostLoadParams | null): string | null {
-		if (!params) return null;
-		return `${params.network.chainId.toString(16)}-${params.indexerAddress.slice(2)}-${params.feedId.slice(2)}-${params.index.toString(16)}` as const;
+export class Post {
+	public readonly author: Address;
+	public readonly createdAt: Date;
+	public readonly content: PostContent;
+
+	public readonly loadedWith: PostLoadParams;
+
+	private constructor(
+		init: { author: Address; contentBytes: BytesLike; time_ms: bigint },
+		loadedWith: PostLoadParams,
+	) {
+		this.loadedWith = loadedWith;
+		this.author = init.author;
+		this.content = PostContent.fromBytes(init.contentBytes);
+		this.createdAt = new Date(Number(init.time_ms));
 	}
 
-	export function fromSearchParam(value: string | null, config: Config): PostLoadParams | null {
+	public replies(config: Config) {
+		const {
+			feedId,
+			index,
+			indexerAddress,
+			network: { chainId },
+		} = this.loadedWith;
+
+		const repliesFeedId = solidityPackedKeccak256(
+			["string", "uint256", "address", "bytes32", "uint256"],
+			["replies", chainId, indexerAddress, feedId, index],
+		) as Feed.Id;
+
+		return new Feed({
+			id: repliesFeedId,
+			direction: -1n,
+			indexers: Object.values(config.networks).map((network) => ({
+				chainId: network.chainId,
+				address: network.contracts.PostIndexer,
+			})),
+			limit: 64,
+		});
+	}
+
+	public toSearchParam() {
+		const {
+			feedId,
+			index,
+			indexerAddress,
+			network: { chainId },
+		} = this.loadedWith;
+
+		return `${chainId.toString(16)}-${indexerAddress.slice(2)}-${feedId.slice(2)}-${index.toString(16)}` as const;
+	}
+
+	public static async loadWithSearchParam(value: string | null, config: Config) {
 		if (!value) return null;
 		const [
 			chainIdHex0xOmitted,
@@ -44,29 +90,12 @@ export namespace PostLoadParams {
 		const network = config.networks[`${chainId.data}`];
 		if (!network) return null;
 
-		return {
+		return await this.load({
 			network,
 			indexerAddress: indexerAddress.data,
 			feedId: feedId.data,
 			index: index.data,
-		};
-	}
-}
-
-export class Post {
-	public readonly author: Address;
-	public readonly createdAt: Date;
-	public readonly content: PostContent;
-
-	#loadedWith: PostLoadParams | undefined;
-	public get loadedWith() {
-		return this.#loadedWith;
-	}
-
-	constructor(init: { author: Address; contentBytes: BytesLike; time_ms: bigint }) {
-		this.author = init.author;
-		this.content = PostContent.fromBytes(init.contentBytes);
-		this.createdAt = new Date(Number(init.time_ms));
+		});
 	}
 
 	public static async load(params: PostLoadParams) {
@@ -112,12 +141,14 @@ export class Post {
 			await postDb.add("Post").values(dbPost).execute();
 		}
 
-		const post = new Post({
-			author: dbPostIndex.authorAddress,
-			contentBytes: dbPost.content,
-			time_ms: dbPostIndex.time_seconds, // TODO: Rename this, its ms
-		});
-		post.#loadedWith = params;
+		const post = new Post(
+			{
+				author: dbPostIndex.authorAddress,
+				contentBytes: dbPost.content,
+				time_ms: dbPostIndex.time_seconds, // TODO: Rename this, its ms
+			},
+			params,
+		);
 
 		return post;
 	}

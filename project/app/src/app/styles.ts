@@ -1,5 +1,7 @@
 import { css, sheet } from "~/shared/css";
 
+export const layoutBrakpoint = "45em";
+
 document.adoptedStyleSheets.push(
 	sheet(css`
 		:root {

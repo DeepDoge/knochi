@@ -1,6 +1,6 @@
 import { tags } from "@purifyjs/core";
-import { feedItemSearchParam } from "~/app/feed/routes";
-import { Post, PostLoadParams } from "~/features/feed/lib/Post";
+import { postSearchParam } from "~/app/feed/routes";
+import { Post } from "~/features/feed/lib/Post";
 import { PostContent } from "~/features/feed/lib/PostContent";
 import { css, useScope } from "~/shared/css";
 import { getRelativeTimeSignal } from "~/shared/time";
@@ -9,7 +9,7 @@ import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
 
 const { article, footer, address, time, div, a } = tags;
 
-export function FeedItem(post: Post) {
+export function PostView(post: Post) {
 	const date = new Date(Number(post.createdAt) * 1000);
 
 	return article()
@@ -34,11 +34,7 @@ export function FeedItem(post: Post) {
 					.dateTime(date.toISOString())
 					.children(
 						a()
-							.href(
-								feedItemSearchParam.toHref(
-									PostLoadParams.toSearchParam(post.loadedWith ?? null),
-								),
-							)
+							.href(postSearchParam.toHref(post.toSearchParam()))
 							.children(getRelativeTimeSignal(date)),
 					),
 			),

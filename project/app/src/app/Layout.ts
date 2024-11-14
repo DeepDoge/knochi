@@ -1,78 +1,36 @@
 import "./styles";
 
-import { computed, tags } from "@purifyjs/core";
-import { FeedItemPage } from "~/app/feed/FeedItemPage";
-import { feedItemSearchParam } from "~/app/feed/routes";
+import { tags } from "@purifyjs/core";
 import { Header } from "~/app/header/Header";
-import { router } from "~/app/router";
-import { BackSvg } from "~/assets/svgs/BackSvg";
-import { PostLoadParams } from "~/features/feed/lib/Post";
-import { config } from "~/shared/config";
-import { Router } from "~/shared/router/mod";
+import { Main } from "~/app/Main";
+import { menuSearchParam } from "~/app/routes";
 import { css, useScope } from "../shared/css";
+import { layoutBrakpoint } from "./styles";
 
-const { div, section, main, header, a, strong } = tags;
+const { div } = tags;
 
 const documentScroller = document.scrollingElement ?? document.body;
-const menuSearchParam = new Router.SearchParam<"open">("menu");
 
 export function Layout() {
-	// Using derive to avoid unwanted deps that might be inside the function being called
-	const postLoadParams = computed(() => ({
-		searchParam: feedItemSearchParam.val,
-		config: config.val,
-	})).derive(({ searchParam, config }) => {
-		return PostLoadParams.fromSearchParam(searchParam, config);
-	});
-
-	const mainBuilder = main().children(
-		section()
-			.ariaLabel(router.route.derive((route) => route?.title() ?? null))
-			.children(
-				header().children(
-					a({ class: "back" })
-						.ariaHidden("true")
-						.href(menuSearchParam.toHref("open"))
-						.children(BackSvg()),
-					router.route.derive((route) => {
-						if (!route) return null;
-						return strong().textContent(route.title());
-					}),
-				),
-				router.route.derive((route) => {
-					return route?.render() ?? null;
-				}),
-			),
-		section()
-			.ariaLabel("Post")
-			.children(
-				header().children(
-					a({ class: "back" })
-						.ariaHidden("true")
-						.href(feedItemSearchParam.toHref(null))
-						.children(BackSvg()),
-					router.route.derive((route) => {
-						if (!route) return null;
-						return strong().textContent("Post");
-					}),
-				),
-				postLoadParams.derive((value) => (value ? FeedItemPage(value) : null)),
-			),
-	);
+	const mainElement = Main().element;
 
 	return div()
 		.id("app")
 		.effect(useScope(LayoutCss))
-		.effect((element) => {
+		.children(Header(), mainElement)
+		.effect((appElement) => {
 			function scroll(isOpen: boolean, behavior: ScrollBehavior) {
 				const left = isOpen ? 0 : Number.MAX_SAFE_INTEGER;
-				element.scrollTo({ left, behavior });
+				appElement.scrollTo({ left, behavior });
 			}
 
 			function getScrollProgress() {
 				return Math.max(
 					0,
-					Math.min(1, element.scrollLeft / (element.scrollWidth - element.clientWidth)),
+					Math.min(
+						1,
+						appElement.scrollLeft / (appElement.scrollWidth - appElement.clientWidth),
+					),
 				);
 			}
 
@@ -92,21 +50,21 @@ export function Layout() {
 			function updateStaticState() {
 				const scrollProgress = getScrollProgress();
 				const isStatic =
-					scrollProgress === 1 || element.scrollWidth === element.clientWidth;
+					scrollProgress === 1 || appElement.scrollWidth === appElement.clientWidth;
 
 				if (isStatic === isStaticCache) return isStatic;
 
 				if (isStatic) {
-					const scrollY = mainBuilder.element.scrollTop;
-					mainBuilder.element.style.overflow = "visible";
-					mainBuilder.element.style.blockSize = "";
+					const scrollY = mainElement.scrollTop;
+					mainElement.style.overflow = "visible";
+					mainElement.style.blockSize = "";
 					documentScroller.scrollTop = scrollY;
 					isStaticCache = true;
 				} else {
 					const scrollY = documentScroller.scrollTop;
-					mainBuilder.element.style.overflow = "hidden";
-					mainBuilder.element.style.blockSize = "100dvb";
-					mainBuilder.element.scrollTop = scrollY;
+					mainElement.style.overflow = "hidden";
+					mainElement.style.blockSize = "100dvb";
+					mainElement.scrollTop = scrollY;
 					isStaticCache = false;
 				}
 
@@ -124,13 +82,13 @@ export function Layout() {
 				scroll(isOpen, "instant");
 			}
 
-			element.addEventListener("scrollend", handleScrollEnd);
+			appElement.addEventListener("scrollend", handleScrollEnd);
 			function handleScrollEnd() {
 				const isOpen = updateIsOpen();
 				scroll(isOpen, "smooth");
 			}
 
-			element.addEventListener("scroll", handleScroll);
+			appElement.addEventListener("scroll", handleScroll);
 			function handleScroll() {
 				updateStaticState();
 			}
@@ -138,15 +96,11 @@ export function Layout() {
 			return () => {
 				unfollowMenuSearchParam();
 				window.removeEventListener("resize", handleResize);
-				element.removeEventListener("scrollend", handleScrollEnd);
-				element.removeEventListener("scroll", handleScroll);
+				appElement.removeEventListener("scrollend", handleScrollEnd);
+				appElement.removeEventListener("scroll", handleScroll);
 			};
-		})
-
-		.children(Header(), mainBuilder);
+		});
 }
-
-const breakPoint = "45em";
 
 const LayoutCss = css`
 	:scope {
@@ -157,7 +111,7 @@ const LayoutCss = css`
 		grid-template-columns: minmax(0, 20em) 1fr;
 		grid-template-rows: auto;
 
-		@container (inline-size < ${breakPoint}) {
+		@container (inline-size < ${layoutBrakpoint}) {
 			overflow: overlay;
 			grid-template-columns: 100% 100%;
 
@@ -186,51 +140,5 @@ const LayoutCss = css`
 		block-size: 100dvb;
 
 		overflow: clip;
-	}
-
-	main {
-		display: block grid;
-		align-content: start;
-
-		grid-template-columns: 1fr;
-
-		gap: 1em;
-
-		background-color: var(--base);
-		min-block-size: 100dvb;
-	}
-
-	main section {
-		display: block grid;
-		gap: 1em;
-		align-content: start;
-
-		padding-block: 1em;
-		padding-inline: 0.75em;
-	}
-
-	main section header {
-		display: block grid;
-		grid-template-columns: 1.5em auto;
-		align-items: center;
-		gap: 1em;
-
-		@container (inline-size >= ${breakPoint}) {
-			grid-template-columns: auto;
-		}
-
-		.back {
-			border-radius: 50%;
-			aspect-ratio: 1;
-			color: color-mix(in srgb, var(--base), var(--pop) 50%);
-
-			@container (inline-size >= ${breakPoint}) {
-				display: none;
-			}
-		}
-
-		strong {
-			font-size: 1.1em;
-		}
 	}
 `;
