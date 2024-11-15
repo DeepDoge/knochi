@@ -1,16 +1,16 @@
 import { tags } from "@purifyjs/core";
-import { FeedGroupIconSvg } from "~/app/feed/components/FeedGroupIconSvg.ts";
-import { postDb } from "~/app/feed/database/client.ts";
-import { feedGroupFormDialogSearchParam } from "~/app/feed/feedGroupFormDialog.ts";
-import { feedGroupSearchParam } from "~/app/feed/routes.ts";
-import { CreateFolderSvg } from "~/assets/svgs/CreateFolderSvg.ts";
-import { RssSvg } from "~/assets/svgs/RssSvg.ts";
-import { css, useScope } from "~/shared/css.ts";
+import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIconSvg";
+import { feedDB } from "~/features/feed/database/client";
+import { feedGroupFormDialogSearchParam } from "~/features/feed/feedGroupFormDialog";
+import { feedGroupSearchParam } from "~/features/feed/routes";
+import { CreateFolderSvg } from "~/shared/svgs/CreateFolderSvg";
+import { RssSvg } from "~/shared/svgs/RssSvg";
+import { css, useScope } from "~/shared/utils/css";
 
 const { div, hr, a } = tags;
 
 export function FeedGroupTabList(
-	groups: ReturnType<typeof postDb.lastVersion.models.FeedGroup.parser>[],
+	groups: ReturnType<typeof feedDB.lastVersion.models.FeedGroup.parser>[],
 ) {
 	return div()
 		.effect(useScope(FeedGroupTabListCss))

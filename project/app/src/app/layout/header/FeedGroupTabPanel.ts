@@ -1,20 +1,21 @@
 import { awaited, tags } from "@purifyjs/core";
-import { FeedGroupIconSvg } from "~/app/feed/components/FeedGroupIconSvg.ts";
-import { postDb } from "~/app/feed/database/client.ts";
-import { feedGroupSearchParam } from "~/app/feed/routes.ts";
-import { router } from "~/app/router.ts";
-import { TrashcanSvg } from "~/assets/svgs/TrashcanSvg.ts";
-import { Router } from "~/domains/router/mod.ts";
-import { WalletAddress, WalletAvatarSvg } from "~/domains/wallet/mod.ts";
-import { css, useScope } from "~/shared/css.ts";
-import { useClass } from "~/shared/effects/useClass.ts";
+import { router } from "~/app/router";
+import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIconSvg";
+import { feedDB } from "~/features/feed/database/client";
+import { feedGroupSearchParam } from "~/features/feed/routes";
+import { Router } from "~/shared/router";
+import { TrashcanSvg } from "~/shared/svgs/TrashcanSvg";
+import { css, useScope } from "~/shared/utils/css";
+import { useClass } from "~/shared/utils/effects/useClass";
+import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
+import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
 
 const { div, strong, small, button, a, header } = tags;
 
 export function FeedGroupTabPanel(
-	group: ReturnType<typeof postDb.lastVersion.models.FeedGroup.parser>,
+	group: ReturnType<typeof feedDB.lastVersion.models.FeedGroup.parser>,
 ) {
-	const items = postDb.find("FeedGroupItem").byIndex("groupId", "=", group.groupId);
+	const items = feedDB.find("FeedGroupItem").byIndex("groupId", "=", group.groupId);
 
 	function renderItem(item: Awaited<typeof items>[number]) {
 		const searchParams = new URLSearchParams(location.search);

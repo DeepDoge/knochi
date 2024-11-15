@@ -1,15 +1,40 @@
 import eslint from "@eslint/js";
 import typescriptPlugin from "@typescript-eslint/eslint-plugin";
-import importPlugin from "eslint-plugin-import";
 import projectStructurePlugin, { createIndependentModules } from "eslint-plugin-project-structure";
 import tseslint from "typescript-eslint";
 
+/**
+ * @satisfies {Record<string, string[]>}>}
+ */
 const patterns = {
+	app: ["src/app/**"],
+	shared: ["src/shared/*/**"],
 	features: ["src/features/*/**"],
-	domains_export: ["src/domains/*/mod.ts"],
-	domains: ["src/domains/*/**"],
-	shared: ["src/assets/**", "src/shared/**"],
-	app: ["src/app/**", "src/app.ts"],
+	"feature:profile": ["src/features/profile/**"],
+	"feature:post": ["src/features/post/**"],
+	"feature:feed": ["src/features/feed/**"],
+	family_3: ["{family_3}/**"],
+};
+
+/**
+ * @type {{ [K in keyof typeof patterns]?: { allowImportsFrom: (keyof typeof patterns)[] } }}
+ */
+const boundaries = {
+	app: {
+		allowImportsFrom: ["app", "shared", "features"],
+	},
+	shared: {
+		allowImportsFrom: ["shared"],
+	},
+	"feature:profile": {
+		allowImportsFrom: ["feature:profile", "feature:feed", "shared"],
+	},
+	"feature:post": {
+		allowImportsFrom: ["feature:post", "shared"],
+	},
+	"feature:feed": {
+		allowImportsFrom: ["feature:feed", "feature:post", "shared"],
+	},
 };
 
 export default tseslint.config(
@@ -19,12 +44,6 @@ export default tseslint.config(
 		rules: {
 			"no-inner-declarations": "off",
 			"no-undefined": "error",
-		},
-	},
-	{
-		plugins: { import: importPlugin },
-		rules: {
-			"import/extensions": ["error", "always", { ignorePackages: true }],
 		},
 	},
 	{
@@ -48,39 +67,13 @@ export default tseslint.config(
 						},
 					},
 					modules: [
-						{
-							name: "domains",
-							pattern: patterns.domains,
-							allowImportsFrom: [
-								...patterns.shared,
-								...patterns.domains_export,
-								"{family_3}/**",
-							],
-						},
-						{
-							name: "features",
-							pattern: patterns.features,
-							allowImportsFrom: [
-								...patterns.shared,
-								...patterns.domains_export,
-								"{family_3}/**",
-							],
-						},
-						{
-							name: "shared",
-							pattern: patterns.shared,
-							allowImportsFrom: [...patterns.shared],
-						},
-						{
-							name: "app",
-							pattern: patterns.app,
-							allowImportsFrom: [
-								...patterns.shared,
-								...patterns.app,
-								...patterns.features,
-								...patterns.domains_export,
-							],
-						},
+						...Object.keys(boundaries).map((key) => ({
+							name: key,
+							pattern: patterns[key],
+							allowImportsFrom: boundaries[key].allowImportsFrom
+								.map((key) => patterns[key])
+								.flat(),
+						})),
 						{
 							name: "unknown",
 							pattern: "src/**",

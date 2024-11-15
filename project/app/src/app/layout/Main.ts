@@ -1,14 +1,14 @@
 import { awaited, computed, tags } from "@purifyjs/core";
-import { Post } from "~/app/feed/lib/Post.ts";
-import { PostThread } from "~/app/feed/PostThread.ts";
-import { postSearchParam } from "~/app/feed/routes.ts";
 import { menuSearchParam } from "~/app/layout/routes";
-import { router } from "~/app/router.ts";
-import { layoutBrakpoint } from "~/app/styles.ts";
-import { BackSvg } from "~/assets/svgs/BackSvg.ts";
-import { CloseSvg } from "~/assets/svgs/CloseSvg.ts";
-import { config } from "~/shared/config.ts";
-import { css, useScope } from "~/shared/css.ts";
+import { router } from "~/app/router";
+import { layoutBrakpoint } from "~/app/styles";
+import { PostThread } from "~/features/feed/components/PostThread";
+import { Post } from "~/features/post/Post";
+import { postSearchParam } from "~/features/post/routes";
+import { config } from "~/shared/config";
+import { BackSvg } from "~/shared/svgs/BackSvg";
+import { CloseSvg } from "~/shared/svgs/CloseSvg";
+import { css, useScope } from "~/shared/utils/css";
 
 const { section, main, header, a, strong } = tags;
 

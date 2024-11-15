@@ -1,18 +1,16 @@
 import { awaited, computed, tags } from "@purifyjs/core";
-import { postDb } from "~/app/feed/database/client.ts";
-import { feedGroupFormDialogSearchParam } from "~/app/feed/feedGroupFormDialog.ts";
-import { feedGroupSearchParam } from "~/app/feed/routes.ts";
-import { FeedGroupTabList } from "~/app/layout/header/FeedGroupTabList.ts";
-import { FeedGroupTabPanel } from "~/app/layout/header/FeedGroupTabPanel.ts";
-import { router } from "~/app/router.ts";
-import {
-	connectWallet,
-	currentWalletDetail,
-	WalletAddress,
-	WalletAvatarSvg,
-} from "~/domains/wallet/mod.ts";
-import { css, useScope } from "~/shared/css.ts";
-import { Address } from "~/shared/solidity/primatives.ts";
+import { FeedGroupTabList } from "~/app/layout/header/FeedGroupTabList";
+import { FeedGroupTabPanel } from "~/app/layout/header/FeedGroupTabPanel";
+import { router } from "~/app/router";
+import { feedDB } from "~/features/feed/database/client";
+import { feedGroupFormDialogSearchParam } from "~/features/feed/feedGroupFormDialog";
+import { feedGroupSearchParam } from "~/features/feed/routes";
+import { Address } from "~/shared/schemas/primatives";
+import { css, useScope } from "~/shared/utils/css";
+import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
+import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
+import { connectWallet } from "~/shared/wallet/connectDialog";
+import { currentWalletDetail } from "~/shared/wallet/utils";
 
 const { div, header, a, section } = tags;
 
@@ -25,7 +23,7 @@ export function Header() {
 	});
 
 	const groupsPromise = feedGroupFormDialogSearchParam.derive(Boolean).derive(() => {
-		return postDb.find("FeedGroup").many({ by: "index", order: "prev" });
+		return feedDB.find("FeedGroup").many({ by: "index", order: "prev" });
 	});
 
 	return header()

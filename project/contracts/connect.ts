@@ -1,9 +1,9 @@
 import type { TypedContract } from "@nomadshiba/typed-contracts/ethers6";
 import { BytesLike, Contract, ContractRunner } from "ethers";
-import { Address, Hex } from "~/shared/solidity/primatives.ts";
-import { PostIndexer_ABI } from "./artifacts/PostIndexer.ts";
-import { PostStore_ABI } from "./artifacts/PostStore.ts";
-import { PostStore_Plain_ABI } from "./artifacts/PostStore_Plain.ts";
+import { Address, Hex } from "~/shared/schemas/primatives";
+import { PostIndexer_ABI } from "./artifacts/PostIndexer";
+import { PostStore_ABI } from "./artifacts/PostStore";
+import { PostStore_Plain_ABI } from "./artifacts/PostStore_Plain";
 
 type PrimativeTypeMap = TypedContract.PrimativeTypeMap & {
 	[K in `bytes${bigint | ""}`]: {

@@ -1,19 +1,22 @@
-import "~/app/styles.ts";
+import "~/app/styles";
 
 import { tags } from "@purifyjs/core";
-import { Header } from "~/app/layout/header/Header.ts";
-import { Main } from "~/app/layout/Main.ts";
+import { Header } from "~/app/layout/header/Header";
+import { Main } from "~/app/layout/Main";
 import { menuSearchParam } from "~/app/layout/routes";
-import { layoutBrakpoint } from "~/app/styles.ts";
-import { css, useScope } from "~/shared/css.ts";
-import { usePart } from "~/shared/effects/usePart.ts";
+import { layoutBrakpoint } from "~/app/styles";
+import { css, useScope } from "~/shared/utils/css";
+import { usePart } from "~/shared/utils/effects/usePart";
 
 const { div } = tags;
 
 const documentScroller = document.scrollingElement ?? document.body;
 
 export function Layout() {
+	console.log("hello");
 	const mainElement = Main().element;
+
+	console.log(mainElement);
 
 	return div()
 		.id("app")
