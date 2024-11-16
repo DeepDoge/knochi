@@ -166,7 +166,6 @@ const PostFormCss = css`
 		grid-auto-flow: column;
 		justify-content: space-between;
 		align-items: center;
-		font-size: 0.75em;
 	}
 
 	label {

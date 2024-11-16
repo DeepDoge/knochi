@@ -41,8 +41,7 @@ export class Post {
 		return `${chainId.toString(16)}-${indexerAddress.slice(2)}-${feedId.slice(2)}-${index.toString(16)}` as const;
 	}
 
-	public static async loadWithSearchParam(value: string | null, config: Config) {
-		if (!value) return null;
+	public static async loadWithSearchParam(value: string, config: Config) {
 		const [
 			chainIdHex0xOmitted,
 			indexerAddressHex0xOmitted,

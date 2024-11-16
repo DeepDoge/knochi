@@ -1,4 +1,4 @@
-import { awaited, computed, tags } from "@purifyjs/core";
+import { computed, ref, tags } from "@purifyjs/core";
 import { menuSearchParam } from "~/app/layout/routes";
 import { router } from "~/app/router";
 import { layoutBrakpoint } from "~/app/styles";
@@ -9,54 +9,78 @@ import { config } from "~/shared/config";
 import { BackSvg } from "~/shared/svgs/BackSvg";
 import { CloseSvg } from "~/shared/svgs/CloseSvg";
 import { css, useScope } from "~/shared/utils/css";
+import { match } from "~/shared/utils/match";
 
 // TODO: seperate route and post section into two different files later.
 
 const { section, main, header, a, strong } = tags;
 
 export function Main() {
-	return main()
-		.effect(useScope(MainCss))
-		.children(
-			router.route.derive((route) => {
-				if (!route) return null;
-				return section({ class: "route" })
-					.ariaLabel(route.title)
+	const host = main();
+
+	const post = ref<Post | null>(null);
+	host.effect(() => {
+		const postPromise = computed(() => ({
+			searchParam: postSearchParam.val,
+			config: config.val,
+		})).derive(({ searchParam, config }) => {
+			if (!searchParam) return null;
+			return Post.loadWithSearchParam(searchParam, config);
+		});
+
+		return postPromise.follow((promise) => {
+			if (!promise) {
+				post.val = null;
+				return;
+			}
+
+			promise.then((resultPost) => {
+				if (promise !== postPromise.val) return;
+				post.val = resultPost;
+			});
+		}, true);
+	});
+
+	return host.effect(useScope(MainCss)).children(
+		match(router.route)
+			.if((route) => route !== null)
+			.then((route) =>
+				section({ class: "route" })
+					.ariaLabel(route.derive((route) => route.title))
 					.children(
 						header().children(
 							a({ class: "icon back" })
 								.ariaHidden("true")
 								.href(menuSearchParam.toHref("open"))
 								.children(BackSvg()),
-							strong().textContent(route.title),
-							route.renderHeaderEnd(),
+							route.derive((route) => [
+								strong().textContent(route.title),
+								route.renderHeaderEnd(),
+							]),
 						),
-						route.render(),
-					);
-			}),
-			computed(() => ({ searchParam: postSearchParam.val, config: config.val })).derive(
-				({ searchParam, config }) =>
-					awaited(
-						Post.loadWithSearchParam(searchParam, config).then((post) => {
-							if (!post) return null;
-
-							return section({ class: "post" })
-								.role("complementary")
-								.ariaLabel("Post")
-								.children(
-									header().children(
-										a({ class: "icon close" })
-											.ariaHidden("true")
-											.href(postSearchParam.toHref(null))
-											.children(CloseSvg()),
-										strong().textContent("Post"),
-									),
-									PostThread(post),
-								);
-						}),
+						route.derive((route) => route.render()),
 					),
-			),
-		);
+			)
+			.else(() => null),
+		match(post)
+			.if((post) => post !== null)
+			.then((post) => {
+				return section({ class: "post" })
+					.role("complementary")
+					.ariaLabel("Post")
+					.children(
+						header().children(
+							a({ class: "icon close" })
+								.ariaHidden("true")
+								.href(postSearchParam.toHref(null))
+								.children(CloseSvg()),
+							strong().textContent("Post"),
+						),
+						post.derive(PostThread),
+					);
+			})
+			.else(() => null),
+	);
 }
 
 export const MainCss = css`
