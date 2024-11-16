@@ -21,22 +21,26 @@ export function sheet(cssRef: String) {
 	return sheet;
 }
 
-const scopeIdCache = new WeakMap<String, string>();
+const cache = new WeakMap<Element, Set<String>>();
 export function useScope(cssRef: String): Lifecycle.OnConnected {
 	return (element) => {
-		let scopeId = scopeIdCache.get(cssRef);
-		if (!scopeId) {
-			scopeId = Math.random().toString(36).slice(2);
-			scopeIdCache.set(cssRef, scopeId);
-			// this still doesnt require you to use [data-part] selector and might leak, but im gonna solve this later, not a concern atm.
-			document.adoptedStyleSheets.push(
-				sheet(css`
-					@scope ([data-scope="${scopeId}"]) to ([data-part] > *, [data-scope]:not([data-part])) {
-						${cssRef}
-					}
-				`),
-			);
+		const scopeId = (element.dataset.scope ??= Math.random().toString(36).slice(2));
+
+		let set = cache.get(element);
+		if (!set) {
+			set = new Set();
+			cache.set(element, set);
 		}
-		element.dataset.scope = scopeId;
+
+		if (set.has(cssRef)) return;
+
+		const styleSheet = sheet(css`
+			@scope ([data-scope="${scopeId}"]) to ([data-part] > *, [data-scope]:not([data-part])) {
+				${cssRef}
+			}
+		`);
+		document.adoptedStyleSheets.push(styleSheet);
+
+		set.add(cssRef);
 	};
 }
