@@ -8,7 +8,7 @@ export const feedRoutes = {
 				.transform((feedId) => ({ feedId }))
 				.parse(pathname.split("/"));
 		},
-		toPathname(data) {
+		toPathname(data: { feedId: FeedId }) {
 			return data.feedId;
 		},
 		render(data) {

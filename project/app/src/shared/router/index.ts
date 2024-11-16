@@ -33,7 +33,7 @@ export namespace Router {
 		return `#/${pathname}${searchParams?.size ? `?${searchParams}` : ""}`;
 	}
 
-	export class Client<const TRoutes extends { readonly [key: string]: Router.Route<unknown> }> {
+	export class Client<const TRoutes extends { readonly [key: string]: Router.Route }> {
 		public readonly routes: TRoutes;
 		public readonly route = pathname.derive((pathname) => {
 			for (const [name, route] of Object.entries(this.routes)) {
@@ -68,68 +68,55 @@ export namespace Router {
 		}
 	}
 
-	export declare namespace Route {
-		type Init<
-			TData,
-			TRender extends MemberOf<DocumentFragment>,
-			TTitle extends MemberOf<DocumentFragment>,
-		> = {
-			toPathname(data: TData): string;
-			fromPathname(pathname: string): TData;
-			render(data: TData): TRender;
-			renderHeaderEnd?(data: TData): MemberOf<DocumentFragment>;
-			title(data: TData): TTitle;
-		};
-	}
-	export declare class Route<
-		TData = unknown,
+	export type RouteInit<
+		TDataIn,
+		TDataOut extends TDataIn,
+		TRender extends MemberOf<DocumentFragment>,
+		TTitle extends MemberOf<DocumentFragment>,
+	> = {
+		toPathname(data: TDataIn): string;
+		fromPathname(pathname: string): TDataOut;
+		render(data: TDataOut): TRender;
+		renderHeaderEnd?(data: TDataOut): MemberOf<DocumentFragment>;
+		title(data: TDataOut): TTitle;
+	};
+
+	export class Route<
+		TDataIn = unknown,
+		TDataOut extends TDataIn = TDataIn,
 		TRender extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
 		TTitle extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
 	> {
-		constructor(init: Route.Init<TData, TRender, TTitle>);
+		readonly #init: RouteInit<TDataIn, TDataOut, TRender, TTitle>;
 
-		fromPathname(pathname: string): TData | undefined;
-		toPathname(data: TData): string;
-		toHref(data: TData): string;
-		render(data: TData): TRender;
-		renderHeaderEnd(data: TData): MemberOf<ParentNode>;
-		title(data: TData): TTitle;
-	}
-	Router.Route = class<
-		TData = unknown,
-		TRender extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
-		TTitle extends MemberOf<DocumentFragment> = MemberOf<DocumentFragment>,
-	> {
-		readonly #init: Route.Init<TData, TRender, TTitle>;
-
-		constructor(init: Route.Init<TData, TRender, TTitle>) {
+		constructor(init: RouteInit<TDataIn, TDataOut, TRender, TTitle>) {
 			this.#init = init;
 		}
 
-		public fromPathname(pathname: string): TData | undefined {
+		public fromPathname(pathname: string): TDataOut | undefined {
 			return catchError(() => this.#init.fromPathname(pathname), [Error]).data;
 		}
 
-		public toPathname(data: TData): string {
+		public toPathname(data: TDataIn): string {
 			return this.#init.toPathname(data);
 		}
 
-		public toHref(data: TData): string {
+		public toHref(data: TDataIn): string {
 			return hrefFrom(this.toPathname(data));
 		}
 
-		public render(data: TData): TRender {
+		public render(data: TDataOut): TRender {
 			return this.#init.render(data);
 		}
 
-		public renderHeaderEnd(data: TData) {
+		public renderHeaderEnd(data: TDataOut) {
 			return this.#init.renderHeaderEnd?.(data) ?? null;
 		}
 
-		public title(data: TData): TTitle {
+		public title(data: TDataOut): TTitle {
 			return this.#init.title(data);
 		}
-	};
+	}
 
 	export class SearchParam<T extends string> extends Signal.State<T | (string & {}) | null> {
 		public readonly name: string;

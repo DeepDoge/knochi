@@ -16,7 +16,7 @@ export const profileRoutes = {
 				}))
 				.parse(pathname);
 		},
-		toPathname(data) {
+		toPathname(data: { address: Address }) {
 			return data.address;
 		},
 		render(data) {
