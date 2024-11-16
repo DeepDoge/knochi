@@ -153,7 +153,7 @@ export function FeedForm(feedIds: readonly FeedId[]) {
 const PostFormCss = css`
 	:scope {
 		display: block grid;
-		background-color: color-mix(in srgb, transparent, var(--base) 90%);
+		background-color: color-mix(in srgb, var(--base), var(--pop) 1.5%);
 		backdrop-filter: blur(3px);
 
 		padding-inline: 1em;

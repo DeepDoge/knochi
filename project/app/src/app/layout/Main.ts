@@ -1,4 +1,4 @@
-import { computed, ref, tags } from "@purifyjs/core";
+import { awaited, computed, tags } from "@purifyjs/core";
 import { menuSearchParam } from "~/app/layout/routes";
 import { router } from "~/app/router";
 import { layoutBrakpoint } from "~/app/styles";
@@ -17,29 +17,6 @@ const { section, main, header, a, strong } = tags;
 
 export function Main() {
 	const host = main();
-
-	const post = ref<Post | null>(null);
-	host.effect(() => {
-		const postPromise = computed(() => ({
-			searchParam: postSearchParam.val,
-			config: config.val,
-		})).derive(({ searchParam, config }) => {
-			if (!searchParam) return null;
-			return Post.loadWithSearchParam(searchParam, config);
-		});
-
-		return postPromise.follow((promise) => {
-			if (!promise) {
-				post.val = null;
-				return;
-			}
-
-			promise.then((resultPost) => {
-				if (promise !== postPromise.val) return;
-				post.val = resultPost;
-			});
-		}, true);
-	});
 
 	return host.effect(useScope(MainCss)).children(
 		match(router.route)
@@ -62,9 +39,16 @@ export function Main() {
 					),
 			)
 			.else(() => null),
-		match(post)
-			.if((post) => post !== null)
-			.then((post) => {
+		match(postSearchParam)
+			.if((searchParam) => searchParam !== null)
+			.then((searchParam) => {
+				const postPromise = computed(() => ({
+					searchParam: searchParam.val,
+					config: config.val,
+				})).derive(({ searchParam, config }) =>
+					Post.loadWithSearchParam(searchParam, config),
+				);
+
 				return section({ class: "post" })
 					.role("complementary")
 					.ariaLabel("Post")
@@ -76,7 +60,15 @@ export function Main() {
 								.children(CloseSvg()),
 							strong().textContent("Post"),
 						),
-						post.derive(PostThread),
+						postPromise.derive((postPromise) => {
+							return awaited(
+								postPromise.then((post) => {
+									if (!post) return null; // not found
+									return PostThread(post);
+								}),
+								null, // loading
+							);
+						}),
 					);
 			})
 			.else(() => null),
@@ -89,6 +81,8 @@ export const MainCss = css`
 
 		display: block flex;
 		align-content: start;
+
+		/* gap: 0.25em; */
 
 		background-color: var(--base);
 		min-block-size: 100dvb;
