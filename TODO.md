@@ -1,6 +1,5 @@
 # TODO
 
--   [ ] PostForm should have parts, not just text like on X or Facebook or Instagram. It should be more like a page builder.
 -   [x] Instead of using tx.origin, Sender contract should give the sender address to the Indexer contract, and there should be permissions on the indexer contract that allows or disallows Sender contracts to index post in behalf of you.
 -   [x] On the left side of header we should have feed list similar to X lists, at the top there is the default home list for your home feed.
 -   [x] We should be able to add any feed we want to the list. So we should have a add to feed popover and button something.

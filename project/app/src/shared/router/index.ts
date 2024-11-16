@@ -42,18 +42,20 @@ export namespace Router {
 				return {
 					name,
 					data,
+					title: route.title(data),
 					render() {
 						return route.render(data);
 					},
-					title() {
-						return route.title(data);
+					renderHeaderEnd() {
+						return route.renderHeaderEnd(data);
 					},
 				} as {
 					[K in keyof TRoutes]: {
 						name: K;
-						title(): ReturnType<TRoutes[K]["title"]>;
 						data: Exclude<ReturnType<TRoutes[K]["fromPathname"]>, undefined>;
+						title: ReturnType<TRoutes[K]["title"]>;
 						render(): ReturnType<TRoutes[K]["render"]>;
+						renderHeaderEnd(): ReturnType<TRoutes[K]["renderHeaderEnd"]>;
 					};
 				}[keyof TRoutes];
 			}
@@ -75,6 +77,7 @@ export namespace Router {
 			toPathname(data: TData): string;
 			fromPathname(pathname: string): TData;
 			render(data: TData): TRender;
+			renderHeaderEnd?(data: TData): MemberOf<DocumentFragment>;
 			title(data: TData): TTitle;
 		};
 	}
@@ -89,6 +92,7 @@ export namespace Router {
 		toPathname(data: TData): string;
 		toHref(data: TData): string;
 		render(data: TData): TRender;
+		renderHeaderEnd(data: TData): MemberOf<ParentNode>;
 		title(data: TData): TTitle;
 	}
 	Router.Route = class<
@@ -116,6 +120,10 @@ export namespace Router {
 
 		public render(data: TData): TRender {
 			return this.#init.render(data);
+		}
+
+		public renderHeaderEnd(data: TData) {
+			return this.#init.renderHeaderEnd?.(data) ?? null;
 		}
 
 		public title(data: TData): TTitle {

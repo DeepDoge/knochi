@@ -2,10 +2,10 @@ import { tags } from "@purifyjs/core";
 import { Post } from "~/features/post/Post";
 import { PostContent } from "~/features/post/PostContent";
 import { postSearchParam } from "~/features/post/routes";
-import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
-import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
 import { getRelativeTimeSignal } from "~/shared/language/time";
 import { css, useScope } from "~/shared/utils/css";
+import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
+import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
 
 const { article, footer, address, time, div, a } = tags;
 
@@ -48,7 +48,7 @@ const FeedItemCss = css`
 			"avatar . content"
 			"avatar . ."
 			"avatar . footer";
-		grid-template-columns: 1.1em 0.25em 1fr;
+		grid-template-columns: 2em 0.5em 1fr;
 		grid-template-rows: auto 0.5em auto;
 	}
 

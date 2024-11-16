@@ -10,30 +10,30 @@ import { BackSvg } from "~/shared/svgs/BackSvg";
 import { CloseSvg } from "~/shared/svgs/CloseSvg";
 import { css, useScope } from "~/shared/utils/css";
 
+// TODO: seperate route and post section into two different files later.
+
 const { section, main, header, a, strong } = tags;
 
 export function Main() {
 	return main()
 		.effect(useScope(MainCss))
 		.children(
-			section({ class: "route" })
-				.ariaLabel(router.route.derive((route) => route?.title() ?? null))
-				.children(
-					header().children(
-						a({ class: "icon back" })
-							.ariaHidden("true")
-							.href(menuSearchParam.toHref("open"))
-							.children(BackSvg()),
-						router.route.derive((route) => {
-							if (!route) return null;
-							return strong().textContent(route.title());
-						}),
-					),
-					router.route.derive((route) => {
-						return route?.render() ?? null;
-					}),
-				),
-
+			router.route.derive((route) => {
+				if (!route) return null;
+				return section({ class: "route" })
+					.ariaLabel(route.title)
+					.children(
+						header().children(
+							a({ class: "icon back" })
+								.ariaHidden("true")
+								.href(menuSearchParam.toHref("open"))
+								.children(BackSvg()),
+							strong().textContent(route.title),
+							route.renderHeaderEnd(),
+						),
+						route.render(),
+					);
+			}),
 			computed(() => ({ searchParam: postSearchParam.val, config: config.val })).derive(
 				({ searchParam, config }) =>
 					awaited(
@@ -49,10 +49,7 @@ export function Main() {
 											.ariaHidden("true")
 											.href(postSearchParam.toHref(null))
 											.children(CloseSvg()),
-										router.route.derive((route) => {
-											if (!route) return null;
-											return strong().textContent("Post");
-										}),
+										strong().textContent("Post"),
 									),
 									PostThread(post),
 								);
@@ -69,8 +66,6 @@ export const MainCss = css`
 		display: block flex;
 		align-content: start;
 
-		gap: 0.5em;
-
 		background-color: var(--base);
 		min-block-size: 100dvb;
 	}
@@ -80,18 +75,41 @@ export const MainCss = css`
 		gap: 1em;
 		align-content: start;
 
-		background-color: color-mix(in srgb, var(--base), var(--pop) 5%);
+		header {
+			position: sticky;
+			inset-block-start: 0;
+
+			display: block flex;
+			align-items: center;
+			gap: 1em;
+
+			background-color: color-mix(in srgb, var(--base), var(--pop) 2.5%);
+			padding-inline: 1em;
+			padding-block: 1.25em;
+
+			.icon {
+				inline-size: 1.5em;
+				border-radius: 50%;
+				aspect-ratio: 1;
+				color: color-mix(in srgb, var(--base), var(--pop) 50%);
+			}
+
+			strong {
+				font-size: 1.1em;
+			}
+		}
 
 		&.route {
 			flex: 1.5;
 
-			&:has(a svg) {
-				@container body (inline-size >= ${layoutBrakpoint}) {
-					grid-template-columns: auto;
+			header {
+				margin-inline: 0.5em;
+				margin-block-start: 0.5em;
+			}
 
-					a:has(svg) {
-						display: none;
-					}
+			@container body (inline-size >= ${layoutBrakpoint}) {
+				header .icon {
+					display: none;
 				}
 			}
 		}
@@ -106,6 +124,8 @@ export const MainCss = css`
 			position: sticky;
 			inset-block-start: 0;
 
+			background-color: color-mix(in srgb, var(--base), var(--pop) 1%);
+
 			@container main (inline-size < 60em) {
 				position: fixed;
 				inset-block: 0;
@@ -113,23 +133,6 @@ export const MainCss = css`
 				inline-size: min(100%, 30em);
 				box-shadow: 0 0 2em 1em color-mix(in srgb, transparent, var(--base) 65%);
 			}
-		}
-	}
-
-	section header {
-		display: block grid;
-		grid-template-columns: 1.5em auto;
-		align-items: center;
-		gap: 1em;
-
-		a:has(svg) {
-			border-radius: 50%;
-			aspect-ratio: 1;
-			color: color-mix(in srgb, var(--base), var(--pop) 50%);
-		}
-
-		strong {
-			font-size: 1.1em;
 		}
 	}
 `;

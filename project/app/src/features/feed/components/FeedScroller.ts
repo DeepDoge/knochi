@@ -7,7 +7,7 @@ import { ReloadSvg } from "~/shared/svgs/ReloadSvg";
 import { css, useScope } from "~/shared/utils/css";
 import { useOnVisible } from "~/shared/utils/effects/useOnVisible";
 
-const { div, section, button } = tags;
+const { ul, li, section, button } = tags;
 
 export function FeedScroller(feed: Feed) {
 	const host = section()
@@ -17,7 +17,7 @@ export function FeedScroller(feed: Feed) {
 		})
 		.ariaLabel("Feed");
 
-	const posts = div({ class: "posts" });
+	const posts = ul();
 
 	let nextGenerator: ReturnType<typeof feed.nextGenerator> | undefined;
 
@@ -39,7 +39,9 @@ export function FeedScroller(feed: Feed) {
 		// Give animation time to play.
 		await new Promise((resolve) => setTimeout(resolve, Math.max(0, 1000 - passed)));
 
-		const newFragment = fragment(result.value?.map((post) => PostView(post)) ?? null);
+		const newFragment = fragment(
+			result.value?.map((post) => li().children(PostView(post))) ?? null,
+		);
 
 		if (clear) {
 			posts.element.replaceChildren(newFragment);
@@ -107,14 +109,24 @@ export function FeedScroller(feed: Feed) {
 const FeedScrollerCss = css`
 	:scope {
 		display: block grid;
-		gap: 2em;
+		gap: 0.5em;
 		align-content: start;
 	}
 
-	.posts {
+	ul {
 		display: block grid;
-		gap: 1em;
 		align-content: start;
+
+		gap: 0.5em;
+
+		list-style: none;
+	}
+
+	li {
+		padding-inline: 1.5em;
+		padding-block: 2em;
+
+		background-color: color-mix(in srgb, transparent, currentColor 5%);
 	}
 
 	button.load {

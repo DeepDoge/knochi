@@ -13,15 +13,13 @@ const { div } = tags;
 const documentScroller = document.scrollingElement ?? document.body;
 
 export function Layout() {
-	console.log("hello");
 	const mainElement = Main().element;
-
-	console.log(mainElement);
+	const headerElement = Header().effect(usePart("header")).element;
 
 	return div()
 		.id("app")
 		.effect(useScope(LayoutCss))
-		.children(Header().effect(usePart("header")), mainElement)
+		.children(headerElement, mainElement)
 		.effect((appElement) => {
 			function scroll(isOpen: boolean, behavior: ScrollBehavior) {
 				const left = isOpen ? 0 : Number.MAX_SAFE_INTEGER;
@@ -53,15 +51,30 @@ export function Layout() {
 			let isStaticCache = true;
 			function updateStaticState() {
 				const scrollProgress = getScrollProgress();
-				const isStatic =
-					scrollProgress === 1 || appElement.scrollWidth === appElement.clientWidth;
+
+				const isScrollable = appElement.scrollWidth !== appElement.clientWidth;
+
+				// TODO: Need something like this becuase having overflow: auto; on the app breaks sticky content
+				// Basically if im gonna make the app scrollable it should be when im scrolling already somehow
+				// worse case i might make the whole thing not scroll based and would use pointer events
+				/* console.log("isScrollable", isScrollable);
+				if (!isScrollable) {
+					appElement.style.removeProperty("overflow");
+					headerElement.style.removeProperty("display");
+				} else {
+					appElement.style.overflow = "unset";
+					headerElement.style.display = "none";
+					mainElement.style.inlineSize = "calc(100% + 1px)";
+				} */
+
+				const isStatic = scrollProgress === 1 || !isScrollable;
 
 				if (isStatic === isStaticCache) return isStatic;
 
 				if (isStatic) {
 					const scrollY = mainElement.scrollTop;
-					mainElement.style.overflow = "visible";
-					mainElement.style.blockSize = "";
+					mainElement.style.removeProperty("overflow");
+					mainElement.style.removeProperty("block-size");
 					documentScroller.scrollTop = scrollY;
 					isStaticCache = true;
 				} else {
@@ -94,6 +107,7 @@ export function Layout() {
 
 			appElement.addEventListener("scroll", handleScroll);
 			function handleScroll() {
+				console.log("scroll");
 				updateStaticState();
 			}
 
@@ -114,28 +128,6 @@ const LayoutCss = css`
 		align-items: start;
 		grid-template-columns: minmax(0, 20em) 1fr;
 		grid-template-rows: auto;
-
-		@container body (inline-size < ${layoutBrakpoint}) {
-			overflow: overlay;
-			grid-template-columns: 100% 100%;
-
-			&::-webkit-scrollbar {
-				display: none;
-			}
-
-			[data-part="header"] {
-				animation: hide-header-scroll linear;
-				animation-timeline: scroll(x);
-				z-index: -1;
-			}
-
-			@keyframes hide-header-scroll {
-				to {
-					scale: 0.95;
-					translate: 100% 0;
-				}
-			}
-		}
 	}
 
 	[data-part="header"] {
@@ -144,5 +136,30 @@ const LayoutCss = css`
 		block-size: 100dvb;
 
 		overflow: clip;
+	}
+
+	@container body (inline-size < ${layoutBrakpoint}) {
+		:scope {
+			overflow: auto;
+			position: relative;
+			grid-template-columns: 100% 100%;
+		}
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+
+		[data-part="header"] {
+			animation: hide-header-scroll linear;
+			animation-timeline: scroll(x);
+			z-index: -1;
+		}
+
+		@keyframes hide-header-scroll {
+			to {
+				scale: 0.95;
+				translate: 100% 0;
+			}
+		}
 	}
 `;

@@ -38,7 +38,7 @@ export function FeedGroupAddFormPopoverButton(params: {
 			}),
 		);
 
-	return button()
+	return button({ class: "button" })
 		.effect(() => {
 			document.body.append(popover.element);
 			return () => {

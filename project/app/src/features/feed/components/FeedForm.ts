@@ -153,7 +153,8 @@ export function FeedForm(feedIds: readonly FeedId[]) {
 const PostFormCss = css`
 	:scope {
 		display: block grid;
-		background-color: color-mix(in srgb, var(--base), var(--pop) 7.5%);
+		background-color: color-mix(in srgb, transparent, var(--base) 90%);
+		backdrop-filter: blur(3px);
 
 		padding-inline: 1em;
 		padding-block: 0.5em;
@@ -177,7 +178,7 @@ const PostFormCss = css`
 		gap: 0.5em;
 		padding: 0.5em;
 
-		background-color: color-mix(in srgb, var(--base), var(--pop) 10%);
+		background-color: color-mix(in srgb, var(--base), var(--pop) 5%);
 
 		.actions {
 			align-self: start;

@@ -1,43 +1,32 @@
 import { tags } from "@purifyjs/core";
 import { FeedForm } from "~/features/feed/components/FeedForm";
-import { FeedGroupAddFormPopoverButton } from "~/features/feed/components/FeedGroupAddFormPopoverButton";
 import { FeedScroller } from "~/features/feed/components/FeedScroller";
 import { Feed } from "~/features/feed/Feed";
-import { Config } from "~/shared/config";
 import { Address } from "~/shared/schemas/primatives";
 import { css, useScope } from "~/shared/utils/css";
 import { usePart } from "~/shared/utils/effects/usePart";
 
 const { div } = tags;
 
-export function ProfileView(params: { address: Address; config: Config }) {
-	const { config, address } = params;
-
-	const profileFeed = Feed.ProfilePosts({ address, config });
+export function ProfileView(params: { address: Address; postsFeed: Feed }) {
+	const { postsFeed } = params;
 
 	return div()
 		.effect(useScope(ProfileViewCss))
 		.children(
-			FeedGroupAddFormPopoverButton({
-				values: {
-					feedId: profileFeed.id,
-					style: {
-						type: "profile",
-						address,
-						label: "posts",
-					},
-				},
-			})
-				.attributes({ class: "button" })
-				.textContent("add to group"),
-			FeedScroller(profileFeed).effect(usePart("scroller")),
-			FeedForm([profileFeed.id]).effect(usePart("form")),
+			div({ class: "content" }).children(FeedScroller(postsFeed)),
+			FeedForm([postsFeed.id]).effect(usePart("form")),
 		);
 }
 
 const ProfileViewCss = css`
-	[data-part="scroller"] {
+	.content {
 		min-block-size: 100dvb;
+		padding-inline: 0.75em;
+
+		display: block grid;
+		grid-template-columns: minmax(0, 60em);
+		justify-content: center;
 	}
 
 	[data-part="form"] {
