@@ -101,7 +101,7 @@ host.effect(
 			--margin: 0.25em;
 
 			position: fixed;
-			inset-block-end: var(--margin);
+			inset-block-start: var(--margin);
 			inset-inline-end: var(--margin);
 			margin-inline: auto;
 

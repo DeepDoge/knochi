@@ -24,7 +24,7 @@ export function SelectSenderButton(params?: {
 		button()
 			.type("button")
 			.effect(useScope(SelectSenderButtonCss))
-			/* .effect((element) => {
+			/* .effect((element) => { // Missing browser support
 			selectSenderPopover.anchorElement = element;
 		}) */
 			.ariaDescription("Currently selected sender contract, click to change.")
@@ -47,4 +47,13 @@ export function SelectSenderButton(params?: {
 	);
 }
 
-const SelectSenderButtonCss = css``;
+const SelectSenderButtonCss = css`
+	:scope {
+		font-size: 0.75em;
+
+		display: block grid;
+		grid-template-columns: 0.75em auto;
+		align-items: center;
+		gap: 0.5em;
+	}
+`;

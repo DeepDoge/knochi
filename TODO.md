@@ -25,7 +25,7 @@
 -   [ ] Design profile page
 -   [x] Design posts
 -   [ ] Show combined feeds feed for one group
--   [ ] Make PostForm more like YT comment box on mobile app or on interagam comments
+-   [x] Make PostForm more like YT comment box on mobile app or on interagam comments
 
 # Ideas
 
