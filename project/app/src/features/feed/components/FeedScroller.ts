@@ -1,5 +1,6 @@
 import { computed, fragment, ref, tags } from "@purifyjs/core";
 import { Feed } from "~/features/feed/Feed";
+import { randomNoAlloc } from "~/features/feed/feedDirections";
 import { PostView } from "~/features/post/PostView";
 import { config } from "~/shared/config";
 import { ArrowDownSvg } from "~/shared/svgs/ArrowDownSvg";
@@ -19,7 +20,7 @@ export function FeedScroller(feed: Feed) {
 
 	const posts = ul();
 
-	let nextGenerator: ReturnType<typeof feed.nextGenerator> | undefined;
+	let nextGenerator: ReturnType<typeof feed.iter> | undefined;
 
 	const loadingMore = ref(false);
 	const refresing = ref(false);
@@ -68,7 +69,7 @@ export function FeedScroller(feed: Feed) {
 
 		try {
 			refresing.val = true;
-			nextGenerator = feed.nextGenerator({ config: config.val });
+			nextGenerator = feed.iter({ config: config.val, direction: randomNoAlloc("newer") });
 			await loadNext({ clear: true });
 		} catch (error) {
 			console.error(error);

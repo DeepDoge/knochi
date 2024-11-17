@@ -8,23 +8,23 @@ import { Post } from "../post/Post";
 export namespace Feed {
 	export type Init = {
 		id: FeedId;
-		direction: Feed.Direction;
 		limit: number;
 		indexers: Feed.Indexer[];
 	};
-	export type Direction = 1n | -1n;
+	export type Direction = {
+		indexIterator(length: bigint): Iterator<bigint, void, unknown>;
+		isCandidateOfOtherSourceBetter(candidatePost: Post, selectedPost: Post): boolean;
+	};
 	export type Indexer = { chainId: bigint; address: Address };
 }
 
 export class Feed {
 	public readonly id: FeedId;
-	public readonly direction: Feed.Direction;
 	public readonly indexers: Feed.Indexer[];
 	public readonly limit: number;
 
 	constructor(init: Feed.Init) {
 		this.id = init.id;
-		this.direction = init.direction;
 		this.limit = init.limit;
 		this.indexers = init.indexers;
 	}
@@ -40,7 +40,6 @@ export class Feed {
 
 		return new Feed({
 			id: repliesFeedId,
-			direction: -1n,
 			indexers: Object.values(config.networks).map((network) => ({
 				chainId: network.chainId,
 				address: network.contracts.PostIndexer,
@@ -55,7 +54,6 @@ export class Feed {
 
 		return new Feed({
 			id: profileFeedId,
-			direction: -1n,
 			indexers: Object.values(config.networks).map((network) => ({
 				chainId: network.chainId,
 				address: network.contracts.PostIndexer,
@@ -64,21 +62,32 @@ export class Feed {
 		});
 	}
 
-	public async *previousGenerator(): AsyncGenerator<Post[]> {
-		throw new Error("Not Implemented");
-		yield [];
-	}
+	public async *iter(params: {
+		config: Config;
+		direction: Feed.Direction;
+	}): AsyncIterator<Post[], void, unknown> {
+		const { config, direction } = params;
 
-	public async *nextGenerator(params: { config: Config }) {
-		const { config } = params;
-
-		const sources = this.indexers.map((indexer) => {
-			return {
-				indexer,
-				index: this.direction > 0 ? 0n : null,
-				queue: [] as Post[],
-			};
-		});
+		const sources = await Promise.allSettled(
+			this.indexers.map(async (indexer) => {
+				const network = config.networks[`${indexer.chainId}`];
+				if (!network) throw new Error(`Network is missing: ${indexer.chainId}`);
+				const provider = new JsonRpcProvider(network.providers[0]);
+				const indexerContract = PostIndexer.connect(provider, indexer.address);
+				const length = await indexerContract.length(this.id);
+				return {
+					indexer,
+					network,
+					provider,
+					indexerContract,
+					length,
+					indexIterator: direction.indexIterator(length),
+					queue: [] as Post[],
+				};
+			}),
+		).then((results) =>
+			results.filter((result) => result.status === "fulfilled").map(({ value }) => value),
+		);
 
 		while (true) {
 			await Promise.allSettled(
@@ -86,36 +95,23 @@ export class Feed {
 					const take = Math.max(0, this.limit - source.queue.length);
 					if (!take) return;
 
-					const network = config.networks[`${source.indexer.chainId}`];
-					if (!network) {
-						return [];
-					}
-
-					const provider = new JsonRpcProvider(network.providers[0]);
-					const indexerContract = PostIndexer.connect(provider, source.indexer.address);
-
-					// TODO: Use cached length and load optimisticly, and dont give `done` until remote length is fetched.
-					// TODO: After getting remote length fetch the rest on the next call.
-					const length = await indexerContract.length(this.id);
-					source.index ??= length - 1n;
+					const { network } = source;
 
 					const posts: Promise<Post>[] = [];
 
-					for (let i = 0n; i < take; i++) {
-						const index = source.index + i * this.direction;
-						if (index < 0) break;
-						if (index >= length) break;
+					for (let n = 0; n < take; n++) {
+						const indexIterResult = source.indexIterator.next();
+						if (indexIterResult.done) break;
 
 						posts.push(
 							Post.load({
 								network,
 								indexerAddress: source.indexer.address,
 								feedId: this.id,
-								index,
+								index: indexIterResult.value,
 							}),
 						);
 					}
-					source.index += BigInt(posts.length) * this.direction;
 
 					source.queue.push(
 						...(await Promise.allSettled(posts))
@@ -134,31 +130,27 @@ export class Feed {
 			const result: Post[] = [];
 
 			while (result.length < this.limit) {
-				let nextChain: (typeof sources)[number] | null = null;
+				let selectedSource: (typeof sources)[number] | null = null;
 
-				for (const chain of sources) {
-					const firstPost = chain.queue.at(0);
-					const nextPost = nextChain?.queue.at(0);
+				for (const candidateSource of sources) {
+					const candidatePost = candidateSource.queue.at(0);
+					const selectedPost = selectedSource?.queue.at(0);
 
-					if (!firstPost) continue;
+					if (!candidatePost) continue;
 
-					if (!nextPost) {
-						nextChain = chain;
+					if (!selectedPost) {
+						selectedSource = candidateSource;
 						continue;
 					}
 
-					if (
-						this.direction > 0 ?
-							firstPost.createdAt > nextPost.createdAt
-						:	firstPost.createdAt < nextPost.createdAt
-					) {
-						nextChain = chain;
+					if (direction.isCandidateOfOtherSourceBetter(candidatePost, selectedPost)) {
+						selectedSource = candidateSource;
 						continue;
 					}
 				}
 
-				if (!nextChain) break;
-				const nextPost = nextChain.queue.shift();
+				if (!selectedSource) break;
+				const nextPost = selectedSource.queue.shift();
 				if (!nextPost) break;
 				result.push(nextPost);
 			}
