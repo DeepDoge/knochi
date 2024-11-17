@@ -25,7 +25,7 @@ const ProfileViewCss = css`
 		padding-inline: 0.75em;
 
 		display: block grid;
-		grid-template-columns: minmax(0, 60em);
+		grid-template-columns: minmax(0, 45em);
 		justify-content: center;
 	}
 
