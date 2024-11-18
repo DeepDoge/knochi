@@ -1,6 +1,6 @@
 import { css, sheet } from "~/shared/utils/css";
 
-export const layoutBrakpoint = "45em";
+export const layoutBreakpoint = "45em";
 
 document.adoptedStyleSheets.push(
 	sheet(css`

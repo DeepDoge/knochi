@@ -1,7 +1,7 @@
 import { Signal, tags } from "@purifyjs/core";
 import { menuSearchParam } from "~/app/layout/routes";
 import { router } from "~/app/router";
-import { layoutBrakpoint } from "~/app/styles";
+import { layoutBreakpoint } from "~/app/styles";
 import { BackSvg } from "~/shared/svgs/BackSvg";
 import { css, useScope } from "~/shared/utils/css";
 
@@ -55,7 +55,7 @@ export const RouteViewCss = css`
 			aspect-ratio: 1;
 			color: color-mix(in srgb, var(--base), var(--pop) 50%);
 
-			@container body (inline-size >= ${layoutBrakpoint}) {
+			@container body (inline-size >= ${layoutBreakpoint}) {
 				display: none;
 			}
 		}
