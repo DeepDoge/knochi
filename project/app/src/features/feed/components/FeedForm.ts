@@ -71,8 +71,6 @@ async function publish(params: {
 }
 
 export function FeedForm(feedIds: readonly FeedId[]) {
-	const host = form();
-
 	const senders = config.derive((config) => {
 		const networks = Object.values(config.networks);
 		return networks
@@ -98,45 +96,55 @@ export function FeedForm(feedIds: readonly FeedId[]) {
 	const contentBytes = postContent.derive(PostContent.toBytes);
 	const contentByteLength = contentBytes.derive((bytes) => bytes.byteLength);
 
-	host.ariaLabel("Post content")
+	const connected = computed(() => Boolean(currentWalletDetail.val?.signer.val));
+	const busy = ref(false);
+	const disabled = computed(() => !connected.val || !sender.val || busy.val);
+
+	return form()
+		.ariaBusy(busy.derive(String))
+		.ariaLabel("Post content")
 		.effect(useScope(PostFormCss))
-		.onsubmit((event) => {
+		.onsubmit(async (event) => {
 			event.preventDefault();
 			if (!sender.val) return;
-			publish({ feedIds, sender: sender.val, contentBytes: contentBytes.val });
+			busy.val = true;
+			await publish({ feedIds, sender: sender.val, contentBytes: contentBytes.val }).catch(
+				console.error,
+			);
+			busy.val = false;
+			text.val = "";
 		})
 		.children(
 			label()
 				.ariaLabel("post content")
 				.children(
 					textarea()
+						.disabled(disabled)
 						.effect(useAutoSize())
 						.required(true)
 						.placeholder("Just say it...")
 						.effect(useBind(text, "value", "input")),
 
 					div({ class: "actions" }).children(
-						computed(() => Boolean(currentWalletDetail.val?.signer.val)).derive(
-							(connected) => {
-								if (connected) {
-									return button()
-										.type("submit")
-										.ariaLabel("Publish")
-										.title("Publish")
-										.disabled(sender.derive((sender) => !sender))
-										.children(SendSvg());
-								}
+						connected.derive((connected) => {
+							if (connected) {
+								return button()
+									.type("submit")
+									.ariaLabel("Publish")
+									.title("Publish")
+									.disabled(disabled)
+									.children(SendSvg());
+							}
 
-								const href = sender.derive((sender) =>
-									connectWallet.searchParam.toHref(
-										`${sender?.network.chainId ?? "open"}`,
-									),
-								);
-								return a({ class: "button" })
-									.href(unroll(href))
-									.textContent("Sign In/Up");
-							},
-						),
+							const href = sender.derive((sender) =>
+								connectWallet.searchParam.toHref(
+									`${sender?.network.chainId ?? "open"}`,
+								),
+							);
+							return a({ class: "connect button" })
+								.href(unroll(href))
+								.textContent("Sign In/Up");
+						}),
 					),
 				),
 			footer().children(
@@ -146,8 +154,6 @@ export function FeedForm(feedIds: readonly FeedId[]) {
 					.children(contentByteLength, " bytes"),
 			),
 		);
-
-	return host;
 }
 
 const PostFormCss = css`
@@ -166,6 +172,10 @@ const PostFormCss = css`
 		grid-auto-flow: column;
 		justify-content: space-between;
 		align-items: center;
+	}
+
+	.connect {
+		font-size: 0.75em;
 	}
 
 	label {

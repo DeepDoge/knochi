@@ -8,7 +8,7 @@ export function useBind<T, P extends keyof HTMLElement | (string & {})>(
 	return (element) => {
 		const handler = () => (signal.val = element[propertyName]);
 		element.addEventListener(eventName, handler);
-		const unfollow = signal.follow((value) => element[propertyName] === value, true);
+		const unfollow = signal.follow((value) => (element[propertyName] = value as never), true);
 
 		return () => {
 			unfollow();

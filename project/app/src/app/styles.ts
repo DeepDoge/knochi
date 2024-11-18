@@ -115,7 +115,7 @@ document.adoptedStyleSheets.push(
 			margin: 0;
 		}
 
-		button:disabled {
+		:disabled {
 			cursor: not-allowed;
 			opacity: 0.5;
 		}
