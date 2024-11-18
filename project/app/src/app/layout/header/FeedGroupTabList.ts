@@ -17,7 +17,7 @@ export function FeedGroupTabList(
 		.role("tablist")
 		.children(
 			(() => {
-				const id = null;
+				const id = "~";
 				const current = feedGroupSearchParam.derive((value) => value === id || !value);
 				return a()
 					.role("tab")
