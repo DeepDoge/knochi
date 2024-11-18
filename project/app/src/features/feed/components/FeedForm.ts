@@ -134,7 +134,7 @@ export function FeedForm(feedIds: readonly FeedId[]) {
 								);
 								return a({ class: "button" })
 									.href(unroll(href))
-									.textContent("connect wallet");
+									.textContent("Sign In/Up");
 							},
 						),
 					),

@@ -1,3 +1,4 @@
+import { tags } from "@purifyjs/core";
 import { FeedGroupAddFormPopoverButton } from "~/features/feed/components/FeedGroupAddFormPopoverButton";
 import { Feed } from "~/features/feed/Feed";
 import { ProfileView } from "~/features/profile/ProfileView";
@@ -5,6 +6,10 @@ import { config } from "~/shared/config";
 import { Router } from "~/shared/router";
 import { Address } from "~/shared/schemas/primatives";
 import { css, useScope } from "~/shared/utils/css";
+import { usePart } from "~/shared/utils/effects/usePart";
+import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
+
+const { div, strong, small } = tags;
 
 export const profileRoutes = {
 	profile: new Router.Route({
@@ -23,18 +28,26 @@ export const profileRoutes = {
 			const { address, postsFeed } = data;
 			return postsFeed.derive((postsFeed) => ProfileView({ address, postsFeed }));
 		},
-		renderHeaderEnd(data) {
+		renderHeader(data) {
 			const { address, postsFeed } = data;
-			return postsFeed.derive((postsFeed) =>
-				FeedGroupAddFormPopoverButton({
-					values: {
-						feedId: postsFeed.id,
-						style: { type: "profile", address, label: "posts" },
-					},
-				})
-					.effect(useScope(profilePageHeaderEndCss))
-					.textContent("add to group"),
-			);
+			return div({ style: "display:contents" })
+				.effect(useScope(profileHeaderCss))
+				.children(
+					[
+						small().textContent("Profile:"),
+						strong().children(WalletAddress(address).effect(usePart("address"))),
+					],
+					postsFeed.derive((postsFeed) =>
+						FeedGroupAddFormPopoverButton({
+							values: {
+								feedId: postsFeed.id,
+								style: { type: "profile", address, label: "posts" },
+							},
+						})
+							.effect(usePart("button"))
+							.textContent("Watch"),
+					),
+				);
 		},
 		title() {
 			return "Profile";
@@ -42,8 +55,13 @@ export const profileRoutes = {
 	}),
 };
 
-const profilePageHeaderEndCss = css`
-	:scope {
-		font-size: 0.6em;
+const profileHeaderCss = css`
+	[data-part="address"] {
+		max-inline-size: 10em;
+	}
+
+	[data-part="button"] {
+		font-size: 0.7em;
+		padding-block: 0.2em;
 	}
 `;

@@ -35,7 +35,9 @@ export function Header() {
 						FeedGroupTabList(groups).attributes({ style: "grid-area:tablist" }),
 						feedGroupSearchParam
 							.derive((value) => groups.find((group) => group.groupId === value))
-							.derive((group) => group ?? { name: "home", groupId: "~", index: -1 })
+							.derive(
+								(group) => group ?? { name: "My Feed", groupId: "~", index: -1 },
+							)
 							.derive((group) =>
 								FeedGroupTabPanel(group).attributes({
 									style: "grid-area:tabpanel",
@@ -66,7 +68,7 @@ export function Header() {
 						} else {
 							return a({ class: "button" })
 								.href(connectWallet.searchParam.toHref("auto"))
-								.children("connect wallet");
+								.children("Sign In/Up");
 						}
 					}),
 				),

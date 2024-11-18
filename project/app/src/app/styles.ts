@@ -218,7 +218,7 @@ document.adoptedStyleSheets.push(
 
 		.button {
 			display: block flow;
-			padding-block: 0.5em;
+			padding-block: 0.4em;
 			padding-inline: 1em;
 			background-color: color-mix(in srgb, var(--pop) 95%, var(--base));
 			color: var(--base);

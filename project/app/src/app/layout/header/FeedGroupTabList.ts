@@ -17,12 +17,12 @@ export function FeedGroupTabList(
 		.role("tablist")
 		.children(
 			(() => {
-				const id = "~";
+				const id = null;
 				const current = feedGroupSearchParam.derive((value) => value === id || !value);
 				return a()
 					.role("tab")
 					.href("#/")
-					.title("Home Feed")
+					.title("My Feed")
 					.attributes({ "aria-controls": "header-tabpanel-home" })
 					.ariaSelected(current.derive(String))
 					.tabIndex(current.derive((current) => (current ? 0 : -1)))

@@ -30,10 +30,7 @@ export function Main() {
 								.ariaHidden("true")
 								.href(menuSearchParam.toHref("open"))
 								.children(BackSvg()),
-							route.derive((route) => [
-								strong().textContent(route.title),
-								route.renderHeaderEnd(),
-							]),
+							route.derive((route) => route.renderHeader()),
 						),
 						route.derive((route) => route.render()),
 					),
