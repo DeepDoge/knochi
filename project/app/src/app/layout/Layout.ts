@@ -1,7 +1,7 @@
 import "~/app/styles";
 
 import { tags } from "@purifyjs/core";
-import { Header } from "~/app/layout/header/Header";
+import { Header } from "~/app/layout/Header";
 import { Main } from "~/app/layout/Main";
 import { menuSearchParam } from "~/app/layout/routes";
 import { layoutBrakpoint } from "~/app/styles";
