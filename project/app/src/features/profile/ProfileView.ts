@@ -2,6 +2,7 @@ import { tags } from "@purifyjs/core";
 import { FeedForm } from "~/features/feed/components/FeedForm";
 import { FeedScroller } from "~/features/feed/components/FeedScroller";
 import { Feed } from "~/features/feed/Feed";
+import { orderNewer } from "~/features/feed/feedDirections";
 import { Address } from "~/shared/schemas/primatives";
 import { css, useScope } from "~/shared/utils/css";
 import { usePart } from "~/shared/utils/effects/usePart";
@@ -14,7 +15,9 @@ export function ProfileView(params: { address: Address; postsFeed: Feed }) {
 	return div()
 		.effect(useScope(ProfileViewCss))
 		.children(
-			div({ class: "content" }).children(FeedScroller(postsFeed)),
+			div({ class: "content" }).children(
+				FeedScroller({ feed: postsFeed, preferDirection: orderNewer() }),
+			),
 			FeedForm([postsFeed.id]).effect(usePart("form")),
 		);
 }

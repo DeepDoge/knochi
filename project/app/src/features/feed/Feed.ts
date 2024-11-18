@@ -11,7 +11,7 @@ export namespace Feed {
 		limit: number;
 		indexers: Feed.Indexer[];
 	};
-	export type Direction = {
+	export type Order = {
 		indexIterator(length: bigint): Iterator<bigint, void, unknown>;
 		isCandidateOfOtherSourceBetter(candidatePost: Post, selectedPost: Post): boolean;
 	};
@@ -64,9 +64,9 @@ export class Feed {
 
 	public async *iter(params: {
 		config: Config;
-		direction: Feed.Direction;
+		order: Feed.Order;
 	}): AsyncIterator<Post[], void, unknown> {
-		const { config, direction } = params;
+		const { config, order } = params;
 
 		const sources = await Promise.allSettled(
 			this.indexers.map(async (indexer) => {
@@ -81,7 +81,7 @@ export class Feed {
 					provider,
 					indexerContract,
 					length,
-					indexIterator: direction.indexIterator(length),
+					indexIterator: order.indexIterator(length),
 					queue: [] as Post[],
 				};
 			}),
@@ -143,7 +143,7 @@ export class Feed {
 						continue;
 					}
 
-					if (direction.isCandidateOfOtherSourceBetter(candidatePost, selectedPost)) {
+					if (order.isCandidateOfOtherSourceBetter(candidatePost, selectedPost)) {
 						selectedSource = candidateSource;
 						continue;
 					}

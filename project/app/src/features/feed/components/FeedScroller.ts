@@ -1,6 +1,5 @@
 import { computed, fragment, ref, tags } from "@purifyjs/core";
 import { Feed } from "~/features/feed/Feed";
-import { randomNoAlloc } from "~/features/feed/feedDirections";
 import { PostView } from "~/features/post/PostView";
 import { config } from "~/shared/config";
 import { ArrowDownSvg } from "~/shared/svgs/ArrowDownSvg";
@@ -10,7 +9,9 @@ import { useOnVisible } from "~/shared/utils/effects/useOnVisible";
 
 const { ul, li, section, button } = tags;
 
-export function FeedScroller(feed: Feed) {
+export function FeedScroller(params: { feed: Feed; preferDirection: Feed.Order }) {
+	const { feed, preferDirection } = params;
+
 	const host = section()
 		.effect(useScope(FeedScrollerCss))
 		.effect(() => {
@@ -69,7 +70,10 @@ export function FeedScroller(feed: Feed) {
 
 		try {
 			refresing.val = true;
-			nextGenerator = feed.iter({ config: config.val, direction: randomNoAlloc("newer") });
+			nextGenerator = feed.iter({
+				config: config.val,
+				order: preferDirection,
+			});
 			await loadNext({ clear: true });
 		} catch (error) {
 			console.error(error);

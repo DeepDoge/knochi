@@ -2,6 +2,7 @@ import { tags } from "@purifyjs/core";
 import { FeedForm } from "~/features/feed/components/FeedForm";
 import { FeedScroller } from "~/features/feed/components/FeedScroller";
 import { Feed } from "~/features/feed/Feed";
+import { orderRandom } from "~/features/feed/feedDirections";
 import { Post } from "~/features/post/Post";
 import { PostView } from "~/features/post/PostView";
 import { config } from "~/shared/config";
@@ -21,7 +22,10 @@ export function PostThread(post: Post) {
 				.children(
 					strong().textContent("Replies"),
 					repliesFeed.derive((repliesFeed) =>
-						FeedScroller(repliesFeed).effect(usePart("scroller")),
+						FeedScroller({
+							feed: repliesFeed,
+							preferDirection: orderRandom("newer"),
+						}).effect(usePart("scroller")),
 					),
 				),
 			repliesFeed.derive((repliesFeed) => FeedForm([repliesFeed.id]).effect(usePart("form"))),
