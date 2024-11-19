@@ -68,7 +68,7 @@ export function Header() {
 							);
 						} else {
 							return a({ class: "button" })
-								.href(connectWallet.searchParam.toHref("auto"))
+								.href(connectWallet.searchParam.toHref("open"))
 								.children("Sign In/Up");
 						}
 					}),
