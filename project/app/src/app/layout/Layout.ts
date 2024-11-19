@@ -25,6 +25,7 @@ const LayoutCss = css`
 		align-items: start;
 		grid-template-columns: minmax(0, 20em) 1fr;
 		grid-template-rows: auto;
+		contain: paint;
 	}
 
 	[data-part="header"] {
