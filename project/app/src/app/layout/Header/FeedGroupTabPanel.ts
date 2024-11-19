@@ -1,4 +1,4 @@
-import { awaited, tags } from "@purifyjs/core";
+import { tags } from "@purifyjs/core";
 import { router } from "~/app/router";
 import { feedDB } from "~/features/feed/database/client";
 import { feedGroupSearchParam } from "~/features/feed/routes";
@@ -7,6 +7,7 @@ import { HomeSvg } from "~/shared/svgs/HomeSvg";
 import { TrashcanSvg } from "~/shared/svgs/TrashcanSvg";
 import { SignalOrValue } from "~/shared/types/signal";
 import { css, useScope } from "~/shared/utils/css";
+import { awaited } from "~/shared/utils/signals/awaited";
 import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
 
 const { div, strong, button, a, header } = tags;

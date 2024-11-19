@@ -1,9 +1,10 @@
-import { awaited, Signal, tags } from "@purifyjs/core";
+import { Signal, tags } from "@purifyjs/core";
 import { PostThread } from "~/features/feed/components/PostThread";
 import { Post } from "~/features/post/Post";
 import { postSearchParam } from "~/features/post/routes";
 import { CloseSvg } from "~/shared/svgs/CloseSvg";
 import { css, useScope } from "~/shared/utils/css";
+import { awaited } from "~/shared/utils/signals/awaited";
 
 const { section, div, header, a, strong } = tags;
 

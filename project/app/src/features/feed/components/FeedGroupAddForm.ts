@@ -1,10 +1,11 @@
-import { awaited, ref, tags } from "@purifyjs/core";
+import { ref, tags } from "@purifyjs/core";
 import { FeedGroupIconSvg } from "~/features/feed/components/FeedGroupIconSvg";
 import { feedDB } from "~/features/feed/database/client";
 import { PromiseOrValue } from "~/shared/types/promise";
 import { Utils } from "~/shared/types/utils";
 import { css, useScope } from "~/shared/utils/css";
 import { useBind } from "~/shared/utils/effects/useBind";
+import { awaited } from "~/shared/utils/signals/awaited";
 
 const { form, button, strong, label, div, input } = tags;
 

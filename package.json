@@ -36,7 +36,7 @@
 	},
 	"dependencies": {
 		"@nomadshiba/typed-contracts": "npm:@jsr/nomadshiba__typed-contracts@^0.2.13",
-		"@purifyjs/core": "npm:@jsr/purifyjs__core@^0.0.328",
+		"@purifyjs/core": "npm:@jsr/purifyjs__core@^0.0.331",
 		"ethers": "^6.9.1",
 		"extra-bigint": "^1.1.18",
 		"jazzicon-ts": "^4.0.0",

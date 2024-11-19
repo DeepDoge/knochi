@@ -7,7 +7,7 @@ import { postSearchParam } from "~/features/post/routes";
 import { config } from "~/shared/config";
 import { css, useScope } from "~/shared/utils/css";
 import { usePart } from "~/shared/utils/effects/usePart";
-import { match } from "~/shared/utils/match";
+import { match } from "~/shared/utils/signals/match";
 
 const { main } = tags;
 

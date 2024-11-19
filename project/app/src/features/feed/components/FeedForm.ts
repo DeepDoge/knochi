@@ -1,4 +1,4 @@
-import { awaited, computed, ref, tags } from "@purifyjs/core";
+import { computed, ref, tags } from "@purifyjs/core";
 import { PostIndexer, PostStore_Plain } from "@root/contracts/connect";
 import { SelectSenderButton } from "~/features/feed/components/SelectSenderButton";
 import { SelectedSender } from "~/features/feed/components/SelectSenderPopover";
@@ -10,7 +10,8 @@ import { SendSvg } from "~/shared/svgs/SendSvg";
 import { css, useScope } from "~/shared/utils/css";
 import { useAutoSize } from "~/shared/utils/effects/useAutoSize";
 import { useBind } from "~/shared/utils/effects/useBind";
-import { unroll } from "~/shared/utils/unroll";
+import { awaited } from "~/shared/utils/signals/awaited";
+import { unroll } from "~/shared/utils/signals/unroll";
 import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
 import { connectWallet } from "~/shared/wallet/connectDialog";
 import { currentWalletDetail, getOrRequestSigner } from "~/shared/wallet/utils";
@@ -136,13 +137,13 @@ export function FeedForm(feedIds: readonly FeedId[]) {
 									.children(SendSvg());
 							}
 
-							const href = sender.derive((sender) =>
-								connectWallet.searchParam.toHref(
-									`${sender?.network.chainId ?? "open"}`,
-								),
-							);
+							const href = sender
+								.derive((sender) => `${sender?.network.chainId ?? "open"}`)
+								.derive((value) => connectWallet.searchParam.toHref(value))
+								.pipe(unroll);
+
 							return a({ class: "connect button" })
-								.href(unroll(href))
+								.href(href)
 								.textContent("Sign In/Up");
 						}),
 					),

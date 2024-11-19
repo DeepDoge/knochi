@@ -1,4 +1,4 @@
-import { awaited, computed, tags } from "@purifyjs/core";
+import { computed, tags } from "@purifyjs/core";
 import { FeedGroupTabList } from "~/app/layout/Header/FeedGroupTabList";
 import { FeedGroupTabPanel } from "~/app/layout/Header/FeedGroupTabPanel";
 import { router } from "~/app/router";
@@ -7,6 +7,7 @@ import { feedGroupFormDialogSearchParam } from "~/features/feed/feedGroupFormDia
 import { feedGroupSearchParam } from "~/features/feed/routes";
 import { Address } from "~/shared/schemas/primatives";
 import { css, useScope } from "~/shared/utils/css";
+import { awaited } from "~/shared/utils/signals/awaited";
 import { WalletAddress } from "~/shared/wallet/components/WalletAddress";
 import { WalletAvatarSvg } from "~/shared/wallet/components/WalletAvatarSvg";
 import { connectWallet } from "~/shared/wallet/connectDialog";
