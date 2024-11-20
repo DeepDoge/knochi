@@ -11,4 +11,9 @@ declare global {
 		(value: bigint): `${bigint}`;
 		(value: boolean): `${boolean}`;
 	}
+
+	interface HTMLElement {
+		// If browser doesnt support it, popover just appears at the center, which is ok.
+		anchorElement?: HTMLElement;
+	}
 }

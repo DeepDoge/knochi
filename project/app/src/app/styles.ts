@@ -132,20 +132,35 @@ document.adoptedStyleSheets.push(
 
 		[popover] {
 			max-block-size: 100dvb;
+			max-inline-size: 100%;
+			inset: 0;
+			margin: auto;
 		}
 
 		[popover][anchor] {
 			margin: 0;
-			inset: 0;
+			inset: auto;
 
-			position-area: span-inline-start block-end;
+			position: absolute;
+			inset-inline-end: anchor(end);
+			inset-block-start: anchor(end);
 			position-try:
-				flip-inline,
 				flip-block,
-				flip-block flip-inline;
+				flip-inline,
+				flip-block flip-inline,
+				--final-block-start,
+				--final-block-end;
+		}
 
-			inline-size: max-content;
-			max-inline-size: 100dvi;
+		@position-try --final-block-start {
+			inset: auto;
+			inset-inline-end: 0;
+			inset-block-end: anchor(start);
+		}
+		@position-try --final-block-end {
+			inset: auto;
+			inset-inline-end: 0;
+			inset-block-start: anchor(end);
 		}
 
 		dialog::backdrop {

@@ -20,31 +20,29 @@ export function SelectSenderButton(params?: {
 			},
 		}).element;
 
-	return (
-		button()
-			.type("button")
-			.effect(useScope(SelectSenderButtonCss))
-			/* .effect((element) => { // Missing browser support
+	return button()
+		.type("button")
+		.effect(useScope(SelectSenderButtonCss))
+		.effect((element) => {
 			selectSenderPopover.anchorElement = element;
-		}) */
-			.ariaDescription("Currently selected sender contract, click to change.")
-			.popoverTargetElement(selectSenderPopover)
-			.effect((element) => {
-				element.after(selectSenderPopover);
-				return () => {
-					selectSenderPopover.remove();
-				};
-			})
-			.children(
-				selectedSender.derive((sender) => {
-					if (!sender) {
-						return "Select Sender";
-					}
+		})
+		.ariaDescription("Currently selected sender contract, click to change.")
+		.popoverTargetElement(selectSenderPopover)
+		.effect((element) => {
+			element.after(selectSenderPopover);
+			return () => {
+				selectSenderPopover.remove();
+			};
+		})
+		.children(
+			selectedSender.derive((sender) => {
+				if (!sender) {
+					return "Select Sender";
+				}
 
-					return fragment(img().src(sender.network.iconSrc), sender.key);
-				}),
-			)
-	);
+				return fragment(img().src(sender.network.iconSrc), sender.key);
+			}),
+		);
 }
 
 const SelectSenderButtonCss = css`
