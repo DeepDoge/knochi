@@ -14,6 +14,6 @@ declare global {
 
 	interface HTMLElement {
 		// If browser doesnt support it, popover just appears at the center, which is ok.
-		anchorElement?: HTMLElement;
+		anchorElement: HTMLElement | null;
 	}
 }

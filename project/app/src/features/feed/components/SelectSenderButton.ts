@@ -1,48 +1,45 @@
-import { fragment, ref, Signal, tags } from "@purifyjs/core";
+import { Signal, tags } from "@purifyjs/core";
 import {
 	SelectedSender,
 	SelectSenderPopover,
 } from "~/features/feed/components/SelectSenderPopover";
 import { css, useScope } from "~/shared/utils/css";
+import { match } from "~/shared/utils/signals/match";
 
 const { button, img } = tags;
 
-export function SelectSenderButton(params?: {
-	selectedSender?: Signal.State<SelectedSender | null>;
-	selectSenderPopover?: HTMLElement;
+export function SelectSenderButton(params: {
+	selectedSender: Signal.State<SelectedSender | null>;
 }) {
-	const selectedSender = params?.selectedSender ?? ref<SelectedSender | null>(null);
-	const selectSenderPopover =
-		params?.selectSenderPopover ??
-		SelectSenderPopover({
-			onChange(sender) {
-				selectedSender.val = sender;
-			},
-		}).element;
+	const { selectedSender } = params;
 
-	return button()
+	const selectSenderPopover = SelectSenderPopover({
+		onChange(sender) {
+			selectedSender.val = sender;
+		},
+	});
+
+	const selectSenderButton = button()
 		.type("button")
 		.effect(useScope(SelectSenderButtonCss))
-		.effect((element) => {
-			selectSenderPopover.anchorElement = element;
-		})
 		.ariaDescription("Currently selected sender contract, click to change.")
-		.popoverTargetElement(selectSenderPopover)
 		.effect((element) => {
-			element.after(selectSenderPopover);
-			return () => {
-				selectSenderPopover.remove();
-			};
+			element.after(selectSenderPopover.element);
+			return () => selectSenderPopover.remove();
 		})
 		.children(
-			selectedSender.derive((sender) => {
-				if (!sender) {
-					return "Select Sender";
-				}
-
-				return fragment(img().src(sender.network.iconSrc), sender.key);
-			}),
+			match(selectedSender)
+				.if((sender) => sender === null)
+				.then(() => "Select Sender")
+				.else((sender) =>
+					sender.derive((sender) => [img().src(sender.network.iconSrc), sender.key]),
+				),
 		);
+
+	selectSenderButton.popoverTargetElement(selectSenderPopover.element);
+	selectSenderPopover.anchorElement(selectSenderButton.element);
+
+	return selectSenderButton;
 }
 
 const SelectSenderButtonCss = css`
