@@ -1,7 +1,7 @@
 import { tags } from "@purifyjs/core";
-import { router } from "~/app/router";
 import { feedDB } from "~/features/feed/database/client";
 import { feedGroupSearchParam } from "~/features/feed/routes";
+import { ProfileRoute } from "~/features/profile/routes";
 import { Router } from "~/shared/router";
 import { HomeSvg } from "~/shared/svgs/HomeSvg";
 import { TrashcanSvg } from "~/shared/svgs/TrashcanSvg";
@@ -65,7 +65,7 @@ export function FeedGroupTabPanel(
 							renderItem({
 								icon: WalletAvatarSvg(style.address),
 								name: style.address,
-								pathname: router.routes.profile.toPathname(style),
+								pathname: new ProfileRoute(style.address).pathname,
 							})
 						:	null,
 					),

@@ -1,6 +1,7 @@
 import { computed, tags } from "@purifyjs/core";
 import { PostThreadView } from "~/app/layout/Main/PostThreadView";
 import { RouteView } from "~/app/layout/Main/RouteView";
+import { UnknownRoute } from "~/app/layout/routes";
 import { router } from "~/app/router";
 import { Post } from "~/features/post/Post";
 import { postSearchParam } from "~/features/post/routes";
@@ -14,11 +15,10 @@ const { main } = tags;
 export function Main() {
 	const host = main();
 
+	const route = router.route.derive((route) => route ?? new UnknownRoute());
+
 	return host.effect(useScope(MainCss)).children(
-		match(router.route)
-			.if((route) => route !== null)
-			.then((route) => RouteView(route).effect(usePart("route")))
-			.else(() => null),
+		RouteView(route).effect(usePart("route")),
 		match(postSearchParam)
 			.if((searchParam) => searchParam !== null)
 			.then((searchParam) => {

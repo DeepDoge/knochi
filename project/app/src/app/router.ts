@@ -1,8 +1,5 @@
-import { feedRoutes } from "~/features/feed/routes";
-import { profileRoutes } from "~/features/profile/routes";
+import { FeedRoute } from "~/features/feed/routes";
+import { ProfileRoute } from "~/features/profile/routes";
 import { Router } from "~/shared/router";
 
-export const router = new Router.Client({
-	...profileRoutes,
-	...feedRoutes,
-});
+export const router = new Router.Client([ProfileRoute, FeedRoute]);

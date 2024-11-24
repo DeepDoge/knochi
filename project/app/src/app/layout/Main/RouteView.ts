@@ -1,25 +1,41 @@
-import { Signal, tags } from "@purifyjs/core";
+import { computed, Signal, tags } from "@purifyjs/core";
 import { menuSearchParam } from "~/app/layout/routes";
 import { router } from "~/app/router";
 import { layoutBreakpoint } from "~/app/styles";
 import { BackSvg } from "~/shared/svgs/BackSvg";
 import { css, useScope } from "~/shared/utils/css";
+import { awaited } from "~/shared/utils/signals/awaited";
+import { unroll } from "~/shared/utils/signals/unroll";
 
 const { section, header, a, div } = tags;
 
 export function RouteView(route: Signal<NonNullable<typeof router.route.val>>) {
+	const title = route
+		.derive(async (route) => await route.title())
+		.derive((title) => awaited(title, "..."))
+		.pipe(unroll);
+	const headerRender = route
+		.derive(async (route) => await route.renderHeader())
+		.derive((headerRender) => awaited(headerRender, "..."))
+		.pipe((signal) => computed(() => signal.val.val));
+	const contentsRender = route
+		.derive(async (route) => await route.render())
+		.derive((contentsRender) => awaited(contentsRender, "..."))
+		.pipe((signal) => computed(() => signal.val.val));
+
 	return section({ class: "route" })
 		.effect(useScope(RouteViewCss))
-		.ariaLabel(route.derive((route) => route.title))
+		.effect(() => title.follow((title) => (document.title = title)))
+		.ariaLabel(title)
 		.children(
 			header().children(
 				a({ class: "icon back" })
 					.ariaHidden("true")
 					.href(menuSearchParam.toHref("open"))
 					.children(BackSvg()),
-				route.derive((route) => route.renderHeader()),
+				headerRender,
 			),
-			div({ class: "contents" }).children(route.derive((route) => route.render())),
+			div({ class: "contents" }).children(contentsRender),
 		);
 }
 

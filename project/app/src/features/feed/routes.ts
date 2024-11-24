@@ -1,24 +1,31 @@
-import { Router } from "~/shared/router";
+import { Route, Router } from "~/shared/router";
 import { FeedId } from "~/shared/schemas/feed";
 
-export const feedRoutes = {
-	feed: new Router.Route({
-		fromPathname(pathname) {
-			return FeedId()
-				.transform((feedId) => ({ feedId }))
-				.parse(pathname.split("/"));
-		},
-		toPathname(data: { feedId: FeedId }) {
-			return data.feedId;
-		},
-		render(data) {
-			return data.feedId;
-			// return data.feedId ? FeedPage({ config }) : null;
-		},
-		title() {
-			return "Feed";
-		},
-	}),
-};
-
 export const feedGroupSearchParam = new Router.SearchParam("group");
+
+export type FeedRouteData = { feedId: FeedId };
+export class FeedRoute extends Route<FeedRouteData> {
+	constructor(feedId: FeedId) {
+		const pathname = feedId;
+		const data = FeedRoute.parsePathname(pathname);
+		super(pathname, data);
+	}
+
+	public static parsePathname(pathname: string): FeedRouteData {
+		return FeedId()
+			.transform((feedId) => ({ feedId }))
+			.parse(pathname.split("/"));
+	}
+
+	public override title() {
+		return "Feed";
+	}
+
+	public override renderHeader() {
+		return "Feed";
+	}
+
+	public override render() {
+		return this.data.feedId;
+	}
+}
