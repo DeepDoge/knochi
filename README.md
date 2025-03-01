@@ -1,4 +1,6 @@
 **UPDATE:** Rewrite in progress... 🚧 <br>
+Uhh, so well, I need to make this a nostr first app now.
+But yeah I don't have time, and there are other projects that i wanna do more than this first.
 
 # Knochi
 
