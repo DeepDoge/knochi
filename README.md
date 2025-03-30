@@ -1,6 +1,16 @@
 **UPDATE:** Rewrite in progress... 🚧 <br>
-Uhh, so well, I need to make this a nostr first app now.<br>
-But yeah I don't have time, and there are other projects that i wanna do more than this first.
+**UPDATE2:** Uhh, so well, I need to make this a nostr app now.<br>
+Why? Because nostr is partically is similar to what i have been trying to do anyway, and already big and not on blockchain. And more close to Bitcoin.
+I was first thinking "maybe I can also support Nostr, makign this an aggrigator of protocols". But Nostr is just better.
+So this is depricated. I'm just gonna use this same name, maybe I rename this repo. And create another repo with this same name, archive this one.
+
+So plan is make a Nostr client with this name later one day.
+
+But yeah I don't have time, and there are other projects that i wanna do more than this first, Nostr clients are already good.
+
+I have some ideas for a more improved nostr client, but I mean Nostr isn't going anywhere, there is no "network building", it will just be client building.
+
+So no need to rush. I can come back itch this anytime later. But I first have other things to itch.
 
 # Knochi
 
