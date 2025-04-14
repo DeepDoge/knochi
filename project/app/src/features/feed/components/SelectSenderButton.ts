@@ -37,7 +37,7 @@ export function SelectSenderButton(params: {
 		);
 
 	selectSenderButton.popoverTargetElement(selectSenderPopover.element);
-	selectSenderPopover.anchorElement(selectSenderButton.element);
+	selectSenderPopover.element.anchorElement = selectSenderButton.element;
 
 	return selectSenderButton;
 }

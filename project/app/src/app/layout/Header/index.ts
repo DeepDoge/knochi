@@ -5,6 +5,7 @@ import { router } from "~/app/router";
 import { feedDB } from "~/features/feed/database/client";
 import { feedGroupFormDialogSearchParam } from "~/features/feed/feedGroupFormDialog";
 import { feedGroupSearchParam } from "~/features/feed/routes";
+import { ProfileRoute } from "~/features/profile/routes";
 import { Address } from "~/shared/schemas/primatives";
 import { css, useScope } from "~/shared/utils/css";
 import { awaited } from "~/shared/utils/signals/awaited";
@@ -53,7 +54,10 @@ export function Header() {
 					signerAddress.derive((signerAddress) => {
 						if (signerAddress) {
 							const ariaCurrent = router.route.derive((route) =>
-								route?.name === "profile" && route.data.address === signerAddress ?
+								(
+									route instanceof ProfileRoute &&
+									route.data.address === signerAddress
+								) ?
 									"page"
 								:	"false",
 							);
@@ -61,7 +65,7 @@ export function Header() {
 							return div({ class: "content" }).children(
 								a()
 									.ariaCurrent(ariaCurrent)
-									.href(router.routes.profile.toHref({ address: signerAddress }))
+									.href(new ProfileRoute(signerAddress).toHref())
 									.title("My Wallet")
 									.children(WalletAvatarSvg(signerAddress)),
 								WalletAddress(signerAddress),
