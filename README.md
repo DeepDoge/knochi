@@ -3,6 +3,7 @@
 Why? Because nostr is partically is similar to what i have been trying to do anyway, and already big and not on blockchain. And more close to Bitcoin.
 I was first thinking "maybe I can also support Nostr, makign this an aggrigator of protocols". But Nostr is just better.
 So this is depricated. I'm just gonna use this same name, maybe I rename this repo. And create another repo with this same name, archive this one.
+**UPDATE3:** When??? June 02, 2025
 
 So plan is make a Nostr client with this name later one day.
 
