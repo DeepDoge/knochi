@@ -60,3 +60,7 @@ I'm not satisfied with existing solutions...
 -   "Decentralized" platform has their own servers that you connect to.
 -   "Decentralized" platform is profitable and makes money from your content and is a bussiness not a protocol.
 -   "Decentralized" platform is hard to participate in as a node.
+
+## License
+
+[GPL v2](LICENSE)
