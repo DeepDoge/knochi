@@ -1,4 +1,4 @@
-# Depricated in favor of nostr.
+# Depricated in favor of nostr, and also i dont fuck with shitchains anymore
 
 # Knochi
 
